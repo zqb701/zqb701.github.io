@@ -1,0 +1,15 @@
+CACHE MANIFEST
+# 快取清單檔案（cache manifest file）
+# 以「.manifest」檔案設定, 讓檔案可以快取在用戶端, 
+# 每站點容量5MB,由browser決定。
+# 已快取的檔案需待manifest檔變化時才會更新。可透過修改本檔, 例如版號或日期
+# 日期:2021/7/21, 版本:
+
+CACHE:      #快取清單
+#index.html #引用檔不用列出
+
+NETWORK:    #不會被快取
+*
+
+FALLBACK:   #替代清單
+/html5/ /404.html
