@@ -6,10 +6,13 @@ CACHE MANIFEST
 # 日期:2021/7/21, 版本:
 
 CACHE:      #快取清單
-#index.html #引用檔不用列出
+index.html #
+# images/
+# js/
+# http://....
 
 NETWORK:    #不會被快取
-*
+# *
 
 FALLBACK:   #替代清單
-/html5/ /404.html
+# /html5/ /404.html
