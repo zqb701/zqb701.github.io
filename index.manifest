@@ -16,6 +16,7 @@ NETWORK:    #不會被快取
 # *
 
 FALLBACK:   #替代清單
-# index.html 404.html
+index.html 404.html #結果是輸入任何不存在的頁面, 都用404.html回應
+
 # /html5/ /404.html
 # ajax/account/ noCode.html
