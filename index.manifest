@@ -16,6 +16,6 @@ NETWORK:    #不會被快取
 # *
 
 FALLBACK:   #替代清單
-index.html 404.html
+# index.html 404.html
 # /html5/ /404.html
 # ajax/account/ noCode.html
