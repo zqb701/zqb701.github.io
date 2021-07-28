@@ -1,13 +1,21 @@
 
 <html><title>iptv</title>
 <body onmouseover="w=700;window.resizeTo(w,w*.75);" onmouseleave="w=300;window.resizeTo(w,w*.75);">
-<button_ onclick="oIf=document.getElementById('iframe');oIf.src=oIf.src;"/>
-
+<a href="javascript:void(0)" 
+   onclick="oIf=document.getElementById('iframe');oIf.src=oIf.src;"
+   title="<Ctrl>+<R>"
+   >reload1</a>、
+        
+<a href="javascript:void(0)" 
+   onclick="window.location.reload();"
+   title="<Ctrl>+<R>"
+   >reload2</a>、
+        
 <div style="position:relative;width:100%;padding-bottom:56.25%;">
-<iframe id="iframe" style="position:absolute;width:100%;height:100%"
+        <iframe id="iframe" style="position:absolute;width:100%;height:100%"
         frameborder=0
         src="https://www.youtube.com/embed/pJ0VgJloR9E?
-             iv_load_policy=1&fs=0&showinfo=0&modestbranding=1&mute=1;&autoplay=1;"></iframe>
+             iv_load_policy=1&fs=1&showinfo=0&modestbranding=1&mute=1;&autoplay=1;"></iframe>
 </div>
 </body>
 </html>
