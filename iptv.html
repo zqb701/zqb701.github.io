@@ -1,19 +1,26 @@
 
-<html><title>iptv</title>
-<body onmouseover_="w=700;window.resizeTo(w,w*.75);" onmouseleave_="w=300;window.resizeTo(w,w*.75);">
+<html><head><title>iptv</title>
+   <script type=”text/javascript”>
+   var isAutoZoon = true;
+</script>
+   </head>
+<body 
+      onmouseover="if isAutoZoon {w=700;window.resizeTo(w,w*.75);}" 
+      onmouseleave="if isAutoZoon {w=300;window.resizeTo(w,w*.75);}"
+ >
    
 <a href="javascript:void(0)" 
    onclick="oIf=document.getElementById('iframe');oIf.src=oIf.src;"
-   title="<Ctrl>+<R>"
+   title="reload iframe"
    >reload1</a>、
         
 <a href="javascript:void(0)" 
    onclick="window.location.reload();"
-   title="<Ctrl>+<R>"
+   title="reload iframe"
    >reload2</a>、
 
 <a href="javascript:void(0)" 
-   onclick="var marioVideo = document.getElementById('iframe');marioVideo.webkitRequestFullScreen();"
+   onclick="isAutoZoon=false;var marioVideo = document.getElementById('iframe');marioVideo.webkitRequestFullScreen();"
    title="like <F11>?"
    >fullScreen</a>、
    
