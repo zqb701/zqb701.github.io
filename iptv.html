@@ -35,36 +35,40 @@ function doKeyDown(event){
    	case 75://<K>
              //alert("k");
              //isAutoZoon=false;
-             myiframe.webkitRequestFullScreen();
+             document.getElementById('iframe').webkitRequestFullScreen();
 				    break;
 	case 82://<R>
 	//直播時,暫停後「再播放」會接稍早的串流, 而非當前的即時資訊, 故以「reload」處置。
 	//視窗重置已有Ctrl+R可用, 同window.location.reload();
 	// 但iframe重置要另行「加碼」。
-			alert("r0");
-		myiframe.location.reload(true);//可用
+			alert("body get R");
+		document.getElementById('iframe').location.reload(true);//可用
 			
-		myiframe.contentWindow.location.reload(true);//沒作用
+		//myiframe.contentWindow.location.reload(true);//沒作用
 			
 
 //myiframe.src=myiframe.src;
 	    	break;
            }
 	}
+function sizeS(){
+if(isAutoZoon){
+		   	window.resizeTo(scrWs,scrHs);
+		   alert(scrWs+ ", " + scrHs);
+				    }
+}
+function sizeM(){
+	if(isAutoZoon){
+	  window.resizeTo(scrWm,scrHm);
+	  alert(scrWm+ ", " + scrHm);
+	}
+}	   
 </script>
    </head>
 <body 
       onkeydown="doKeyDown(event)"
-      onmouseover="
-		   if(isAutoZoon){
-		   	window.resizeTo(scrWm,scrHm);
-		   alert(scrWm+ ", " + scrHm);
-				    }" 
-      onmouseleave="
-		    if(isAutoZoon){
-		    	window.resizeTo(scrWs,scrHs);
-		    	alert(scrWs+ ", " + scrHs);
-					 }">
+      onmouseover="sizeM()" 
+      onmouseleave="sizeS">
 	
 <div style="position:relative;width:100%;padding-bottom:56.25%;">
         <iframe 
