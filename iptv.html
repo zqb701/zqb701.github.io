@@ -2,11 +2,28 @@
 <html><head><title>iptv</title>
    <script type=”text/javascript”>
    let isAutoZoon = true;
+    function doKeyDown(){
+        switch (event.keyCode){
+             case 37://左键头
+             case 65://<A>
+			//	    go("left");
+				    break;
+                   
+             case 75://<K>
+             alert("k");
+             var marioVideo = document.getElementById('iframe');
+             marioVideo.webkitRequestFullScreen();
+			//	    go("left");
+				    break;
+           }
+	}
 </script>
    </head>
 <body 
+      onkeydown="doKeyDown(event)"
       onmouseover="if(isAutoZoon){w=700;window.resizeTo(w,w*.75);}" 
-      onmouseleave="if(isAutoZoon){w=300;window.resizeTo(w,w*.75);}">
+      onmouseleave="if(isAutoZoon){w=300;window.resizeTo(w,w*.75);}"
+>
    
 <a href="javascript:void(0)" 
    onclick="oIf=document.getElementById('iframe');oIf.src=oIf.src;"
