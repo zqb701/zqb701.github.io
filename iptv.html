@@ -15,7 +15,7 @@
 window.addEventListener('keydown', function(e){  
 switch (e.code){
      	case 'KeyR':
-		alert("R");
+		alert("window get R");
 	    break;
 }//swith(e.code)
 }, false);
@@ -47,7 +47,7 @@ function doKeyDown(event){
 </script>
    </head>
 <body 
-      onkeydown_="doKeyDown(event)"
+      onkeydown="doKeyDown(event)"
       onmouseover="if(isAutoZoon){window.resizeTo(scrW/2,scrW/2*.6);}" 
       onmouseleave="if(isAutoZoon){window.resizeTo(scrW/4,scrW/4*.6);}">
 	
