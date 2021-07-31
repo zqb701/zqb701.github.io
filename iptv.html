@@ -42,12 +42,13 @@ function doKeyDown(event){
 	//視窗重置已有Ctrl+R可用, 同window.location.reload();
 	// 但iframe重置要另行「加碼」。
 			alert("body get R");
-		document.getElementById('iframe').location.reload(true);//可用
+			var myiframe = document.getElementById('iframe');
+		myiframe.location.reload(true);//可用
 			
 		//myiframe.contentWindow.location.reload(true);//沒作用
 			
 
-//myiframe.src=myiframe.src;
+myiframe.src=myiframe.src;
 	    	break;
            }
 	}
@@ -68,7 +69,7 @@ function sizeM(){
 <body 
       onkeydown="doKeyDown(event)"
       onmouseover="sizeM()" 
-      onmouseleave="sizeS">
+      onmouseleave="sizeS()">
 	
 <div style="position:relative;width:100%;padding-bottom:56.25%;">
         <iframe 
@@ -79,14 +80,16 @@ function sizeM(){
              iv_load_policy=1&fs=0&modestbranding=1&mute=1;&autoplay=1;"">
 									 </iframe>
 </div>
-	
+	<br>
 網路電視,chrome子母畫面:另外操作才有, 調音量或進度需到原視窗, 無法全螢幕,要先開一個視窗<br>
-  開啟子視窗, 配iframe<br>
-  用embed網址, 以排除頁面其它元素(iframe放標準連結無效), <a href="https://www.youtube.com/watch?v=pJ0VgJloR9E">標準網址</a><br>
-embed版的全螢幕鈕無作用,用fs=0隱藏。document.currentScript.parentNode。.webkitfullscreenElement != null。webkitIsFullScreen <br>
-註解尚需手動關閉。showinfo=0沒作用<br>
-重載入功能(暫停後重啟無法接到即時串流)<br>
-
+  
+<ul>
+<li>開啟子視窗, 配iframe</li>
+  <li>用embed網址, 以排除頁面其它元素(iframe放標準連結無效), <a href="https://www.youtube.com/watch?v=pJ0VgJloR9E">標準網址</a></li>
+<li>embed版的全螢幕鈕無作用,用fs=0隱藏。document.currentScript.parentNode。.webkitfullscreenElement != null。webkitIsFullScreen</li>
+<li>註解尚需手動關閉。showinfo=0沒作用</li>
+											       <li>重載入功能(暫停後重啟無法接到即時串流)</li>
+</ul>
   快速鍵:youtube api, <br>
 	F全螢幕切換,在內嵌模式沒反應,標準模式正常, ESC結束全螢幕。<br>
 	K/Space,暫停/播放,可混用。<br>
