@@ -1,63 +1,54 @@
 
 <html><head><title>iptv</title>
    <script type="text/javascript">
-	   alert(0);
+
    let isAutoZoon = true;
-    function doKeyDown(event){
+   var myiframe = document.getElementById('iframe');
+	   
+function doKeyDown(event){
         switch (event.keyCode){
-             case 65://<A>
+     	case 65://<A>
 	    break;
                    
-             case 75://<K>
+   	case 75://<K>
              alert("k");
-             var marioVideo = document.getElementById('iframe');
-             marioVideo.webkitRequestFullScreen();
-			//	    go("left");
+             //isAutoZoon=false;
+             myiframe.webkitRequestFullScreen();
 				    break;
-case 82://<R>
-alert("R");
-var oIf=document.getElementById('iframe');
-oIf.src=oIf.src;
-	    break;
+	case 82://<R>
+	//直播時,暫停後「再播放」會接稍早的串流, 而非當前的即時資訊, 故以「reload」處置。
+	//視窗重置已有Ctrl+R可用, 同window.location.reload();
+	// 但iframe重置要另行「加碼」。
+			alert("r0");
+		myiframe.location.reload(true);
+			alert("r1");
+		myiframe.contentWindow.location.reload(true);
+//myiframe.src=myiframe.src;
+	    	break;
            }
 	}
 </script>
    </head>
 <body 
       onkeydown="doKeyDown(event)"
-      onmouseover="if(isAutoZoon){w=700;window.resizeTo(w,w*.75);}" 
+      onmouseover="if(isAutoZoon){w=700;window.resizeTo(w,w*.75);//缺onfocus}" 
       onmouseleave="if(isAutoZoon){w=300;window.resizeTo(w,w*.75);}"
 >
-   
-<a href="javascript:void(0)" 
-   onclick="oIf=document.getElementById('iframe');oIf.src=oIf.src;"
-   title="reload iframe"
-   >reload1</a>、
-        
-<a href="javascript:void(0)" 
-   onclick="window.location.reload();"
-   title="reload iframe"
-   >reload2</a>、
-
-<a href="javascript:void(0)" 
-   onclick="isAutoZoon=false;var marioVideo = document.getElementById('iframe');marioVideo.webkitRequestFullScreen();"
-   title="like <F11>?"
-   >fullScreen</a>、
-   
 <div style="position:relative;width:100%;padding-bottom:56.25%;">
         <iframe 
-         onwebkitfullscreenchange_="alert(document.getElementById('iframe').webkitfullscreenElement != null);"
+         onwebkitfullscreenchange="alert(myiframe.webkitfullscreenElement);"
                 id="iframe" style="position:absolute;width:100%;height:100%"
         frameborder=0
         src="https://www.youtube.com/embed/pJ0VgJloR9E?
-             iv_load_policy=1&fs=0&showinfo=0&modestbranding=1&mute=1;&autoplay=1;"
-                note="embed版的全螢幕鈕無作用,用fs=0關閉。註解尚需手動關閉。document.currentScript.parentNode。.webkitfullscreenElement != null。webkitIsFullScreen"></iframe>
+             iv_load_policy=1&fs=0&modestbranding=1&mute=1;&autoplay=1;""></iframe>
 </div>
 	
-網路電視,chrome子母畫面:無法調音量, 無法全螢幕,要先開一個視窗<br>
+網路電視,chrome子母畫面:另外操作才有, 調音量或進度需到原視窗, 無法全螢幕,要先開一個視窗<br>
   開啟子視窗, 配iframe<br>
-  用embed模式, 以排除頁面其它元素, <a href="www.youtube.com/watch?v=pJ0VgJloR9E">標準模式</a><br>
-  重載入功能(暫停後重啟無法接到即時串流)<br>
+  用embed網址, 以排除頁面其它元素(iframe放標準連結無效), <a href="www.youtube.com/watch?v=pJ0VgJloR9E">標準網址</a><br>
+embed版的全螢幕鈕無作用,用fs=0隱藏。document.currentScript.parentNode。.webkitfullscreenElement != null。webkitIsFullScreen <br>
+註解尚需手動關閉。showinfo=0沒作用<br>
+重載入功能(暫停後重啟無法接到即時串流)<br>
 
   快速鍵:youtube api, <br>
 	F全螢幕切換,在內嵌模式沒反應,標準模式正常, ESC結束全螢幕。<br>
