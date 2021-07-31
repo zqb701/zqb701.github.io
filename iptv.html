@@ -22,7 +22,7 @@
 window.addEventListener('keydown', function(e){  
 switch (e.keyCode){
 	case 82://'KeyR':
-		alert("window get R");
+		//alert("window get R");
 	    break;
 }//swith(e.code)
 }, false);
@@ -32,16 +32,16 @@ function doKeyDown(event){
      	case 65://<A>
 	    break;
                    
-   	case 75://<K>
-             //alert("k");
-             //isAutoZoon=false;
+   	case 70://<F>
+             //alert("F");
+             isAutoZoon=false;
              document.getElementById('iframe').webkitRequestFullScreen();
 				    break;
 	case 82://<R>
 	//直播時,暫停後「再播放」會接稍早的串流, 而非當前的即時資訊, 故以「reload」處置。
 	//視窗重置已有Ctrl+R可用, 同window.location.reload();
 	// 但iframe重置要另行「加碼」。
-			alert("body get R");
+		//alert("body get R");
 			var myiframe = document.getElementById('iframe');
 		myiframe.location.reload(true);//可用
 			
@@ -55,13 +55,13 @@ myiframe.src=myiframe.src;
 function sizeS(){
 if(isAutoZoon){
 		   	window.resizeTo(scrWs,scrHs);
-		   alert(scrWs+ ", " + scrHs);
+		   //alert(scrWs+ ", " + scrHs);
 				    }
 }
 function sizeM(){
 	if(isAutoZoon){
 	  window.resizeTo(scrWm,scrHm);
-	  alert(scrWm+ ", " + scrHm);
+	  //alert(scrWm+ ", " + scrHm);
 	}
 }	   
 </script>
