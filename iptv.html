@@ -2,12 +2,10 @@
 <html><head><title>iptv</title>
    <script type=”text/javascript”>
    let isAutoZoon = true;
-    function doKeyDown(){
+    function doKeyDown(event){
         switch (event.keyCode){
-             case 37://左键头
              case 65://<A>
-			//	    go("left");
-				    break;
+	    break;
                    
              case 75://<K>
              alert("k");
@@ -15,6 +13,11 @@
              marioVideo.webkitRequestFullScreen();
 			//	    go("left");
 				    break;
+case 82://<R>
+alert("R");
+var oIf=document.getElementById('iframe');
+oIf.src=oIf.src;
+	    break;
            }
 	}
 </script>
@@ -49,5 +52,25 @@
              iv_load_policy=1&fs=0&showinfo=0&modestbranding=1&mute=1;&autoplay=1;"
                 note="embed版的全螢幕鈕無作用,用fs=0關閉。註解尚需手動關閉。document.currentScript.parentNode。.webkitfullscreenElement != null。webkitIsFullScreen"></iframe>
 </div>
+	
+網路電視,chrome子母畫面:無法調音量, 無法全螢幕,要先開一個視窗<br>
+  開啟子視窗, 配iframe<br>
+  用embed模式, 以排除頁面其它元素, <a href="www.youtube.com/watch?v=pJ0VgJloR9E">標準模式</a><br>
+  重載入功能(暫停後重啟無法接到即時串流)<br>
+
+  快速鍵:youtube api, <br>
+	<F>全螢幕切換,在內嵌模式沒反應,標準模式正常, <ESC>結束全螢幕。<br>
+	<K><Space>,暫停/播放,可混用。<br>
+	<up><down>,音量5%<br>
+	<M>靜音切換<br>
+
+待測鍵<br>
+<0>~<9>,進度<br>
+<left><right>,快轉5秒<br>
+<J><K>,快轉10秒<br>
+<C>,字幕<br>
+Shift>+<或>,播放速度<br>
+
+  chrome政策:禁止自動發出聲音。<br>
 </body>
 </html>
