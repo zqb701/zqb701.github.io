@@ -15,6 +15,7 @@
    
    //window.Width = int(scrW/4);
    //window.Height = int(scrH/4);
+	   alert(scrWs+ ", " + scrHs);
 	   window.resizeTo(scrWs, scrHs);
 	   
 //=============== end of main ===============
@@ -54,8 +55,8 @@ function doKeyDown(event){
    </head>
 <body 
       onkeydown="doKeyDown(event)"
-      onmouseover="if(isAutoZoon){window.resizeTo(scrWm,scrHm);}" 
-      onmouseleave="if(isAutoZoon){window.resizeTo(scrWs,scrHs);}">
+      onmouseover="if(isAutoZoon){window.resizeTo(scrWm,scrHm);alert(scrWm+ ", " + scrHm);}" 
+      onmouseleave="if(isAutoZoon){window.resizeTo(scrWs,scrHs);alert(scrWs+ ", " + scrHs);}">
 	
 <div style="position:relative;width:100%;padding-bottom:56.25%;">
         <iframe 
