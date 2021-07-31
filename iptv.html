@@ -18,7 +18,7 @@ function doKeyDown(event){
 	    break;
                    
    	case 75://<K>
-             alert("k");
+             //alert("k");
              //isAutoZoon=false;
              myiframe.webkitRequestFullScreen();
 				    break;
@@ -38,8 +38,8 @@ function doKeyDown(event){
    </head>
 <body 
       onkeydown="doKeyDown(event)"
-      onmouseover="if(isAutoZoon){w=700;window.resizeTo(w,w*.75);}window.focus();" 
-      onmouseleave="if(isAutoZoon){w=300;window.resizeTo(w,w*.75);}">
+      onmouseover="if(isAutoZoon){window.resizeTo(scrW/2,scrH/2);}" 
+      onmouseleave="if(isAutoZoon){window.resizeTo(scrW/4,scrH/4);}">
 	
 <div style="position:relative;width:100%;padding-bottom:56.25%;">
         <iframe 
