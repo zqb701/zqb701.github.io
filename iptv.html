@@ -1,9 +1,16 @@
 
-<html><head><title>iptv</title>
+<html><head>
+	<title>iptv</title>
    <script type="text/javascript">
 
    let isAutoZoon = true;
    var myiframe = document.getElementById('iframe');
+   var scrW = window.screen.availWidth;
+	   var scrH = window.screen.availHeight;
+   
+   //window.Width = int(scrW/4);
+   //window.Height = int(scrH/4);
+	   window.resizeTo(scrW/4,scrH/4);
 	   
 function doKeyDown(event){
         switch (event.keyCode){
@@ -31,21 +38,22 @@ function doKeyDown(event){
    </head>
 <body 
       onkeydown="doKeyDown(event)"
-      onmouseover="if(isAutoZoon){w=700;window.resizeTo(w,w*.75);//缺onfocus}" 
-      onmouseleave="if(isAutoZoon){w=300;window.resizeTo(w,w*.75);}"
->
+      onmouseover="if(isAutoZoon){w=700;window.resizeTo(w,w*.75);}window.focus();" 
+      onmouseleave="if(isAutoZoon){w=300;window.resizeTo(w,w*.75);}">
+	
 <div style="position:relative;width:100%;padding-bottom:56.25%;">
         <iframe 
          onwebkitfullscreenchange="alert(myiframe.webkitfullscreenElement);"
                 id="iframe" style="position:absolute;width:100%;height:100%"
         frameborder=0
         src="https://www.youtube.com/embed/pJ0VgJloR9E?
-             iv_load_policy=1&fs=0&modestbranding=1&mute=1;&autoplay=1;""></iframe>
+             iv_load_policy=1&fs=0&modestbranding=1&mute=1;&autoplay=1;"">
+									 </iframe>
 </div>
 	
 網路電視,chrome子母畫面:另外操作才有, 調音量或進度需到原視窗, 無法全螢幕,要先開一個視窗<br>
   開啟子視窗, 配iframe<br>
-  用embed網址, 以排除頁面其它元素(iframe放標準連結無效), <a href="www.youtube.com/watch?v=pJ0VgJloR9E">標準網址</a><br>
+  用embed網址, 以排除頁面其它元素(iframe放標準連結無效), <a href="https://www.youtube.com/watch?v=pJ0VgJloR9E">標準網址</a><br>
 embed版的全螢幕鈕無作用,用fs=0隱藏。document.currentScript.parentNode。.webkitfullscreenElement != null。webkitIsFullScreen <br>
 註解尚需手動關閉。showinfo=0沒作用<br>
 重載入功能(暫停後重啟無法接到即時串流)<br>
