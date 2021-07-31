@@ -5,13 +5,15 @@
 
    let isAutoZoon = true;
    var myiframe = document.getElementById('iframe');
+	   myiframe.focus();//要取得焦點才能接受按鍵控制 ???
    var scrW = window.screen.availWidth;
 	   //var scrH = window.screen.availHeight;
    
    //window.Width = int(scrW/4);
    //window.Height = int(scrH/4);
 	   window.resizeTo(scrW/4,scrW/4*.6);
-	  //=============== end of main ===============
+	   
+//=============== end of main ===============
 window.addEventListener('keydown', function(e){  
 switch (e.code){
      	case 'KeyR':
