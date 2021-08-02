@@ -4,7 +4,7 @@
    <script type="text/javascript">
 
    let isAutoZoon = true;
-   var myiframe = document.getElementById('iframe');
+   var myiframe;
 	   //myiframe.focus();//要取得焦點才能接受按鍵控制 ???
    var scrW = window.screen.availWidth;
 	   var scrWs = scrW/4;
@@ -18,7 +18,7 @@
 	   alert(scrWs + ", " + scrHs);
 	   window.resizeTo(scrWs, scrHs);
 	   
-//=============== end of main ===============
+
 window.addEventListener('keydown', function(e){  
 switch (e.keyCode){
 	case 82://'KeyR':
@@ -26,7 +26,10 @@ switch (e.keyCode){
 	    break;
 }//swith(e.code)
 }, false);
-	   
+//=============== end of main ===============
+function init(){
+	myiframe = document.getElementById('iframe');
+}
 function doKeyDown(event){
         switch (event.keyCode){
      	case 65://<A>
@@ -35,15 +38,15 @@ function doKeyDown(event){
    	case 70://<F>
              //alert("F");
              isAutoZoon=false;
-             document.getElementById('iframe').webkitRequestFullScreen();
+             myiframe.webkitRequestFullScreen();
 				    break;
 	case 82://<R>
 	//直播時,暫停後「再播放」會接稍早的串流, 而非當前的即時資訊, 故以「reload」處置。
 	//視窗重置已有Ctrl+R可用, 同window.location.reload();
 	// 但iframe重置要另行「加碼」。
 		//alert("body get R");
-			var myiframe = document.getElementById('iframe');
-		myiframe.location.reload(true);//可用
+			//var myiframe = document.getElementById('iframe');
+		//myiframe.location.reload(true);//可用?
 			
 		//myiframe.contentWindow.location.reload(true);//沒作用
 			
@@ -66,7 +69,7 @@ function sizeM(){
 }	   
 </script>
    </head>
-<body 
+<body onload="init()"
       onkeydown="doKeyDown(event)"
       onmouseover="sizeM()" 
       onmouseleave="sizeS()">
