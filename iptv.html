@@ -38,7 +38,9 @@ function doKeyDown(event){
    	case 70://<F>
              //alert("F");
              isAutoZoon=false;
+			alert(myiframe.webkitfullscreenElement);
              myiframe.webkitRequestFullScreen();
+			alert(myiframe.webkitfullscreenElement);
 				    break;
 	case 82://<R>
 	//直播時,暫停後「再播放」會接稍早的串流, 而非當前的即時資訊, 故以「reload」處置。
