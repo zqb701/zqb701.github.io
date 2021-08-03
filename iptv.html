@@ -9,13 +9,13 @@
    var scrW = window.screen.availWidth;
 	   var scrWs = scrW/4;
 	   var scrWm = scrW/2;
-	   var scrHs = scrWs * 0.6;
-	   var scrHm = scrWm * 0.6;
+	   var scrHs = scrWs * 0.74;
+	   var scrHm = scrWm * 0.74;
 	   //var scrH = window.screen.availHeight;
    
    //window.Width = int(scrW/4);
    //window.Height = int(scrH/4);
-	   alert(scrWs + ", " + scrHs);
+	   //alert(scrWs + ", " + scrHs);
 	   window.resizeTo(scrWs, scrHs);
 	   
 
@@ -38,9 +38,9 @@ function doKeyDown(event){
    	case 70://<F>
              //alert("F");
              isAutoZoon=false;
-			alert(myiframe.webkitfullscreenElement);
+			 //alert(myiframe.webkitfullscreenElement);
              myiframe.webkitRequestFullScreen();
-			alert(myiframe.webkitfullscreenElement);
+			 //alert(myiframe.webkitfullscreenElement);
 				    break;
 	case 82://<R>
 	//直播時,暫停後「再播放」會接稍早的串流, 而非當前的即時資訊, 故以「reload」處置。
