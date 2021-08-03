@@ -32,7 +32,7 @@ function init(){
 	msg = = document.getElementById("msg");
 }
 function doKeyDown(event){
-	msg.innerText = event.keyCode;
+	msg.innerHTML = event.keyCode;
         switch (event.keyCode){
 	case 27://<ESC>
 			 isAutoZoon=true;
@@ -80,7 +80,7 @@ function sizeM(){
       onkeydown="doKeyDown(event)"
       onmouseover="sizeM()" 
       onmouseleave="sizeS()">
-<a id="msg">msg</a>
+<div id="msg">msg</div>
 <div style="position:relative;width:100%;padding-bottom:56.25%;">
         <iframe 
          onwebkitfullscreenchange="alert(myiframe.webkitfullscreenElement);"
