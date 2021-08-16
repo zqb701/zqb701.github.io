@@ -1,0 +1,45 @@
+
+<html>
+<head>
+    <title></title>
+
+</head>
+<body>
+    <button onclick="prev();">prev</button>
+    <button onclick="play();">play</button>
+    <button onclick="next();">next</button>
+</body>
+<script>
+    var playlist=[
+        "C:/Users/zqb/Downloads/zqb/zqb701.github.io/html5-audio-player-master/mp3/let-it-go.mp3",
+        "file:///C:/Users/zqb/Downloads/mp3/G_光高郭/郭靜_下一個天亮.mp3",
+        "file:///C:/Users/zqb/Downloads/mp3/X_徐許/許哲佩_吉普賽人生.mp3",
+        "file:///C:/Users/zqb/Downloads/mp3/X_徐許/徐佳瑩_不要再孤單.mp3",
+        "file:///C:/Users/zqb/Downloads/mp3/R_任容/任然_外婆橋.mp3"
+    ];
+    playindex = 0;
+    const audio = new Audio(playlist[playindex]);
+    audio.volume = 0.5;
+
+
+    function play(){
+        filename =  playlist[playindex];
+        audio.setAttribute('src',filename);
+        audio.load();
+        audio.play();
+        document.title = "aaa";
+    }
+
+    function next(){
+        playindex ++;
+        play();
+    }
+
+    function prev(){
+        playindex --;
+        play();
+    }
+    </script>
+</html>
+
+
