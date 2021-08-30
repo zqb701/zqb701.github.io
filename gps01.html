@@ -1,0 +1,93 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- 程式來源 https://blog.xuite.net/gkyo0510/wretch/242769650 -->
+<title>GPS 測試</title>
+<script>
+
+    let prevLati = -1;
+    let prevLongi = -1;
+if( navigator.geolocation ) {
+//alert("GPS已被定位....千萬不可以動手!!!");
+// 支援GPS地理定位
+navigator.geolocation.getCurrentPosition( geoYes, geoNo);
+}
+else {
+//alert("目前GPS無法定位....趕快補刀吧!!!");
+}
+function geoYes(evt){
+//alert(evt);
+str = "緯度" + evt.coords.latitude;
+str += "<br />經度" + evt.coords.longitude;
+//str += "<br />精確度" + evt.coords.accuracy;
+str += "<br />前一座標:" + prevLati + ", " + prevLongi;
+str += "距離XXX";
+prevLati = evt.coords.latitude;
+prevLongi = evt.coords.longitude;
+// str += 等於=> str = str+....
+document.getElementById("posStr").innerHTML=str;
+
+str = "https://maps.googleapis.com/maps/api/staticmap"+
+        "?zoom=15&size=300x300&sensor=false&center=" + 
+        evt.coords.latitude +","+ evt.coords.longitude+
+        "&markers=color:red%7C"+evt.coords.latitude +","+
+         evt.coords.longitude;
+// document.getElementById("map").src = str;    //要附API Key才能用。
+//Google Map 2018.07.16以後開始收費
+//document.getElementById("msg").innerText = str;
+}
+function geoNo(evt){
+//alert("GPS取得失敗");
+document.getElementById("watchStr").innerHTML="GPS取得失敗。";
+}
+
+var watchID;
+function startGPS(){
+watchID = navigator.geolocation.watchPosition( geoYes, geoNo);
+var d=new Date();
+strTime = d.getHours()+":" + d.getMinutes();
+document.getElementById("watchStr").innerHTML=strTime + "GPS正在監控中...";
+}
+
+function stopGPS(){
+navigator.geolocation.clearWatch( watchID );
+document.getElementById("watchStr").innerHTML="GPS停止監控中...";
+}
+
+function distance(lat1, lon1, lat2, lon2) {
+    //本函式來源 https://www.geodatasource.com/developers/javascript
+
+    var radlat1 = Math.PI * lat1/180;
+    var radlat2 = Math.PI * lat2/180;
+    var theta = lon1-lon2;
+    var radtheta = Math.PI * theta/180;
+    var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+    if (dist > 1) {
+        dist = 1;
+    }
+    dist = Math.acos(dist);
+    dist = dist * 180/Math.PI;
+    dist = dist * 60 * 1.1515;  //不明常數
+    dist = dist * 1.609344  //英浬轉公里
+
+    return dist;
+
+}
+</script>
+</head>
+<body>
+<h1>定位資訊 </h1>
+<p id="posStr">111222</p>
+<p id="watchStr">監控狀態</p>
+<p>
+<input type="button" value="啟動GPS更新" onClick="startGPS();">
+<input type="button" value="停止GPS更新" onClick="stopGPS();">
+</p>
+<p>當啟動GPS更新,不用聯網也可持續更新!!!<br>
+只要網頁開著!</p>
+<hr>
+<p><img id="map"/></p>
+<div id="msg"></div>
+</body>
+</html>
