@@ -4,10 +4,29 @@
 <meta charset="utf-8">
 <!-- 程式來源 https://blog.xuite.net/gkyo0510/wretch/242769650 -->
 <title>GPS 測試</title>
+
+<style>
+/* 字型大小自適應來源 https://www.minwt.com/webdesign-dev/css/20278.html*/
+html{
+  font-size: 14px;
+}
+
+@media (min-width: 600px) and (max-width: 1200px) {
+  html {
+   font-size: calc(1.2rem + (1.3-1.2) * ((100vw - 600px) / (1200 - 600)));
+  }
+}
+
+@media (min-width: 1200px) {
+  html {
+     font-size: 1.3rem;
+  }
+}
+</style>
 <script>
 
-    let prevLati = -1;
-    let prevLongi = -1;
+    let prevLati = 22.976986;   //關廟交流道
+    let prevLongi = 120.324490;
 if( navigator.geolocation ) {
 //alert("GPS已被定位....千萬不可以動手!!!");
 // 支援GPS地理定位
@@ -18,24 +37,26 @@ else {
 }
 function geoYes(evt){
 //alert(evt);
-str = "緯度" + evt.coords.latitude;
-str += "<br />經度" + evt.coords.longitude;
+recentLati = evt.coords.latitude
+recentLongi = evt.coords.longitude
+str = "現在:" + recentLati.toFixed(7) + ", "+ recentLongi.toFixed(7);
 //str += "<br />精確度" + evt.coords.accuracy;
-str += "<br />前一座標:" + prevLati + ", " + prevLongi;
-str += "距離XXX";
-prevLati = evt.coords.latitude;
-prevLongi = evt.coords.longitude;
-// str += 等於=> str = str+....
-document.getElementById("posStr").innerHTML=str;
+str += "<br />目標:" + prevLati.toFixed(7) + ", " + prevLongi.toFixed(7);
+str += "<br />距離:" + distance(recentLati, recentLongi, prevLati, prevLongi).toFixed(2) +"公里";
+//prevLati = evt.coords.latitude;
+//prevLongi = evt.coords.longitude;
 
+document.getElementById("posStr").innerHTML=str;
+/*
 str = "https://maps.googleapis.com/maps/api/staticmap"+
         "?zoom=15&size=300x300&sensor=false&center=" + 
         evt.coords.latitude +","+ evt.coords.longitude+
         "&markers=color:red%7C"+evt.coords.latitude +","+
          evt.coords.longitude;
-// document.getElementById("map").src = str;    //要附API Key才能用。
+ document.getElementById("map").src = str;    //要附API Key才能用。
 //Google Map 2018.07.16以後開始收費
-//document.getElementById("msg").innerText = str;
+document.getElementById("msg").innerText = str;
+*/
 }
 function geoNo(evt){
 //alert("GPS取得失敗");
