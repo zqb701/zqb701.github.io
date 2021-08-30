@@ -10,6 +10,7 @@ CACHE MANIFEST
 CACHE:      #快取清單
 index.html #
 game.html
+gps01.html
 # images/
 # js/
 # http://....
