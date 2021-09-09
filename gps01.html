@@ -25,8 +25,9 @@ html{
 </style>
 <script>
 
-    let prevLati = 22.976986;   //關廟交流道
-    let prevLongi = 120.324490;
+    let prevLati = 22.9620338;   //關廟系統北上出口前2公里標示牌
+    let prevLongi = 120.346256;
+
 if( navigator.geolocation ) {
 //alert("GPS已被定位....千萬不可以動手!!!");
 // 支援GPS地理定位
@@ -39,10 +40,13 @@ function geoYes(evt){
 //alert(evt);
 recentLati = evt.coords.latitude
 recentLongi = evt.coords.longitude
-str = "現在:" + recentLati.toFixed(7) + ", "+ recentLongi.toFixed(7);
+var d=new Date();
+strTime = d.getHours()+":" + d.getMinutes();
+str = "時間:" + strTime;
+str += "<br />位置:" + recentLati.toFixed(7) + ", "+ recentLongi.toFixed(7);
 //str += "<br />精確度" + evt.coords.accuracy;
 str += "<br />目標:" + prevLati.toFixed(7) + ", " + prevLongi.toFixed(7);
-str += "<br />距離:" + distance(recentLati, recentLongi, prevLati, prevLongi).toFixed(2) +"公里";
+str += "<br />距離:" + distance(recentLati, recentLongi, prevLati, prevLongi).toFixed(3) +"公里";
 //prevLati = evt.coords.latitude;
 //prevLongi = evt.coords.longitude;
 
@@ -66,9 +70,8 @@ document.getElementById("watchStr").innerHTML="GPS取得失敗。";
 var watchID;
 function startGPS(){
 watchID = navigator.geolocation.watchPosition( geoYes, geoNo);
-var d=new Date();
-strTime = d.getHours()+":" + d.getMinutes();
-document.getElementById("watchStr").innerHTML=strTime + "GPS正在監控中...";
+
+document.getElementById("watchStr").innerHTML="GPS正在監控中...";
 }
 
 function stopGPS(){

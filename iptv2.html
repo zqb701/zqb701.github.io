@@ -1,11 +1,21 @@
-<html><head>
-<title>iptv by video</title>
+﻿<html>
+<head>
+<title>iptv2</title>
+<style>
+
+iframe{
+  pointer-events: none;
+  width:100vw;
+  height:100vh;
+}
+</style>
+
   <script async src="//www.youtube.com/iframe_api"></script>
   <script>
-    function onYouTubeIframeAPIReady() {
+function onYouTubeIframeAPIReady() {
   var player;
-  player = new YT.Player('myplayer', {
-    videoId: 'pJ0VgJloR9E',   // YouTube 影片ID
+  player = new YT.Player('YouTubeVideoPlayerAPI', {
+    videoId: 'rshfNb2ped8',   // YouTube 影片ID
     width: '1080',            // 播放器寬度 (px)
     height: '720',           // 播放器高度 (px)
     playerVars: {
@@ -14,7 +24,7 @@
       showinfo: 0,            // 隱藏影片標題
       modestbranding: 0,      // 隱藏YouTube Logo
       loop: 1,                // 重覆播放
-      playlist:'YouTube ID', // 當使用影片要重覆播放時，需再輸入YouTube 影片ID
+      playlist:'rshfNb2ped8', // 當使用影片要重覆播放時，需再輸入YouTube 影片ID
       fs: 0,                  // 隱藏全螢幕按鈕
       cc_load_policty: 0,     // 隱藏字幕
       iv_load_policy: 3,      // 隱藏影片註解
@@ -31,8 +41,9 @@
    </script>
 </head>
 <body>
-<div id="myplayer"></div><br>
-  <a href="https://www.minwt.com/webdesign-dev/html/22143.html">參考</a>
+<div id="YouTubeVideoPlayerAPI"></div>
+<br>
+  <a href="https://www.minwt.com/webdesign-dev/html/22143.html">參考來源</a>
 
 
 </body></html>
