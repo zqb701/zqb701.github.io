@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>timer01</title>
+
+<body onload="init();" style=" font-family:sans-serif;">
+    <a id="msg" onclick="reset();" ondblclick="run();" style="font-size:64px;">0.0</a>
+    
+    </body>
+<script>
+    var IntervalID;
+    var startTime = new Date();
+    var isRun = false;
+
+    var msg = document.getElementById("msg");
+    function init(){
+     
+    }
+    function run(){
+        if(isRun){//stop
+            isRun = false;
+            window.clearInterval(IntervalID);
+            msg.innerText = "0.0";
+        }else{
+            isRun = true;
+            IntervalID = window.setInterval(( () =>  showMsg() ) , 100);
+        }
+    }
+    function reset(){        
+        startTime = new Date();
+        if(!isRun){//stop
+            
+                    isRun = true;
+            IntervalID = window.setInterval(( () =>  showMsg() ) , 100);
+        }
+    }
+
+    function showMsg(){
+        strtmp = ((new Date() - startTime)/1000).toFixed(1);
+
+        msg.innerText = strtmp;
+    }
+
+</script>
+</head>
+
+</html>
+
