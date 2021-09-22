@@ -1,6 +1,8 @@
 
 <html><head>
 	<title>iptv</title>
+
+
    <script type="text/javascript">
 
    let isAutoZoon = true;
@@ -11,35 +13,43 @@
 	   var scrWm = scrW/2;
 	   var scrHs = scrWs * 0.72;
 	   var scrHm = scrWm * 0.62;
+	var currentCh = 0;
+	var channelList = [
+		{channel:13, title:"台視", ytID:"xL0ch83RAK8"},
+		{channel:13, title:"中視", ytID:"TCnaIE_SAtM"},
+		{channel:13, title:"華視", ytID:"yUTy1U1wTwE"},
+		{channel:54, title:"民視", ytID:"XxJKnDLYZz4"},
+		{channel:13, title:"公視", ytID:"JAzRXylm3M0"},
+		
+		{channel:51, title:"東森", ytID:"R2iMq5LKXco"},
+		{channel:52, title:"中天", ytID:"XwzkihjzsTM"},
+		{channel:53, title:"三立", ytID:"pJ0VgJloR9E"},	
+		{channel:55, title:"TVBS", ytID:"V0WxUakDV7M"},
+		{channel:56, title:"TVBSHD", ytID:"hP6_jfCFxyQ"},
+
+		{channel:99, title:"小施", ytID:"6wNZyZEziL0"},
+		{channel:99, title:"蜜雪薇琪_獨立", ytID:"pSKK7JYeFoQ"},	
+		{channel:99, title:"殷悅_揮之不去", ytID:"WK19HOgLjg8"}	
+		];
+		
 	   //var scrH = window.screen.availHeight;
    
    //window.Width = int(scrW/4);
    //window.Height = int(scrH/4);
 	   //alert(scrWs + ", " + scrHs);
-	   window.resizeTo(scrWs, scrHs);
+	   
 	   
 
-window.addEventListener('keydown', function(e){  
-switch (e.keyCode){
-	case 82://'KeyR':
-		//alert("window get R");
-	    break;
-}//swith(e.code)
-}, false);
 //=============== end of main ===============
 function init(){
+	window.resizeTo(scrWs, scrHs);
 	myiframe = document.getElementById('iframe');
 	//msg = = document.getElementById("msg");
 }
 function doKeyDown(event){
 	//msg.innerHTML = event.keyCode;
         switch (event.keyCode){
-	case 27://<ESC>
-		isAutoZoon=true;
-	    break;
-     	case 65://<A>
-	    break;
-                   
+                  
    	case 70://<F>
              //alert("F");
              isAutoZoon=false;
@@ -74,6 +84,23 @@ function sizeM(){
 	  //alert(scrWm+ ", " + scrHm);
 	}
 }	   
+function reload(){
+	myiframe.src=myiframe.src;
+}
+function next(flag){
+	currentCh += flag;
+	mainURL = "https://www.youtube.com/embed/";
+	parm = "?iv_load_policy=1&fs=0&modestbranding=1&mute=1;&autoplay=1";
+	embedID = channelList[currentCh].ytID;	//"XwzkihjzsTM";
+	strtmp = mainURL + embedID + parm;
+	document.title = channelList[currentCh].title;
+	myiframe.src= strtmp;
+	
+	//myiframe.src="https://www.youtube.com/embed/pJ0VgJloR9E?iv_load_policy=1&fs=0&modestbranding=1&mute=1;&autoplay=1;"
+}
+function fullScr(){
+	myiframe.webkitRequestFullScreen();
+}
 </script>
    </head>
 <body topmargin="0" leftmargin="0" onload="init()"
@@ -81,13 +108,18 @@ function sizeM(){
       onmouseover="sizeM()" 
       onmouseleave="sizeS()">
 
+<button onclick="reload();">reload</button>
+<button onclick="next(-1);">ch-</button>
+<button onclick="next(1);">ch+</button>
+<button onclick="fullScr;">fullScr</button>
+
 <div style="position:relative;width:100%;padding-bottom:56.25%;">
         <iframe 
          onwebkitfullscreenchange_="alert(myiframe.webkitfullscreenElement);"
                 id="iframe" style="position:absolute;width:100%;height:100%"
         frameborder=0
         src="https://www.youtube.com/embed/pJ0VgJloR9E?
-             iv_load_policy=1&fs=0&modestbranding=1&mute=1;&autoplay=1;"">
+             iv_load_policy=1&fs=0&modestbranding=1&mute=1;&autoplay=1;">
 									 </iframe>
 </div>
 	<br>
