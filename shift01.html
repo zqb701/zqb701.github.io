@@ -1,0 +1,128 @@
+<html>
+    <head>
+        <title>shift01</title>      
+    </head>
+    <style>
+        th, td {border:1px solid #aaa}
+        table {border-collapse:collapse}
+        thead,tfoot {
+    background-color: #333;
+    color: #fff;
+}
+    </style>
+    <script>
+        var list;
+        var actMonth;
+        var tbl01;
+
+        function init(){
+            //alert("init()");
+            list = document.getElementById("personList");
+            actMonth = document.getElementById("monSel");
+            tbl01 = document.getElementById("table01");
+
+            if (typeof (Storage) != "undefined"){
+                if(localStorage.getItem("list")){
+                    list.innerText = localStorage.list;
+                }
+            }
+            run();
+        }
+        function personList(){  //變更名單
+            var guest = window.prompt('名單請以逗號隔開, 不要有空白。', list.innerText);
+            if (guest == null || "") {
+                //showtxt.innerHTML = '您已取消輸入'
+            } else {
+                list.innerText = guest;
+                localStorage.list = list.innerText;
+            }
+            run();
+        }
+
+        function run(){
+            var person = list.innerText.split(",");
+            var actDate = new Date(monSel.value);
+            var firstWeek = actDate.getDay()-1;
+            var actRow = 1;
+            var dayAdd = 0;
+            var listIndex = 0;
+            var actMon = actDate.getMonth()+1;
+
+            for(i=0; i<firstWeek; i++){
+                tbl01.rows[actRow].cells[i].innerHTML = "";
+            }
+            for(; actRow<5; actRow++){
+                for(i=firstWeek; i<7; i++){
+                    tbl01.rows[actRow].cells[i].innerHTML = 
+                     actMon + "/" + actDate.getDate() + "<br>" + 
+                     "<big><big>" + person[listIndex % person.length] + "</big></big>" ;
+                    //dayAdd ++;
+                    listIndex ++;
+                    actDate = new Date(actDate.getTime() + 86400000);
+                    //alert(actDate);
+                }
+            firstWeek = 0;
+            }
+
+            for(i=0; i<7; i++){
+                if(actDate.getMonth()+1 == actMon){
+                    strtmp = actMon + "/" + actDate.getDate() + "<br>" + 
+                    "<big><big>" + person[listIndex % person.length] + "</big></big>" ;
+                    //dayAdd ++;
+                    listIndex ++;
+                    actDate = new Date(actDate.getTime() + 86400000);
+                }else{
+                    strtmp = "";
+                }
+                tbl01.rows[actRow].cells[i].innerHTML = strtmp;
+            }
+            //alert(person[2] + "," + firstWeek);
+            //document.write(person[2] + "," + firstWeek);
+        }
+        function shift(){
+            //strtmp = list.innerText;
+            index = list.innerText.indexOf(",");
+            list.innerText = list.innerText.substr(index+1,list.innerText.length) + "," +
+                list.innerText.substr(0,index);
+                localStorage.list = list.innerText;
+                run();
+        }
+    </script>
+    <body onload="init();">
+        輪值表
+        <br>
+        人員：<a id="personList" onclick="personList();">王○永,馬○軒,徐○國,陳○安</a>
+        <!--input type="text" value="" onblur="localStorage.list = list.innerText;run();" -->
+        <button onclick="shift();">移位</button>
+        <button onclick="localStorage.clear();window.location.reload();">重置</button>
+        <br>
+        月份：
+        <select id="monSel" onchange="run();">
+            <option value="2021/10/1">2021年10月</option>
+            <option value="2021/11/1">2021年11月</option>
+            <option value="2021/12/1">2021年12月</option>
+            <option value="2022/1/1">2022年1月</option>
+            <option value="2022/2/1">2022年2月</option>
+            <option value="2022/3/1">2022年3月</option>
+          </select>
+          <table id="table01">
+            <tbody>
+                <thead>
+                <tr><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td><td>日</td>                
+                </tr></thead>
+
+                <tr><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td><td>日</td>                
+                </tr>
+                <tr><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td><td>日</td>                
+                </tr>
+                <tr><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td><td>日</td>                
+                </tr>
+                <tr><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td><td>日</td>                
+                </tr>
+                <tr><td>一</td><td>二</td><td>三</td><td>四</td><td>五</td><td>六</td><td>日</td>                
+                </tr>
+            </tbody>
+          </table>
+
+    </body>
+</html>
