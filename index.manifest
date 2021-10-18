@@ -1,4 +1,4 @@
-CACHE MANIFEST
+﻿CACHE MANIFEST
 # chrome 85停用AppCache, 但可以試用, 也就是開啟即將關閉的實驗性功能, 以為過度期, 改用Service Worker。
 # 手機版的可能還沒停用。
 # 快取清單檔案（cache manifest file）
@@ -11,7 +11,7 @@ CACHE:      #快取清單
 index.html #
 # game.html
 # gps01.html #
-# timer01.html 
+timer01.html 
 # images/
 # js/
 # http://....
