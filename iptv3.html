@@ -1,4 +1,22 @@
+<!--
+電視兒童
+設定:
+	捷徑用 --app
+	自動播放且有聲音,要加系統註冊碼 HKLM\Software\Policies\Google\Chrome\AutoplayAllowed=1
+	無法播放影片狀態:1.連結錯誤, 2.上層為本機路徑時
+使用:
+換台:PgUp/PgDn
+音量:iframe內建,Up/Dn/m可作動, 但頁面載入後須點擊iframe才有效。
+FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放iframe無效,可能被覆蓋。esc結束全螢幕。
 
+記錄音量/頻道...
+頻道直選/自訂頻道
+非youtube系統
+子母畫面
+
+待處理
+	select 選單超出div, 看不到。
+-->
 <html><head>
 	<title>iptv3</title>
 <style>
@@ -10,24 +28,29 @@
    </head>
 <body topmargin="0" leftmargin="0" onload="init();" onkeydown="doKeyDown(event);">
 
-<button onclick="volume(-7);">v-</button>
-<button onclick="volume(3);">v+</button>
-<button onclick="ch(-1);">ch-</button>
-<button onclick="ch(1);">ch+</button>
+<div id="btnGrp" style="display:none; position: absolute; z-index:1;">
+	<button onclick="volume(-7);">v-</button>
+	<button onclick="volume(3);">v+</button>
+	<button onclick="ch(-1);">ch-</button>
+	<button onclick="ch(1);">ch+</button>
 
-        <select id="scrModeSe" onchange="scrModeCh();">
-            <option value="0">自動</option>
-            <option value="1">小</option>
-            <option value="2">中</option>
-            <option value="3">全螢幕</option>
-          </select>
+	<select id="scrModeSe" onchange="scrModeCh();">
+		<option value="0">自動</option>
+		<option value="1">小</option>
+		<option value="2">中</option>
+		<option value="3">全螢幕</option>
+	</select>
+	音量:上下<br>
+	靜音:M<br>
+	字幕:C<br>
+	全屏:F
+</div>
 
 <div style="position:relative;width:100%;padding-bottom:56.25%;">
   <iframe id="player" style="position:absolute;width:100%;height:100%"
-  onmouseover="sizeM();" onmouseleave="sizeS();"
+  onkeydown="doKeyDown(event);" ondrop="drop_handler(event);"
   src="https://www.youtube.com/embed/XxJKnDLYZz4?enablejsapi=1&fs=0&modestbranding=1&controls=0;"></iframe>
 </div>
-
 </body>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
@@ -38,8 +61,8 @@
      var scrW = window.screen.availWidth;
 	   var scrWs = scrW/4;
 	   var scrWm = scrW/2;
-	   var scrHs = scrWs * 0.72;
-	   var scrHm = scrWm * 0.62;
+	   var scrHs = scrWs * 0.64;
+	   var scrHm = scrWm * 0.60;
 	var currentCh = 8;
 	var channelList = [
 		{channel:13, title:"台視", ytID:"xL0ch83RAK8"},
@@ -63,21 +86,41 @@
 		{channel:99, title:"蜜雪薇琪_獨立", ytID:"pSKK7JYeFoQ"},
 		{channel:99, title:"殷悅_揮之不去", ytID:"WK19HOgLjg8"}
 		];
+
   function init(){
   	window.resizeTo(scrWs, scrHs);
 	myiframe = document.getElementById('player');
+	//myiframe.focus();
+}
+	function XXX(){
+	window.addEventListener('blur', function() {
+		window.resizeTo(scrWs,scrHs);
+		//點選視窗內物件會觸發本事件???
+	});
+
+    window.addEventListener('focus', function() {
+		window.resizeTo(scrWm,scrHm);
+	});
+
+    //e.stopPropagation();
+    window.addEventListener("keypress", function(event) {
+		//event.stopPropagation();		//中止氣泡
+		//event.preventDefault();			//取消預設的行為
+		alert(event.keyCode);
+    });
+
   }
 
   function onYouTubeIframeAPIReady() {
 
     player = new YT.Player('player', {
 	videoId:"XxJKnDLYZz4",
-	playerVars:{
+	playerVars:{	//網址列的參數才有作用???
       //autoplay:1,
-     controls:0,		//隱藏齒輪含「訂閱」圖示。
-	  fs: 0,                  // 隱藏全螢幕按鈕
-	  iv_load_policy: 3,      // 隱藏影片註解(沒效)
-	  modestbranding: 1      // 隱藏YouTube Logo, 但滑鼠移入才會出現
+     controls:0,				//隱藏齒輪含「訂閱」圖示。
+	  fs: 0,                  	// 隱藏全螢幕按鈕
+	  iv_load_policy: 3,      	// 隱藏影片註解(沒效)
+	  modestbranding: 1      	// 隱藏YouTube Logo, 但滑鼠移入才會出現
       //start:30
     },
       events: {
@@ -108,20 +151,22 @@
   }
 
   function sizeS(){
-	if(scrMode == "0"){
+  //document.getElementById("btnGrp").style.display = 'none';
+	//if(scrMode == "0"){
 		window.resizeTo(scrWs,scrHs);
 		   //alert(scrWs+ ", " + scrHs);
-	}
+	//}
 }
 function sizeM(){
-	if(scrMode == "0"){
+//document.getElementById("btnGrp").style.display = 'block';
+	//if(scrMode == "0"){
 	  window.resizeTo(scrWm,scrHm);
 	  //alert(scrWm+ ", " + scrHm);
-	}
+	//}
 }
+
 function scrModeCh(){
 scrMode = document.getElementById("scrModeSe").value;
-
 switch (scrMode) {
 case "0":
 　break;
@@ -143,13 +188,64 @@ default:
 //prescrMode = scrMode;
 }
 
+function drop_handler(event) {
+ event.preventDefault();
+ // Get the id of the target and add the moved element to the target's DOM
+ var data = ev.dataTransfer.getData("text");
+ alert(data);
+ //ev.target.appendChild(document.getElementById(data));
+}
+
 function doKeyDown(event){
-	//msg.innerHTML = event.keyCode;
+	event.stopPropagation();		//中止氣泡
+	event.preventDefault();			//取消預設的行為(只擋住F1。F/Ctrl+/Ctrl-都擋不住)
+
+	//alert(event.keyCode);
         switch (event.keyCode){
+	case 33:	//<PgUp>
+		ch(-1);
+		break;
+	case 34:	//<PgDn>
+		ch(1);
+		break;
+	case 38:	//<Up>
+		volume(3);
+		break;
+	case 40:	//<Dn>
+		volume(-7);
+		break;
+	//空白鍵,暫停
+	case 27:	//<ESC>
+		document.getElementById("btnGrp").style.display = 'none';
+		break;
+	case 72:	//<H> forHelp
+	case 112:	//<H> forHelp
+		document.getElementById("btnGrp").style.display = 'block';
+		break;
+	case 187:	//<+>
+window.resizeTo(scrWm,scrHm);
+		break;
+	case 189:	//<->
+window.resizeTo(scrWs,scrHs);
+		break;
+	case 77:	//<M>
+		if(player.isMuted()){
+			player.unMute();
+		}else{
+			player.mute();
+		}
+		break;
+	case 34:	//<PgDn>
 
-   	case 70://<F>
-             alert("F");
-
+		break;
+   	case 70:	//<F>
+             //alert("F");
+	if(scrMode == "0"){
+		document.getElementById("scrModeSe").value = "1";
+		scrMode = "1";
+	}
+　 myiframe.webkitRequestFullScreen();
+	//無法取得解除全螢幕的事件
 				    break;
 	default:
 				}
