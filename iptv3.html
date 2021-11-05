@@ -21,12 +21,16 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	<title>iptv3</title>
 <style>
 	body::-webkit-scrollbar {
-    	display: none;	/*隱藏body層次的滾動條*/
+    	display: none;			/*隱藏body層次的滾動條*/
 	}
+	
+	#player {
+    pointer-events: none;	//對滑鼠不反應。
+}
 </style>
 
    </head>
-<body topmargin="0" leftmargin="0" onload="init();" onkeydown="doKeyDown(event);">
+<body topmargin="0" leftmargin="0" onload="init();" onkeydown="doKeyDown(event);" onclick="stop();">
 
 <div id="btnGrp" style="display:none; position: absolute; z-index:1;">
 	<button onclick="volume(-7);">v-</button>
@@ -48,8 +52,8 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 
 <div style="position:relative;width:100%;padding-bottom:56.25%;">
   <iframe id="player" style="position:absolute;width:100%;height:100%"
-  onkeydown="doKeyDown(event);" ondrop="drop_handler(event);"
-  src="https://www.youtube.com/embed/XxJKnDLYZz4?enablejsapi=1&fs=0&modestbranding=1&controls=0;"></iframe>
+  onkeydown_="doKeyDown(event);" ondrop="drop_handler(event);"
+  src="https://www.youtube.com/embed/XxJKnDLYZz4?enablejsapi=1&fs=0&modestbranding=1&controls=0&disablekb=1"></iframe>
 </div>
 </body>
 <script src="https://www.youtube.com/iframe_api"></script>
@@ -92,25 +96,6 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	myiframe = document.getElementById('player');
 	//myiframe.focus();
 }
-	function XXX(){
-	window.addEventListener('blur', function() {
-		window.resizeTo(scrWs,scrHs);
-		//點選視窗內物件會觸發本事件???
-	});
-
-    window.addEventListener('focus', function() {
-		window.resizeTo(scrWm,scrHm);
-	});
-
-    //e.stopPropagation();
-    window.addEventListener("keypress", function(event) {
-		//event.stopPropagation();		//中止氣泡
-		//event.preventDefault();			//取消預設的行為
-		alert(event.keyCode);
-    });
-
-  }
-
   function onYouTubeIframeAPIReady() {
 
     player = new YT.Player('player', {
@@ -120,7 +105,8 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
      controls:0,				//隱藏齒輪含「訂閱」圖示。
 	  fs: 0,                  	// 隱藏全螢幕按鈕
 	  iv_load_policy: 3,      	// 隱藏影片註解(沒效)
-	  modestbranding: 1      	// 隱藏YouTube Logo, 但滑鼠移入才會出現
+	  modestbranding: 1,      	// 隱藏YouTube Logo, 但滑鼠移入才會出現
+	  disablekb:1					//關閉鍵盤功能
       //start:30
     },
       events: {
@@ -148,6 +134,16 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
   embedID = channelList[currentCh].ytID;
 	player.loadVideoById(embedID);
 	document.title = currentCh + "_" + channelList[currentCh].title + "_" + embedID;
+  }
+  
+  function stop() {
+	if(player.getPlayerState()==1){
+		player.pauseVideo();
+	}
+
+	if(player.getPlayerState()==2){
+		player.playVideo();
+	}
   }
 
   function sizeS(){
@@ -197,11 +193,14 @@ function drop_handler(event) {
 }
 
 function doKeyDown(event){
-	event.stopPropagation();		//中止氣泡
-	event.preventDefault();			//取消預設的行為(只擋住F1。F/Ctrl+/Ctrl-都擋不住)
+	//event.stopPropagation();		//中止氣泡
+	//event.preventDefault();			//取消預設的行為(只擋住F1。F/Ctrl+/Ctrl-都擋不住)
 
 	//alert(event.keyCode);
         switch (event.keyCode){
+	case 32:	//<SPACE>
+		stop();
+		break;
 	case 33:	//<PgUp>
 		ch(-1);
 		break;
