@@ -85,7 +85,9 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 		{channel:56, title:"TVBSHD", ytID:"hP6_jfCFxyQ"},
 		{channel:57, title:"東森財經", ytID:"x"},
 		{channel:58, title:"非凡", ytID:"x"},
-
+		
+		{channel:99, title:"飯思思", ytID:"rzBp10kx5Lw"},
+		{channel:99, title:"黃霄雲", ytID:"3A4cxRJyEBo"},
 		{channel:99, title:"小施", ytID:"6wNZyZEziL0"},
 		{channel:99, title:"蜜雪薇琪_獨立", ytID:"pSKK7JYeFoQ"},
 		{channel:99, title:"殷悅_揮之不去", ytID:"WK19HOgLjg8"}
@@ -106,7 +108,7 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	  fs: 0,                  	// 隱藏全螢幕按鈕
 	  iv_load_policy: 3,      	// 隱藏影片註解(沒效)
 	  modestbranding: 1,      	// 隱藏YouTube Logo, 但滑鼠移入才會出現
-	  disablekb:1					//關閉鍵盤功能
+	  disablekb:1					//關閉鍵盤功能, 滑鼠不會消失,也不能點畫面的連結
       //start:30
     },
       events: {
@@ -116,7 +118,7 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
   }
   function onPlayerReady(e) {
 	ch(8);
-    e.target.unMute().playVideo();
+   e.target.unMute().playVideo();
 	e.target.setVolume(10);
 
   }
@@ -137,11 +139,12 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
   }
   
   function stop() {
-	if(player.getPlayerState()==1){
+  	state = player.getPlayerState();
+	if(state == 1){
 		player.pauseVideo();
 	}
 
-	if(player.getPlayerState()==2){
+	if((state == 2) || (state ==-1)){
 		player.playVideo();
 	}
   }
