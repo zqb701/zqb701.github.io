@@ -24,35 +24,48 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
     	display: none;			/*隱藏body層次的滾動條*/
 	}
 	
-	#player {
-    pointer-events: none;	//對滑鼠不反應。
-}
+	#player {					//因為用滑鼠點過畫面後,按鍵全失效, 包含youtube的。
+		//pointer-events: none;	//設定對滑鼠不反應。
+							//結果游標不會消失,也不能點畫面的連結不能關廣告(播放結束時)
+	}
 </style>
 
    </head>
-<body topmargin="0" leftmargin="0" onload="init();" onkeydown="doKeyDown(event);" onclick="stop();">
+<body topmargin="0" leftmargin="0" 
+	onload="init();" 
+	onkeydown="doKeyDown(event);" onclick="stop();"
+	onkeydown_="doKeyDown(event);" ondrop="alert('沒反應!');"
+	onmouseover="dspCtrlPal('block')" onmouseleave="dspCtrlPal('none')">
 
-<div id="btnGrp" style="display:none; position: absolute; z-index:1;">
-	<button onclick="volume(-7);">v-</button>
-	<button onclick="volume(3);">v+</button>
-	<button onclick="ch(-1);">ch-</button>
+<div id="btnGrp" style="display:none; position: absolute; z-index:1;background:#737373;"
+	onclick="event.stopPropagation();">
+	<button onclick="volume(-7);" title="按鍵 down">vol-</button>
+	<button onclick="volume(3);">vol+</button>
+	音量:上/下, 靜音:M
+	<br>
+	<button onclick="ch(-1);" title="按鍵 left">ch-</button>
 	<button onclick="ch(1);">ch+</button>
-
-	<select id="scrModeSe" onchange="scrModeCh();">
+	 選台:左/右
+	 <br>
+	 <button onclick="ch(-1);" title="key -">z-</button>
+	<button onclick="ch(1);" title="按鍵 +">z+</button>
+	 尺寸:加/減/F
+	 <br>
+	 播放/暫停: space key 或滑鼠點畫面
+	 <br>
+	 路徑:<input id="ytID" type="text" value="a"/>
+	 <button>go</button>
+	<!-- select id="scrModeSe" onchange="scrModeCh();">
 		<option value="0">自動</option>
 		<option value="1">小</option>
 		<option value="2">中</option>
 		<option value="3">全螢幕</option>
-	</select>
-	音量:上下<br>
-	靜音:M<br>
-	字幕:C<br>
-	全屏:F
+	</select -->
 </div>
 
 <div style="position:relative;width:100%;padding-bottom:56.25%;">
   <iframe id="player" style="position:absolute;width:100%;height:100%"
-  onkeydown_="doKeyDown(event);" ondrop="drop_handler(event);"
+  
   src="https://www.youtube.com/embed/XxJKnDLYZz4?enablejsapi=1&fs=0&modestbranding=1&controls=0&disablekb=1"></iframe>
 </div>
 </body>
@@ -94,9 +107,14 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 		];
 
   function init(){
-  	window.resizeTo(scrWs, scrHs);
+  	window.resizeTo(scrWm, scrHm);
 	myiframe = document.getElementById('player');
 	//myiframe.focus();
+	
+	window.addEventListener('online', () => {
+		player.playVideo();
+	});
+
 }
   function onYouTubeIframeAPIReady() {
 
@@ -108,7 +126,10 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	  fs: 0,                  	// 隱藏全螢幕按鈕
 	  iv_load_policy: 3,      	// 隱藏影片註解(沒效)
 	  modestbranding: 1,      	// 隱藏YouTube Logo, 但滑鼠移入才會出現
-	  disablekb:1					//關閉鍵盤功能, 滑鼠不會消失,也不能點畫面的連結
+	  disablekb:1,				//關閉鍵盤功能,
+	  rel:0 						//播放結束不要顯示相關影片預設為1
+	  // loop=1循環播放,預設值為0(即不循環)
+	  //border]設定是否顯示影片的外框，值為0或1，預設值為0(即不顯示)
       //start:30
     },
       events: {
@@ -118,8 +139,8 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
   }
   function onPlayerReady(e) {
 	ch(8);
-   e.target.unMute().playVideo();
-	e.target.setVolume(10);
+   e.target.playVideo().unMute();
+	e.target.setVolume(17);	//初始音量
 
   }
 
@@ -135,7 +156,9 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
   }
   embedID = channelList[currentCh].ytID;
 	player.loadVideoById(embedID);
-	document.title = currentCh + "_" + channelList[currentCh].title + "_" + embedID;
+	document.title = channelList[currentCh].channel + "_" + channelList[currentCh].title;
+	document.getElementById("ytID").value = channelList[currentCh].ytID;
+	
   }
   
   function stop() {
@@ -149,6 +172,10 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	}
   }
 
+	function dspCtrlPal(mode){	//display Control Panel
+		document.getElementById("btnGrp").style.display = mode;
+	}
+	
   function sizeS(){
   //document.getElementById("btnGrp").style.display = 'none';
 	//if(scrMode == "0"){
@@ -165,30 +192,31 @@ function sizeM(){
 }
 
 function scrModeCh(){
-scrMode = document.getElementById("scrModeSe").value;
-switch (scrMode) {
-case "0":
-　break;
-case "1":
-　window.resizeTo(scrWs,scrHs);
-　break;
-case "2":
-//alert(scrWm + "," + scrHm);
-  window.resizeTo(scrWm,scrHm);
-　break;
-case "3":
-	document.getElementById("scrModeSe").value = "1";
-	scrMode = "1";
-　 myiframe.webkitRequestFullScreen();
-　break;
-default:
-　x="沒有符合的條件";
-}
-//prescrMode = scrMode;
+	scrMode = document.getElementById("scrModeSe").value;
+	switch (scrMode) {
+	case "0":
+	　break;
+	case "1":
+	　window.resizeTo(scrWs,scrHs);
+	　break;
+	case "2":
+	//alert(scrWm + "," + scrHm);
+	  window.resizeTo(scrWm,scrHm);
+	　break;
+	case "3":
+		document.getElementById("scrModeSe").value = "1";
+		scrMode = "1";
+	　 myiframe.webkitRequestFullScreen();
+	　break;
+	default:
+	　x="沒有符合的條件";
+	}
+	//prescrMode = scrMode;
 }
 
 function drop_handler(event) {
- event.preventDefault();
+ alert("event");
+ event.preventDefault();	//避免瀏覽器對資料的預設處理
  // Get the id of the target and add the moved element to the target's DOM
  var data = ev.dataTransfer.getData("text");
  alert(data);
@@ -200,14 +228,22 @@ function doKeyDown(event){
 	//event.preventDefault();			//取消預設的行為(只擋住F1。F/Ctrl+/Ctrl-都擋不住)
 
 	//alert(event.keyCode);
-        switch (event.keyCode){
+   switch (event.keyCode){
 	case 32:	//<SPACE>
 		stop();
 		break;
+/*
 	case 33:	//<PgUp>
 		ch(-1);
 		break;
 	case 34:	//<PgDn>
+		ch(1);
+		break;
+	*/	
+	case 37:	//<Left>
+		ch(-1);
+		break;
+	case 39:	//<Right>
 		ch(1);
 		break;
 	case 38:	//<Up>
@@ -225,10 +261,10 @@ function doKeyDown(event){
 		document.getElementById("btnGrp").style.display = 'block';
 		break;
 	case 187:	//<+>
-window.resizeTo(scrWm,scrHm);
+		window.resizeTo(scrWm,scrHm);
 		break;
 	case 189:	//<->
-window.resizeTo(scrWs,scrHs);
+		window.resizeTo(scrWs,scrHs);
 		break;
 	case 77:	//<M>
 		if(player.isMuted()){
@@ -251,7 +287,7 @@ window.resizeTo(scrWs,scrHs);
 				    break;
 	default:
 				}
-				}
+	}
 
 </script>
 </html>
