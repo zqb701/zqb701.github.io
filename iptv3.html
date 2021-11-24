@@ -24,9 +24,11 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
     	display: none;			/*隱藏body層次的滾動條*/
 	}
 	
-	#player {					//因為用滑鼠點過畫面後,按鍵全失效, 包含youtube的。
-		//pointer-events: none;	//設定對滑鼠不反應。
-							//結果游標不會消失,也不能點畫面的連結不能關廣告(播放結束時)
+	#player {					
+		pointer-events: none;	/*設定對滑鼠不反應。
+								結果游標不會消失,也不能點畫面的連結不能關廣告(播放結束時)
+								因為用滑鼠點過畫面後,按鍵全失效, 包含youtube的。
+								*/
 	}
 </style>
 
@@ -47,8 +49,8 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	<button onclick="ch(1);">ch+</button>
 	 選台:左/右
 	 <br>
-	 <button onclick="ch(-1);" title="key -">z-</button>
-	<button onclick="ch(1);" title="按鍵 +">z+</button>
+	 <button onclick="window.resizeTo(scrWs,scrHs);" title="key -">z-</button>
+	<button onclick="window.resizeTo(scrWm,scrHm);" title="按鍵 +">z+</button>
 	 尺寸:加/減/F
 	 <br>
 	 播放/暫停: space key 或滑鼠點畫面
@@ -69,6 +71,8 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
   src="https://www.youtube.com/embed/XxJKnDLYZz4?enablejsapi=1&fs=0&modestbranding=1&controls=0&disablekb=1"></iframe>
 </div>
 </body>
+
+
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
   var player;
@@ -81,32 +85,40 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	   var scrHs = scrWs * 0.64;
 	   var scrHm = scrWm * 0.60;
 	var currentCh = 8;
+	
+	const CHANNEL_NO=0;
+	const CHANNEL_ID = 1;
+	const CHANNEL_TITLE=2;
+/*影片來源:
+	a.youtube,以videoID表示,a1直播, a2單片
+	b.獨立網址,直播
+*/			
 	var channelList = [
-		{channel:13, title:"台視", ytID:"xL0ch83RAK8"},
-		{channel:13, title:"中視", ytID:"TCnaIE_SAtM"},
-		{channel:13, title:"華視", ytID:"yUTy1U1wTwE"},
-		{channel:13, title:"公視", ytID:"JAzRXylm3M0"},
+		{channel:13, title:"台視",	ytID:"xL0ch83RAK8"},
+		{channel:13, title:"中視",	ytID:"TCnaIE_SAtM"},
+		{channel:13, title:"華視",	ytID:"yUTy1U1wTwE"},
+		{channel:13, title:"公視",	ytID:"JAzRXylm3M0"},
 
-		{channel:0, title:"壹電視", ytID:"x"},
-		{channel:0, title:"年代", ytID:"x"},
+		{channel: 0, title:"壹電視",ytID:"x"},
+		{channel: 0, title:"年代",	ytID:"x"},
 
-		{channel:51, title:"東森", ytID:"R2iMq5LKXco"},
-		{channel:52, title:"中天", ytID:"XwzkihjzsTM"},
-		{channel:53, title:"民視", ytID:"XxJKnDLYZz4"},
-		{channel:54, title:"三立", ytID:"FoBfXvlOR6I"},	//pJ0VgJloR9E
-		{channel:55, title:"TVBS", ytID:"V0WxUakDV7M"},
-		{channel:56, title:"TVBSHD", ytID:"hP6_jfCFxyQ"},
-		{channel:57, title:"東森財經", ytID:"x"},
-		{channel:58, title:"非凡", ytID:"x"},
+		{channel:51, title:"東森",	ytID:"R2iMq5LKXco"},
+		{channel:52, title:"中天",	ytID:"XwzkihjzsTM"},
+		{channel:53, title:"民視",	ytID:"XxJKnDLYZz4"},
+		{channel:54, title:"三立",	ytID:"FoBfXvlOR6I"},	//pJ0VgJloR9E
+		{channel:55, title:"TVBS",	ytID:"V0WxUakDV7M"},
+		{channel:56, title:"TVBSHD", 	ytID:"hP6_jfCFxyQ"},
+		{channel:57, title:"東森財經",	ytID:"x"},
+		{channel:58, title:"非凡",  ytID:"x"},
 		
-		{channel:99, title:"飯思思", ytID:"rzBp10kx5Lw"},
-		{channel:99, title:"黃霄雲", ytID:"3A4cxRJyEBo"},
-		{channel:99, title:"小施", ytID:"6wNZyZEziL0"},
+		{channel:99, title:"飯思思",ytID:"rzBp10kx5Lw"},
+		{channel:99, title:"黃霄雲",ytID:"3A4cxRJyEBo"},
+		{channel:99, title:"小施",	ytID:"6wNZyZEziL0"},
 		{channel:99, title:"蜜雪薇琪_獨立", ytID:"pSKK7JYeFoQ"},
 		{channel:99, title:"殷悅_揮之不去", ytID:"WK19HOgLjg8"}
 		];
 
-  function init(){
+ function init(){
   	window.resizeTo(scrWm, scrHm);
 	myiframe = document.getElementById('player');
 	//myiframe.focus();
@@ -116,8 +128,7 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	});
 
 }
-  function onYouTubeIframeAPIReady() {
-
+function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
 	videoId:"XxJKnDLYZz4",
 	playerVars:{	//網址列的參數才有作用???
@@ -136,33 +147,32 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
         'onReady': onPlayerReady
       }
     });
-  }
-  function onPlayerReady(e) {
+}
+  
+function onPlayerReady(e) {
 	ch(8);
-   e.target.playVideo().unMute();
+	e.target.playVideo().unMute();
 	e.target.setVolume(17);	//初始音量
+}
 
-  }
-
-  function volume(flag){
+function volume(flag){
 	player.setVolume(player.getVolume() + flag);
-  }
+}
 
-  function ch(flag){
-  if(Math.abs(flag) == 1){
-	currentCh += flag;
-  }else{
-	currentCh = flag;
-  }
-  embedID = channelList[currentCh].ytID;
+function ch(flag){
+	if(Math.abs(flag) == 1){
+		currentCh += flag;
+	}else{
+		currentCh = flag;
+	}
+	embedID = channelList[currentCh].ytID;
 	player.loadVideoById(embedID);
 	document.title = channelList[currentCh].channel + "_" + channelList[currentCh].title;
 	document.getElementById("ytID").value = channelList[currentCh].ytID;
-	
-  }
+}
   
-  function stop() {
-  	state = player.getPlayerState();
+function stop() {
+	state = player.getPlayerState();
 	if(state == 1){
 		player.pauseVideo();
 	}
@@ -170,27 +180,17 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	if((state == 2) || (state ==-1)){
 		player.playVideo();
 	}
-  }
+}
 
-	function dspCtrlPal(mode){	//display Control Panel
-		document.getElementById("btnGrp").style.display = mode;
-	}
+function dspCtrlPal(mode){	//display Control Panel
+	document.getElementById("btnGrp").style.display = mode;
+}
 	
-  function sizeS(){
-  //document.getElementById("btnGrp").style.display = 'none';
-	//if(scrMode == "0"){
-		window.resizeTo(scrWs,scrHs);
-		   //alert(scrWs+ ", " + scrHs);
-	//}
+function zoon(flag){
+//TODO:視窗最大化時沒反應
+//尺寸為1/8~7/8,全螢幕
 }
-function sizeM(){
-//document.getElementById("btnGrp").style.display = 'block';
-	//if(scrMode == "0"){
-	  window.resizeTo(scrWm,scrHm);
-	  //alert(scrWm+ ", " + scrHm);
-	//}
-}
-
+	
 function scrModeCh(){
 	scrMode = document.getElementById("scrModeSe").value;
 	switch (scrMode) {
@@ -215,12 +215,12 @@ function scrModeCh(){
 }
 
 function drop_handler(event) {
- alert("event");
- event.preventDefault();	//避免瀏覽器對資料的預設處理
- // Get the id of the target and add the moved element to the target's DOM
- var data = ev.dataTransfer.getData("text");
- alert(data);
- //ev.target.appendChild(document.getElementById(data));
+	alert("event");
+	event.preventDefault();	//避免瀏覽器對資料的預設處理
+	// Get the id of the target and add the moved element to the target's DOM
+	var data = ev.dataTransfer.getData("text");
+	alert(data);
+	//ev.target.appendChild(document.getElementById(data));
 }
 
 function doKeyDown(event){
@@ -278,11 +278,11 @@ function doKeyDown(event){
 		break;
    	case 70:	//<F>
              //alert("F");
-	if(scrMode == "0"){
-		document.getElementById("scrModeSe").value = "1";
-		scrMode = "1";
-	}
-　 myiframe.webkitRequestFullScreen();
+		if(scrMode == "0"){
+			document.getElementById("scrModeSe").value = "1";
+			scrMode = "1";
+		}
+		myiframe.webkitRequestFullScreen();
 	//無法取得解除全螢幕的事件
 				    break;
 	default:
