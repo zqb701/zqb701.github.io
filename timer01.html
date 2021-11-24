@@ -6,29 +6,31 @@
 <style>
     html,body{
         font-family:sans-serif;
-height: 100%; 
-margin: 0; 
-padding: 0;
-background:orange;
+		height: 100%; 
+		margin: 0; 
+		padding: 0;
+		background:orange;
 
-}
-.div1 {
-background:red;
-width: 90%; 
-height: 90%; 
-position: relative;     /*隨上層縮放*/
-}
+	}
+	
+	.div1 {
+	background:red;
+	width: 90%; 
+	height: 90%; 
+	position: relative;     /*隨上層縮放*/
+	}
 
 .div2 {
     background:green;
     text-align: center;
     user-select: none;
-    font-size: 64px; 
+    font-size:500%; 
     
-    width:80% ;
+    width:60% ;
+	height:60%;
     position: absolute; 
     left: 50%; 
-    top: 50%; 
+	top: 50%; 
     transform: translateX(-50%) translateY(-50%);//位移
 
 }
