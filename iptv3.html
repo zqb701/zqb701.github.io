@@ -90,7 +90,7 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	const CHANNEL_ID = 1;
 	const CHANNEL_TITLE=2;
 /*影片來源:
-	a.youtube,以videoID表示,a1直播, a2單片
+	a.youtube,以videoID表示,a1直播, a2單一影片
 	b.獨立網址,直播
 */			
 	var channelList = [
@@ -151,7 +151,7 @@ function onYouTubeIframeAPIReady() {
   
 function onPlayerReady(e) {
 	ch(8);
-	e.target.playVideo().unMute();
+	e.target.unMute().playVideo();
 	e.target.setVolume(17);	//初始音量
 }
 
