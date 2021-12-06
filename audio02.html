@@ -1,44 +1,219 @@
-
+﻿
 <html>
 <head>
-    <title></title>
-
+    <title>audio02</title>
 </head>
-<body>
-    <button onclick="prev();">prev</button>
-    <button onclick="play();">play</button>
-    <button onclick="next();">next</button>
+
+<body onload="init();">
+    <button onclick="next(-1);">⏮</button>
+    <button onclick="skip(-1);">⏪</button>
+    <button id="run" onclick="run();" title="run">▶</button>
+    <button onclick="skip(1);">⏩️</button>
+    <button onclick="next(1);">⏭</button>
+    <br>
+    <button title="-7" onclick="vol(-.07);">▼</button>
+    <a id="volmsg">a</a>
+    <button title="+3" onclick="vol(+.03);">▴</button>
+    <input type="checkbox" checked="checked" id="a"/>🔃
+    <input type="checkbox" checked="checked" id="b"/>🔀
+    <br>
+    <input id="root" type="text" value="file:///C:/">
+    <label>...
+        <input id="file-uploader" type="file" webkitdirectory style="display: none">
+    </label>
+    <br />
+    <a id="msg2">msg2</a>
+    <br />
+    <div id="msg">msg</div>
+
+<br>說明:
+<ol>
+<li>可選擇本機檔案,根路徑要自動對應, 本機js也不能(瀏覽器安全政策)。記錄清單待建置。/li>
+<li>必須為靜音才能自動播放(瀏覽器防干擾政策),所以無法開機就有樂,但直接把mp3拖入則無限制。</li>
+<li>用--app啟動的音效會加入Global Media Controls, 就是瀏覽器視窗有上角的音樂圖示, 可控制所有音訊的播放。</li>
+<li>無法隱常視窗標題? 把body高度調為零, 再用window.onfocus()</li>
+<li></li>
+</ol>
+
 </body>
+
 <script>
+    //html符號來源, https://en.wikipedia.org/wiki/Media_control_symbols
+    //符號懶心包2021 https://lovefree365.pixnet.net/blog/post/399059086 
+    //https://mei30530.pixnet.net/blog/post/259272983
+    var mediaPath = document.getElementById("root").value;
     var playlist=[
-        "C:/Users/zqb/Downloads/zqb/zqb701.github.io/html5-audio-player-master/mp3/let-it-go.mp3",
-        "file:///C:/Users/zqb/Downloads/mp3/G_光高郭/郭靜_下一個天亮.mp3",
-        "file:///C:/Users/zqb/Downloads/mp3/X_徐許/許哲佩_吉普賽人生.mp3",
-        "file:///C:/Users/zqb/Downloads/mp3/X_徐許/徐佳瑩_不要再孤單.mp3",
-        "file:///C:/Users/zqb/Downloads/mp3/R_任容/任然_外婆橋.mp3"
+        // "mp3/G_光高郭/郭靜_下一個天亮.mp3",
+        // "mp3/X_徐許/許哲佩_吉普賽人生S.mp3",
+        // "mp3/X_徐許/徐佳瑩_不要再孤單.mp3",
+        // "mp3/R_任容/任然_外婆橋.mp3"
     ];
-    playindex = 0;
-    const audio = new Audio(playlist[playindex]);
-    audio.volume = 0.5;
+    //playlist.push("mp3/J_江酒/江美琪_凝望.mp3");
+    var strTmp = window.location.href;
+    var indexTmp = strTmp.lastIndexOf("/");
+    document.getElementById("msg2").innerText = strTmp.substring(0,indexTmp);
+    //把網頁放在mp3根目錄的可能性 : 只能做一半?
+
+    const fileUploader = document.getElementById('file-uploader');
+    var msg = document.getElementById("msg");
+    var runBtn = document.getElementById("run");
+    var volmsg = document.getElementById("volmsg");
+    var autoZoon = true;
+    var playindex = 0;
+    var playVolume = .02;
+    var filename = "";
+    const audio = new Audio();
 
 
-    function play(){
-        filename =  playlist[playindex];
+    function init(){
+        var scrW = window.screen.availWidth;	//availHeight;
+        window.resizeTo(scrW/4, 1);//TODO 高度零時「有時」沒作用???
+        window.addEventListener('blur', 收合);
+        window.addEventListener('focus', 展開);
+
+	//找歌曲清單
+    if (typeof (Storage) != "undefined"){
+        if (localStorage.playVolume != "undefined"){
+            //msg.innerText = localStorage.playVolume;
+            playVolume = localStorage.playVolume;
+        }
+    //}else{
+    if (localStorage.playlist != "undefined"){
+    //}else{
+        //msg.innerText = localStorage.playlist;
+        playlist = localStorage.playlist.split(",");
+        if (localStorage.playindex != "undefined"){
+        //}else{
+        playindex = localStorage.playindex;
+        //有清單才使用記錄的索引, 但索引若與歌名不符, 則索引調回零。
+        }
+    }
+    }
+
+    filename = mediaPath + playlist[playindex];
+    msg.innerText = filename;
+    audio.setAttribute('src',filename);
+    audio.pause();
+    audio.volume = playVolume;
+    volmsg.innerText = (audio.volume*100).toFixed()+"%";
+    info();
+    }//end of init()
+
+	function 展開(){
+        if(autoZoon){
+            window.resizeTo(
+                window.screen.availWidth/4, 
+                window.screen.availHeight/4);
+        }
+	}
+	function 收合(){
+        if(autoZoon){
+	        window.resizeTo( window.screen.availWidth/4, 28);
+            //window.innerHeight = 0;//沒反應,也沒錯誤
+            //window.outerHeight = 30;//沒反應,也沒錯誤
+            //TODO 高度零時「完全」沒作用???200正常!
+	        //另,開啟上傳對話框也會blur。
+        }
+	}
+
+    function run(){
+        if(audio.paused){
+            audio.play();
+            runBtn.innerText = "⏸";
+            //runBtn.attribute("title","pause");
+        }else{
+            audio.pause();
+            runBtn.innerText = "▶";
+            //runBtn.attribute("title","run");
+        }
+    }
+
+    function skip(flag){
+        audio.currentTime += 5 * flag;  //5秒為間隔
+    }
+
+    function vol(flag){
+        //TODO 設定上下限及靜音
+        
+        audio.volume += flag;
+        volmsg.innerText = (audio.volume*100).toFixed()+"%";
+        localStorage.playVolume = "" + audio.volume;
+        
+    }
+
+    function next(flag){
+        //TODO開頭5秒才跳前一首, 否則從頭播放
+        //隨機時,記錄前一首,下一首用亂數,但不等於本首。
+        //找不到檔案要跳過。
+        if(true){
+            playindex = Math.floor(Math.random()* playlist.length);//不需要「種子」
+            
+        }else{
+            playindex += flag;
+            if (playindex == playlist.length){
+                playindex = 0;
+            }else if (playindex == -1){
+                playindex = playlist.length -1;
+            }
+        }
+	localStorage.playindex = playindex;
+        filename = mediaPath + playlist[playindex];
         audio.setAttribute('src',filename);
-        audio.load();
         audio.play();
-        document.title = "aaa";
+//找不到檔案???
+        runBtn.innerText = "⏸";
+        info();
     }
 
-    function next(){
-        playindex ++;
-        play();
+    function info(){
+        var i1 = playlist[playindex].lastIndexOf(".");
+        var i2 = playlist[playindex].lastIndexOf("/")+1;
+        playTitle = playlist[playindex].substr(i2,i1-i2);
+        //msg.innerText = playindex+ "_" + playTitle;
+	document.title = playindex+ "_" + playTitle;
     }
 
-    function prev(){
-        playindex --;
-        play();
-    }
+    audio.addEventListener("ended", function() {
+         next(1);//播完一首歌之後要處置
+    });
+
+    fileUploader.addEventListener('change', function(event) {
+	//取得要上傳的檔案「清單」(系統對話框按確定才會觸發)
+    autoZoon = false;
+       const files = event.target.files;
+       [...files].forEach((file, index) => {
+           strtmp = file.webkitRelativePath;
+           if(strtmp.substr(strtmp.length-3,3).toLowerCase() == "mp3"){
+            playlist.push(strtmp);
+           }
+        });
+        localStorage.playlist = playlist.join(",");
+        autoZoon = true;
+    });
+    audio.addEventListener('error', function failed(e) {
+   // audio playback failed - show a message saying why
+   // to get the source of the audio element use $(this).src
+   switch (e.target.error.code) {
+     case e.target.error.MEDIA_ERR_ABORTED:
+       alert('You aborted the video playback.');
+       break;
+     case e.target.error.MEDIA_ERR_NETWORK:
+       alert('A network error caused the audio download to fail.');
+       break;
+     case e.target.error.MEDIA_ERR_DECODE:
+         
+       alert('The audio playback was aborted due to a corruption problem or because the video used features your browser did not support.');
+       break;
+     case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
+       //alert('The video audio not be loaded, either because the server or network failed or because the format is not supported.');
+       msg.innerText = "檔案讀取失敗"+ filename;
+       break;
+     default:
+       alert('An unknown error occurred.');
+       break;
+   }
+ }, true);
+
     </script>
 </html>
 

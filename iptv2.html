@@ -2,48 +2,176 @@
 <head>
 <title>iptv2</title>
 <style>
+	body::-webkit-scrollbar {
+    	display: none;	/*隱藏body層次的滾動條*/
+	}
 
-iframe{
-  pointer-events: none;
-  width:100vw;
-  height:100vh;
-}
 </style>
 
-  <script async src="//www.youtube.com/iframe_api"></script>
-  <script>
-function onYouTubeIframeAPIReady() {
-  var player;
-  player = new YT.Player('YouTubeVideoPlayerAPI', {
-    videoId: 'rshfNb2ped8',   // YouTube 影片ID
-    width: '1080',            // 播放器寬度 (px)
-    height: '720',           // 播放器高度 (px)
-    playerVars: {
-      autoplay: 1,            // 自動播放影片
-      controls: 0,            // 顯示播放器
-      showinfo: 0,            // 隱藏影片標題
-      modestbranding: 0,      // 隱藏YouTube Logo
-      loop: 1,                // 重覆播放
-      playlist:'rshfNb2ped8', // 當使用影片要重覆播放時，需再輸入YouTube 影片ID
-      fs: 0,                  // 隱藏全螢幕按鈕
-      cc_load_policty: 0,     // 隱藏字幕
-      iv_load_policy: 3,      // 隱藏影片註解
-      autohide: 0             // 影片播放時，隱藏影片控制列
-    },
-    events: {
-      onReady: function(e) {
-        e.target.mute();      //播放時靜音
-        e.target.playVideo(); //強制播放(手機才會自動播放，但僅限於Android)
-      }
-    }
-  });
- }
-   </script>
+
+
 </head>
-<body>
-<div id="YouTubeVideoPlayerAPI"></div>
-<br>
-  <a href="https://www.minwt.com/webdesign-dev/html/22143.html">參考來源</a>
+<body topmargin="0" leftmargin="0">
+	<button onclick="next(-1);">ch-</button>
+	<button onclick="next(1);">ch+</button>
+<div class="embed-responsive embed-responsive-16by9"
+style="position:relative;width:100%;padding:0 0 0 0;">
+	<div id="YouTubeVideoPlayerAPI" style="position:absolute;width:100%;" note="小寬度時上下黑邊,最大寬度後左右黑邊"></div>
+</div>
 
+<!-- 播放相關按鈕-->
+<div class="row align-items-center pt-4">
+  <div class="col text-center">
+    <div class="btn-group">
 
-</body></html>
+      <button class="btn btn-outline-dark" id="play" type="button">播放</button>
+      <button class="btn btn-outline-dark" id="pause" type="button">暫停</button>
+      <button class="btn btn-outline-dark" id="stop" type="button">停止</button>
+      <button class="btn btn-outline-dark" id="back" type="button">後退10秒</button>
+      <button class="btn btn-outline-dark" id="forward" type="button">前進10秒</button>
+    </div>
+  </div>
+
+  <!-- 速度相關-->
+  <div class="col text-center">
+    <div class="form-group row align-items-center mb-0">
+      <div class="col-2 text-right">
+        <label class="mb-0" for="volume">速度</label>
+      </div>
+      <div class="col-10">
+        <input class="form-control-range" id="rate" type="range" min="0.25" max="2" step="0.25"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 聲音相關按鈕-->
+<div class="row pt-4">
+  <div class="col-10">
+    <div class="form-group row align-items-center mb-0">
+      <div class="col-2 text-right">
+        <label class="mb-0" for="volume">音量</label>
+      </div>
+      <div class="col-10">
+        <input class="form-control-range" id="volume" type="range" min="0" max="100" step="1"/>
+      </div>
+    </div>
+  </div>
+  <div class="col-2">
+    <div class="custom-control custom-switch">
+      <input class="custom-control-input" id="toggleMute" type="checkbox" checked="checked"/>
+      <label class="custom-control-label" for="toggleMute">靜音</label>
+    </div>
+  </div>
+</div>
+
+</body>
+<script async src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    var player;
+		var currentCh = 8;
+	var channelList = [
+		{channel:13, title:"台視", ytID:"xL0ch83RAK8"},
+		{channel:13, title:"中視", ytID:"TCnaIE_SAtM"},
+		{channel:13, title:"華視", ytID:"yUTy1U1wTwE"},
+		{channel:13, title:"公視", ytID:"JAzRXylm3M0"},
+
+		{channel:0, title:"壹電視", ytID:"x"},
+		{channel:0, title:"年代", ytID:"x"},
+
+		{channel:51, title:"東森", ytID:"R2iMq5LKXco"},
+		{channel:52, title:"中天", ytID:"XwzkihjzsTM"},
+		{channel:53, title:"民視", ytID:"XxJKnDLYZz4"},
+		{channel:54, title:"三立", ytID:"pJ0VgJloR9E"},
+		{channel:55, title:"TVBS", ytID:"V0WxUakDV7M"},
+		{channel:56, title:"TVBSHD", ytID:"hP6_jfCFxyQ"},
+		{channel:57, title:"東森財經", ytID:"x"},
+		{channel:58, title:"非凡", ytID:"x"},
+
+		{channel:99, title:"小施", ytID:"6wNZyZEziL0"},
+		{channel:99, title:"蜜雪薇琪_獨立", ytID:"pSKK7JYeFoQ"},
+		{channel:99, title:"殷悅_揮之不去", ytID:"WK19HOgLjg8"}
+		];
+
+function next(flag){
+	currentCh += flag;
+	embedID = channelList[currentCh].ytID;
+	player.loadVideoById(embedID);
+	document.title = currentCh + "_" + channelList[currentCh].title + "_" + embedID;
+
+}
+
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('YouTubeVideoPlayerAPI', {
+		videoId: 'XxJKnDLYZz4',
+		    //width: '600',            // 播放器寬度 (px)
+		//height: '100%',
+	    playerVars:{
+      //autoplay:1,
+     controls:0,
+	  fs: 0,                  // 隱藏全螢幕按鈕
+	  iv_load_policy: 3,      // 隱藏影片註解
+	  modestbranding: 0      // 隱藏YouTube Logo, 但滑鼠移入時仍會出現
+      //start:30
+    },
+      events: {
+        'onReady': onPlayerReady
+      }
+    });
+  }
+
+  function onPlayerReady(e) {
+    const play = document.getElementById('play');
+    const pause = document.getElementById('pause');
+    const stop = document.getElementById('stop');
+
+    const back = document.getElementById('back');
+    const forward = document.getElementById('forward');
+
+    const rate = document.getElementById('rate');
+
+    const volume = document.getElementById('volume');
+    const mute = document.getElementById('toggleMute');
+
+e.target.mute().playVideo();
+//e.target.setAttribute("style","position:absolute;width:100%;height:100%");
+e.target.setSize(e.target.width, e.target.width * 0.67)
+
+	//- 播放、暫停、停止
+    play.addEventListener('click', () => {
+      mute.checked = true;
+      e.target.mute().playVideo();
+    });
+    pause.addEventListener('click', () => e.target.pauseVideo());
+    stop.addEventListener('click', () => e.target.stopVideo());
+
+    // 後退、前進10秒
+    back.addEventListener('click', () => {
+      // 先抓到目前秒數
+      let current = e.target.getCurrentTime();
+      // 後退10秒：目前秒數 - 10
+      e.target.seekTo(current - 10);
+    });
+    forward.addEventListener('click', () => {
+      // 先抓到目前秒數
+      ///let current = e.target.getCurrentTime();
+      // 前進10秒：目前秒數 + 10
+      ///e.target.seekTo(current + 10);
+	  e.target.loadVideoById("JAzRXylm3M0");
+    });
+
+    //- 速度
+    rate.value = e.target.getPlaybackRate(); // 先抓目前的速度
+    rate.addEventListener('input', () => e.target.setPlaybackRate(Number(rate.value)))
+
+    //- 音量
+    volume.value = e.target.getVolume(); // 先抓目前的音量
+    volume.addEventListener('input', () => e.target.setVolume(volume.value))
+
+    //- 靜音
+    //- 有聲的情況下無法自動播放，因此不執行 playVideo
+    mute.addEventListener('change', () => mute.checked ? e.target.mute().playVideo() : e.target.unMute());
+
+  }
+   </script>
+</html>

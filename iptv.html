@@ -6,7 +6,6 @@
     	display: none;	/*隱藏body層次的滾動條*/
 	}
 </style>
-
    <script type="text/javascript">
 
    var autoZoonSW;
@@ -18,11 +17,12 @@
 	   var scrWm = scrW/2;
 	   var scrHs = scrWs * 0.72;
 	   var scrHm = scrWm * 0.62;
-	var currentCh = 0;
+
+	var currentCh = 8;
 	var channelList = [
 		{channel:13, title:"台視", ytID:"xL0ch83RAK8"},
 		{channel:13, title:"中視", ytID:"TCnaIE_SAtM"},
-		{channel:13, title:"華視", ytID:"yUTy1U1wTwE"},		
+		{channel:13, title:"華視", ytID:"yUTy1U1wTwE"},
 		{channel:13, title:"公視", ytID:"JAzRXylm3M0"},
 
 		{channel:0, title:"壹電視", ytID:"x"},
@@ -31,26 +31,27 @@
 		{channel:51, title:"東森", ytID:"R2iMq5LKXco"},
 		{channel:52, title:"中天", ytID:"XwzkihjzsTM"},
 		{channel:53, title:"民視", ytID:"XxJKnDLYZz4"},
-		{channel:54, title:"三立", ytID:"pJ0VgJloR9E"},	
+		{channel:54, title:"三立", ytID:"pJ0VgJloR9E"},
 		{channel:55, title:"TVBS", ytID:"V0WxUakDV7M"},
 		{channel:56, title:"TVBSHD", ytID:"hP6_jfCFxyQ"},
 		{channel:57, title:"東森財經", ytID:"x"},
 		{channel:58, title:"非凡", ytID:"x"},
 
 		{channel:99, title:"小施", ytID:"6wNZyZEziL0"},
-		{channel:99, title:"蜜雪薇琪_獨立", ytID:"pSKK7JYeFoQ"},	
-		{channel:99, title:"殷悅_揮之不去", ytID:"WK19HOgLjg8"}	
+		{channel:99, title:"蜜雪薇琪_獨立", ytID:"pSKK7JYeFoQ"},
+		{channel:99, title:"殷悅_揮之不去", ytID:"WK19HOgLjg8"}
 		];
-		
+
 	   //var scrH = window.screen.availHeight;
-   
+
    //window.Width = int(scrW/4);
    //window.Height = int(scrH/4);
 	   //alert(scrWs + ", " + scrHs);
-	   
-	   
+
+
 
 //=============== end of main ===============
+
 function init(){
 	window.resizeTo(scrWs, scrHs);
 	myiframe = document.getElementById('iframe');
@@ -58,35 +59,15 @@ function init(){
 	//msg = = document.getElementById("msg");
 	autoZoonSW = document.getElementById("autoZoon");
 	//alert(autoZoonSW.checked);
-    
-  
+
+
 }
 
-function onYouTubeIframeAPIReady() {
-	alert("onYouTubeIframeAPIReady");
-    player = new YT.Player('player', {
-      events: {
-        'onReady': onPlayerReady
-      }
-    });
-  }
-  function onPlayerReady(e) {
-	  alert("onPlayerReady");
-	const volinc = document.getElementById('vol_inc');
-	volinc.addEventListener('click', function(){
-		e.target.setVolume(0.1); 
-		e.target.unMute();
-	});
-
-	// const mute = document.getElementById('toggleMute');
-    // mute.addEventListener('change', () => mute.checked ? e.target.mute().playVideo() : e.target.unMute());
-
-  }
 
 function doKeyDown(event){
 	//msg.innerHTML = event.keyCode;
         switch (event.keyCode){
-                  
+
    	case 70://<F>
              //alert("F");
              isAutoZoon=false;
@@ -101,9 +82,9 @@ function doKeyDown(event){
 		//alert("body get R");
 			//var myiframe = document.getElementById('iframe');
 		//myiframe.location.reload(true);//可用?
-			
+
 		//myiframe.contentWindow.location.reload(true);//沒作用
-			
+
 
 myiframe.src=myiframe.src;
 	    	break;
@@ -120,7 +101,7 @@ function sizeM(){
 	  window.resizeTo(scrWm,scrHm);
 	  //alert(scrWm+ ", " + scrHm);
 	}
-}	   
+}
 function reload(){
 	myiframe.src=myiframe.src;
 }
@@ -130,11 +111,15 @@ function next(flag){
 	mainURL = "https://www.youtube.com/embed/";
 	parm = "?iv_load_policy=1&fs=0&modestbranding=1&mute=1;&autoplay=1";
 	embedID = channelList[currentCh].ytID;	//"XwzkihjzsTM";
+	//alert(currentCh + ":" + embedID);
+
 	strtmp = mainURL + embedID + parm;
 	document.title = channelList[currentCh].title;
 	myiframe.src= strtmp;
-	
-	//myiframe.src="https://www.youtube.com/embed/pJ0VgJloR9E?iv_load_policy=1&fs=0&modestbranding=1&mute=1;&autoplay=1;"
+
+	//var x = new String(embedID)
+
+	//myiframe.src="https://www.youtube.com/embed/XxJKnDLYZz4?iv_load_policy=1&fs=0&modestbranding=1&mute=1;&autoplay=1;"
 }
 
 function volume(flag){
@@ -149,6 +134,7 @@ function fullScr(){
 	autoZoonSW.checked = false;
 	myiframe.webkitRequestFullScreen();
 }
+alert("003");
 </script>
    </head>
 <body topmargin="0" leftmargin="0" onload="init()"
@@ -159,7 +145,7 @@ function fullScr(){
 <button onclick="next(1);">ch+</button>
 <button onclick="volume(-1);">vol-</button>
 <button id="vol_inc">vol+</button>
-<button onclick="fullScr();">fullScr</button>
+<button onclick="fullScr();">fullScrxxx</button>
 
 <input type="checkbox" checked="checked" id="autoZoon"/>autoZoon
 
@@ -168,13 +154,14 @@ function fullScr(){
          onwebkitfullscreenchange_="alert(myiframe.webkitfullscreenElement);"
                 id="iframe" style="position:absolute;width:100%;height:100%"
         frameborder=0
-        src="https://www.youtube.com/embed/pJ0VgJloR9E?
-             iv_load_policy=1&fs=0&modestbranding=1&mute=1;&autoplay=1;">
+        src="https://www.youtube.com/embed/XxJKnDLYZz4?
+             enablejsapi=1&iv_load_policy=1&fs=0&modestbranding=1&mute=1;&autoplay=1;">
 									 </iframe>
 </div>
+
 	<br>
 網路電視,chrome子母畫面:另外操作才有, 調音量或進度需到原視窗, 無法全螢幕,要先開一個視窗<br>
-  
+
 <ul>
 	<li>參考來源:<a href="https://www.letswrite.tw/youtube-iframe-api/">1</a></li>
 	<li>開啟子視窗, 配iframe</li>
@@ -182,7 +169,7 @@ function fullScr(){
 	<li>embed版的全螢幕鈕無作用,用fs=0隱藏。document.currentScript.parentNode。.webkitfullscreenElement != null。webkitIsFullScreen</li>
 	<li>註解尚需手動關閉。showinfo=0沒作用</li>
 	<li>重載入功能(暫停後重啟無法接到即時串流)</li>
-	
+
 </ul>
   快速鍵:youtube api, <br>
 	F全螢幕切換,在內嵌模式沒反應,標準模式正常, ESC結束全螢幕。<br>
@@ -199,4 +186,26 @@ Shift+大於或小於,播放速度<br>
 
   chrome政策:禁止自動發出聲音。<br>
 </body>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+<script type="text/javascript">
+alert("yt");
+  //var player;
+  function onYouTubeIframeAPIReady() {
+  alert("onYouTubeIframeAPIReady");
+    //- 一般使用 影片的id寫在html裡
+    //- 不必加width, height，想加可加在iframe上
+    player = new YT.Player('player', {
+      events: {
+        onReady': onPlayerReady
+      }
+    });
+  }
+  function onPlayerReady(e) {
+	alert("onPlayerReady");
+    //- 為確保瀏覽器上可以自動播放，要把影片調成靜音
+    e.target.mute().playVideo();
+	e.target.loadVideoById("JAzRXylm3M0");
+  }
+</script>
 </html>
