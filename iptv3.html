@@ -9,6 +9,7 @@
 音量:iframe內建,Up/Dn/m可作動, 但頁面載入後須點擊iframe才有效。
 FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放iframe無效,可能被覆蓋。esc結束全螢幕。
 
+
 記錄音量/頻道...
 頻道直選/自訂頻道
 非youtube系統
@@ -103,7 +104,7 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 		{channel: 0, title:"年代",	ytID:"x"},
 
 		{channel:51, title:"東森",	ytID:"R2iMq5LKXco"},
-		{channel:52, title:"中天",	ytID:"XwzkihjzsTM"},
+		{channel:52, title:"中天",	ytID:"lu_BJKxqGnk"},
 		{channel:53, title:"民視",	ytID:"XxJKnDLYZz4"},
 		{channel:54, title:"三立",	ytID:"FoBfXvlOR6I"},	//pJ0VgJloR9E
 		{channel:55, title:"TVBS",	ytID:"V0WxUakDV7M"},
@@ -229,9 +230,11 @@ function doKeyDown(event){
 
 	//alert(event.keyCode);
    switch (event.keyCode){
-	case 32:	//<SPACE>
+   
+	case 32:	//暫停:<SPACE>空白鍵,<K>
 		stop();
 		break;
+		//<左><右>5秒,<J><L>10秒, <C>字幕, <i>浮動, <r>頁面寛度
 /*
 	case 33:	//<PgUp>
 		ch(-1);
@@ -252,7 +255,7 @@ function doKeyDown(event){
 	case 40:	//<Dn>
 		volume(-7);
 		break;
-	//空白鍵,暫停
+
 	case 27:	//<ESC>
 		document.getElementById("btnGrp").style.display = 'none';
 		break;
@@ -266,7 +269,7 @@ function doKeyDown(event){
 	case 189:	//<->
 		window.resizeTo(scrWs,scrHs);
 		break;
-	case 77:	//<M>
+	case 77:	//靜音<M>
 		if(player.isMuted()){
 			player.unMute();
 		}else{

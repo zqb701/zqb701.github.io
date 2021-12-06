@@ -1,17 +1,21 @@
 ﻿CACHE MANIFEST
 # chrome 85停用AppCache, 但可以試用, 也就是開啟即將關閉的實驗性功能, 以為過度期, 改用Service Worker。
 # 手機版的可能還沒停用。
+
 # 快取清單檔案（cache manifest file）
 # 以「.manifest」檔案設定, 讓檔案可以快取在用戶端, 
 # 每站點容量5MB,由browser決定。
 # 已快取的檔案需待manifest檔變化時才會更新。可透過修改本檔, 例如版號或日期
+
+# window.applicationCache.update();		//清除瀏覽器快取
+
 # 日期:2021/7/21, 版本:
 
 CACHE:      #快取清單
 index.html #
 # game.html
 # gps01.html #
-timer01.html 
+timer02.html 
 # images/
 # js/
 # http://....
