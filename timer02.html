@@ -59,6 +59,15 @@
 }
 </style>
 
+<script>
+window.addEventListener('load', () => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
+  });
+
+</script>
+</head>
 <body >
     <div class="div1" onclick="stop();">
 		<div class="div2 text-v-center" id="box">
@@ -105,6 +114,6 @@
     }
 
 </script>
-</head>
+
 </html>
 
