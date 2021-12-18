@@ -1,0 +1,8 @@
+{
+    "name": "zqb701",
+    "short_name": "Tzqb701",
+    "background_color": "#707477",
+    "theme_color": "#f2f2f2",
+    "display": "standalone",
+    "orientation": "portrait"
+}
