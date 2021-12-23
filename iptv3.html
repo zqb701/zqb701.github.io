@@ -105,7 +105,7 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 
 		{channel:51, title:"東森",	ytID:"R2iMq5LKXco"},
 		{channel:52, title:"中天",	ytID:"lu_BJKxqGnk"},
-		{channel:53, title:"民視",	ytID:"XxJKnDLYZz4"},
+		{channel:53, title:"民視",	ytID:"XGEmg3vhrzU"},
 		{channel:54, title:"三立",	ytID:"FoBfXvlOR6I"},	//pJ0VgJloR9E
 		{channel:55, title:"TVBS",	ytID:"V0WxUakDV7M"},
 		{channel:56, title:"TVBSHD", 	ytID:"hP6_jfCFxyQ"},
@@ -120,7 +120,7 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 		];
 
  function init(){
-  	window.resizeTo(scrWm, scrHm);
+  	window.resizeTo(scrWs, scrHs);
 	myiframe = document.getElementById('player');
 	//myiframe.focus();
 	
@@ -134,7 +134,7 @@ function onYouTubeIframeAPIReady() {
 	videoId:"XxJKnDLYZz4",
 	playerVars:{	//網址列的參數才有作用???
       //autoplay:1,
-     controls:0,				//隱藏齒輪含「訂閱」圖示。
+     controls:0,				//隱藏齒輪, 也隱藏「訂閱」圖示。
 	  fs: 0,                  	// 隱藏全螢幕按鈕
 	  iv_load_policy: 3,      	// 隱藏影片註解(沒效)
 	  modestbranding: 1,      	// 隱藏YouTube Logo, 但滑鼠移入才會出現
@@ -153,7 +153,7 @@ function onYouTubeIframeAPIReady() {
 function onPlayerReady(e) {
 	ch(8);
 	e.target.unMute().playVideo();
-	e.target.setVolume(17);	//初始音量
+	e.target.setVolume(14);	//初始音量
 }
 
 function volume(flag){
