@@ -48,7 +48,7 @@ if( navigator.geolocation ) {
 	navigator.geolocation.getCurrentPosition( geoYes, geoNo);
 }
 else {
-	document.getElementById("watchStr").innerHTML="navigator.geolocation失敗。";
+	document.getElementById("watchStr").innerHTML="navigator.geolocation物件失敗。";
 }
 //document.getElementById("posStr").innerHTML="script finish.";
 
@@ -67,6 +67,7 @@ str += "<br />距離:" + distance(recentLati, recentLongi, prevLati, prevLongi).
 //prevLongi = evt.coords.longitude;
 
 document.getElementById("posStr").innerHTML=str;
+document.getElementById("watchStr").innerHTML="geoYes()完成。";
 /*
 str = "https://maps.googleapis.com/maps/api/staticmap"+
         "?zoom=15&size=300x300&sensor=false&center=" + 
@@ -78,6 +79,7 @@ str = "https://maps.googleapis.com/maps/api/staticmap"+
 document.getElementById("msg").innerText = str;
 */
 }
+
 function geoNo(evt){
 //網頁為本機檔則會失敗(手機note9或電腦win10都是)
 document.getElementById("watchStr").innerHTML="GPS取得失敗。";
