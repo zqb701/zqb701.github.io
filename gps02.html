@@ -39,7 +39,8 @@ html{
 <div id="msg"></div>
 </body>
 <script>
-document.getElementById("posStr").innerHTML="script start.";
+var debugMsg = "script start.";
+//document.getElementById("posStr").innerHTML="";
     let prevLati = 22.9620338;   //關廟系統北上出口前2公里標示牌
     let prevLongi = 120.346256;
 
@@ -48,12 +49,14 @@ if( navigator.geolocation ) {
 	navigator.geolocation.getCurrentPosition( geoYes, geoNo);
 }
 else {
-	document.getElementById("watchStr").innerHTML="navigator.geolocation物件失敗。";
+	debugMsg += "navigator.geolocation物件失敗。";
 }
 //document.getElementById("posStr").innerHTML="script finish.";
-document.getElementById("posStr").innerHTML="script 完成。";
+document.getElementById("posStr").innerHTML=debugMsg;
+
+
 function geoYes(evt){
-document.getElementById("posStr").innerHTML="getYes開始。";
+debugMsg += "getYes開始。";
 //alert(evt);
 recentLati = evt.coords.latitude
 recentLongi = evt.coords.longitude
@@ -68,7 +71,7 @@ str += "<br />距離:" + distance(recentLati, recentLongi, prevLati, prevLongi).
 //prevLongi = evt.coords.longitude;
 
 document.getElementById("posStr").innerHTML=str;
-document.getElementById("watchStr").innerHTML="geoYes()完成。";
+debugMsg += "geoYes()完成。";
 /*
 str = "https://maps.googleapis.com/maps/api/staticmap"+
         "?zoom=15&size=300x300&sensor=false&center=" + 
@@ -82,8 +85,8 @@ document.getElementById("msg").innerText = str;
 }
 
 function geoNo(evt){
-//網頁為本機檔則會失敗(手機note9或電腦win10都是)
-document.getElementById("watchStr").innerHTML="GPS取得失敗。";
+//限https, 若為本機檔則會失敗(手機note9或電腦win10都是)
+debugMsg += "GPS取得失敗。";
 }
 
 var watchID;
