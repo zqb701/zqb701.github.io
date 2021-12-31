@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <!-- 程式來源 https://blog.xuite.net/gkyo0510/wretch/242769650 -->
-<title>GPS01</title>
+<title>GPS02</title>
 
 <style>
 /* 字型大小自適應來源 https://www.minwt.com/webdesign-dev/css/20278.html*/
@@ -51,8 +51,9 @@ else {
 	document.getElementById("watchStr").innerHTML="navigator.geolocation物件失敗。";
 }
 //document.getElementById("posStr").innerHTML="script finish.";
-
+document.getElementById("posStr").innerHTML="script 完成。";
 function geoYes(evt){
+document.getElementById("posStr").innerHTML="getYes開始。";
 //alert(evt);
 recentLati = evt.coords.latitude
 recentLongi = evt.coords.longitude
