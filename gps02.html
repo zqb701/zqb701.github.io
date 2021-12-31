@@ -58,12 +58,13 @@ document.getElementById("watchStr").innerHTML=debugMsg;
 
 function geoYes(evt){
 debugMsg += "getYes開始。";
-alert(evt);
+
 recentLati = evt.coords.latitude
 recentLongi = evt.coords.longitude
 var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
 str = "時間:" + strTime;
+alert(str);
 str += "<br />位置:" + recentLati.toFixed(7) + ", "+ recentLongi.toFixed(7);
 //str += "<br />精確度" + evt.coords.accuracy;
 str += "<br />目標:" + prevLati.toFixed(7) + ", " + prevLongi.toFixed(7);
