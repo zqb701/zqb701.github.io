@@ -45,18 +45,20 @@ var debugMsg = "script 開始.";
     let prevLongi = 120.346256;
 
 if( navigator.geolocation ) {
-
+debugMsg += "A1.";
 	navigator.geolocation.getCurrentPosition( geoYes, geoNo);
+	debugMsg += "A2.";
 }else {
+debugMsg += "B";
 	debugMsg += "navigator.geolocation物件失敗。";
 }
 //document.getElementById("posStr").innerHTML="script finish.";
-document.getElementById("posStr").innerHTML=debugMsg;
+document.getElementById("watchStr").innerHTML=debugMsg;
 
 
 function geoYes(evt){
 debugMsg += "getYes開始。";
-//alert(evt);
+alert(evt);
 recentLati = evt.coords.latitude
 recentLongi = evt.coords.longitude
 var d=new Date();
