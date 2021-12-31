@@ -39,7 +39,7 @@ html{
 <div id="msg"></div>
 </body>
 <script>
-var debugMsg = "script start.";
+var debugMsg = "script 開始.";
 //document.getElementById("posStr").innerHTML="";
     let prevLati = 22.9620338;   //關廟系統北上出口前2公里標示牌
     let prevLongi = 120.346256;
@@ -47,8 +47,7 @@ var debugMsg = "script start.";
 if( navigator.geolocation ) {
 
 	navigator.geolocation.getCurrentPosition( geoYes, geoNo);
-}
-else {
+}else {
 	debugMsg += "navigator.geolocation物件失敗。";
 }
 //document.getElementById("posStr").innerHTML="script finish.";
