@@ -64,7 +64,7 @@ recentLongi = evt.coords.longitude
 var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
 str = "時間:" + strTime;
-alert(str);
+//alert(str);
 str += "<br />位置:" + recentLati.toFixed(7) + ", "+ recentLongi.toFixed(7);
 //str += "<br />精確度" + evt.coords.accuracy;
 str += "<br />目標:" + prevLati.toFixed(7) + ", " + prevLongi.toFixed(7);
@@ -73,7 +73,9 @@ str += "<br />距離:" + distance(recentLati, recentLongi, prevLati, prevLongi).
 //prevLongi = evt.coords.longitude;
 
 document.getElementById("posStr").innerHTML=str;
+
 debugMsg += "geoYes()完成。";
+document.getElementById("watchStr").innerHTML=debugMsg;
 /*
 str = "https://maps.googleapis.com/maps/api/staticmap"+
         "?zoom=15&size=300x300&sensor=false&center=" + 
@@ -87,20 +89,21 @@ document.getElementById("msg").innerText = str;
 }
 
 function geoNo(evt){
-//限https, 若為本機檔則會失敗(手機note9或電腦win10都是)
+//限https? win10本機檔用Chrome可開允許,但仍取得失敗。 手機note9待測
 debugMsg += "GPS取得失敗。";
+document.getElementById("watchStr").innerHTML=debugMsg;
 }
 
 var watchID;
 function startGPS(){
-watchID = navigator.geolocation.watchPosition( geoYes, geoNo);
+	watchID = navigator.geolocation.watchPosition( geoYes, geoNo);
 
-document.getElementById("watchStr").innerHTML="GPS正在監控中...";
+	document.getElementById("watchStr").innerHTML="GPS正在監控中...";
 }
 
 function stopGPS(){
-navigator.geolocation.clearWatch( watchID );
-document.getElementById("watchStr").innerHTML="GPS停止監控中...";
+	navigator.geolocation.clearWatch( watchID );
+	document.getElementById("watchStr").innerHTML="GPS停止監控中...";
 }
 
 function distance(lat1, lon1, lat2, lon2) {
