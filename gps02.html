@@ -90,17 +90,32 @@ ctx.strokeStyle = "red";	//線條色
 	ctx.fillText("許功蓋", 10, 50);
 */	
 	var points=[
+	/*
 		[22.6659424,120.5005407],	//阿婆粉圓冰
-		[22.6618443,120.5069158],		//演 
+		[22.6618443,120.5069158],		//演藝廳
 		[22.66238,120.5079811],			//民生國小
 		[22.6603804,120.5111652],		//全家超商
-		[22.6590325,120.5116325]	//國仁
+		*/
+		[22.6590325,120.5116325,"國仁醫院"],
+		[22.6492241, 120.522914,"麟洛鄉公所"],
+		[22.6400416, 120.5362810, "麟洛國中路口"],
+		[22.655381953796578, 120.55160925823591, "科大路口"],
+		[22.630047211459626, 120.59291416762996, "老埤路口"],
+		[22.633128880246172, 120.59797113670795, "安通路口"],
+		[22.62871783050417, 120.62638157350078,"沿山路口"],
+		[22.591721713708438, 120.62115374455101, "佳平路口"],
+		
+		[22.5727629,120.6509855,"急彎,逍遙山莊"],
+				
+		[22.5838491,120.6723113,"北大武山步道"]
 		];
 	var wPoint = 120.51;		//最西點
 	//ar ePoint = 120.52;		//最東點
 	var nPoint = 22.668;		//最北點
 	var zoon = 10000;//canvas.width / Math.abs(wPoint - ePoint);
-	
+	var nextPoint = 0;	//下一個點
+	var nextDist = -1;
+	var preDist = 0;
 ctx.strokeStyle = "red";	//線條色
 	ctx.beginPath();
     ctx.arc(nPoint, wPoint,3,0,Math.PI*2,true);
@@ -128,26 +143,35 @@ function drawPoint(lat, lon){
 	
 //============================================
 function geoYes(evt){
-debugMsg += "getYes開始。";
+//debugMsg += "getYes開始。";
 
 recentLati = evt.coords.latitude;
 recentLongi = evt.coords.longitude;
-drawPoint(recentLati, recentLongi);
+nextDist  = getDistance(recentLati, recentLongi, points[nextPoint][0], points[nextPoint][1]);
+//drawPoint(recentLati, recentLongi);
+
 var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
 str = "時間:" + strTime;
 //alert(str);
 str += "<br />位置:" + recentLati.toFixed(7) + ", "+ recentLongi.toFixed(7);
 //str += "<br />精確度" + evt.coords.accuracy;
-str += "<br />目標:" + prevLati.toFixed(7) + ", " + prevLongi.toFixed(7);
-str += "<br />距離:" + distance(recentLati, recentLongi, prevLati, prevLongi).toFixed(3) +"公里";
+str += "<br />目標:" + points[nextPoint][0];		//prevLati.toFixed(7) + ", " + prevLongi.toFixed(7);
+str += "<br />距離:" + dist.toFixed(3) +"公里";
 //prevLati = evt.coords.latitude;
 //prevLongi = evt.coords.longitude;
 
 document.getElementById("posStr").innerHTML=str;
 
-debugMsg += "geoYes()完成。";
+//debugMsg += "geoYes()完成。";
 document.getElementById("watchStr").innerHTML=debugMsg;
+if (nextDist > preDist){
+	nextPoint++;
+	preDist = 0;
+}else(
+	preDist = nextDist;
+)
+
 /*
 str = "https://maps.googleapis.com/maps/api/staticmap"+
         "?zoom=15&size=300x300&sensor=false&center=" + 
@@ -178,7 +202,7 @@ function stopGPS(){
 	document.getElementById("watchStr").innerHTML="GPS停止監控中...";
 }
 
-function distance(lat1, lon1, lat2, lon2) {
+function getDistance(lat1, lon1, lat2, lon2) {
     //本函式來源 https://www.geodatasource.com/developers/javascript
 
     var radlat1 = Math.PI * lat1/180;
