@@ -59,7 +59,7 @@ document.getElementById("watchStr").innerHTML=debugMsg;
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
-canvas.width = 200;canvas.height = 300;		//寬高預設值為300×150
+canvas.width = 1000;canvas.height = 1000;		//寬高預設值為300×150
 
 
 ctx.strokeStyle = "green";	//線條色
@@ -101,8 +101,14 @@ ctx.strokeStyle = "red";	//線條色
 	var nPoint = 22.668;		//最北點
 	var zoon = 10000;//canvas.width / Math.abs(wPoint - ePoint);
 	
+ctx.strokeStyle = "red";	//線條色
+	ctx.beginPath();
+    ctx.arc(nPoint, wPoint,3,0,Math.PI*2,true);
+	ctx.stroke();
+	
+	ctx.strokeStyle = "green";	//線條色
 	//console.log(zoon);
-	for ( indexP in points){
+	for ( indexP in points){		//TODO 改用Path2D物件
 		drawPoint(points[indexP][0], points[indexP][1]);
 	}
 	
