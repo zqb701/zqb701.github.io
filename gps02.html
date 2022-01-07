@@ -26,7 +26,7 @@ html{
 
 </head>
 <body>
-<h1>定位資訊 </h1>
+<canvas id="canvas"></canvas>
 <p id="posStr">111222</p>
 <p id="watchStr">監控狀態</p>
 <p>
@@ -55,12 +55,78 @@ debugMsg += "B";
 //document.getElementById("posStr").innerHTML="script finish.";
 document.getElementById("watchStr").innerHTML=debugMsg;
 
+//畫圖
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
 
+canvas.width = 200;canvas.height = 300;		//寬高預設值為300×150
+
+
+ctx.strokeStyle = "green";	//線條色
+ctx.lineWidth = 2;	//線條粗度
+ctx.strokeRect(0,0,canvas.width,canvas.height);
+/*
+ctx.fillStyle = "green";
+    ctx.fillRect(25,25,100,100);
+    ctx.clearRect(45,45,60,60);
+    ctx.strokeRect(50,50,50,50);
+
+
+ctx.fillStyle = "white";	//填滿色
+ctx.strokeStyle = "red";	//線條色
+    ctx.beginPath();
+    ctx.moveTo(75,50);
+    ctx.lineTo(100,75);
+    ctx.lineTo(100,25);
+	    ctx.fill();		//填滿
+	
+	ctx.beginPath();
+	ctx.lineWidth = 3;	//線條粗度
+	ctx.moveTo(75,50);
+    ctx.lineTo(180,75);
+    ctx.lineTo(100,25);
+	ctx.stroke();	//執行本行才畫線
+	
+	ctx.fillText("許功蓋", 10, 50);
+*/	
+	var points=[
+		[22.6659424,120.5005407],	//阿婆粉圓冰
+		[22.6618443,120.5069158],		//演 
+		[22.66238,120.5079811],			//民生國小
+		[22.6603804,120.5111652],		//全家超商
+		[22.6590325,120.5116325]	//國仁
+		];
+	var wPoint = 120.51;		//最西點
+	//ar ePoint = 120.52;		//最東點
+	var nPoint = 22.668;		//最北點
+	var zoon = 10000;//canvas.width / Math.abs(wPoint - ePoint);
+	
+	//console.log(zoon);
+	for ( indexP in points){
+		drawPoint(points[indexP][0], points[indexP][1]);
+	}
+	
+function drawPoint(lat, lon){
+	var drawX = (lon - wPoint )* zoon + canvas.width/2;
+	var drawY = -(lat - nPoint )*zoon + canvas.height/2;
+	//console.log(drawX + "," + drawY);
+	
+	ctx.beginPath();
+	//ctx.moveTo(drawX, drawY);
+	//ctx.lineTo(drawX, drawY);
+    ctx.arc(drawX, drawY,3,0,Math.PI*2,true);
+	//ctx.lineWidth = 10;	//線條粗度
+	//ctx.strokeStyle = "green";	//線條色
+	ctx.stroke();
+}
+	
+//============================================
 function geoYes(evt){
 debugMsg += "getYes開始。";
 
-recentLati = evt.coords.latitude
-recentLongi = evt.coords.longitude
+recentLati = evt.coords.latitude;
+recentLongi = evt.coords.longitude;
+drawPoint(recentLati, recentLongi);
 var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
 str = "時間:" + strTime;
