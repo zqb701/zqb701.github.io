@@ -164,7 +164,7 @@ function geoYes(evt){
 
 recentLati = evt.coords.latitude;
 recentLongi = evt.coords.longitude;
-nextDist  = getDistance(recentLati, recentLongi, points[nextPoint][0], points[nextPoint][1]);
+//nextDist  = getDistance(recentLati, recentLongi, points[nextPoint][1],  points[nextPoint][0]);
 drawPoint(recentLati, recentLongi, "red", 2);
 
 var d=new Date();
@@ -182,12 +182,14 @@ document.getElementById("posStr").innerHTML=str;
 
 //debugMsg += "geoYes()完成。";
 document.getElementById("watchStr").innerHTML=debugMsg;
+/*
 if (nextDist > preDist){	//TODO 
 	nextPoint++;
 	preDist = 0;
 }else{
 	preDist = nextDist;
 }
+*/
 
 /*
 str = "https://maps.googleapis.com/maps/api/staticmap"+
