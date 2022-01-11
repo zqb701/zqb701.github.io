@@ -165,7 +165,7 @@ function geoYes(evt){
 
 recentLati = evt.coords.latitude;
 recentLongi = evt.coords.longitude;
-//nextDist  = getDistance(recentLati, recentLongi, points[nextPoint][1],  points[nextPoint][0]);
+nextDist  = getDistance(recentLati, recentLongi, points[nextPoint][1],  points[nextPoint][0]);
 drawPoint(recentLati, recentLongi, "red", 2);
 
 var d=new Date();
@@ -175,8 +175,8 @@ document.getElementById("posStr").innerHTML=str;
 //alert(str);
 str += "<br />現在位置:" + recentLati.toFixed(7) + ", "+ recentLongi.toFixed(7);
 //str += "<br />精確度" + evt.coords.accuracy;
-//str += "<br />目標:" + points[nextPoint][0];		//prevLati.toFixed(7) + ", " + prevLongi.toFixed(7);
-str += "<br />距離:" + dist.toFixed(3) +"公里";
+str += "<br />目標:" + points[nextPoint][2];		//prevLati.toFixed(7) + ", " + prevLongi.toFixed(7);
+str += "<br />距離:" + nextDist.toFixed(3) +"公里";
 //prevLati = evt.coords.latitude;
 //prevLongi = evt.coords.longitude;
 
@@ -184,14 +184,14 @@ document.getElementById("posStr").innerHTML=str;
 
 //debugMsg += "geoYes()完成。";
 document.getElementById("watchStr").innerHTML=debugMsg;
-/*
+
 if (nextDist > preDist){	//TODO 
 	nextPoint++;
 	preDist = 0;
 }else{
 	preDist = nextDist;
 }
-*/
+
 
 /*
 str = "https://maps.googleapis.com/maps/api/staticmap"+
