@@ -59,8 +59,9 @@ document.getElementById("watchStr").innerHTML=debugMsg;
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
-canvas.width = 500;canvas.height = 500;		//寬高預設值為300×150
-
+canvas.width = 900;canvas.height = 1000;		//寬高預設值為300×150
+ctx.fillStyle = "black";	//填滿色
+ctx.fillRect(0,0,canvas.width,canvas.height)
 
 ctx.strokeStyle = "blue";	//線條色
 ctx.lineWidth = 2;	//線條粗度
@@ -109,12 +110,12 @@ ctx.strokeStyle = "red";	//線條色
 				
 		[22.5838491,120.6723113,"北大武山步道"]
 		];
-		var nextPoint = 2;	//下一個點
+		var nextPoint = 5;	//下一個點
 	var wPoint = points[nextPoint][1];//120.5116;		//最西點
 	//ar ePoint = 120.52;		//最東點
 	var nPoint = points[nextPoint][0];//22.659;		//最北點
 	
-	var zoon = 1500;//canvas.width / Math.abs(wPoint - ePoint);
+	var zoon = 3000;//canvas.width / Math.abs(wPoint - ePoint);
 	
 	var nextDist = -1;
 	var preDist = 0;
@@ -134,14 +135,19 @@ ctx.lineWidth = 1;	//線條粗度
 	ctx.strokeStyle = "green";	//線條色
 	ctx.lineWidth = 2;	//線條粗度
 	//console.log(zoon);
+
 	for ( indexP in points){		//TODO 改用Path2D物件
-		drawPoint(points[indexP][0], points[indexP][1]);
+		drawPoint(points[indexP][0], points[indexP][1], "green", 2);
+
 	}
+
 	
-function drawPoint(lat, lon){
+function drawPoint(lat, lon, color, width){
 	var drawX = (lon - wPoint )* zoon + canvas.width/2;
 	var drawY = -(lat - nPoint )*zoon + canvas.height/2;
 	//console.log(drawX + "," + drawY);
+	ctx.strokeStyle = color;	//線條色
+	ctx.lineWidth = width;	//線條粗度
 	
 	ctx.beginPath();
 	//ctx.moveTo(drawX, drawY);
@@ -159,7 +165,7 @@ function geoYes(evt){
 recentLati = evt.coords.latitude;
 recentLongi = evt.coords.longitude;
 nextDist  = getDistance(recentLati, recentLongi, points[nextPoint][0], points[nextPoint][1]);
-drawPoint(recentLati, recentLongi);
+drawPoint(recentLati, recentLongi, "red", 2);
 
 var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
@@ -176,7 +182,7 @@ document.getElementById("posStr").innerHTML=str;
 
 //debugMsg += "geoYes()完成。";
 document.getElementById("watchStr").innerHTML=debugMsg;
-if (nextDist > preDist){
+if (nextDist > preDist){	//TODO 
 	nextPoint++;
 	preDist = 0;
 }else{
