@@ -165,13 +165,12 @@ function geoYes(evt){
 
 recentLati = evt.coords.latitude;
 recentLongi = evt.coords.longitude;
-nextDist  = getDistance(recentLati, recentLongi, points[nextPoint][1],  points[nextPoint][0]);
+nextDist  = getDistance(recentLati, recentLongi,  points[nextPoint][0], points[nextPoint][1]);
 drawPoint(recentLati, recentLongi, "red", 2);
 
 var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
 str = "時間:" + strTime;
-document.getElementById("posStr").innerHTML=str;
 //alert(str);
 str += "<br />現在位置:" + recentLati.toFixed(7) + ", "+ recentLongi.toFixed(7);
 //str += "<br />精確度" + evt.coords.accuracy;
