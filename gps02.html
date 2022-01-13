@@ -25,7 +25,7 @@ html{
 </style>
 
 </head>
-<body>
+<body onload="init();">
 <canvas id="canvas"></canvas>
 <p id="posStr">111222</p>
 <p id="watchStr">監控狀態</p>
@@ -43,54 +43,23 @@ var debugMsg = "script 開始.";
 //document.getElementById("posStr").innerHTML="";
     let prevLati = 22.9620338;   //關廟系統北上出口前2公里標示牌
     let prevLongi = 120.346256;
-
-if( navigator.geolocation ) {
-debugMsg += "A1.";
-	navigator.geolocation.getCurrentPosition( geoYes, geoNo);
-	debugMsg += "A2.";
-}else {
-debugMsg += "B";
-	debugMsg += "navigator.geolocation物件失敗。";
+	
+function init(){
+	//alert("init");
+	if( navigator.geolocation ) {
+	debugMsg += "A1.";
+		navigator.geolocation.getCurrentPosition( geoYes, geoNo);
+		debugMsg += "A2.";
+	}else {
+	debugMsg += "B";
+		debugMsg += "navigator.geolocation物件失敗。";
+	}
+	//document.getElementById("posStr").innerHTML="script finish.";
+	document.getElementById("watchStr").innerHTML=debugMsg;
+	//alert("run drawMap()");
+	drawBaseMap();
+	startGPS();
 }
-//document.getElementById("posStr").innerHTML="script finish.";
-document.getElementById("watchStr").innerHTML=debugMsg;
-
-//畫圖
-var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
-
-canvas.width = 950;canvas.height = 1000;		//寬高預設值為300×150
-ctx.fillStyle = "black";	//填滿色
-ctx.fillRect(0,0,canvas.width,canvas.height)
-	
-	ctx.beginPath();
-ctx.strokeStyle = "blue";	//線條色
-ctx.lineWidth = 2;	//線條粗度
-ctx.strokeRect(0,0,canvas.width,canvas.height);
-/*
-ctx.fillStyle = "green";
-    ctx.fillRect(25,25,100,100);
-    ctx.clearRect(45,45,60,60);
-    ctx.strokeRect(50,50,50,50);
-
-
-ctx.fillStyle = "white";	//填滿色
-ctx.strokeStyle = "red";	//線條色
-    ctx.beginPath();
-    ctx.moveTo(75,50);
-    ctx.lineTo(100,75);
-    ctx.lineTo(100,25);
-	    ctx.fill();		//填滿
-	
-	ctx.beginPath();
-	ctx.lineWidth = 3;	//線條粗度
-	ctx.moveTo(75,50);
-    ctx.lineTo(180,75);
-    ctx.lineTo(100,25);
-	ctx.stroke();	//執行本行才畫線
-	
-	ctx.fillText("許功蓋", 10, 50);
-*/	
 	var points=[
 	/*
 		[22.6659424,120.5005407],	//阿婆粉圓冰
@@ -101,14 +70,15 @@ ctx.strokeStyle = "red";	//線條色
 		[22.6590325,120.5116325,"國仁醫院"],
 		[22.6492241, 120.522914,"麟洛鄉公所"],
 		[22.6400416, 120.5362810, "麟洛國中路口"],
+
 		[22.655381953796578, 120.55160925823591, "科大路口"],
 		[22.630047211459626, 120.59291416762996, "老埤路口"],
 		[22.633128880246172, 120.59797113670795, "安通路口"],
+
 		[22.62871783050417, 120.62638157350078,"沿山路口"],
 		[22.591721713708438, 120.62115374455101, "佳平路口"],
-		
 		[22.5727629,120.6509855,"急彎,逍遙山莊"],
-				
+
 		[22.5838491,120.6723113,"北大武山步道"]
 		];
 		var nextPoint = 5;	//下一個點
@@ -120,7 +90,27 @@ ctx.strokeStyle = "red";	//線條色
 	
 	var nextDist = -1;
 	var preDist = 0;
+	var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+canvas.width = 950;canvas.height = 1000;		//寬高預設值為300×150
+
+function drawBaseMap(){
+//alert("drawMap()");
+//畫圖
+
+ctx.fillStyle = "black";	//填滿色
+ctx.fillRect(0,0,canvas.width,canvas.height);
 	
+	ctx.beginPath();
+ctx.strokeStyle = "blue";	//線條色
+ctx.lineWidth = 2;	//線條粗度
+ctx.strokeRect(0,0,canvas.width,canvas.height);
+ctx.stroke();
+
+//	ctx.fillText("許功蓋", 10, 50);
+
+	//螢幕中央標示
 ctx.strokeStyle = "red";	//線條色
 ctx.lineWidth = 1;	//線條粗度
 	ctx.beginPath();
@@ -133,19 +123,64 @@ ctx.lineWidth = 1;	//線條粗度
     //ctx.arc(nPoint, wPoint,3,0,Math.PI*2,true);
 	ctx.stroke();
 	
-	ctx.strokeStyle = "green";	//線條色
-	ctx.lineWidth = 2;	//線條粗度
-	//console.log(zoon);
 
+	/*
+	//points.forEach(function drawPoint(value[0],value[1],"green",2);
 	for ( indexP in points){		//TODO 改用Path2D物件
 		drawPoint(points[indexP][0], points[indexP][1], "green", 2);
-
 	}
-
 	
+
+	ctx.strokeStyle = "red";
+		ctx.lineWidth = 1;	//線條粗度
+		ctx.beginPath();
+		//ctx.moveTo(0,0);
+		//alert(mapPoints[0][0] +"," + mapPoints[0][1]);
+	for ( p in mapPoints){		//TODO 改用Path2D物件
+		ctx.lineTo(mapPoints[p][0], mapPoints[p][1]);
+	}
+		ctx.stroke();
+		
+
+
+	ctx.beginPath();
+	//ctx.moveTo(points[0][0], points[0][1]);
+	for ( p in mapPoints){		//TODO 改用Path2D物件
+		ctx.moveTo(mapPoints[p][0], mapPoints[p][1]);
+		ctx.arc(mapPoints[p][0], mapPoints[p][1],5,0,Math.PI*2,true);
+	}
+	  ctx.stroke();
+ */
+
+	//console.log(zoon);
+	var mapPoints = gps2scr(points);
+     var circle = new Path2D();
+	 var path = new Path2D();
+ 	for ( p in mapPoints){		//TODO 改用Path2D物件
+			circle.moveTo(mapPoints[p][0], mapPoints[p][1]);
+			circle.arc(mapPoints[p][0], mapPoints[p][1],3,0,Math.PI*2,true);
+			path.lineTo(mapPoints[p][0], mapPoints[p][1]);
+	}
+	 	ctx.strokeStyle = "green";	//線條色
+	ctx.lineWidth = 2;	//線條粗度
+	  ctx.stroke(circle);
+	  ctx.lineWidth = 1;	//線條粗度
+	  	  ctx.stroke(path);
+}
+
+function gps2scr(sourcePs){		//經緯度座標轉螢幕座標
+	var newPs=new Array();
+	for(var i=0; i<sourcePs.length; i++){
+		newPs[i] = new Array();
+		newPs[i][0] =	(sourcePs[i][1] - points[nextPoint][1] )* zoon + canvas.width/2;
+		newPs[i][1] =	-(sourcePs[i][0] - points[nextPoint][0] )*zoon + canvas.height/2;
+	}
+	return newPs;
+}
+
 function drawPoint(lat, lon, color, width){
-	var drawX = (lon - wPoint )* zoon + canvas.width/2;
-	var drawY = -(lat - nPoint )*zoon + canvas.height/2;
+	var drawX = (lon - points[nextPoint][1] )* zoon + canvas.width/2;
+	var drawY = -(lat - points[nextPoint][0] )*zoon + canvas.height/2;
 	//console.log(drawX + "," + drawY);
 	ctx.strokeStyle = color;	//線條色
 	ctx.lineWidth = width;	//線條粗度
@@ -175,7 +210,7 @@ str = "時間:" + strTime;
 str += "<br />現在位置:" + recentLati.toFixed(7) + ", "+ recentLongi.toFixed(7);
 //str += "<br />精確度" + evt.coords.accuracy;
 str += "<br />目標:" + points[nextPoint][2];		//prevLati.toFixed(7) + ", " + prevLongi.toFixed(7);
-str += "<br />距離:" + nextDist.toFixed(3) +"公里";
+str += "<br />直線距離:" + nextDist.toFixed(3) +"公里";
 //prevLati = evt.coords.latitude;
 //prevLongi = evt.coords.longitude;
 
@@ -206,13 +241,18 @@ document.getElementById("msg").innerText = str;
 
 function geoNo(evt){
 //限https? win10本機檔用Chrome可開允許,但仍取得失敗。 手機note9待測
-debugMsg += "GPS取得失敗。";
+debugMsg = "GPS取得失敗。";
 document.getElementById("watchStr").innerHTML=debugMsg;
 }
 
 var watchID;
 function startGPS(){
-	watchID = navigator.geolocation.watchPosition( geoYes, geoNo);
+var options = {
+  enableHighAccuracy: true,
+  timeout: 5000,
+  maximumAge: 0
+};
+	watchID = navigator.geolocation.watchPosition( geoYes, geoNo, options);
 
 	document.getElementById("watchStr").innerHTML="GPS正在監控中...";
 }
