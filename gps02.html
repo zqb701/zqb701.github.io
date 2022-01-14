@@ -8,24 +8,13 @@
 <style>
 /* 字型大小自適應來源 https://www.minwt.com/webdesign-dev/css/20278.html*/
 html{
-  font-size: 14px;
+  font-size: 30px;
 }
 
-@media (min-width: 600px) and (max-width: 1200px) {
-  html {
-   font-size: calc(1.2rem + (1.3-1.2) * ((100vw - 600px) / (1200 - 600)));
-  }
-}
-
-@media (min-width: 1200px) {
-  html {
-     font-size: 1.3rem;
-  }
-}
 </style>
 
 </head>
-<body onload="init();">
+<body onload="init();" bgcolor="black" text="white">
 <canvas id="canvas"></canvas>
 <p id="posStr">111222</p>
 <p id="watchStr">監控狀態</p>
@@ -67,29 +56,35 @@ function init(){
 		[22.66238,120.5079811],			//民生國小
 		[22.6603804,120.5111652],		//全家超商
 		*/
-		[22.6590325,120.5116325,"國仁醫院"],
-		[22.6492241, 120.522914,"麟洛鄉公所"],
+
+		[22.658032475585777, 120.51462941403176,"國仁路口"],
+		[22.651514894343208, 120.52598275892676,"麟洛路口"],
 		[22.6400416, 120.5362810, "麟洛國中路口"],
 
 		[22.655381953796578, 120.55160925823591, "科大路口"],
+		[22.652601671108002, 120.56930340677384, "科大彎道"],
 		[22.630047211459626, 120.59291416762996, "老埤路口"],
 		[22.633128880246172, 120.59797113670795, "安通路口"],
 
 		[22.62871783050417, 120.62638157350078,"沿山路口"],
 		[22.591721713708438, 120.62115374455101, "佳平路口"],
 		[22.5727629,120.6509855,"急彎,逍遙山莊"],
-
-		[22.5838491,120.6723113,"北大武山步道"]
+		[22.58924109879525, 120.66460999148127, "大武山之門"],
+		[22.6145008,120.7017865,"北大武山步道"]
 		];
-		var nextPoint = 5;	//下一個點
-	var wPoint = points[nextPoint][1];//120.5116;		//最西點
+		var nextPoint = 0;	//下一個點
+	var wPoint =  120.51431010230766;	//points[nextPoint][1];//120.5116;		//最西點
+	var recentLongi = 120.51431010230766;
 	//ar ePoint = 120.52;		//最東點
-	var nPoint = points[nextPoint][0];//22.659;		//最北點
-	
+	var nPoint = 22.659517486714293;	//points[nextPoint][0];//22.659;		//最北點
+	var recentLati = 22.659517486714293;
+
+
 	var zoon = 4000;//canvas.width / Math.abs(wPoint - ePoint);
 	
 	var nextDist = -1;
 	var preDist = 0;
+	
 	var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
@@ -164,7 +159,7 @@ ctx.lineWidth = 1;	//線條粗度
 	 	ctx.strokeStyle = "green";	//線條色
 	ctx.lineWidth = 2;	//線條粗度
 	  ctx.stroke(circle);
-	  ctx.lineWidth = 1;	//線條粗度
+	  ctx.lineWidth = 3;	//線條粗度
 	  	  ctx.stroke(path);
 }
 
@@ -172,8 +167,8 @@ function gps2scr(sourcePs){		//經緯度座標轉螢幕座標
 	var newPs=new Array();
 	for(var i=0; i<sourcePs.length; i++){
 		newPs[i] = new Array();
-		newPs[i][0] =	(sourcePs[i][1] - points[nextPoint][1] )* zoon + canvas.width/2;
-		newPs[i][1] =	-(sourcePs[i][0] - points[nextPoint][0] )*zoon + canvas.height/2;
+		newPs[i][0] =	(sourcePs[i][1] - recentLongi )* zoon + canvas.width/8;
+		newPs[i][1] =	-(sourcePs[i][0] -recentLati )*zoon + canvas.height/8;
 	}
 	return newPs;
 }
@@ -207,7 +202,8 @@ var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
 str = "時間:" + strTime;
 //alert(str);
-str += "<br />現在位置:" + recentLati.toFixed(7) + ", "+ recentLongi.toFixed(7);
+//str += "<br />現在位置:" + recentLati.toFixed(7) + ", "+ recentLongi.toFixed(7);
+str += "<br/>速度："+ evt.coords.speed/1000 + "公里/小時。方向：" + evt.coords.heading;	//方向為正北的順時針
 //str += "<br />精確度" + evt.coords.accuracy;
 str += "<br />目標:" + points[nextPoint][2];		//prevLati.toFixed(7) + ", " + prevLongi.toFixed(7);
 str += "<br />直線距離:" + nextDist.toFixed(3) +"公里";
@@ -218,14 +214,14 @@ document.getElementById("posStr").innerHTML=str;
 
 //debugMsg += "geoYes()完成。";
 document.getElementById("watchStr").innerHTML=debugMsg;
-/*
+
 if (nextDist > preDist){	//TODO 
 	nextPoint++;
-	preDist = 0;
+	preDist = getDistance(recentLati, recentLongi,  points[nextPoint][0], points[nextPoint][1]);
 }else{
 	preDist = nextDist;
 }
-*/
+
 
 /*
 str = "https://maps.googleapis.com/maps/api/staticmap"+
