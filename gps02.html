@@ -5,27 +5,18 @@
 <!-- 程式來源 https://blog.xuite.net/gkyo0510/wretch/242769650 -->
 <title>GPS02</title>
 
-<style>
-/* 字型大小自適應來源 https://www.minwt.com/webdesign-dev/css/20278.html*/
-html{
-  font-size: 30px;
-}
-
-</style>
-
 </head>
 <body onload="init();" bgcolor="black" text="white">
 <canvas id="canvas"></canvas>
+<font size="6">
 <p id="posStr">111222</p>
+</font>
+<font size="5">
 <p id="watchStr">監控狀態</p>
-<p>
+</font>
 <input type="button" value="啟動GPS更新" onClick="startGPS();">
 <input type="button" value="停止GPS更新" onClick="stopGPS();">
-</p>
 
-<hr>
-<p><img id="map"/></p>
-<div id="msg"></div>
 </body>
 <script>
 var debugMsg = "script 開始.";
@@ -36,11 +27,8 @@ var debugMsg = "script 開始.";
 function init(){
 	//alert("init");
 	if( navigator.geolocation ) {
-	debugMsg += "A1.";
 		navigator.geolocation.getCurrentPosition( geoYes, geoNo);
-		debugMsg += "A2.";
 	}else {
-	debugMsg += "B";
 		debugMsg += "navigator.geolocation物件失敗。";
 	}
 	//document.getElementById("posStr").innerHTML="script finish.";
@@ -49,7 +37,22 @@ function init(){
 	drawBaseMap();
 	startGPS();
 }
-	var points=[
+
+var p2=[
+	[22.658032475585777, 120.51462941403176,"國仁路口"],
+	[22.661457518466925, 120.51546704670002, "瑞光彎道1"],
+	[22.669040797908576, 120.51069667037709, "瑞光彎道2"],
+	[22.675343791402256, 120.51041230398191, "瑞光彎道3"],
+	[22.680967230062606, 120.5055987046144, "瑞光彎道4"],
+	[22.692732317780546, 120.50245954225517,"海豐街"],
+	[22.695511971450234, 120.5054161117716,"盛豐路"],
+	[22.697465730730798, 120.5124731605147,"盛豐彎道1"],
+	[22.701213109756527, 120.51893681604922,"盛豐彎道2"],
+	[22.70880261417915, 120.52199195978083, "德和路"],
+	[22.7151486520024, 120.52903378461157, "海豐交流道"],
+	[22.753526095626334, 120.49163293266612,"九如交流道"]
+];
+	var p3=[
 	/*
 		[22.6659424,120.5005407],	//阿婆粉圓冰
 		[22.6618443,120.5069158],		//演藝廳
@@ -72,6 +75,7 @@ function init(){
 		[22.58924109879525, 120.66460999148127, "大武山之門"],
 		[22.6145008,120.7017865,"北大武山步道"]
 		];
+		var points = p3;
 		var nextPoint = 0;	//下一個點
 	var wPoint =  120.51431010230766;	//points[nextPoint][1];//120.5116;		//最西點
 	var recentLongi = 120.51431010230766;
@@ -80,7 +84,6 @@ function init(){
 	var recentLati = 22.659517486714293;
 
 
-	var zoon = 4000;//canvas.width / Math.abs(wPoint - ePoint);
 	
 	var nextDist = -1;
 	var preDist = 0;
@@ -89,7 +92,10 @@ function init(){
 var ctx = canvas.getContext("2d");
 
 canvas.width = 950;canvas.height = 1000;		//寬高預設值為300×150
-
+	var centerX = canvas.width / 8;
+	var centerY = canvas.height / 2;
+	var zoon = 4000;//canvas.width / Math.abs(wPoint - ePoint);
+	
 function drawBaseMap(){
 //alert("drawMap()");
 //畫圖
@@ -109,12 +115,10 @@ ctx.stroke();
 ctx.strokeStyle = "red";	//線條色
 ctx.lineWidth = 1;	//線條粗度
 	ctx.beginPath();
-	x0 = canvas.width / 2;
-	y0 = canvas.height / 2;
-	ctx.moveTo(x0-10,y0);
-    ctx.lineTo(x0 +10,y0);
-	ctx.moveTo(x0,y0-10);
-    ctx.lineTo(x0,y0+10);
+	ctx.moveTo(centerX - 10, centerY);
+    ctx.lineTo(centerX + 10, centerY);
+	ctx.moveTo(centerX, centerY - 10);
+    ctx.lineTo(centerX, centerY + 10);
     //ctx.arc(nPoint, wPoint,3,0,Math.PI*2,true);
 	ctx.stroke();
 	
@@ -167,15 +171,15 @@ function gps2scr(sourcePs){		//經緯度座標轉螢幕座標
 	var newPs=new Array();
 	for(var i=0; i<sourcePs.length; i++){
 		newPs[i] = new Array();
-		newPs[i][0] =	(sourcePs[i][1] - recentLongi )* zoon + canvas.width/8;
-		newPs[i][1] =	-(sourcePs[i][0] -recentLati )*zoon + canvas.height/8;
+		newPs[i][0] =	(sourcePs[i][1] - recentLongi )* zoon + centerX;
+		newPs[i][1] =	-(sourcePs[i][0] -recentLati )*zoon + centerY;
 	}
 	return newPs;
 }
 
 function drawPoint(lat, lon, color, width){
-	var drawX = (lon - points[nextPoint][1] )* zoon + canvas.width/2;
-	var drawY = -(lat - points[nextPoint][0] )*zoon + canvas.height/2;
+	var drawX = (lon - points[nextPoint][1] )* zoon + centerX;
+	var drawY = -(lat - points[nextPoint][0] )*zoon + centerY;
 	//console.log(drawX + "," + drawY);
 	ctx.strokeStyle = color;	//線條色
 	ctx.lineWidth = width;	//線條粗度
@@ -203,10 +207,10 @@ strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
 str = "時間:" + strTime;
 //alert(str);
 //str += "<br />現在位置:" + recentLati.toFixed(7) + ", "+ recentLongi.toFixed(7);
-str += "<br/>速度："+ evt.coords.speed/1000 + "公里/小時。方向：" + evt.coords.heading;	//方向為正北的順時針
+str += "<br/>速度："+ Math.round(evt.coords.speed)/1000 + "公里/小時。方向：" + evt.coords.heading;	//方向為正北的順時針
 //str += "<br />精確度" + evt.coords.accuracy;
 str += "<br />目標:" + points[nextPoint][2];		//prevLati.toFixed(7) + ", " + prevLongi.toFixed(7);
-str += "<br />直線距離:" + nextDist.toFixed(3) +"公里";
+str += "<br />直線距離:" + nextDist +"公里";
 //prevLati = evt.coords.latitude;
 //prevLongi = evt.coords.longitude;
 
@@ -215,7 +219,7 @@ document.getElementById("posStr").innerHTML=str;
 //debugMsg += "geoYes()完成。";
 document.getElementById("watchStr").innerHTML=debugMsg;
 
-if (nextDist > preDist){	//TODO 
+if (nextDist < 0.005 && (nextDist > preDist) ){	//目標5公尺內才判斷是否通過
 	nextPoint++;
 	preDist = getDistance(recentLati, recentLongi,  points[nextPoint][0], points[nextPoint][1]);
 }else{
@@ -243,11 +247,11 @@ document.getElementById("watchStr").innerHTML=debugMsg;
 
 var watchID;
 function startGPS(){
-var options = {
-  enableHighAccuracy: true,
-  timeout: 5000,
-  maximumAge: 0
-};
+	var options = {
+	  enableHighAccuracy: true,
+	  timeout: 5000,
+	  maximumAge: 0
+	};
 	watchID = navigator.geolocation.watchPosition( geoYes, geoNo, options);
 
 	document.getElementById("watchStr").innerHTML="GPS正在監控中...";
@@ -255,7 +259,7 @@ var options = {
 
 function stopGPS(){
 	navigator.geolocation.clearWatch( watchID );
-	document.getElementById("watchStr").innerHTML="GPS停止監控中...";
+	document.getElementById("watchStr").innerHTML="GPS停止監控...";
 }
 
 function getDistance(lat1, lon1, lat2, lon2) {
@@ -271,10 +275,10 @@ function getDistance(lat1, lon1, lat2, lon2) {
     }
     dist = Math.acos(dist);
     dist = dist * 180/Math.PI;
-    dist = dist * 60 * 1.1515;  //不明常數
-    dist = dist * 1.609344  //英浬轉公里
+    dist = dist * 60 * 1.1515;	//不明常數
+    dist = dist * 1.609344 ;		//英浬轉公里
 
-    return dist;
+    return dist.toFixed(3);		//小數點後三位
 
 }
 </script>
