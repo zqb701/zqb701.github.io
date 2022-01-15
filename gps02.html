@@ -8,10 +8,10 @@
 </head>
 <body onload="init();" bgcolor="black" text="white">
 <canvas id="canvas"></canvas>
-<font size="6">
+<font size="7">
 <p id="posStr">111222</p>
 </font>
-<font size="5">
+<font size="6">
 <p id="watchStr">監控狀態</p>
 </font>
 <input type="button" value="啟動GPS更新" onClick="startGPS();">
@@ -37,8 +37,24 @@ function init(){
 	drawBaseMap();
 	startGPS();
 }
-
-var p2=[
+var p01=[
+	[22.658032475585777, 120.51462941403176,"國仁路口"],
+	[22.659914735641667, 120.51117374021372,"屏商路口"],
+	[22.65983459647982, 120.50578459146016,"歸仁彎"],
+	[22.652905040831186, 120.49474121968251, "和生彎"],
+	[22.651762313125314, 120.48597167701199, "復興路口"],
+	[22.655823532381984, 120.46656980548235, "建國路口"],
+	[22.642159446314253, 120.4185087722723, "磚仔窰"],
+	[22.633618032191855, 120.38857434750723, "賓士路口"],
+	[22.63635369740717, 120.38229941534014,"彎道1"],
+	[22.635421093866388, 120.37318949926723, "彎道2"],
+	[22.63413212059094, 120.37012392539445, "彎道3"],
+	[22.63634876160687, 120.35721342010389, "文衡路"],
+	[22.634581156634074, 120.35822752986832, "文衡彎道"],
+	[22.63337989604311, 120.3579774601367, "文化路"],
+	[22.633949053558847, 120.35468108635685, "大潤發"]	
+];
+var p02=[
 	[22.658032475585777, 120.51462941403176,"國仁路口"],
 	[22.661457518466925, 120.51546704670002, "瑞光彎道1"],
 	[22.669040797908576, 120.51069667037709, "瑞光彎道2"],
@@ -52,7 +68,7 @@ var p2=[
 	[22.7151486520024, 120.52903378461157, "海豐交流道"],
 	[22.753526095626334, 120.49163293266612,"九如交流道"]
 ];
-	var p3=[
+	var p03=[
 	/*
 		[22.6659424,120.5005407],	//阿婆粉圓冰
 		[22.6618443,120.5069158],		//演藝廳
@@ -75,7 +91,7 @@ var p2=[
 		[22.58924109879525, 120.66460999148127, "大武山之門"],
 		[22.6145008,120.7017865,"北大武山步道"]
 		];
-		var points = p3;
+		var points = p01;
 		var nextPoint = 0;	//下一個點
 	var wPoint =  120.51431010230766;	//points[nextPoint][1];//120.5116;		//最西點
 	var recentLongi = 120.51431010230766;
@@ -92,9 +108,9 @@ var p2=[
 var ctx = canvas.getContext("2d");
 
 canvas.width = 950;canvas.height = 1000;		//寬高預設值為300×150
-	var centerX = canvas.width / 8;
+	var centerX = canvas.width * 7/ 8;
 	var centerY = canvas.height / 2;
-	var zoon = 4000;//canvas.width / Math.abs(wPoint - ePoint);
+	var zoon = 5000;//canvas.width / Math.abs(wPoint - ePoint);
 	
 function drawBaseMap(){
 //alert("drawMap()");
@@ -204,13 +220,14 @@ drawPoint(recentLati, recentLongi, "red", 2);
 
 var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
-str = "時間:" + strTime;
+str = "時間：" + strTime;
 //alert(str);
 //str += "<br />現在位置:" + recentLati.toFixed(7) + ", "+ recentLongi.toFixed(7);
-str += "<br/>速度："+ Math.round(evt.coords.speed)/1000 + "公里/小時。方向：" + evt.coords.heading;	//方向為正北的順時針
+str += "<br/>速度："+ Math.round(evt.coords.speed)/1000 + "公里/小時。";
+	str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
 //str += "<br />精確度" + evt.coords.accuracy;
-str += "<br />目標:" + points[nextPoint][2];		//prevLati.toFixed(7) + ", " + prevLongi.toFixed(7);
-str += "<br />直線距離:" + nextDist +"公里";
+str += "<br />目標：" + points[nextPoint][2];		//prevLati.toFixed(7) + ", " + prevLongi.toFixed(7);
+str += "<br />距離：" + nextDist  + "公里";
 //prevLati = evt.coords.latitude;
 //prevLongi = evt.coords.longitude;
 
