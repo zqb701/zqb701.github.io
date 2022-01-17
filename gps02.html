@@ -21,22 +21,10 @@
 <script>
 var debugMsg = "script 開始.";
 //document.getElementById("posStr").innerHTML="";
-    let prevLati = 22.9620338;   //關廟系統北上出口前2公里標示牌
-    let prevLongi = 120.346256;
+//    let prevLati = 22.9620338;   //關廟系統北上出口前2公里標示牌
+//    let prevLongi = 120.346256;
 	
-function init(){
-	//alert("init");
-	if( navigator.geolocation ) {
-		navigator.geolocation.getCurrentPosition( geoYes, geoNo);
-	}else {
-		debugMsg += "navigator.geolocation物件失敗。";
-	}
-	//document.getElementById("posStr").innerHTML="script finish.";
-	document.getElementById("watchStr").innerHTML=debugMsg;
-	//alert("run drawMap()");
-	drawBaseMap();
-	startGPS();
-}
+
 var p00=[
 		
 		//[22.666237, 120.500873, "前門"],
@@ -107,8 +95,20 @@ var p02=[
 		[22.58924109879525, 120.66460999148127, "大武山之門"],
 		[22.6145008,120.7017865,"北大武山步道"]
 		];
-		var points = p00;
-		var zoon = 500000;
+		var p04 = [
+			[22.666540670813557, 120.50113642730727, "民利路"],
+			[22.66728729803525, 120.4997624132888, "民教路"],
+			[22.668284731721105, 120.49808200934285, "廣東路"],
+			[22.667523721107013, 120.4978306934891, "民生路"],
+			[22.66566750271852, 120.4961204306436, "民有一路"],
+			[22.664495102608665, 120.49399094587267, "台糖三街"],
+			[22.66472029116734, 120.49111723281767, "台糖一街"],
+			[22.662416069802465, 120.49028271413977, "台糖街"],
+			[22.66159915133573, 120.49302542015064, "台糖三街2"]
+
+		];
+		var points = p04;
+		var zoon = 50000;
 		
 		var nextPoint = 0;	//下一個點
 	//var wPoint =  120.51431010230766;	//points[nextPoint][1];//120.5116;		//最西點
@@ -128,13 +128,25 @@ var p02=[
 	var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
-canvas.width = 950;canvas.height = 1000;		//寬高預設值為300×150
-	var centerX = canvas.width  / 2;
+canvas.width = 950;canvas.height = 950;		//寬高預設值為300×150
+	var centerX = canvas.width *7 / 8;
 	var centerY = canvas.height / 2;
 	
 
 	//var scrPoint = gps2scr(recentPoint);
-
+function init(){
+	//alert("init");
+	if( navigator.geolocation ) {
+		navigator.geolocation.getCurrentPosition( geoYes, geoNo);
+	}else {
+		debugMsg += "navigator.geolocation物件失敗。";
+	}
+	//document.getElementById("posStr").innerHTML="script finish.";
+	document.getElementById("watchStr").innerHTML=debugMsg;
+	//alert("run drawMap()");
+	drawBaseMap();
+	startGPS();
+}
 	
 function drawBaseMap(){
 //alert("drawMap()");
@@ -152,6 +164,7 @@ ctx.strokeRect(0,0,canvas.width,canvas.height);
 //	ctx.fillText("許功蓋", 10, 50);
 
 	//螢幕中央標示
+	/*
 ctx.strokeStyle = "red";	//線條色
 ctx.lineWidth = 5;	//線條粗度
 	ctx.beginPath();
@@ -161,7 +174,7 @@ ctx.lineWidth = 5;	//線條粗度
     ctx.lineTo(centerX, centerY + 30);
     //ctx.arc(nPoint, wPoint,3,0,Math.PI*2,true);
 	ctx.stroke();
-	
+	*/
 
 	/*
 	//points.forEach(function drawPoint(value[0],value[1],"green",2);
