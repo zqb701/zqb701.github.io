@@ -119,6 +119,7 @@ var p02=[
 	var Point01 = [22.659517486714293,120.51431010230766, "田中巷"];	
 	var Point02 = [22.666152566994903, 120.50087279317975,"後門"];
 	var recentPoint = Point02;
+	
 
 	
 	var nextDist = -1;
@@ -131,6 +132,9 @@ canvas.width = 950;canvas.height = 1000;		//寬高預設值為300×150
 	var centerX = canvas.width  / 2;
 	var centerY = canvas.height / 2;
 	
+
+	//var scrPoint = gps2scr(recentPoint);
+
 	
 function drawBaseMap(){
 //alert("drawMap()");
@@ -210,7 +214,14 @@ ctx.lineWidth = 5;	//線條粗度
 	  ctx.fillStyle = "black";
 	  ctx.fill(circle2);
 	  
-
+		var drawX = (recentPoint[1] - points[nextPoint][1] )* zoon + centerX;
+	var drawY = -(recentPoint[0] - points[nextPoint][0] )*zoon + centerY;
+	alert(drawX+ ", " + drawY);
+	ctx.strokeStyle ="red";	//線條色
+	ctx.lineWidth = 2;	//線條粗度
+	ctx.beginPath();
+    ctx.arc(drawX, drawY,3,0,Math.PI*2,true);
+	ctx.stroke();
 }
 
 function gps2scr(sourcePs){		//經緯度座標轉螢幕座標
@@ -251,12 +262,14 @@ recentPoint[1]= evt.coords.longitude;
 nextDist  = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
 //drawPoint(recentPoint[0], recentPoint[1], "red", 2);
 
-var scrPoint = gps2scr(recentPoint);
+	var drawX = (recentPoint[1] - points[nextPoint][1] )* zoon + centerX;
+	var drawY = -(recentPoint[0] - points[nextPoint][0] )*zoon + centerY;
 	ctx.strokeStyle ="red";	//線條色
 	ctx.lineWidth = 2;	//線條粗度
 	ctx.beginPath();
-    ctx.arc(scrPoint[0], scrPoint[1],10,0,Math.PI*2,true);
+    ctx.arc(drawX, drawY,3,0,Math.PI*2,true);
 	ctx.stroke();
+	//debugMsg += scrPoint[0] + "," + scrPoint[1];
 	
 var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
