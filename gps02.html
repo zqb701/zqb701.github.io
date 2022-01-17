@@ -234,7 +234,8 @@ function drawPoint(lat, lon, color, width){
 	
 //============================================
 function geoYes(evt){
-//debugMsg += "getYes開始。";
+
+debugMsg = "";
 
 //recentLati = evt.coords.latitude;
 //recentLongi = evt.coords.longitude;
@@ -245,7 +246,7 @@ drawPoint(recentPoint[0], recentPoint[1], "red", 2);
 
 var scrPoint = gps2scr(recentPoint);
 	ctx.strokeStyle ="blue";	//線條色
-	ctx.lineWidth = width;	//線條粗度
+	ctx.lineWidth = 2;	//線條粗度
 	ctx.beginPath();
     ctx.arc(scrPoint[0], scrPoint[1],10,0,Math.PI*2,true);
 	ctx.stroke();
@@ -274,8 +275,8 @@ if (nextDist < 0.005 && (nextDist > preDist) ){	//目標5公尺內才判斷是�
 	preDist = nextDist;
 }
 
-debugMsg += ", GPS ok.";
-document.getElementById("watchStr").innerHTML=debugMsg;
+debugMsg += "GPS ok.";
+document.getElementById("watchStr").innerHTML = debugMsg;
 /*
 str = "https://maps.googleapis.com/maps/api/staticmap"+
         "?zoom=15&size=300x300&sensor=false&center=" + 
