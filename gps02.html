@@ -38,6 +38,7 @@ function init(){
 	startGPS();
 }
 var p00=[
+		[22.665897115074287, 120.50069570831349, "前門"],
 		[22.665897115074287, 120.50069570831349, "巷口1"],
 		[22.665707901738443, 120.5010424041541, "巷口2"],
 		[22.66528466599206, 120.5017954343364, "殺蛇溪"],
@@ -109,7 +110,7 @@ var p02=[
 //var nPoint = 22.659517486714293;	//points[nextPoint][0];//22.659;		//最北點
 	//var recentLati = 22.659517486714293;
 	var Point01 = [22.659517486714293,120.51431010230766, "田中巷"];	
-	var Point02 = [22.666152566994903, 120.50087279317975,"民利路"];
+	var Point02 = [22.666152566994903, 120.50087279317975,"後門"];
 	var recentPoint = Point02;
 
 	
@@ -131,22 +132,22 @@ function drawBaseMap(){
 ctx.fillStyle = "black";	//填滿色
 ctx.fillRect(0,0,canvas.width,canvas.height);
 	
-	ctx.beginPath();
+	//ctx.beginPath();
 ctx.strokeStyle = "blue";	//線條色
 ctx.lineWidth = 2;	//線條粗度
 ctx.strokeRect(0,0,canvas.width,canvas.height);
-ctx.stroke();
+//ctx.stroke();
 
 //	ctx.fillText("許功蓋", 10, 50);
 
 	//螢幕中央標示
 ctx.strokeStyle = "red";	//線條色
-ctx.lineWidth = 1;	//線條粗度
+ctx.lineWidth = 5;	//線條粗度
 	ctx.beginPath();
-	ctx.moveTo(centerX - 10, centerY);
-    ctx.lineTo(centerX + 10, centerY);
-	ctx.moveTo(centerX, centerY - 10);
-    ctx.lineTo(centerX, centerY + 10);
+	ctx.moveTo(centerX - 30, centerY);
+    ctx.lineTo(centerX + 30, centerY);
+	ctx.moveTo(centerX, centerY - 30);
+    ctx.lineTo(centerX, centerY + 30);
     //ctx.arc(nPoint, wPoint,3,0,Math.PI*2,true);
 	ctx.stroke();
 	
@@ -182,17 +183,27 @@ ctx.lineWidth = 1;	//線條粗度
 	//console.log(zoon);
 	var mapPoints = gps2scr(points);
      var circle = new Path2D();
+	 var circle2 = new Path2D();
 	 var path = new Path2D();
  	for ( p in mapPoints){		//TODO 改用Path2D物件
 			circle.moveTo(mapPoints[p][0], mapPoints[p][1]);
-			circle.arc(mapPoints[p][0], mapPoints[p][1],5,0,Math.PI*2,true);
+			circle.arc(mapPoints[p][0], mapPoints[p][1],10,0,Math.PI*2,true);
+			circle2.moveTo(mapPoints[p][0], mapPoints[p][1]);
+			circle2.arc(mapPoints[p][0], mapPoints[p][1],8,0,Math.PI*2,true);
 			path.lineTo(mapPoints[p][0], mapPoints[p][1]);
 	}
 	 	ctx.strokeStyle = "green";	//線條色
+		
+			  ctx.lineWidth = 10;	//線條粗度
+	  	  ctx.stroke(path);
+		  
 	ctx.lineWidth = 3;	//線條粗度
 	  ctx.stroke(circle);
-	  ctx.lineWidth = 10;	//線條粗度
-	  	  ctx.stroke(path);
+	  
+	  ctx.fillStyle = "black";
+	  ctx.fill(circle2);
+	  
+
 }
 
 function gps2scr(sourcePs){		//經緯度座標轉螢幕座標
@@ -236,19 +247,18 @@ var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
 str = "時間：" + strTime;
 //alert(str);
-//str += "<br />現在位置:" + recentLati.toFixed(7) + ", "+ recentLongi.toFixed(7);
+str += "<br />位置:" + recentPoint[0] + ", "+ recentPoint[1];
 str += "<br/>速度："+ Math.round(evt.coords.speed)/1000 + "公里/小時。";
 	str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
 //str += "<br />精確度" + evt.coords.accuracy;
-str += "<br />目標：" + points[nextPoint][2];		//prevLati.toFixed(7) + ", " + prevLongi.toFixed(7);
+str += "<br />目標：" + points[nextPoint][2]+"("+ points[nextPoint][0] +", " + points[nextPoint][1]
 str += "<br />距離：" + nextDist  + "公里";
 //prevLati = evt.coords.latitude;
 //prevLongi = evt.coords.longitude;
 
 document.getElementById("posStr").innerHTML=str;
 
-//debugMsg += "geoYes()完成。";
-document.getElementById("watchStr").innerHTML=debugMsg;
+
 
 if (nextDist < 0.005 && (nextDist > preDist) ){	//目標5公尺內才判斷是否通過
 	nextPoint++;
@@ -257,7 +267,8 @@ if (nextDist < 0.005 && (nextDist > preDist) ){	//目標5公尺內才判斷是�
 	preDist = nextDist;
 }
 
-
+debugMsg += ", GPS ok.";
+document.getElementById("watchStr").innerHTML=debugMsg;
 /*
 str = "https://maps.googleapis.com/maps/api/staticmap"+
         "?zoom=15&size=300x300&sensor=false&center=" + 
