@@ -37,8 +37,16 @@ function init(){
 	drawBaseMap();
 	startGPS();
 }
+var p00=[
+		[22.665897115074287, 120.50069570831349, "巷口1"],
+		[22.665707901738443, 120.5010424041541, "巷口2"],
+		[22.66528466599206, 120.5017954343364, "殺蛇溪"],
+		[22.665066241181687, 120.50217027304704, "民福路"],
+		[22.66379809138713, 120.50183335621948, "民興路"],
+		[22.663710225539916, 120.50237449188843, "63巷"]
+	];
 var p01=[
-	[22.658032475585777, 120.51462941403176,"國仁路口"],
+	[22.658034247616996, 120.5146302173418,"國仁路口"],
 	[22.659914735641667, 120.51117374021372,"屏商路口"],
 	[22.65983459647982, 120.50578459146016,"歸仁彎"],
 	[22.652905040831186, 120.49474121968251, "和生彎"],
@@ -55,7 +63,7 @@ var p01=[
 	[22.633949053558847, 120.35468108635685, "大潤發"]	
 ];
 var p02=[
-	[22.658032475585777, 120.51462941403176,"國仁路口"],
+	[22.658034247616996, 120.5146302173418,"國仁路口"],
 	[22.661457518466925, 120.51546704670002, "瑞光彎道1"],
 	[22.669040797908576, 120.51069667037709, "瑞光彎道2"],
 	[22.675343791402256, 120.51041230398191, "瑞光彎道3"],
@@ -68,15 +76,15 @@ var p02=[
 	[22.7151486520024, 120.52903378461157, "海豐交流道"],
 	[22.753526095626334, 120.49163293266612,"九如交流道"]
 ];
-	var p03=[
+	var p03=[	//北大武山
 	/*
 		[22.6659424,120.5005407],	//阿婆粉圓冰
 		[22.6618443,120.5069158],		//演藝廳
 		[22.66238,120.5079811],			//民生國小
 		[22.6603804,120.5111652],		//全家超商
 		*/
-
-		[22.658032475585777, 120.51462941403176,"國仁路口"],
+		 22.658034247616996, 120.5146302173418
+		[22.658034247616996, 120.5146302173418,"國仁路口"],
 		[22.651514894343208, 120.52598275892676,"麟洛路口"],
 		[22.6400416, 120.5362810, "麟洛國中路口"],
 
@@ -91,14 +99,18 @@ var p02=[
 		[22.58924109879525, 120.66460999148127, "大武山之門"],
 		[22.6145008,120.7017865,"北大武山步道"]
 		];
-		var points = p01;
+		var points = p00;
+		var zoon = 250000;
+		
 		var nextPoint = 0;	//下一個點
-	var wPoint =  120.51431010230766;	//points[nextPoint][1];//120.5116;		//最西點
-	var recentLongi = 120.51431010230766;
+	//var wPoint =  120.51431010230766;	//points[nextPoint][1];//120.5116;		//最西點
+	//var recentLongi = 120.51431010230766;
 	//ar ePoint = 120.52;		//最東點
-	var nPoint = 22.659517486714293;	//points[nextPoint][0];//22.659;		//最北點
-	var recentLati = 22.659517486714293;
-
+//var nPoint = 22.659517486714293;	//points[nextPoint][0];//22.659;		//最北點
+	//var recentLati = 22.659517486714293;
+	var Point01 = [22.659517486714293,120.51431010230766, "田中巷"];	
+	var Point02 = [22.666152566994903, 120.50087279317975,"民利路"];
+	var recentPoint = Point02;
 
 	
 	var nextDist = -1;
@@ -108,9 +120,9 @@ var p02=[
 var ctx = canvas.getContext("2d");
 
 canvas.width = 950;canvas.height = 1000;		//寬高預設值為300×150
-	var centerX = canvas.width * 7/ 8;
-	var centerY = canvas.height / 2;
-	var zoon = 5000;//canvas.width / Math.abs(wPoint - ePoint);
+	var centerX = canvas.width  / 8;
+	var centerY = canvas.height / 8;
+	
 	
 function drawBaseMap(){
 //alert("drawMap()");
@@ -173,13 +185,13 @@ ctx.lineWidth = 1;	//線條粗度
 	 var path = new Path2D();
  	for ( p in mapPoints){		//TODO 改用Path2D物件
 			circle.moveTo(mapPoints[p][0], mapPoints[p][1]);
-			circle.arc(mapPoints[p][0], mapPoints[p][1],3,0,Math.PI*2,true);
+			circle.arc(mapPoints[p][0], mapPoints[p][1],5,0,Math.PI*2,true);
 			path.lineTo(mapPoints[p][0], mapPoints[p][1]);
 	}
 	 	ctx.strokeStyle = "green";	//線條色
-	ctx.lineWidth = 2;	//線條粗度
+	ctx.lineWidth = 3;	//線條粗度
 	  ctx.stroke(circle);
-	  ctx.lineWidth = 3;	//線條粗度
+	  ctx.lineWidth = 10;	//線條粗度
 	  	  ctx.stroke(path);
 }
 
@@ -187,8 +199,8 @@ function gps2scr(sourcePs){		//經緯度座標轉螢幕座標
 	var newPs=new Array();
 	for(var i=0; i<sourcePs.length; i++){
 		newPs[i] = new Array();
-		newPs[i][0] =	(sourcePs[i][1] - recentLongi )* zoon + centerX;
-		newPs[i][1] =	-(sourcePs[i][0] -recentLati )*zoon + centerY;
+		newPs[i][0] =	(sourcePs[i][1] - recentPoint[1] )* zoon + centerX;
+		newPs[i][1] =	-(sourcePs[i][0] - recentPoint[0] )*zoon + centerY;
 	}
 	return newPs;
 }
@@ -213,10 +225,12 @@ function drawPoint(lat, lon, color, width){
 function geoYes(evt){
 //debugMsg += "getYes開始。";
 
-recentLati = evt.coords.latitude;
-recentLongi = evt.coords.longitude;
-nextDist  = getDistance(recentLati, recentLongi,  points[nextPoint][0], points[nextPoint][1]);
-drawPoint(recentLati, recentLongi, "red", 2);
+//recentLati = evt.coords.latitude;
+//recentLongi = evt.coords.longitude;
+recentPoint[0]= evt.coords.latitude;
+recentPoint[1]= evt.coords.longitude;
+nextDist  = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
+drawPoint(recentPoint[0], recentPoint[1], "red", 2);
 
 var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
@@ -238,7 +252,7 @@ document.getElementById("watchStr").innerHTML=debugMsg;
 
 if (nextDist < 0.005 && (nextDist > preDist) ){	//目標5公尺內才判斷是否通過
 	nextPoint++;
-	preDist = getDistance(recentLati, recentLongi,  points[nextPoint][0], points[nextPoint][1]);
+	preDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
 }else{
 	preDist = nextDist;
 }
