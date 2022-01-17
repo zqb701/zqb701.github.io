@@ -38,13 +38,20 @@ function init(){
 	startGPS();
 }
 var p00=[
-		//[22.665897115074287, 120.50069570831349, "前門"],
+		
+		//[22.666237, 120.500873, "前門"],
+		[22.666542406527448, 120.50113774703287,"a"],
+		[22.66623981251613, 120.50146958468582, "b"],
+		[22.665709532152782, 120.50103976069336, "c"],
+		[22.665897636506635, 120.50069576739025, "d"]
+		/*
 		[22.665897115074287, 120.50069570831349, "巷口1"],
 		[22.665707901738443, 120.5010424041541, "巷口2"],
 		[22.66528466599206, 120.5017954343364, "殺蛇溪"],
 		[22.665066241181687, 120.50217027304704, "民福路"],
 		[22.66379809138713, 120.50183335621948, "民興路"],
 		[22.663710225539916, 120.50237449188843, "63巷"]
+		*/
 	];
 var p01=[
 	[22.658034247616996, 120.5146302173418,"國仁路口"],
@@ -101,7 +108,7 @@ var p02=[
 		[22.6145008,120.7017865,"北大武山步道"]
 		];
 		var points = p00;
-		var zoon = 250000;
+		var zoon = 500000;
 		
 		var nextPoint = 0;	//下一個點
 	//var wPoint =  120.51431010230766;	//points[nextPoint][1];//120.5116;		//最西點
@@ -121,8 +128,8 @@ var p02=[
 var ctx = canvas.getContext("2d");
 
 canvas.width = 950;canvas.height = 1000;		//寬高預設值為300×150
-	var centerX = canvas.width  / 8;
-	var centerY = canvas.height / 8;
+	var centerX = canvas.width  / 2;
+	var centerY = canvas.height / 2;
 	
 	
 function drawBaseMap(){
@@ -255,7 +262,7 @@ var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
 str = "時間：" + strTime;
 //alert(str);
-str += "<br />位置:" + recentPoint[0] + ", "+ recentPoint[1];
+str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
 str += "<br/>速度："+ Math.round(evt.coords.speed)/1000 + "公里/小時。";
 	str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
 //str += "<br />精確度" + evt.coords.accuracy;
