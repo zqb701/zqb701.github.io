@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <!-- 程式來源 https://blog.xuite.net/gkyo0510/wretch/242769650 -->
-<title>GPS02</title>
+<title>GPS02-2</title>
 
 </head>
 <body onload="init();" bgcolor="black" text="white">
@@ -214,14 +214,7 @@ ctx.lineWidth = 5;	//線條粗度
 	  ctx.fillStyle = "black";
 	  ctx.fill(circle2);
 	  
-		var drawX = (recentPoint[1] - points[nextPoint][1] )* zoon + centerX;
-	var drawY = -(recentPoint[0] - points[nextPoint][0] )*zoon + centerY;
-	alert(drawX+ ", " + drawY);
-	ctx.strokeStyle ="red";	//線條色
-	ctx.lineWidth = 2;	//線條粗度
-	ctx.beginPath();
-    ctx.arc(drawX, drawY,3,0,Math.PI*2,true);
-	ctx.stroke();
+
 }
 
 function gps2scr(sourcePs){		//經緯度座標轉螢幕座標
@@ -262,14 +255,14 @@ recentPoint[1]= evt.coords.longitude;
 nextDist  = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
 //drawPoint(recentPoint[0], recentPoint[1], "red", 2);
 
-	var drawX = (recentPoint[1] - points[nextPoint][1] )* zoon + centerX;
+		var drawX = (recentPoint[1] - points[nextPoint][1] )* zoon + centerX;
 	var drawY = -(recentPoint[0] - points[nextPoint][0] )*zoon + centerY;
+	alert(drawX+ ", " + drawY);
 	ctx.strokeStyle ="red";	//線條色
 	ctx.lineWidth = 2;	//線條粗度
 	ctx.beginPath();
     ctx.arc(drawX, drawY,3,0,Math.PI*2,true);
 	ctx.stroke();
-	//debugMsg += scrPoint[0] + "," + scrPoint[1];
 	
 var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
