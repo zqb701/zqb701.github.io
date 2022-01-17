@@ -243,6 +243,13 @@ recentPoint[1]= evt.coords.longitude;
 nextDist  = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
 drawPoint(recentPoint[0], recentPoint[1], "red", 2);
 
+var scrPoint = gps2scr(recentPoint);
+	ctx.strokeStyle ="blue";	//線條色
+	ctx.lineWidth = width;	//線條粗度
+	ctx.beginPath();
+    ctx.arc(scrPoint[0], scrPoint[1],10,0,Math.PI*2,true);
+	ctx.stroke();
+	
 var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
 str = "時間：" + strTime;
