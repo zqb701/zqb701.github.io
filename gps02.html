@@ -79,7 +79,7 @@ var p02=[
 		[22.66238,120.5079811],			//民生國小
 		[22.6603804,120.5111652],		//全家超商
 		*/
-		 22.658034247616996, 120.5146302173418
+		 //22.658034247616996, 120.5146302173418
 		[22.658034247616996, 120.5146302173418,"國仁路口"],
 		[22.651514894343208, 120.52598275892676,"麟洛路口"],
 		[22.6400416, 120.5362810, "麟洛國中路口"],
@@ -95,6 +95,7 @@ var p02=[
 		[22.58924109879525, 120.66460999148127, "大武山之門"],
 		[22.6145008,120.7017865,"北大武山步道"]
 		];
+		
 		var p04 = [
 			[22.666540670813557, 120.50113642730727, "民利路"],
 			[22.66728729803525, 120.4997624132888, "民教路"],
@@ -107,8 +108,8 @@ var p02=[
 			[22.66159915133573, 120.49302542015064, "台糖三街2"]
 
 		];
-		var points = p04;
-		var zoon = 50000;
+		var points = p03;
+		var zoon = 4000;
 		
 		var nextPoint = 0;	//下一個點
 	//var wPoint =  120.51431010230766;	//points[nextPoint][1];//120.5116;		//最西點
@@ -129,7 +130,7 @@ var p02=[
 var ctx = canvas.getContext("2d");
 
 canvas.width = 950;canvas.height = 950;		//寬高預設值為300×150
-	var centerX = canvas.width *7 / 8;
+	var centerX = canvas.width  / 2;
 	var centerY = canvas.height / 2;
 	
 
@@ -203,7 +204,34 @@ ctx.lineWidth = 5;	//線條粗度
 	}
 	  ctx.stroke();
  */
+ //找出四邊的點以算出放大值zoon
+var maxN = points[0][0];
+var maxS = points[0][0];
+var maxE = points[0][1];
+var maxW = points[0][1];
+for(p in points){
+	if(points[p][0] > maxN) maxN = points[p][0];
+	if(points[p][0] < maxS) maxS = points[p][0];
+	if(points[p][1] > maxE) maxE = points[p][1];
+	if(points[p][1] < maxW) maxW = points[p][1];
+}
 
+console.log("maxN=" + maxN);
+console.log("maxS=" + maxS);
+console.log("maxE=" + maxE);
+console.log("maxW=" + maxW);
+
+if((maxN - maxS) >(maxE - maxW)){	//範圍大的用來算比例
+	zoon = canvas.height * 0.9/(maxN - maxS);
+	console.log("垂直比例=" + zoon);
+	}else{
+	zoon = canvas.width * 0.9/(maxE - maxW);
+	console.log("水平比例=" + zoon);
+	}
+recentPoint[0] = (maxN + maxS)/2;
+recentPoint[1] = (maxE + maxW)/2;
+
+//畫路線圖(點與線)
 	//console.log(zoon);
 	var mapPoints = gps2scr(points);
      var circle = new Path2D();
@@ -281,11 +309,12 @@ var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
 str = "時間：" + strTime;
 //alert(str);
-str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
-str += "<br/>速度："+ Math.round(evt.coords.speed)/1000 + "公里/小時。";
+//str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
+str += "<br/>速度："+ Math.round(evt.coords.speed)*3.6 + "公里/小時。";	//原單位：米/秒
 	str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
 //str += "<br />精確度" + evt.coords.accuracy;
-str += "<br />目標：" + points[nextPoint][2]+"("+ points[nextPoint][0] +", " + points[nextPoint][1]
+str += "<br />目標：" + points[nextPoint][2];
+//	str += "("+ points[nextPoint][0] +", " + points[nextPoint][1];
 str += "<br />距離：" + nextDist  + "公里";
 //prevLati = evt.coords.latitude;
 //prevLongi = evt.coords.longitude;
@@ -293,8 +322,8 @@ str += "<br />距離：" + nextDist  + "公里";
 document.getElementById("posStr").innerHTML=str;
 
 
-
-if (nextDist < 0.005 && (nextDist > preDist) ){	//目標5公尺內才判斷是否通過
+//時速60公里 = 每秒60x1000/60x60 = 60/3.6 = 16.6公尺
+if (nextDist < 0.02 && (nextDist > preDist) ){	//目標20公尺內才判斷是否通過, 要看速度決定?
 	nextPoint++;
 	preDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
 }else{
