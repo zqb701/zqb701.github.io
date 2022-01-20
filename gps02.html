@@ -26,20 +26,18 @@ var debugMsg = "script 開始.";
 	
 
 var p00=[
-		
-		//[22.666237, 120.500873, "前門"],
-		[22.666542406527448, 120.50113774703287,"a"],
-		[22.66623981251613, 120.50146958468582, "b"],
-		[22.665709532152782, 120.50103976069336, "c"],
-		[22.665897636506635, 120.50069576739025, "d"]
-		/*
+
 		[22.665897115074287, 120.50069570831349, "巷口1"],
 		[22.665707901738443, 120.5010424041541, "巷口2"],
 		[22.66528466599206, 120.5017954343364, "殺蛇溪"],
 		[22.665066241181687, 120.50217027304704, "民福路"],
-		[22.66379809138713, 120.50183335621948, "民興路"],
-		[22.663710225539916, 120.50237449188843, "63巷"]
-		*/
+		//[22.66379809138713, 120.50183335621948, "民興路"],
+		//[22.663710225539916, 120.50237449188843, "63巷"],
+		[22.6642219442753, 120.50369274070279, "民生校區"],
+		[22.66339089234732, 120.50520474477672, "菸廠路"],
+		[22.66279229323675, 120.50623662222313, "瑞民路口"],
+		[22.662224974588675, 120.50727148282286, "歸仁路口"],
+		[22.660783934931143, 120.50977659008726, "瑞屏街口"]
 	];
 var p01=[
 	[22.658034247616996, 120.5146302173418,"國仁路口"],
@@ -108,7 +106,7 @@ var p02=[
 			[22.66159915133573, 120.49302542015064, "台糖三街2"]
 
 		];
-		var points = p03;
+		var points = p00;
 		var zoon = 4000;
 		
 		var nextPoint = 0;	//下一個點
@@ -120,6 +118,7 @@ var p02=[
 	var Point01 = [22.659517486714293,120.51431010230766, "田中巷"];	
 	var Point02 = [22.666152566994903, 120.50087279317975,"後門"];
 	var recentPoint = Point02;
+	var centerCoords = [23,120.5];
 	
 
 	
@@ -231,6 +230,9 @@ if((maxN - maxS) >(maxE - maxW)){	//範圍大的用來算比例
 recentPoint[0] = (maxN + maxS)/2;
 recentPoint[1] = (maxE + maxW)/2;
 
+centerCoords[0] = recentPoint[0];
+centerCoords[1] = recentPoint[1];
+
 //畫路線圖(點與線)
 	//console.log(zoon);
 	var mapPoints = gps2scr(points);
@@ -262,13 +264,13 @@ function gps2scr(sourcePs){		//經緯度座標轉螢幕座標
 	var newPs=new Array();
 	for(var i=0; i<sourcePs.length; i++){
 		newPs[i] = new Array();
-		newPs[i][0] =	(sourcePs[i][1] - recentPoint[1] )* zoon + centerX;
-		newPs[i][1] =	-(sourcePs[i][0] - recentPoint[0] )*zoon + centerY;
+		newPs[i][0] =	(sourcePs[i][1] - recentPoint[1] )* zoon		 + centerX;
+		newPs[i][1] =	-(sourcePs[i][0] - recentPoint[0] )*zoon+ centerY;
 	}
 	return newPs;
 }
 
-function drawPoint(lat, lon, color, width){
+function drawPoint_x(lat, lon, color, width){
 	var drawX = (lon - points[nextPoint][1] )* zoon + centerX;
 	var drawY = -(lat - points[nextPoint][0] )*zoon + centerY;
 	//console.log(drawX + "," + drawY);
@@ -296,8 +298,8 @@ recentPoint[1]= evt.coords.longitude;
 nextDist  = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
 //drawPoint(recentPoint[0], recentPoint[1], "red", 2);
 
-		var drawX = (recentPoint[1] - points[nextPoint][1] )* zoon + centerX;
-	var drawY = -(recentPoint[0] - points[nextPoint][0] )*zoon + centerY;
+	var drawX =  (recentPoint[1] - centerCoords[1])* zoon+ centerX;
+	var drawY = -(recentPoint[0] - centerCoords[0])*zoon + centerY;
 	//alert(drawX+ ", " + drawY);
 	ctx.strokeStyle ="red";	//線條色
 	ctx.lineWidth = 2;	//線條粗度
@@ -310,9 +312,8 @@ strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();
 str = "時間：" + strTime;
 //alert(str);
 //str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
-str += "<br/>速度："+ Math.round(evt.coords.speed)*3.6 + "公里/小時。";	//原單位：米/秒
+str += "<br/>速度："+ Math.round(evt.coords.speed*3.6, -1) + "公里/小時。";	//原單位：米/秒
 	str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
-//str += "<br />精確度" + evt.coords.accuracy;
 str += "<br />目標：" + points[nextPoint][2];
 //	str += "("+ points[nextPoint][0] +", " + points[nextPoint][1];
 str += "<br />距離：" + nextDist  + "公里";
