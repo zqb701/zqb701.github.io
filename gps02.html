@@ -205,7 +205,7 @@ var startGestY = -1;
 function touchStart(e){
 document.getElementById("watchStr").innerHTML="touchState()";
 	gesturesStart(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
-	e.preventDefault();
+	//e.preventDefault();
 }
 function mouseDown(e){
 	gesturesStart(e.pageX, e.pageY);
