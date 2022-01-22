@@ -9,6 +9,7 @@
 <body onload="init();" bgcolor="black" text="white" topmargin="0" leftmargin="0">
 	<canvas id="canvas"></canvas>
 	<font size="7">
+	<p id="title">任務：</p>
 	<p id="posStr">111222</p>
 	</font>
 	<font size="6">
@@ -126,6 +127,11 @@ var tasks = [[
 	
 	var canvas = document.getElementById("canvas");
 	canvas.addEventListener("click", doMouseDown, false);
+
+    canvas.addEventListener('touchstart',touchStart);
+    canvas.addEventListener('touchmove',touchMove);
+    canvas.addEventListener('touchend',touchEnd);
+	
 var ctx = canvas.getContext("2d");
 
 //canvas.width = 950;canvas.height = 950;		//寬高預設值為300×150
@@ -149,12 +155,28 @@ function init(){
 	//document.getElementById("posStr").innerHTML="script finish.";
 	document.getElementById("watchStr").innerHTML=debugMsg;
 	//alert("run drawMap()");
-	nextTask();
+	skipTask();
 	startGPS();
 	noSleep();
 }
 
-async function noSleep(){
+function touchStart(e){
+	ctx.beginPath();
+    ctx.moveTo(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
+    e.preventDefault();
+}
+
+function touchMove(e){
+     ctx.lineTo(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
+     ctx.stroke();
+    e.preventDefault();
+}
+
+function touchEnd(e){
+     e.preventDefault();
+}
+
+async function noSleep(){	//不自動休眠, Note9 chrome有效, 但三星browser無作用。
 // The wake lock sentinel.
 let wakeLock = null;
 // Function that attempts to request a screen wake lock.
@@ -165,7 +187,7 @@ wakeLock = await navigator.wakeLock.request('screen');
 	console.log('Screen Wake Lock was released');
 	});
 console.log('Screen Wake Lock is active');
-alert("NoSleep");
+//alert("NoSleep");
 } catch (err) {
 console.error(`${err.name}, ${err.message}`);
 }
@@ -175,43 +197,44 @@ await requestWakeLock();
 }
 
 function doMouseDown(event){
-
 		var x = event.pageX;
 		var y = event.pageY;
-		
 		var gridW = canvas.width/3;
 		var gridH = canvas.height/3;
 		
-		//alert(x + ", "+ y);
 		if(x > gridW*2 && y > gridH*2){	//右下角
 		console.log("右下角_任務切換");
-			nextTask();
-			playVoice(tasks[0][1][3]);
+			skipTask();
 			return;
 		}
-		//
+
 		if(x > gridW*2 && y < gridH){//右上角
-		console.log("右上角_跳過目標");
-			nextPoint += vector;
-			preDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
-		return;
+			console.log("右上角_跳過目標");
+			skipPoint();
+			playVoice("跳過");
+			return;
 		}
+		
 		if(x < gridW && y < gridH){//左上角
 			console.log("左上角_去回切換");
 			if(vector ==1){
-			vector = -1;//回程
-			nextPoint = points.length;
+				vector = -1;//回程
+				nextPoint = points.length;
+				document.getElementById("title").innerHTML="任務："+ taskTitle +"(回程)";
+					playVoice("回程");
 			}else{
-			vector = 1;//去程
-			nextPoint = 0;
+				vector = 1;//去程
+				nextPoint = 0;
+				document.getElementById("title").innerHTML="任務："+ taskTitle;
+				playVoice("去程");
 			}
+			
 			return;
 		}
 		
 		if(x < gridW && y > gridH*2){//左下角
 			console.log("左下角_測試音效");
-	
-		return;
+			return;
 		}
 	}
 	
@@ -220,23 +243,39 @@ function playVoice(str){
 	
 	var fileName = "voice/"+ str+".wav";
 	//TODO : 先檢查檔案是否存在, 
+	console.log(fileName);
 		voice.setAttribute('src',fileName);
+		//voice.load();
 	//TODO : 大檔可能要先load(), 再檢查可否撥放, 再catch 播放異常
 		voice.play();
 }
 
-function nextTask(){
-	taskID ++;
+function skipTask(){	//任務切換
 	nextPoint = 0;
 	 nextDist = -1;
 	preDist = 0;
+	vector = 1;
+	taskID ++;
 	if (taskID == tasks.length) taskID = 0;
 	points = tasks[taskID];
 	taskTitle = points[0][2] + " - " + points[points.length-1][2];
 	if(vector == -1) taskTitle += "(回程)";
-	drawBaseMap();
-}	
+	document.getElementById("title").innerHTML="任務："+ taskTitle;
 	
+	drawBaseMap();
+	playVoice("新任務");
+}	
+
+function skipPoint(){	//跳下一點
+
+	nextPoint += vector;
+	preDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
+}	
+
+function viewSwitch(){	//檢視模式切換,全景/置中
+	
+}
+
 function drawBaseMap(){
 //alert("drawMap()");
 //畫圖
@@ -248,50 +287,7 @@ ctx.fillRect(0,0,canvas.width,canvas.height);
 ctx.strokeStyle = "blue";	//線條色
 ctx.lineWidth = 2;	//線條粗度
 ctx.strokeRect(0,0,canvas.width,canvas.height);
-//ctx.stroke();
 
-//	ctx.fillText("許功蓋", 10, 50);
-
-	//螢幕中央標示
-	/*
-ctx.strokeStyle = "red";	//線條色
-ctx.lineWidth = 5;	//線條粗度
-	ctx.beginPath();
-	ctx.moveTo(centerX - 30, centerY);
-    ctx.lineTo(centerX + 30, centerY);
-	ctx.moveTo(centerX, centerY - 30);
-    ctx.lineTo(centerX, centerY + 30);
-    //ctx.arc(nPoint, wPoint,3,0,Math.PI*2,true);
-	ctx.stroke();
-	*/
-
-	/*
-	//points.forEach(function drawPoint(value[0],value[1],"green",2);
-	for ( indexP in points){		//TODO 改用Path2D物件
-		drawPoint(points[indexP][0], points[indexP][1], "green", 2);
-	}
-	
-
-	ctx.strokeStyle = "red";
-		ctx.lineWidth = 1;	//線條粗度
-		ctx.beginPath();
-		//ctx.moveTo(0,0);
-		//alert(mapPoints[0][0] +"," + mapPoints[0][1]);
-	for ( p in mapPoints){		//TODO 改用Path2D物件
-		ctx.lineTo(mapPoints[p][0], mapPoints[p][1]);
-	}
-		ctx.stroke();
-		
-
-
-	ctx.beginPath();
-	//ctx.moveTo(points[0][0], points[0][1]);
-	for ( p in mapPoints){		//TODO 改用Path2D物件
-		ctx.moveTo(mapPoints[p][0], mapPoints[p][1]);
-		ctx.arc(mapPoints[p][0], mapPoints[p][1],5,0,Math.PI*2,true);
-	}
-	  ctx.stroke();
- */
  /*
  for(p in points){
 	points[p][0] = Math.round(points[p][0], -5);
@@ -310,17 +306,10 @@ for(p in points){
 	if(points[p][1] < maxW) maxW = points[p][1];
 }
 
-console.log("maxN=" + maxN);
-console.log("maxS=" + maxS);
-console.log("maxE=" + maxE);
-console.log("maxW=" + maxW);
-
-if((maxN - maxS) >(maxE - maxW)){	//範圍大的用來算比例
-	zoon = canvas.height * 0.9/(maxN - maxS);
-	console.log("垂直比例=" + zoon);
+	if((maxN - maxS) >(maxE - maxW)){	//範圍大的用來算比例
+		zoon = canvas.height * 0.9/(maxN - maxS);
 	}else{
-	zoon = canvas.width * 0.9/(maxE - maxW);
-	console.log("水平比例=" + zoon);
+		zoon = canvas.width * 0.9/(maxE - maxW);
 	}
 recentPoint[0] = (maxN + maxS)/2;
 recentPoint[1] = (maxE + maxW)/2;
@@ -355,7 +344,7 @@ centerCoords[1] = recentPoint[1];
 
 }
 
-function gps2scr(sourcePs){		//經緯度座標轉螢幕座標
+function gps2scr(sourcePs){		//經緯度座標「批次」轉螢幕座標
 	var newPs=new Array();
 	for(var i=0; i<sourcePs.length; i++){
 		newPs[i] = new Array();
@@ -365,51 +354,39 @@ function gps2scr(sourcePs){		//經緯度座標轉螢幕座標
 	return newPs;
 }
 
-function drawPoint_x(lat, lon, color, width){
-	var drawX = (lon - points[nextPoint][1] )* zoon + centerX;
-	var drawY = -(lat - points[nextPoint][0] )*zoon + centerY;
+function drawPoint(lat, lon, color, width){
+	var drawX = (lon - centerCoords[1] )* zoon + centerX;
+	var drawY = -(lat - centerCoords[0] )*zoon + centerY;
 	//console.log(drawX + "," + drawY);
-	ctx.strokeStyle = color;	//線條色
-	ctx.lineWidth = width;	//線條粗度
-	
+	ctx.strokeStyle = "red";	//線條色
+	ctx.lineWidth = "1";	//線條粗度
 	ctx.beginPath();
-	//ctx.moveTo(drawX, drawY);
-	//ctx.lineTo(drawX, drawY);
-    ctx.arc(drawX, drawY,3,0,Math.PI*2,true);
-	//ctx.lineWidth = 10;	//線條粗度
-	//ctx.strokeStyle = "green";	//線條色
+    ctx.arc(drawX, drawY,1,0,Math.PI*2,true);
 	ctx.stroke();
 }
-	
-//============================================
+
 function geoYes(evt){
-
-debugMsg = "";
-
-//recentLati = evt.coords.latitude;
-//recentLongi = evt.coords.longitude;
-recentPoint[0] = evt.coords.latitude;
-recentPoint[1] = evt.coords.longitude;
+	recentPoint[0] = evt.coords.latitude;
+	recentPoint[1] = evt.coords.longitude;
 /*
 recentPoint[0]= Math.round(evt.coords.latitude, -5);
 recentPoint[1]= Math.round(evt.coords.longitude,-5);
 */
 nextDist  = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
-//drawPoint(recentPoint[0], recentPoint[1], "red", 2);
-
+drawPoint(recentPoint[0], recentPoint[1]);
+/*
 	var drawX =  (recentPoint[1] - centerCoords[1])* zoon+ centerX;
 	var drawY = -(recentPoint[0] - centerCoords[0])*zoon + centerY;
-	//alert(drawX+ ", " + drawY);
+
 	ctx.strokeStyle ="red";	//線條色
 	ctx.lineWidth = 1;	//線條粗度
 	ctx.beginPath();
     ctx.arc(drawX, drawY,1,0,Math.PI*2,true);
 	ctx.stroke();
-	
+*/
 var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds()+ " " + d.getMilliseconds();
-str = "任務："+ taskTitle;
-str += "<br/>時間：" + strTime;
+str = "時間：" + strTime;
 //alert(str);
 //str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
 str += "<br/>速度："+ Math.round(evt.coords.speed*3.6, -1) + "公里/小時。";	//原單位：米/秒
@@ -425,11 +402,9 @@ document.getElementById("posStr").innerHTML=str;
 
 //時速60公里 = 每秒60x1000/60x60 = 60/3.6 = 16.6公尺
 if (nextDist < 0.02 && (nextDist > preDist) ){	//目標20公尺內才判斷是否通過, 要看速度決定?
-
-				playVoice(point[nextPoint][3]);
-
-	nextPoint += vector;
-	preDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
+		playVoice(points[nextPoint][3]);
+	skipPoint();
+	
 }else{
 	preDist = nextDist;
 }
