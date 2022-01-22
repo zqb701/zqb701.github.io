@@ -164,7 +164,7 @@ function init(){
 function touchStart(e){
 		var x = e.targetTouches[0].pageX;
 		var y = e.targetTouches[0].pageY;
-		if(x > canvas.width && x <canvas.width*2 && y > canvas.height && y < canvas.height*2){
+		if(x > canvas.width/3 && x <canvas.width*2/3 && y > canvas.height/3 && y < canvas.height*2/3){
 			enGestures = true;
 		ctx.beginPath();
 		ctx.moveTo(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
@@ -177,12 +177,12 @@ if(enGestures){
      ctx.lineTo(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
      ctx.stroke();
 	 }
-    e.preventDefault();
+    //e.preventDefault();
 }
 
 function touchEnd(e){
 	enGestures = false;
-     e.preventDefault();
+    // e.preventDefault();
 }
 
 async function noSleep(){	//不自動休眠, Note9 chrome有效, 但三星browser無作用。
