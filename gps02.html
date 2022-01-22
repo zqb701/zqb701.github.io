@@ -203,6 +203,7 @@ centerCoords[1] = recentPoint[1];
 var startGestX = -1;
 var startGestY = -1;
 function touchStart(e){
+document.getElementById("watchStr").innerHTML="touchState()";
 	gesturesStart(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
 	e.preventDefault();
 }
@@ -238,6 +239,7 @@ function gesturesMove(x, y){
 	 }
 }
 function touchMove(e){
+document.getElementById("watchStr").innerHTML="touchMove()";
 	gesturesMove(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
 	e.preventDefault();
 }
@@ -252,6 +254,7 @@ function gesturesEnd(){
 	}
 }
 function touchEnd(e){
+document.getElementById("watchStr").innerHTML="touchEnd()";
 	gesturesEnd();
 	e.preventDefault();
 }
@@ -283,6 +286,7 @@ async function noSleep(){	//不自動休眠, Note9 chrome有效, 但三星browse
 
 var oldClickTimes = -1;
 function click(event){	//mouseUp時會觸發
+document.getElementById("watchStr").innerHTML="click()";
 		var x = event.pageX;
 		var y = event.pageY;
 		var gridW = canvas.width/3;
@@ -376,13 +380,6 @@ function clearMap(){
 }
 
 function drawBaseMap(){
-//alert("drawMap()");
-//畫圖
-
-
-
-//畫路線圖(點與線)
-	//console.log(zoom);
 	var mapPoints = gps2scr(points);
      var circle = new Path2D();
 	 var circle2 = new Path2D();
