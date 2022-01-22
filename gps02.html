@@ -21,9 +21,9 @@
 
 <script title="座標圖資">
 var tasks = [[
-		[22.6660872645837, 120.50037043288955, "工業路口","號誌"],
-		[22.665707901738443, 120.5010424041541, "69巷", "急彎"],
-		[22.66528466599206, 120.5017954343364, "殺蛇溪", "坑洞"],
+		[22.6660872645837,		120.50037043288955,	"工業路口","號誌"],
+		[22.665707901738443,	120.5010424041541,	"69巷", "急彎"],
+		[22.66528466599206,		120.5017954343364,	"殺蛇溪", "坑洞"],
 		
 		[22.665066241181687, 120.50217027304704, "民福路","號誌"],
 		[22.6642219442753, 120.50369274070279, "民生校區", "急彎"],
@@ -108,7 +108,7 @@ var tasks = [[
 		var taskID = -1;
 		var points = [];
 		var taskTitle = "";
-		var zoon = -1;
+		var zoom = -1;
 		
 		var nextPoint = 0;	//下一個點
 	//var wPoint =  120.51431010230766;	//points[nextPoint][1];//120.5116;		//最西點
@@ -124,11 +124,15 @@ var tasks = [[
 	var nextDist = -1;
 	var preDist = 0;
 	var vector = 1;
-	
+	var alarmON = true;
 	var canvas = document.getElementById("canvas");
 	canvas.addEventListener("click", click, false);
 
-    canvas.addEventListener('touchstart',touchStart);
+    canvas.addEventListener('mousedown',mouseDown);
+	canvas.addEventListener('mousemove',mouseMove);
+	canvas.addEventListener('mouseup',mouseUp);
+	
+	canvas.addEventListener('touchstart',touchStart);
     canvas.addEventListener('touchmove',touchMove);
     canvas.addEventListener('touchend',touchEnd);
 	var enGestures = false;
@@ -157,63 +161,137 @@ function init(){
 	document.getElementById("watchStr").innerHTML=debugMsg;
 	//alert("run drawMap()");
 	skipTask();
+	
 	startGPS();
 	noSleep();
+	
+	clearMap();
+	newSpace();
+	drawBaseMap();
+}
+function newSpace(){	//計算適當的繪圖位置
+ /*
+ for(p in points){
+	points[p][0] = Math.round(points[p][0], -5);
+	points[p][1] = Math.round(points[p][1], -5);
+ }
+ */
+ 	//找出四邊的點以算出放大值zoom
+var maxN = points[0][0];
+var maxS = points[0][0];
+var maxE = points[0][1];
+var maxW = points[0][1];
+for(p in points){
+	if(points[p][0] > maxN) maxN = points[p][0];
+	if(points[p][0] < maxS) maxS = points[p][0];
+	if(points[p][1] > maxE) maxE = points[p][1];
+	if(points[p][1] < maxW) maxW = points[p][1];
 }
 
-function touchStart(e){
-		var x = e.targetTouches[0].pageX;
-		var y = e.targetTouches[0].pageY;
-		if(x > canvas.width/3 && x <canvas.width*2/3 && y > canvas.height/3 && y < canvas.height*2/3){
-			enGestures = true;
-		ctx.beginPath();
-		ctx.moveTo(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
+	if((maxN - maxS) >(maxE - maxW)){	//範圍大的用來算比例
+		zoom = canvas.height * 0.9/(maxN - maxS);
+	}else{
+		zoom = canvas.width * 0.9/(maxE - maxW);
 	}
-    //e.preventDefault();	//因為還有click()要作用, 所以不能中止事件。
+	zoom0 = zoom;
+recentPoint[0] = (maxN + maxS)/2;
+recentPoint[1] = (maxE + maxW)/2;
+
+centerCoords[0] = recentPoint[0];
+centerCoords[1] = recentPoint[1];
+}
+var startGestX = -1;
+var startGestY = -1;
+function touchStart(e){
+	gesturesStart(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
+	e.preventDefault();
+}
+function mouseDown(e){
+	gesturesStart(e.pageX, e.pageY);
+	e.preventDefault();
+}
+function gesturesStart(x,y){
+		//手勢起始位置在九宮格中央才會運作
+		var recentTime = new Date().getTime();
+		if(recentTime - oldClickTimes < 300){		//double click的間隔
+			if(x > canvas.width/3 && x <canvas.width*2/3 && y > canvas.height/3 && y < canvas.height*2/3){
+				//上一行以乎可以用inner區塊的方法
+				enGestures = true;
+				zoom1 = zoom;
+				//ctx.beginPath();
+				//ctx.moveTo(x, y);
+				startGestX = x;
+				startGestY = y;
+			}
+		}
+		//移動
 }
 
-function touchMove(e){
-if(enGestures){
-     ctx.lineTo(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
-     ctx.stroke();
+var zoom0 = -1;
+var zoom1 = -1;
+function gesturesMove(x, y){
+	if(enGestures && zoom>= zoom0/3){		//縮小不能小於1/3。那放大呢???
+		 clearMap();
+		 zoom =zoom1 *(1+(y-startGestY)*0.01);
+		 if(zoom < zoom0/3)zoom = zoom0/3;
+		 drawBaseMap();
 	 }
-    //e.preventDefault();
+}
+function touchMove(e){
+	gesturesMove(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
+	e.preventDefault();
+}
+function mouseMove(e){
+	gesturesMove(e.pageX,e.pageY);
+	e.preventDefault();
 }
 
+function gesturesEnd(){
+	if(enGestures){
+		enGestures = false;
+	}
+}
 function touchEnd(e){
-	enGestures = false;
-    // e.preventDefault();
+	gesturesEnd();
+	e.preventDefault();
+}
+function mouseUp(e){
+	gesturesEnd();
+	e.preventDefault();
+	//e.stopPropagation();
 }
 
 async function noSleep(){	//不自動休眠, Note9 chrome有效, 但三星browser無作用。
-// The wake lock sentinel.
-let wakeLock = null;
-// Function that attempts to request a screen wake lock.
-const requestWakeLock = async () => {
-try {
-wakeLock = await navigator.wakeLock.request('screen');
-	wakeLock.addEventListener('release', () => {
-	console.log('Screen Wake Lock was released');
-	});
-console.log('Screen Wake Lock is active');
-//alert("NoSleep");
-} catch (err) {
-console.error(`${err.name}, ${err.message}`);
-}
-};
-// Request a screen wake lock…
-await requestWakeLock();
+	// The wake lock sentinel.
+	let wakeLock = null;
+	// Function that attempts to request a screen wake lock.
+	const requestWakeLock = async () => {
+		try {
+			wakeLock = await navigator.wakeLock.request('screen');
+			wakeLock.addEventListener('release', () => {
+				console.log('Screen Wake Lock was released');
+			});
+		console.log('Screen Wake Lock is active');
+		//alert("NoSleep");
+		} catch (err) {
+			console.error(`${err.name}, ${err.message}`);
+		}
+	};
+	// Request a screen wake lock…
+	await requestWakeLock();
 }
 
-function click(event){
+var oldClickTimes = -1;
+function click(event){	//mouseUp時會觸發
 		var x = event.pageX;
 		var y = event.pageY;
 		var gridW = canvas.width/3;
 		var gridH = canvas.height/3;
-		
+		oldClickTimes = new Date().getTime();
 		if(x > gridW*2 && y > gridH*2){	//右下角
 		console.log("右下角_任務切換");
 			skipTask();
+			
 			return;
 		}
 
@@ -264,14 +342,17 @@ function skipTask(){	//任務切換
 	 nextDist = -1;
 	preDist = 0;
 	vector = 1;
+	
 	taskID ++;
 	if (taskID == tasks.length) taskID = 0;
 	points = tasks[taskID];
-	taskTitle = points[0][2] + " - " + points[points.length-1][2];
-	if(vector == -1) taskTitle += "(回程)";
-	document.getElementById("title").innerHTML="任務："+ taskTitle;
 	
+	taskTitle = points[0][2] + " - " + points[points.length-1][2];
+	document.getElementById("title").innerHTML="任務："+ taskTitle;
+	newSpace();
+	clearMap();
 	drawBaseMap();
+
 	playVoice("新任務");
 }	
 
@@ -285,49 +366,23 @@ function viewSwitch(){	//檢視模式切換,全景/置中
 	
 }
 
+function clearMap(){
+	ctx.fillStyle = "black";	//填滿色
+	ctx.fillRect(0,0,canvas.width,canvas.height);
+	ctx.strokeStyle = "blue";	//線條色
+	ctx.lineWidth = 2;	//線條粗度
+	ctx.strokeRect(0,0,canvas.width,canvas.height);
+	ctx.strokeRect(canvas.width/3,canvas.height/3,canvas.width/3,canvas.height/3);
+}
+
 function drawBaseMap(){
 //alert("drawMap()");
 //畫圖
 
-ctx.fillStyle = "black";	//填滿色
-ctx.fillRect(0,0,canvas.width,canvas.height);
-	
-	//ctx.beginPath();
-ctx.strokeStyle = "blue";	//線條色
-ctx.lineWidth = 2;	//線條粗度
-ctx.strokeRect(0,0,canvas.width,canvas.height);
-ctx.strokeRect(canvas.width/3,canvas.height/3,canvas.width/3,canvas.height/3);
- /*
- for(p in points){
-	points[p][0] = Math.round(points[p][0], -5);
-	points[p][1] = Math.round(points[p][1], -5);
- }
- */
- //找出四邊的點以算出放大值zoon
-var maxN = points[0][0];
-var maxS = points[0][0];
-var maxE = points[0][1];
-var maxW = points[0][1];
-for(p in points){
-	if(points[p][0] > maxN) maxN = points[p][0];
-	if(points[p][0] < maxS) maxS = points[p][0];
-	if(points[p][1] > maxE) maxE = points[p][1];
-	if(points[p][1] < maxW) maxW = points[p][1];
-}
 
-	if((maxN - maxS) >(maxE - maxW)){	//範圍大的用來算比例
-		zoon = canvas.height * 0.9/(maxN - maxS);
-	}else{
-		zoon = canvas.width * 0.9/(maxE - maxW);
-	}
-recentPoint[0] = (maxN + maxS)/2;
-recentPoint[1] = (maxE + maxW)/2;
-
-centerCoords[0] = recentPoint[0];
-centerCoords[1] = recentPoint[1];
 
 //畫路線圖(點與線)
-	//console.log(zoon);
+	//console.log(zoom);
 	var mapPoints = gps2scr(points);
      var circle = new Path2D();
 	 var circle2 = new Path2D();
@@ -357,15 +412,15 @@ function gps2scr(sourcePs){		//經緯度座標「批次」轉螢幕座標
 	var newPs=new Array();
 	for(var i=0; i<sourcePs.length; i++){
 		newPs[i] = new Array();
-		newPs[i][0] =  (sourcePs[i][1] - centerCoords[1] )* zoon + centerX;
-		newPs[i][1] = -(sourcePs[i][0] - centerCoords[0] )*zoon + centerY;
+		newPs[i][0] =  (sourcePs[i][1] - centerCoords[1] )* zoom + centerX;
+		newPs[i][1] = -(sourcePs[i][0] - centerCoords[0] )*zoom + centerY;
 	}
 	return newPs;
 }
 
 function drawPoint(lat, lon, color, width){
-	var drawX = (lon - centerCoords[1] )* zoon + centerX;
-	var drawY = -(lat - centerCoords[0] )*zoon + centerY;
+	var drawX = (lon - centerCoords[1] )* zoom + centerX;
+	var drawY = -(lat - centerCoords[0] )*zoom + centerY;
 	//console.log(drawX + "," + drawY);
 	ctx.strokeStyle = "red";	//線條色
 	ctx.lineWidth = "1";	//線條粗度
@@ -384,8 +439,8 @@ recentPoint[1]= Math.round(evt.coords.longitude,-5);
 nextDist  = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
 drawPoint(recentPoint[0], recentPoint[1]);
 /*
-	var drawX =  (recentPoint[1] - centerCoords[1])* zoon+ centerX;
-	var drawY = -(recentPoint[0] - centerCoords[0])*zoon + centerY;
+	var drawX =  (recentPoint[1] - centerCoords[1])* zoom+ centerX;
+	var drawY = -(recentPoint[0] - centerCoords[0])*zoom + centerY;
 
 	ctx.strokeStyle ="red";	//線條色
 	ctx.lineWidth = 1;	//線條粗度
@@ -407,19 +462,20 @@ str += "<br />距離：" + nextDist  + "公里";
 //prevLongi = evt.coords.longitude;
 
 document.getElementById("posStr").innerHTML=str;
-
+if(alarmON && nextDist < 0.03){
+			playVoice(points[nextPoint][3]);
+			alarmON = false;
+}
 
 //時速60公里 = 每秒60x1000/60x60 = 60/3.6 = 16.6公尺
 if (nextDist < 0.02 && (nextDist > preDist) ){	//目標20公尺內才判斷是否通過, 要看速度決定?
-		playVoice(points[nextPoint][3]);
 	skipPoint();
-	
+	alarmON = true;
 }else{
 	preDist = nextDist;
 }
 
-debugMsg += "GPS ok.";
-document.getElementById("watchStr").innerHTML = debugMsg;
+document.getElementById("watchStr").innerHTML = "GPS ok.";
 /*
 str = "https://maps.googleapis.com/maps/api/staticmap"+
         "?zoom=15&size=300x300&sensor=false&center=" + 
