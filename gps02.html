@@ -127,7 +127,7 @@ var tasks = [[
 	var alarmON = true;
 	var canvas = document.getElementById("canvas");
 	canvas.addEventListener("click", click, false);
-
+/*
     canvas.addEventListener('mousedown',mouseDown);
 	canvas.addEventListener('mousemove',mouseMove);
 	canvas.addEventListener('mouseup',mouseUp);
@@ -135,6 +135,7 @@ var tasks = [[
 	canvas.addEventListener('touchstart',touchStart);
     canvas.addEventListener('touchmove',touchMove);
     canvas.addEventListener('touchend',touchEnd);
+	*/
 	var enGestures = false;
 	
 var ctx = canvas.getContext("2d");
@@ -203,9 +204,9 @@ centerCoords[1] = recentPoint[1];
 var startGestX = -1;
 var startGestY = -1;
 function touchStart(e){
-document.getElementById("watchStr").innerHTML="touchState()";
+document.getElementById("watchStr").innerHTML="touchStart()";
 	gesturesStart(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
-	//e.preventDefault();
+	//e.preventDefault();//避免觸發 click()
 }
 function mouseDown(e){
 	gesturesStart(e.pageX, e.pageY);
