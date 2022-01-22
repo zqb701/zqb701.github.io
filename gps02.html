@@ -214,7 +214,7 @@ function doMouseDown(event){
 		if(x < gridW && y > gridH*2){//左下角
 		console.log("左下角_測試音效");
 		audio.setAttribute('src',"voice/號誌.wav");
-			
+			audio.load();
 			audio.play();
 		return;
 		}
