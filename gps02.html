@@ -126,11 +126,12 @@ var tasks = [[
 	var vector = 1;
 	
 	var canvas = document.getElementById("canvas");
-	canvas.addEventListener("click", doMouseDown, false);
+	canvas.addEventListener("click", click, false);
 
     canvas.addEventListener('touchstart',touchStart);
     canvas.addEventListener('touchmove',touchMove);
     canvas.addEventListener('touchend',touchEnd);
+	var enGestures = false;
 	
 var ctx = canvas.getContext("2d");
 
@@ -161,18 +162,26 @@ function init(){
 }
 
 function touchStart(e){
-	ctx.beginPath();
-    ctx.moveTo(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
-    e.preventDefault();
+		var x = e.targetTouches[0].pageX;
+		var y = e.targetTouches[0].pageY;
+		if(x > canvas.width and x <canvas.width*2 and y > canvas.height and y < canvas.height*2){
+			enGestures = true;
+		ctx.beginPath();
+		ctx.moveTo(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
+	}
+    //e.preventDefault();	//因為還有click()要作用, 所以不能中止事件。
 }
 
 function touchMove(e){
+if(enGestures){
      ctx.lineTo(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
      ctx.stroke();
+	 }
     e.preventDefault();
 }
 
 function touchEnd(e){
+	enGestures = false;
      e.preventDefault();
 }
 
@@ -196,7 +205,7 @@ console.error(`${err.name}, ${err.message}`);
 await requestWakeLock();
 }
 
-function doMouseDown(event){
+function click(event){
 		var x = event.pageX;
 		var y = event.pageY;
 		var gridW = canvas.width/3;
