@@ -164,7 +164,7 @@ function init(){
 function touchStart(e){
 		var x = e.targetTouches[0].pageX;
 		var y = e.targetTouches[0].pageY;
-		if(x > canvas.width and x <canvas.width*2 and y > canvas.height and y < canvas.height*2){
+		if(x > canvas.width && x <canvas.width*2 && y > canvas.height && y < canvas.height*2){
 			enGestures = true;
 		ctx.beginPath();
 		ctx.moveTo(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
@@ -296,7 +296,7 @@ ctx.fillRect(0,0,canvas.width,canvas.height);
 ctx.strokeStyle = "blue";	//線條色
 ctx.lineWidth = 2;	//線條粗度
 ctx.strokeRect(0,0,canvas.width,canvas.height);
-
+ctx.strokeRect(canvas.width/3,canvas.height/3,canvas.width/3,canvas.height/3);
  /*
  for(p in points){
 	points[p][0] = Math.round(points[p][0], -5);
