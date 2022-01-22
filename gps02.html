@@ -110,7 +110,7 @@ var tasks = [[
 		var debugMsg = "script 開始.";
 		var taskID = -1;
 		var points = [];
-		var finishPoint = "";
+		var taskTitle = "";
 		var zoon = -1;
 		
 		var nextPoint = 0;	//下一個點
@@ -126,6 +126,7 @@ var tasks = [[
 	
 	var nextDist = -1;
 	var preDist = 0;
+	var vector = 1;
 	
 	var canvas = document.getElementById("canvas");
 	canvas.addEventListener("click", doMouseDown, false);
@@ -139,6 +140,9 @@ canvas.height = canvas.width;
 	
 
 	//var scrPoint = gps2scr(recentPoint);
+	const audio = new Audio();
+	audio.volume = 0.1;
+	        
 function init(){
 	//alert("init");
 	if( navigator.geolocation ) {
@@ -161,10 +165,11 @@ let wakeLock = null;
 const requestWakeLock = async () => {
 try {
 wakeLock = await navigator.wakeLock.request('screen');
-wakeLock.addEventListener('release', () => {
-console.log('Screen Wake Lock was released');
-});
+	wakeLock.addEventListener('release', () => {
+	console.log('Screen Wake Lock was released');
+	});
 console.log('Screen Wake Lock is active');
+alert("NoSleep");
 } catch (err) {
 console.error(`${err.name}, ${err.message}`);
 }
@@ -177,19 +182,41 @@ function doMouseDown(event){
 
 		var x = event.pageX;
 		var y = event.pageY;
+		
+		var gridW = canvas.width/3;
+		var gridH = canvas.height/3;
+		
 		//alert(x + ", "+ y);
-		if(x > centerX && y > centerY){	//右下角
+		if(x > gridW*2 && y > gridH*2){	//右下角
+		console.log("右下角_任務切換");
 			nextTask();
-	}
-		//
-		if(x > centerX && y < centerY){//右上角
-			nextPoint++;
-			preDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
+			return;
 		}
-		if(x < centerX && y < centerY){//左上角
+		//
+		if(x > gridW*2 && y < gridH){//右上角
+		console.log("右上角_跳過目標");
+			nextPoint += vector;
+			preDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
+		return;
+		}
+		if(x < gridW && y < gridH){//左上角
+			console.log("左上角_去回切換");
+			if(vector ==1){
+			vector = -1;//回程
+			nextPoint = points.length;
+			}else{
+			vector = 1;//去程
+			nextPoint = 0;
+			}
+			return;
 		}
 		
-		if(x < centerX && y > centerY){//左下角
+		if(x < gridW && y > gridH*2){//左下角
+		console.log("左下角_測試音效");
+		audio.setAttribute('src',"voice/號誌.wav");
+			
+			audio.play();
+		return;
 		}
 	}
 
@@ -200,7 +227,8 @@ function nextTask(){
 	preDist = 0;
 	if (taskID == tasks.length) taskID = 0;
 	points = tasks[taskID];
-	finishPoint = points[points.length-1][2];
+	taskTitle = points[0][2] + " - " + points[points.length-1][2];
+	if(vector == -1) taskTitle += "(回程)";
 	drawBaseMap();
 }	
 	
@@ -375,7 +403,7 @@ nextDist  = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], p
 	
 var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds()+ " " + d.getMilliseconds();
-str = "終點："+ finishPoint;
+str = "任務："+ taskTitle;
 str += "<br/>時間：" + strTime;
 //alert(str);
 //str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
@@ -392,7 +420,7 @@ document.getElementById("posStr").innerHTML=str;
 
 //時速60公里 = 每秒60x1000/60x60 = 60/3.6 = 16.6公尺
 if (nextDist < 0.02 && (nextDist > preDist) ){	//目標20公尺內才判斷是否通過, 要看速度決定?
-	nextPoint++;
+	nextPoint += vector;
 	preDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
 }else{
 	preDist = nextDist;
