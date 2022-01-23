@@ -235,8 +235,12 @@ function gesturesStart(x,y){
 		//移動
 }
 
+	var endGestX = -1; 
+	var endGestY = -1;
 function gesturesMove(x, y){
 	showMsg("gesturesMove()");
+	endGestX = x;
+	endGestY = y;
 	if(enGestures && zoom>= zoom0/3){		//縮小不能小於1/3。那放大呢???
 		 clearMap();
 		 zoom =zoom1 *(1+(y-startGestY)*0.01);
@@ -253,22 +257,22 @@ function mouseMove(e){
 	e.preventDefault();
 }
 
-function gesturesEnd(x, y){
+function gesturesEnd(){
 showMsg("gesturesEnd()"+", enGestures=" + enGestures);
 	//oldClickTimes = new Date().getTime();
 	if(enGestures){
 		enGestures = false;
 	}else{
-		gridCmd(x, y);
+		gridCmd(endGestX, endGestY);
 	}
 }
 function touchEnd(e){
-	gesturesEnd(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
+	gesturesEnd();
 	e.preventDefault();
 }
 function mouseUp(e){
 
-	gesturesEnd(e.pageX, e.pageY);
+	gesturesEnd();
 	e.preventDefault();
 	//e.stopPropagation();
 }
