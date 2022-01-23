@@ -127,7 +127,7 @@ var tasks = [[
 	var alarmON = true;
 	var canvas = document.getElementById("canvas");
 	canvas.addEventListener("click", click, false);
-/*
+
     canvas.addEventListener('mousedown',mouseDown);
 	canvas.addEventListener('mousemove',mouseMove);
 	canvas.addEventListener('mouseup',mouseUp);
@@ -135,14 +135,14 @@ var tasks = [[
 	canvas.addEventListener('touchstart',touchStart);
     canvas.addEventListener('touchmove',touchMove);
     canvas.addEventListener('touchend',touchEnd);
-	*/
+
 	var enGestures = false;
 	
-var ctx = canvas.getContext("2d");
+	var ctx = canvas.getContext("2d");
 
 //canvas.width = 950;canvas.height = 950;		//寬高預設值為300×150
-canvas.width = window.innerWidth;
-canvas.height = canvas.width;
+	canvas.width = window.innerWidth;
+	canvas.height = canvas.width;
 	var centerX = canvas.width  / 2;
 	var centerY = canvas.height / 2;
 	
@@ -150,7 +150,12 @@ canvas.height = canvas.width;
 	//var scrPoint = gps2scr(recentPoint);
 	const voice = new Audio();
 	voice.volume = 0.5;
-	        
+	 var startGestX = -1;
+	var startGestY = -1;
+	var zoom0 = -1;
+	var zoom1 = -1;
+	var oldClickTimes = -1;
+
 function init(){
 	//alert("init");
 	if( navigator.geolocation ) {
@@ -201,12 +206,11 @@ recentPoint[1] = (maxE + maxW)/2;
 centerCoords[0] = recentPoint[0];
 centerCoords[1] = recentPoint[1];
 }
-var startGestX = -1;
-var startGestY = -1;
+
 function touchStart(e){
-document.getElementById("watchStr").innerHTML="touchStart()";
+	document.getElementById("watchStr").innerHTML="touchStart()";
 	gesturesStart(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
-	//e.preventDefault();//避免觸發 click()
+	e.preventDefault();//避免觸發 click()
 }
 function mouseDown(e){
 	gesturesStart(e.pageX, e.pageY);
@@ -229,8 +233,6 @@ function gesturesStart(x,y){
 		//移動
 }
 
-var zoom0 = -1;
-var zoom1 = -1;
 function gesturesMove(x, y){
 	if(enGestures && zoom>= zoom0/3){		//縮小不能小於1/3。那放大呢???
 		 clearMap();
@@ -240,7 +242,7 @@ function gesturesMove(x, y){
 	 }
 }
 function touchMove(e){
-document.getElementById("watchStr").innerHTML="touchMove()";
+	document.getElementById("watchStr").innerHTML="touchMove()";
 	gesturesMove(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
 	e.preventDefault();
 }
@@ -255,7 +257,7 @@ function gesturesEnd(){
 	}
 }
 function touchEnd(e){
-document.getElementById("watchStr").innerHTML="touchEnd()";
+	document.getElementById("watchStr").innerHTML="touchEnd()";
 	gesturesEnd();
 	e.preventDefault();
 }
@@ -285,8 +287,8 @@ async function noSleep(){	//不自動休眠, Note9 chrome有效, 但三星browse
 	await requestWakeLock();
 }
 
-var oldClickTimes = -1;
-function click(event){	//mouseUp時會觸發
+
+function click(e){	//觸發座標為滑鼠放開處
 e.preventDefault();
 document.getElementById("watchStr").innerHTML="click()";
 		var x = event.pageX;
