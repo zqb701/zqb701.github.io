@@ -217,6 +217,7 @@ function mouseDown(e){
 	e.preventDefault();
 }
 function gesturesStart(x,y){
+	showMsg("gesturesStart()");
 		//手勢起始位置在九宮格中央才會運作
 		var recentTime = new Date().getTime();
 		if(recentTime - oldClickTimes < 300){		//double click的間隔
@@ -235,6 +236,7 @@ function gesturesStart(x,y){
 }
 
 function gesturesMove(x, y){
+	showMsg("gesturesMove()");
 	if(enGestures && zoom>= zoom0/3){		//縮小不能小於1/3。那放大呢???
 		 clearMap();
 		 zoom =zoom1 *(1+(y-startGestY)*0.01);
@@ -243,7 +245,6 @@ function gesturesMove(x, y){
 	 }
 }
 function touchMove(e){
-	document.getElementById("watchStr").innerHTML="touchMove()";
 	gesturesMove(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
 	e.preventDefault();
 }
@@ -253,8 +254,7 @@ function mouseMove(e){
 }
 
 function gesturesEnd(e){
-console.log("gesturesEnd()");
-console.log("enGestures=" + enGestures);
+showMsg("gesturesEnd()"+", enGestures=" + enGestures);
 	//oldClickTimes = new Date().getTime();
 	if(enGestures){
 		enGestures = false;
@@ -263,12 +263,11 @@ console.log("enGestures=" + enGestures);
 	}
 }
 function touchEnd(e){
-	document.getElementById("watchStr").innerHTML="touchEnd()";
 	gesturesEnd(e);
 	e.preventDefault();
 }
 function mouseUp(e){
-	console.log("mouseUp()");
+
 	gesturesEnd(e);
 	e.preventDefault();
 	//e.stopPropagation();
@@ -304,6 +303,7 @@ function click(e){	//觸發座標為滑鼠放開處
 }
 
 function gridCmd(x,y){
+showMsg("gridCmd()");
 		var gridW = canvas.width/3;
 		var gridH = canvas.height/3;
 		oldClickTimes = new Date().getTime();
@@ -352,7 +352,7 @@ function playVoice(str){
 	//TODO : 先檢查檔案是否存在, 
 	console.log(fileName);
 		voice.src = fileName;	//voice.setAttribute('src',fileName);
-		//voice.load();
+		voice.load();
 	//TODO : 大檔可能要先load(), 再檢查可否撥放, 再catch 播放異常
 		voice.play();
 }
@@ -543,6 +543,11 @@ function getDistance(lat1, lon1, lat2, lon2) {	//兩座標間的距離, 傳回�
 
     return dist.toFixed(3);		//小數點後三位(四捨「六入」)
 
+}
+
+function  showMsg(str){
+		console.log(str);
+	document.getElementById("watchStr").innerHTML= str;
 }
 </script>
 </html>
