@@ -126,7 +126,7 @@ var tasks = [[
 	var vector = 1;
 	var alarmON = true;
 	var canvas = document.getElementById("canvas");
-	canvas.addEventListener("click", click, false);
+	//canvas.addEventListener("click", click, false);
 
     canvas.addEventListener('mousedown',mouseDown);
 	canvas.addEventListener('mousemove',mouseMove);
@@ -223,6 +223,7 @@ function gesturesStart(x,y){
 			if(x > canvas.width/3 && x <canvas.width*2/3 && y > canvas.height/3 && y < canvas.height*2/3){
 				//上一行以乎可以用inner區塊的方法
 				enGestures = true;
+				console.log("enGestures=" + enGestures);
 				zoom1 = zoom;
 				//ctx.beginPath();
 				//ctx.moveTo(x, y);
@@ -252,6 +253,8 @@ function mouseMove(e){
 }
 
 function gesturesEnd(e){
+console.log("gesturesEnd()");
+console.log("enGestures=" + enGestures);
 	//oldClickTimes = new Date().getTime();
 	if(enGestures){
 		enGestures = false;
@@ -265,6 +268,7 @@ function touchEnd(e){
 	e.preventDefault();
 }
 function mouseUp(e){
+	console.log("mouseUp()");
 	gesturesEnd(e);
 	e.preventDefault();
 	//e.stopPropagation();
@@ -479,6 +483,7 @@ if(alarmON && nextDist < 0.05){	//50公尺才通知?? TODO 要加上速度參數
 //TODO 判斷方式改用投影點座標
 if (nextDist < 0.02 && (nextDist > preDist) ){	//目標20公尺內才判斷是否通過, 要看速度決定?
 	skipPoint();
+	playVoice("通過");
 	alarmON = true;
 }else{
 	preDist = nextDist;
