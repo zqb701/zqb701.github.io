@@ -251,18 +251,21 @@ function mouseMove(e){
 	e.preventDefault();
 }
 
-function gesturesEnd(){
+function gesturesEnd(e){
+	//oldClickTimes = new Date().getTime();
 	if(enGestures){
 		enGestures = false;
+	}else{
+		gridCmd(e.pageX, e.pageY);
 	}
 }
 function touchEnd(e){
 	document.getElementById("watchStr").innerHTML="touchEnd()";
-	gesturesEnd();
+	gesturesEnd(e);
 	e.preventDefault();
 }
 function mouseUp(e){
-	gesturesEnd();
+	gesturesEnd(e);
 	e.preventDefault();
 	//e.stopPropagation();
 }
@@ -289,10 +292,14 @@ async function noSleep(){	//不自動休眠, Note9 chrome有效, 但三星browse
 
 
 function click(e){	//觸發座標為滑鼠放開處
-e.preventDefault();
-document.getElementById("watchStr").innerHTML="click()";
-		var x = event.pageX;
-		var y = event.pageY;
+	e.preventDefault();
+	document.getElementById("watchStr").innerHTML="click()";
+	//var x = event.pageX;
+	//var y = event.pageY;
+	gridCmd(e.pageX, e.pageY);
+}
+
+function gridCmd(x,y){
 		var gridW = canvas.width/3;
 		var gridH = canvas.height/3;
 		oldClickTimes = new Date().getTime();
