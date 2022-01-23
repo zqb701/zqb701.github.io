@@ -1,5 +1,5 @@
 <!doctype html>
-<html manifest="index.manifest">
+<html lang=zh_tw.UTF-8 manifest="index.manifest">
 <head>
 	<meta charset="utf-8">
 	<!-- 程式來源 https://blog.xuite.net/gkyo0510/wretch/242769650 -->
@@ -287,12 +287,14 @@ async function noSleep(){	//不自動休眠, Note9 chrome有效, 但三星browse
 
 var oldClickTimes = -1;
 function click(event){	//mouseUp時會觸發
+e.preventDefault();
 document.getElementById("watchStr").innerHTML="click()";
 		var x = event.pageX;
 		var y = event.pageY;
 		var gridW = canvas.width/3;
 		var gridH = canvas.height/3;
 		oldClickTimes = new Date().getTime();
+		
 		if(x > gridW*2 && y > gridH*2){	//右下角
 		console.log("右下角_任務切換");
 			skipTask();
@@ -336,7 +338,7 @@ function playVoice(str){
 	var fileName = "voice/"+ str+".wav";
 	//TODO : 先檢查檔案是否存在, 
 	console.log(fileName);
-		voice.setAttribute('src',fileName);
+		voice.src = fileName;	//voice.setAttribute('src',fileName);
 		//voice.load();
 	//TODO : 大檔可能要先load(), 再檢查可否撥放, 再catch 播放異常
 		voice.play();
@@ -362,7 +364,6 @@ function skipTask(){	//任務切換
 }	
 
 function skipPoint(){	//跳下一點
-
 	nextPoint += vector;
 	preDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
 }	
@@ -447,11 +448,11 @@ drawPoint(recentPoint[0], recentPoint[1]);
 	ctx.stroke();
 */
 var d=new Date();
-strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds()+ " " + d.getMilliseconds();
+strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();		//+"."+d.getMilliseconds;
 str = "時間：" + strTime;
 //alert(str);
 //str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
-str += "<br/>速度："+ Math.round(evt.coords.speed*3.6, -1) + "公里/小時。";	//原單位：米/秒
+str += "<br/>速度："+ Math.round(evt.coords.speed*3.6, 1) + "公里/小時。";	//原單位：米/秒
 	str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
 str += "<br />目標：" + points[nextPoint][2];
 //	str += "("+ points[nextPoint][0] +", " + points[nextPoint][1];
@@ -460,12 +461,13 @@ str += "<br />距離：" + nextDist  + "公里";
 //prevLongi = evt.coords.longitude;
 
 document.getElementById("posStr").innerHTML=str;
-if(alarmON && nextDist < 0.03){
+if(alarmON && nextDist < 0.05){	//50公尺才通知?? TODO 要加上速度參數
 			playVoice(points[nextPoint][3]);
 			alarmON = false;
 }
 
 //時速60公里 = 每秒60x1000/60x60 = 60/3.6 = 16.6公尺
+//TODO 判斷方式改用投影點座標
 if (nextDist < 0.02 && (nextDist > preDist) ){	//目標20公尺內才判斷是否通過, 要看速度決定?
 	skipPoint();
 	alarmON = true;
@@ -473,7 +475,7 @@ if (nextDist < 0.02 && (nextDist > preDist) ){	//目標20公尺內才判斷是�
 	preDist = nextDist;
 }
 
-document.getElementById("watchStr").innerHTML = "GPS ok.";
+//document.getElementById("watchStr").innerHTML = "GPS ok.";
 /*
 str = "https://maps.googleapis.com/maps/api/staticmap"+
         "?zoom=15&size=300x300&sensor=false&center=" + 
@@ -525,7 +527,7 @@ function getDistance(lat1, lon1, lat2, lon2) {	//兩座標間的距離, 傳回�
     dist = dist * 60 * 1.1515;	//不明常數
     dist = dist * 1.609344 ;		//英浬轉公里
 
-    return dist.toFixed(3);		//小數點後三位
+    return dist.toFixed(3);		//小數點後三位(四捨「六入」)
 
 }
 </script>

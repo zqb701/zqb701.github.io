@@ -14,13 +14,22 @@
 CACHE:      #快取清單
 index.html #
 # game.html
-# gps01.html #
+gps02.html
 timer02.html 
 # images/
 # js/
 # http://....
 
-NETWORK:    #不會被快取
+voice/去程.wav 
+voice/坑洞.wav 
+voice/新任務.wav
+voice/跳過.wav
+voice/回程.wav
+voice/急彎.wav
+voice/號誌.wav
+voice/通過.wav
+
+NETWORK:    ###################不會被快取
 # *
 
 FALLBACK:   #替代清單
