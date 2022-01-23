@@ -253,22 +253,22 @@ function mouseMove(e){
 	e.preventDefault();
 }
 
-function gesturesEnd(e){
+function gesturesEnd(x, y){
 showMsg("gesturesEnd()"+", enGestures=" + enGestures);
 	//oldClickTimes = new Date().getTime();
 	if(enGestures){
 		enGestures = false;
 	}else{
-		gridCmd(e.pageX, e.pageY);
+		gridCmd(x, y);
 	}
 }
 function touchEnd(e){
-	gesturesEnd(e);
+	gesturesEnd(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
 	e.preventDefault();
 }
 function mouseUp(e){
 
-	gesturesEnd(e);
+	gesturesEnd(e.pageX, e.pageY);
 	e.preventDefault();
 	//e.stopPropagation();
 }
