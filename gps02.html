@@ -325,6 +325,10 @@ async function noSleep(){	//不自動休眠, Note9 chrome有效, 但三星browse
 	caches.open('static')
         .then(function(cache){
 		cache.add('/gps02.html');
+		cache.add('/voice/通過.wav');
+		cache.add('/voice/去程.wav');
+		cache.add('/voice/回程.wav');
+		cache.add('/voice/跳過.wav');
             /*
 			cache.addAll([
                 '/',
