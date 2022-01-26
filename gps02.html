@@ -324,7 +324,9 @@ async function noSleep(){	//不自動休眠, Note9 chrome有效, 但三星browse
 	//來源 https://ithelp.ithome.com.tw/articles/10194283
 	caches.open('static')
         .then(function(cache){
-            cache.addAll([
+		cache.add('/gps02.html');
+            /*
+			cache.addAll([
                 '/',
                 '/gps02.html',
                 '/voice/通過.wav',
@@ -336,7 +338,8 @@ async function noSleep(){	//不自動休眠, Note9 chrome有效, 但三星browse
 				'/voice/號誌.wav',
 				'/voice/跳過.wav',
 				'/voice/通過.wav'
-            ]);   
+            ]);  
+			*/
         })  
 }
 
