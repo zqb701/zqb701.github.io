@@ -42,7 +42,7 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-self.addEventListener('fetch', (event) => {
+self.addEventListener_XX('fetch', (event) => {
   // We only want to call event.respondWith() if this is a navigation request
   // for an HTML page.
   if (event.request.mode === 'navigate') {
@@ -62,18 +62,33 @@ self.addEventListener('fetch', (event) => {
         // due to a network error.
         // If fetch() returns a valid HTTP response with a response code in
         // the 4xx or 5xx range, the catch() will NOT be called.
-        console.log('Fetch failed; returning offline page instead.', error);
+		console.log('Fetch failed; returning offline page instead.', error);
 
         const cache = await caches.open(CACHE_NAME);
         const cachedResponse = await cache.match(OFFLINE_URL);
         return cachedResponse;
-      }
-    })());
-  }
-
+	}
   // If our if() condition is false, then this fetch handler won't intercept the
   // request. If there are any other fetch handlers registered, they will get a
   // chance to call event.respondWith(). If no fetch handlers call
   // event.respondWith(), the request will be handled by the browser as if there
   // were no service worker involvement.
 });
+
+
+//來源：https://ithelp.ithome.com.tw/articles/10193531
+self.addEventListener('fetch', function(event){
+    event.respondWith(
+        caches.match(event.request)
+            .then(function(response){
+                //抓不到會拿到 null
+                if(response){
+                    return response;
+                }else{
+                    return fetch(event.request);
+                }
+            })
+    )
+});
+
+
