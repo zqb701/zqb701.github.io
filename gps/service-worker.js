@@ -41,8 +41,8 @@ self.addEventListener('activate', (event) => {
   // Tell the active service worker to take control of the page immediately.
   self.clients.claim();
 });
-
-self.addEventListener_XX('fetch', (event) => {
+/*
+self.addEventListener_XX('fetch', (event) => {	//只把名字加XX會報錯
   // We only want to call event.respondWith() if this is a navigation request
   // for an HTML page.
   if (event.request.mode === 'navigate') {
@@ -76,7 +76,7 @@ self.addEventListener_XX('fetch', (event) => {
   // event.respondWith(), the request will be handled by the browser as if there
   // were no service worker involvement.
 });
-
+*/
 
 //來源：https://ithelp.ithome.com.tw/articles/10193531
 self.addEventListener('fetch', function(event){
