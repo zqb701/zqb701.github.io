@@ -23,6 +23,7 @@ self.addEventListener('install', (event) => {
     const cache = await caches.open(CACHE_NAME);
     // Setting {cache: 'reload'} in the new request will ensure that the response
     // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
+	/*
     await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
 	cache.add('/gps');
 	cache.add('/voice/新任務.wav');
@@ -34,6 +35,7 @@ self.addEventListener('install', (event) => {
 		cache.add('/voice/坑洞.wav');
 		cache.add('/voice/急彎.wav');
 		cache.add('/voice/號誌.wav');
+		*/
   })());
   // Force the waiting service worker to become the active service worker.
   self.skipWaiting();
@@ -46,6 +48,20 @@ self.addEventListener('activate', (event) => {
     if ('navigationPreload' in self.registration) {
       await self.registration.navigationPreload.enable();
     }
+	//from https://ithelp.ithome.com.tw/articles/10194283
+	var response;
+var cachedResponse = caches.match(event.request).catch(function() {
+  return fetch(event.request);
+}).then(function(r) {
+  response = r;
+  caches.open('offline').then(function(cache) {
+    cache.put(event.request, response);
+  });  
+  return response.clone();
+}).catch(function() {
+  return caches.match('/images/dog.png');
+});
+	
   })());
 
   // Tell the active service worker to take control of the page immediately.
