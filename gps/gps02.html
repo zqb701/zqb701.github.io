@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<!-- 程式來源 https://blog.xuite.net/gkyo0510/wretch/242769650 -->
 	<title>GPS02-2</title>
-
+<script src="./script.js" defer></script>
 </head>
 <body onload="init();" bgcolor="black" text="white" topmargin="0" leftmargin="0">
 	<canvas id="canvas"></canvas>
@@ -235,7 +235,7 @@ function mouseDown(e){
 	e.preventDefault();
 }
 function gesturesStart(x,y){
-	showMsg("gesturesStart()");
+//	showMsg("gesturesStart()");
 		//手勢起始位置在九宮格中央才會運作
 		var recentTime = new Date().getTime();
 		
@@ -244,7 +244,7 @@ function gesturesStart(x,y){
 			if(recentTime - oldClickTimes < 300){		//double click的間隔
 				//縮放模式
 				enGestures = true;
-				console.log("enGestures=" + enGestures);
+//				console.log("enGestures=" + enGestures);
 				zoom1 = zoom;
 				//ctx.beginPath();
 				//ctx.moveTo(x, y);
@@ -264,7 +264,7 @@ function gesturesStart(x,y){
 	var endGestX = -1; 
 	var endGestY = -1;
 function gesturesMove(x, y){
-	showMsg("gesturesMove()");
+//	showMsg("gesturesMove()");
 	endGestX = x;
 	endGestY = y;
 	if(enGestures && zoom>= zoom0/3){		//縮小不能小於1/3。那放大呢???
@@ -284,7 +284,7 @@ function mouseMove(e){
 }
 
 function gesturesEnd(){
-showMsg("gesturesEnd()"+", enGestures=" + enGestures);
+//showMsg("gesturesEnd()"+", enGestures=" + enGestures);
 	//oldClickTimes = new Date().getTime();
 	if(enGestures){
 		enGestures = false;
