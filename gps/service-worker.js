@@ -26,17 +26,17 @@ self.addEventListener('install', (event) => {
 
     await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
 	//await cache.add(new Request("newtask.wav", {cache: 'reload'}));
-	cache.add('/gps');	
+	cache.add('../gps');	
 	//cache.add('/voice/新任務.wav');
-	cache.add('/voice/newtask.wav');
-		cache.add('/voice/去程.wav');
-		cache.add('/voice/回程.wav');
-		cache.add('/voice/跳過.wav');
+	cache.add('../voice/newtask.wav');
+		cache.add('../voice/去程.wav');
+		cache.add('../voice/回程.wav');
+		cache.add('../voice/跳過.wav');
 		
-		cache.add('/voice/通過.wav');
-		cache.add('/voice/坑洞.wav');
-		cache.add('/voice/急彎.wav');
-		cache.add('/voice/號誌.wav');
+		cache.add('../voice/通過.wav');
+		cache.add('../voice/坑洞.wav');
+		cache.add('../voice/急彎.wav');
+		cache.add('../voice/號誌.wav');
   })());
   // Force the waiting service worker to become the active service worker.
   self.skipWaiting();
