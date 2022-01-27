@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang=zh_tw.UTF-8>
+<head>
+	<meta charset="utf-8">
+	<title>cache</title>
+
+</head>
+<body onload="init();" bgcolor="black" text="white" topmargin="0" leftmargin="0">
+	<canvas id="canvas"></canvas>
+	<font size="7">
+	<p id="title">任務：</p>
+	<p id="posStr">111222</p>
+	</font>
+	<font size="6">
+	<p id="watchStr">監控狀態</p>
+	</font>
+	<input type="button" value="啟動GPS更新" onClick="startGPS();">
+	<input type="button" value="停止GPS更新" onClick="stopGPS();">
+	<input type="button" value="delCache" onClick="delCache();">
+</body>
+
+<script>
+function delCache(){
+	//將static快取中的key全部刪除
+caches.open('offline').then(function(cache) {
+  cache.keys().then(function(keys) {
+    keys.forEach(function(request, index, array) {
+      cache.delete(request);
+    });
+  });
+})
+
+}
+</script>
+</html>
