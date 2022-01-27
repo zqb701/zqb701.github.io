@@ -334,7 +334,7 @@ function click(e){	//觸發座標為滑鼠放開處
 }
 
 function gridCmd(x,y){
-showMsg("gridCmd(), x=" + x +", y=" +y);
+//showMsg("gridCmd(), x=" + x +", y=" +y);
 		var gridW = canvas.width/3;
 		var gridH = canvas.height/3;
 		oldClickTimes = new Date().getTime();
@@ -347,14 +347,14 @@ showMsg("gridCmd(), x=" + x +", y=" +y);
 		}
 
 		if(x > gridW*2 && y < gridH){//右上角
-			console.log("右上角_跳過目標");
+			//console.log("右上角_跳過目標");
 			skipPoint();
 			playVoice("跳過");
 			return;
 		}
 		
 		if(x < gridW && y < gridH){//左上角
-			console.log("左上角_去回切換");
+			//console.log("左上角_去回切換");
 			if(vector ==1){
 				vector = -1;//回程
 				nextPoint = points.length;
@@ -371,7 +371,7 @@ showMsg("gridCmd(), x=" + x +", y=" +y);
 		}
 		
 		if(x < gridW && y > gridH*2){//左下角
-			console.log("左下角_測試音效");
+			//console.log("左下角_測試音效");
 			playVoice("通過");
 			return;
 		}
@@ -382,7 +382,7 @@ function playVoice(str){
 	
 	var fileName = "../voice/"+ str+".wav";
 	//TODO : 先檢查檔案是否存在, 
-	console.log(fileName);
+	//console.log(fileName);
 		voice.src = fileName;	//voice.setAttribute('src',fileName);
 		voice.load();
 	//TODO : 大檔可能要先load(), 再檢查可否撥放, 再catch 播放異常

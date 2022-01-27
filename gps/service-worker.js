@@ -97,7 +97,8 @@ self.addEventListener('fetch', function(event) {
             } else {
                 return fetch(event.request).then(function(res) {
                     return caches.open('dynamic').then(function(cache) {
-						console.log(event.request.url + ", " + res);	//duck
+						console.log(event.request.url + ", " + res);	
+						//duck : https://w3c.github.io/ServiceWorker/#cache-put 第6點表示不可以cache 某些類型,如非文字檔
                         cache.put(event.request.url, res.clone());
                         return res;
                     })
