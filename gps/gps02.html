@@ -17,6 +17,7 @@
 	</font>
 	<input type="button" value="啟動GPS更新" onClick="startGPS();">
 	<input type="button" value="停止GPS更新" onClick="stopGPS();">
+	<input type="button" value="delCache" onClick="delCache();">
 </body>
 
 <script title="座標圖資">
@@ -616,6 +617,18 @@ function getDistance(lat1, lon1, lat2, lon2) {	//兩座標間的距離, 傳回�
 function  showMsg(str){
 		console.log(str);
 	document.getElementById("watchStr").innerHTML= str;
+}
+
+function delCache(){
+	//將static快取中的key全部刪除
+caches.open('offline').then(function(cache) {
+  cache.keys().then(function(keys) {
+    keys.forEach(function(request, index, array) {
+      cache.delete(request);
+    });
+  });
+})
+
 }
 </script>
 </html>
