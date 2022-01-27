@@ -23,10 +23,11 @@ self.addEventListener('install', (event) => {
     const cache = await caches.open(CACHE_NAME);
     // Setting {cache: 'reload'} in the new request will ensure that the response
     // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
-	/*
+
     await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
+	await cache.add(new Request("newtask.wav", {cache: 'reload'}));
 	cache.add('/gps');
-	cache.add('/voice/新任務.wav');
+	//cache.add('/voice/新任務.wav');
 		cache.add('/voice/去程.wav');
 		cache.add('/voice/回程.wav');
 		cache.add('/voice/跳過.wav');
@@ -35,7 +36,6 @@ self.addEventListener('install', (event) => {
 		cache.add('/voice/坑洞.wav');
 		cache.add('/voice/急彎.wav');
 		cache.add('/voice/號誌.wav');
-		*/
   })());
   // Force the waiting service worker to become the active service worker.
   self.skipWaiting();
@@ -87,6 +87,7 @@ self.addEventListener_XX('fetch', (event) => {	//只把名字加XX會報錯
   // were no service worker involvement.
 });
 */
+/*
 //from https://ithelp.ithome.com.tw/articles/10220322
 self.addEventListener('fetch', function(event) {
     event.respondWith(
@@ -107,21 +108,23 @@ self.addEventListener('fetch', function(event) {
         })
     );
 });
-/*
+*/
 //來源：https://ithelp.ithome.com.tw/articles/10193531
 self.addEventListener('fetch', function(event){
     event.respondWith(
         caches.match(event.request)
             .then(function(response){
                 //抓不到會拿到 null
-				console.log("event.request=" +event.request);
+				
                 if(response){
+					console.log("response=" +response);
                     return response;
                 }else{
+					console.log("event.request=" +event.request.url);
                     return fetch(event.request);
                 }
             })
     )
 });
-*/
+
 
