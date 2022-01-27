@@ -22,7 +22,7 @@
 <script>
 function delCache(){
 	//將static快取中的key全部刪除
-caches.open('offline').then(function(cache) {
+caches.open('static').then(function(cache) {
   cache.keys().then(function(keys) {
     keys.forEach(function(request, index, array) {
       cache.delete(request);
