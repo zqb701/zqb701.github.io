@@ -48,22 +48,6 @@ self.addEventListener('activate', (event) => {
     if ('navigationPreload' in self.registration) {
       await self.registration.navigationPreload.enable();
     }
-	//from https://ithelp.ithome.com.tw/articles/10194283
-	var response;
-var cachedResponse = caches.match(event.request).catch(function() {
-  return fetch(event.request);
-}).then(function(r) {
-  response = r;
-  caches.open('offline').then(function(cache) {
-    cache.put(event.request, response);
-  });  
-  return response.clone();
-}).catch(function() {
-  return caches.match('/images/dog.png');
-});
-	
-  })());
-
   // Tell the active service worker to take control of the page immediately.
   self.clients.claim();
 });
@@ -103,7 +87,7 @@ self.addEventListener_XX('fetch', (event) => {	//只把名字加XX會報錯
   // were no service worker involvement.
 });
 */
-
+//from https://ithelp.ithome.com.tw/articles/10220322
 self.addEventListener('fetch', function(event) {
     event.respondWith(
         caches.match(event.request).then(function(response) {
@@ -112,6 +96,7 @@ self.addEventListener('fetch', function(event) {
             } else {
                 return fetch(event.request).then(function(res) {
                     return caches.open('dynamic').then(function(cache) {
+						console.log(event.request.url + ", " + res);	//duck
                         cache.put(event.request.url, res.clone());
                         return res;
                     })
