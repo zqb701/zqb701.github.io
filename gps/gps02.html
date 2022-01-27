@@ -325,15 +325,15 @@ async function noSleep(){	//不自動休眠, Note9 chrome有效, 但三星browse
 	caches.open('static')
         .then(function(cache){
 		cache.add('/gps02.html');
-		cache.add('/voice/新任務.wav');
-		cache.add('/voice/去程.wav');
-		cache.add('/voice/回程.wav');
-		cache.add('/voice/跳過.wav');
+		cache.add('../voice/新任務.wav');
+		cache.add('../voice/去程.wav');
+		cache.add('../voice/回程.wav');
+		cache.add('../voice/跳過.wav');
 		
-		cache.add('/voice/通過.wav');
-		cache.add('/voice/坑洞.wav');
-		cache.add('/voice/急彎.wav');
-		cache.add('/voice/號誌.wav');
+		cache.add('../voice/通過.wav');
+		cache.add('../voice/坑洞.wav');
+		cache.add('../voice/急彎.wav');
+		cache.add('../voice/號誌.wav');
             /*
 			cache.addAll([
                 '/',
@@ -407,7 +407,7 @@ showMsg("gridCmd(), x=" + x +", y=" +y);
 function playVoice(str){
 	if(str == undefined) return ;
 	
-	var fileName = "voice/"+ str+".wav";
+	var fileName = "../voice/"+ str+".wav";
 	//TODO : 先檢查檔案是否存在, 
 	console.log(fileName);
 		voice.src = fileName;	//voice.setAttribute('src',fileName);
