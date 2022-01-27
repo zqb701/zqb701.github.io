@@ -67,7 +67,7 @@ self.addEventListener_XX('fetch', (event) => {
         const cache = await caches.open(CACHE_NAME);
         const cachedResponse = await cache.match(OFFLINE_URL);
         return cachedResponse;
-	}
+	})
   // If our if() condition is false, then this fetch handler won't intercept the
   // request. If there are any other fetch handlers registered, they will get a
   // chance to call event.respondWith(). If no fetch handlers call
