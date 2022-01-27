@@ -24,16 +24,16 @@ self.addEventListener('install', (event) => {
     // Setting {cache: 'reload'} in the new request will ensure that the response
     // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
     await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
-	cache.add('/');
-	cache.add('../voice/新任務.wav');
-		cache.add('../voice/去程.wav');
-		cache.add('../voice/回程.wav');
-		cache.add('../voice/跳過.wav');
+	cache.add('/gps');
+	cache.add('/voice/新任務.wav');
+		cache.add('/voice/去程.wav');
+		cache.add('/voice/回程.wav');
+		cache.add('/voice/跳過.wav');
 		
-		cache.add('../voice/通過.wav');
-		cache.add('../voice/坑洞.wav');
-		cache.add('../voice/急彎.wav');
-		cache.add('../voice/號誌.wav');
+		cache.add('/voice/通過.wav');
+		cache.add('/voice/坑洞.wav');
+		cache.add('/voice/急彎.wav');
+		cache.add('/voice/號誌.wav');
   })());
   // Force the waiting service worker to become the active service worker.
   self.skipWaiting();

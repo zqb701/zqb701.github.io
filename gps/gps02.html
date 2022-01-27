@@ -321,37 +321,7 @@ async function noSleep(){	//不自動休眠, Note9 chrome有效, 但三星browse
 	};
 	// Request a screen wake lock…
 	await requestWakeLock();
-	//=====================================
-	/*
-	//來源 https://ithelp.ithome.com.tw/articles/10194283
-	caches.open('static')
-        .then(function(cache){
-		cache.add('/gps02.html');
-		cache.add('../voice/新任務.wav');
-		cache.add('../voice/去程.wav');
-		cache.add('../voice/回程.wav');
-		cache.add('../voice/跳過.wav');
-		
-		cache.add('../voice/通過.wav');
-		cache.add('../voice/坑洞.wav');
-		cache.add('../voice/急彎.wav');
-		cache.add('../voice/號誌.wav');
-            
-			cache.addAll([
-                '/',
-                '/gps02.html',
-                '/voice/通過.wav',
-				'/voice/去程.wav',
-				'/voice/回程.wav',
-				'/voice/坑洞.wav',
-				'/voice/急彎.wav',
-				'/voice/新任務.wav',
-				'/voice/號誌.wav',
-				'/voice/跳過.wav',
-				'/voice/通過.wav'
-            ]);  
-			
-        })  */
+
 }
 
 
@@ -402,6 +372,7 @@ showMsg("gridCmd(), x=" + x +", y=" +y);
 		
 		if(x < gridW && y > gridH*2){//左下角
 			console.log("左下角_測試音效");
+			playVoice("通過");
 			return;
 		}
 	}
