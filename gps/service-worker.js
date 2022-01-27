@@ -28,8 +28,11 @@ self.addEventListener('install', (event) => {
 	//await cache.add(new Request("newtask.wav", {cache: 'reload'}));
 	cache.add('../gps');	
 	//cache.add('/voice/新任務.wav');
-	cache.add('../voice/newtask.wav');
-		cache.add('../voice/去程.wav');
+	console.log("cache newtask.wav");
+		cache.add('../voice/newtask.wav');
+		
+console.log("cache 去程.wav");	
+	cache.add('../voice/去程.wav');
 		cache.add('../voice/回程.wav');
 		cache.add('../voice/跳過.wav');
 		
