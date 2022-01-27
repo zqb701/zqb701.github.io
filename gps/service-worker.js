@@ -104,6 +104,25 @@ self.addEventListener_XX('fetch', (event) => {	//只把名字加XX會報錯
 });
 */
 
+self.addEventListener('fetch', function(event) {
+    event.respondWith(
+        caches.match(event.request).then(function(response) {
+            if(response) {
+                return response;
+            } else {
+                return fetch(event.request).then(function(res) {
+                    return caches.open('dynamic').then(function(cache) {
+                        cache.put(event.request.url, res.clone());
+                        return res;
+                    })
+                }).catch(function(err) {
+                    
+                });
+            }
+        })
+    );
+});
+/*
 //來源：https://ithelp.ithome.com.tw/articles/10193531
 self.addEventListener('fetch', function(event){
     event.respondWith(
@@ -119,5 +138,5 @@ self.addEventListener('fetch', function(event){
             })
     )
 });
-
+*/
 
