@@ -25,6 +25,7 @@ self.addEventListener('install', (event) => {
     // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
     await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
 	cache.add('/');
+	cache.add('../voice/新任務.wav');
   })());
   // Force the waiting service worker to become the active service worker.
   self.skipWaiting();
