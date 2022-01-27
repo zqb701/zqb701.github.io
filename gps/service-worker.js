@@ -24,6 +24,7 @@ self.addEventListener('install', (event) => {
     // Setting {cache: 'reload'} in the new request will ensure that the response
     // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
     await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
+	cache.add('/');
   })());
   // Force the waiting service worker to become the active service worker.
   self.skipWaiting();
@@ -84,6 +85,7 @@ self.addEventListener('fetch', function(event){
         caches.match(event.request)
             .then(function(response){
                 //抓不到會拿到 null
+				console.log("event.request=" +event.request);
                 if(response){
                     return response;
                 }else{
