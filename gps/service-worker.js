@@ -115,10 +115,11 @@ self.addEventListener('fetch', function(event) {
 });
 */
 //來源：https://ithelp.ithome.com.tw/articles/10193531
+/*
 self.addEventListener('fetch', function(event){
     event.respondWith(
-        caches.match(event.request)
-            .then(function(response){
+        caches.match(event.request).then(	//先到cache找
+			function(response){
                 //抓不到會拿到 null
 				
                 if(response){
@@ -131,5 +132,18 @@ self.addEventListener('fetch', function(event){
             })
     )
 });
-
+*/
+// https://ithelp.ithome.com.tw/articles/10220415
+self.addEventListener('fetch', function(event) {
+    event.respondWith(
+        fetch(event.request).then(function(res) {
+            return caches.open(CACHE_DYNAMIC_NAME).then(function(cache) {
+                cache.put(event.request.url, res.clone());
+                return res;
+            })
+        }).catch(function(err) {		//失敗才去cache找
+            return caches.match(event.request)
+        })
+    );
+});
 
