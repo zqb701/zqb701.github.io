@@ -26,7 +26,7 @@ self.addEventListener('install', (event) => {
     //await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
 	cache.add('.');
 	cache.add('index.html');
-	cache.add('newtask.wav');
+	cache.add('通過.wav');
 	cache.add('voice/新任務.wav');
 	cache.add('voice/去程.wav');
 	cache.add('voice/回程.wav');
