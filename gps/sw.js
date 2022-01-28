@@ -156,12 +156,13 @@ self.addEventListener('fetch', function(event) {
 self.addEventListener('fetch', function(event) {
 console.log("需要" + event.request.url);
 if (event.request.headers.get('range')) {
+	//https://googlechrome.github.io/samples/service-worker/prefetch-video/index.html
     var pos =
     Number(/^bytes\=(\d+)\-$/g.exec(event.request.headers.get('range'))[1]);
     console.log('Range request for', event.request.url,
       ', starting position:', pos);
     event.respondWith(
-      caches.open(CURRENT_CACHES.prefetch)
+      caches.open("gps")
       .then(function(cache) {
         return cache.match(event.request.url);
       }).then(function(res) {
