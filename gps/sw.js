@@ -24,7 +24,7 @@ self.addEventListener('install', (event) => {
     // Setting {cache: 'reload'} in the new request will ensure that the response
     // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
     //await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
-	cache.add('/');
+	cache.add('.');
 	cache.add('index.html');
 	
 	cache.add('voice/新任務.wav');

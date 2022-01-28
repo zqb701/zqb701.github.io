@@ -24,12 +24,10 @@
 	<input type="button" value="停止GPS更新" onClick="stopGPS();">
 	<br />
 	<input type="button" value="delCache" onClick="delCache();">
-	<a href="newtask.wav">newtask.wav</a>
-	<img src="duck.jpg">
 	
 </body>
 
-<script title="座標圖資">
+<script memo="座標圖資">
 var tasks = [[
 		[22.6660872645837,		120.50037043288955,	"工業路口","號誌"],
 		[22.665707901738443,	120.5010424041541,	"69巷"],
@@ -262,9 +260,6 @@ function gesturesStart(x,y){
 			}else{
 				//移動模式
 			
-			
-			
-			
 			}
 		}
 		//移動
@@ -415,7 +410,7 @@ function skipTask(){	//任務切換
 	clearMap();
 	drawBaseMap();
 
-	playVoice("newtask");
+	playVoice("新任務");
 }	
 
 function skipPoint(){	//跳下一點
