@@ -24,7 +24,8 @@
 	<input type="button" value="停止GPS更新" onClick="stopGPS();">
 	<br />
 	<input type="button" value="delCache" onClick="delCache();">
-	
+	<img src="duck.jpg">
+	<a href="newtask.wav">newtask</a>
 </body>
 
 <script memo="座標圖資">
@@ -599,7 +600,7 @@ function  showMsg(str){
 
 function delCache(){
 	//將static快取中的key全部刪除
-caches.open('offline').then(function(cache) {
+caches.open('gps').then(function(cache) {
   cache.keys().then(function(keys) {
     keys.forEach(function(request, index, array) {
       cache.delete(request);

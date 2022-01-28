@@ -27,6 +27,7 @@ self.addEventListener('install', (event) => {
 	cache.add('.');
 	cache.add('index.html');
 	cache.add('newtask.wav');
+	cache.add('duck.jpg');
 	cache.add('通過.wav');
 	cache.add('voice/新任務.wav');
 	cache.add('voice/去程.wav');
@@ -149,11 +150,44 @@ self.addEventListener('fetch', function(event) {
     );
 });
 */
-// https://stackoverflow.com/questions/57905153
-self.addEventListener('fetch', function(event) {
 
+
+
+self.addEventListener('fetch', function(event) {
+console.log("需要" + event.request.url);
+if (event.request.headers.get('range')) {
+    var pos =
+    Number(/^bytes\=(\d+)\-$/g.exec(event.request.headers.get('range'))[1]);
+    console.log('Range request for', event.request.url,
+      ', starting position:', pos);
+    event.respondWith(
+      caches.open(CURRENT_CACHES.prefetch)
+      .then(function(cache) {
+        return cache.match(event.request.url);
+      }).then(function(res) {
+        if (!res) {
+          return fetch(event.request)
+          .then(res => {
+            return res.arrayBuffer();
+          });
+        }
+        return res.arrayBuffer();
+      }).then(function(ab) {
+        return new Response(
+          ab.slice(pos),
+          {
+            status: 206,
+            statusText: 'Partial Content',
+            headers: [
+              // ['Content-Type', 'video/webm'],
+              ['Content-Range', 'bytes ' + pos + '-' +
+                (ab.byteLength - 1) + '/' + ab.byteLength]]
+          });
+      }));
+  } else {
+// https://stackoverflow.com/questions/57905153
 event.respondWith((async () => {
-	console.log("需要" + event.request.url);
+	
   const cachedResponse = await caches.match(event.request);
   if (cachedResponse) {
 	  console.log("來自cache");
@@ -167,13 +201,13 @@ event.respondWith((async () => {
     return response;
   }
 
-  if (false) {
+  if (false) {//動態cache
     const responseToCache = response.clone();
     const cache = await caches.open(DYNAMIC_CACHE)
     await cache.put(event.request, response.clone());
   }
 
   return response;
-})());
-
-});
+})());//end if respondWith
+} //end of if...get range
+});//end of 'fetch'
