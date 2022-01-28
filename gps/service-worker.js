@@ -135,8 +135,8 @@ self.addEventListener('fetch', function(event){
 */
 // https://ithelp.ithome.com.tw/articles/10220415
 self.addEventListener('fetch', function(event) {
+	console.log("需要"+ event.request.url);
     event.respondWith(
-		console.log("需要"+ event.request.url);
         fetch(event.request).then(function(res) {
 			console.log("fetch成功。");
             return caches.open(CACHE_DYNAMIC_NAME).then(function(cache) {
