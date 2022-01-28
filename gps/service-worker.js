@@ -30,6 +30,7 @@ self.addEventListener('install', (event) => {
 	//console.log("cache newtask.wav");
 		cache.add('../voice/newtask.wav');
 		cache.add('newtask.wav');
+		cache.add('通過.wav');
 //console.log("cache 去程.wav");	
 		cache.add('../voice/去程.wav');
 		cache.add('../voice/回程.wav');
