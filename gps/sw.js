@@ -152,14 +152,17 @@ self.addEventListener('fetch', function(event) {
 self.addEventListener('fetch', function(event) {
 
 event.respondWith((async () => {
+	console.log("需要" + event.request.url);
   const cachedResponse = await caches.match(event.request);
   if (cachedResponse) {
+	  console.log("來自cache");
     return cachedResponse;
   }
 
   const response = await fetch(event.request);
 
   if (!response || response.status !== 200 || response.type !== 'basic') {
+	  console.log("來自網路");
     return response;
   }
 

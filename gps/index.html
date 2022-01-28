@@ -301,7 +301,6 @@ function touchEnd(e){
 	e.preventDefault();
 }
 function mouseUp(e){
-
 	gesturesEnd();
 	e.preventDefault();
 	//e.stopPropagation();
@@ -315,9 +314,9 @@ async function noSleep(){	//不自動休眠, Note9 chrome有效, 但三星browse
 		try {
 			wakeLock = await navigator.wakeLock.request('screen');
 			wakeLock.addEventListener('release', () => {
-				console.log('Screen Wake Lock was released');
+				//console.log('Screen Wake Lock was released');
 			});
-		console.log('Screen Wake Lock is active');
+		//console.log('Screen Wake Lock is active');
 		//alert("NoSleep");
 		} catch (err) {
 			console.error(`${err.name}, ${err.message}`);
