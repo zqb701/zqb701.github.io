@@ -375,7 +375,9 @@ function gridCmd(x,y){
 		
 		if(x < gridW && y > gridH*2){//左下角
 			//console.log("左下角_測試音效");
-			playVoice("通過");
+			voice.src = "newtask";
+			voice.load();
+			voice.play();
 			return;
 		}
 	}
