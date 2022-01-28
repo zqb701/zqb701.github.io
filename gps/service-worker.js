@@ -136,12 +136,15 @@ self.addEventListener('fetch', function(event){
 // https://ithelp.ithome.com.tw/articles/10220415
 self.addEventListener('fetch', function(event) {
     event.respondWith(
+		console.log("需要"+ event.request.url);
         fetch(event.request).then(function(res) {
+			console.log("fetch成功。");
             return caches.open(CACHE_DYNAMIC_NAME).then(function(cache) {
                 cache.put(event.request.url, res.clone());
                 return res;
             })
-        }).catch(function(err) {		//失敗才去cache找
+        }).catch(function(err) {		
+			console.log("去cache找。");
             return caches.match(event.request)
         })
     );
