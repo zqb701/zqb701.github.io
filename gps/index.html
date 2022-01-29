@@ -516,7 +516,7 @@ strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();		//+"."+d.getM
 str = "時間：" + strTime;
 //alert(str);
 //str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
-str += "<br/>速度："+ (evt.coords.speed*3.6).toFix(1) + "公里/小時。";	//原單位：米/秒
+str += "<br/>速度："+ (evt.coords.speed*3.6).toFixed(1) + "公里/小時。";	//原單位：米/秒
 	str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
 str += "<br />目標：" + points[nextPoint][2];
 //	str += "("+ points[nextPoint][0] +", " + points[nextPoint][1];
