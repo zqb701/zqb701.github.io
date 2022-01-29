@@ -5,8 +5,11 @@
 	<!-- 程式來源 https://blog.xuite.net/gkyo0510/wretch/242769650 -->
 	<title>GPS02-2</title>
 <script defer>
+	//空白則立即執行, defer 資源載入後才執行, async同, 但不保證照順序
+	//等同 window.addEventListener('load', function() {...}
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js');
+		navigator.serviceWorker.register('sw.js');	//參數scope設定掌管範圍, 預設為???
+		//sw.js須為獨立檔案, 無法把程式全部塞在一個檔案。
     }
 </script>
 </head>
@@ -29,6 +32,8 @@
 </body>
 
 <script memo="座標圖資">
+
+//TODO 到指定網站下載gps檔(並cache)
 var tasks = [[
 		[22.6660872645837,		120.50037043288955,	"工業路口","號誌"],
 		[22.665707901738443,	120.5010424041541,	"69巷"],
@@ -145,7 +150,7 @@ var tasks = [[
 	var nextDist = -1;
 	var preDist = 0;
 	var vector = 1;
-	var alarmON = true;
+	var enAlarm = true;
 	var canvas = document.getElementById("canvas");
 	//canvas.addEventListener("click", click, false);
 
@@ -171,11 +176,7 @@ var tasks = [[
 	//var scrPoint = gps2scr(recentPoint);
 	const voice = new Audio();
 	//voice.volume = 0.5;//預設值為何?
-	if(window.plus) plus.device.setVolume( 0.5 );	//設定音量
-	
-    if(window.plus)plus.screen.setBrightness( 0.5 );	// 設定亮度 https://www.itread01.com/content/1549661065.html
 
-	
 	 var startGestX = -1;
 	var startGestY = -1;
 	var zoom0 = -1;
@@ -195,12 +196,8 @@ function init(){
 	skipTask();
 	
 	startGPS();
-	//noSleep();note 9 上, chrome有效, 三星無效
-	if(window.plus) plus.device.setWakelock( true );
-	
+	noSleep();note 9 上, chrome有效, 三星無效
 
-
-	
 	clearMap();
 	newSpace();
 	drawBaseMap();
@@ -500,6 +497,7 @@ recentPoint[0]= Math.round(evt.coords.latitude, -5);
 recentPoint[1]= Math.round(evt.coords.longitude,-5);
 */
 nextDist  = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
+//TODO 改用投影距離
 drawPoint(recentPoint[0], recentPoint[1]);
 /*
 	var drawX =  (recentPoint[1] - centerCoords[1])* zoom+ centerX;
@@ -527,9 +525,9 @@ str += "<br />距離：" + nextDist  + "公里";
 
 //時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒
 //TODO 距離改用投影點座標, 要加上速度參數, (例：距離/速度 > 10秒)
-	if(alarmON && nextDist < 0.05){	//50公尺才通知?? (步行4公里/小時)
+	if(enAlarm && nextDist < evt.coords.speed * 20){	//20秒前通知?? (步行4公里/小時)
 		playVoice(points[nextPoint][3]);
-		alarmON = false;
+		enAlarm = false;
 	}
 
 //判定為通過：
@@ -537,10 +535,8 @@ str += "<br />距離：" + nextDist  + "公里";
 //b.小於指定距離後, 又大於指定距離。
 if (nextDist < 0.02 && (nextDist > preDist) ){	
 	skipPoint();
-	//playVoice("通過");
-	 
-	if(window.plus) plus.device.beep( 3 );	
-	alarmON = true;
+	playVoice("通過");
+	enAlarm = true;
 }else{
 	preDist = nextDist;
 }
@@ -597,7 +593,10 @@ function getDistance(lat1, lon1, lat2, lon2) {	//兩座標間的距離, 傳回�
     dist = dist * 1.609344 ;		//英浬轉公里
 
     return dist.toFixed(3);		//小數點後三位(四捨「六入」)
+}
 
+function showGPS(){
+	
 }
 
 function  showMsg(str){

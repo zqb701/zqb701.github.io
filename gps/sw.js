@@ -17,7 +17,9 @@ const OFFLINE_VERSION = 1;
 const CACHE_NAME = 'offline';
 // Customize this with a different URL if needed.
 const OFFLINE_URL = 'gps02.html';
+const voideCache = ["",];
 
+//註冊時執行一次, 或內容更新(且舊版未控制資源), 或DevTools勾選「重新載入時更新」
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open("gps");
@@ -217,3 +219,4 @@ event.respondWith((async () => {
 })());//end if respondWith
 } //end of if...get range
 });//end of 'fetch'
+
