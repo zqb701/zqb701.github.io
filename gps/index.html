@@ -537,7 +537,7 @@ str += "<br />距離：" + nextDist  + "公里";
 //b.小於指定距離後, 又大於指定距離。
 if (nextDist < 0.02 && (nextDist > preDist) ){	
 	skipPoint();
-	playVoice("通過");
+	//playVoice("通過");
 	 
 	if(window.plus) plus.device.beep( 3 );	
 	alarmON = true;

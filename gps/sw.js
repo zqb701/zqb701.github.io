@@ -194,18 +194,17 @@ if (event.request.headers.get('range')) {		//若是要求的資源有range參數
   } else {
 // https://stackoverflow.com/questions/57905153
 event.respondWith((async () => {
-	
+
+  const response = await fetch(event.request);
+  if (!response || response.status !== 200 || response.type !== 'basic') {
+	  console.log("來自網路");
+    return response;
+  }
+  
   const cachedResponse = await caches.match(event.request);
   if (cachedResponse) {
 	  console.log("來自cache");
     return cachedResponse;
-  }
-
-  const response = await fetch(event.request);
-
-  if (!response || response.status !== 200 || response.type !== 'basic') {
-	  console.log("來自網路");
-    return response;
   }
 
   if (false) {//動態cache
