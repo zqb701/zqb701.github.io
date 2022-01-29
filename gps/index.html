@@ -196,7 +196,7 @@ function init(){
 	skipTask();
 	
 	startGPS();
-	noSleep();note 9 上, chrome有效, 三星無效
+	noSleep();	//note 9 上, chrome有效, 三星無效
 
 	clearMap();
 	newSpace();
@@ -509,6 +509,7 @@ drawPoint(recentPoint[0], recentPoint[1]);
     ctx.arc(drawX, drawY,1,0,Math.PI*2,true);
 	ctx.stroke();
 */
+
 var d=new Date();
 strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();		//+"."+d.getMilliseconds;
 str = "時間：" + strTime;
@@ -519,7 +520,7 @@ str += "<br/>速度："+ (evt.coords.speed*3.6).toFixed(1) + "公里/小時。";
 str += "<br />目標：" + points[nextPoint][2];
 //	str += "("+ points[nextPoint][0] +", " + points[nextPoint][1];
 str += "<br />距離：" + nextDist  + "公里";
-//prevLati = evt.coords.latitude;
+// prevLati = evt.coords.latitude;
 //prevLongi = evt.coords.longitude;
 	document.getElementById("posStr").innerHTML=str;
 
