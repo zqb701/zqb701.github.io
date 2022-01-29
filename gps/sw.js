@@ -159,12 +159,12 @@ self.addEventListener('fetch', function(event) {
 
 
 self.addEventListener('fetch', function(event) {
-console.log("需要" + event.request.url);
+// console.log("需要" + event.request.url);
 if (event.request.headers.get('range')) {		//若是要求的資源有range參數。用來判斷為影音檔。
 	//https://googlechrome.github.io/samples/service-worker/prefetch-video/index.html
     var pos =
     Number(/^bytes\=(\d+)\-$/g.exec(event.request.headers.get('range'))[1]);
-    console.log('Range request for', event.request.url,
+    // console.log('Range request for', event.request.url,
       ', starting position:', pos);
 	event.respondWith(
 		caches.open("gps")		//cache查找範圍為"gps"
@@ -199,13 +199,13 @@ event.respondWith((async () => {
 
   const response = await fetch(event.request);
   if (!response || response.status !== 200 || response.type !== 'basic') {
-	  console.log("來自網路");
+	  // console.log("來自網路");
     return response;
   }
   
   const cachedResponse = await caches.match(event.request);
   if (cachedResponse) {
-	  console.log("來自cache");
+	  // console.log("來自cache");
     return cachedResponse;
   }
 
