@@ -23,7 +23,7 @@
 	<input type="button" value="啟動GPS更新" onClick="startGPS();">
 	<input type="button" value="停止GPS更新" onClick="stopGPS();">
 	<br />
-	<input type="button" value="delCache" onClick="delCache();">
+	<input type="button" value="更新快取" onClick="newCache();">
 	<img src="duck.jpg">
 	<a href="newtask.wav">newtask</a>
 </body>
@@ -137,11 +137,6 @@ var tasks = [[
 		var zoom = -1;
 		
 		var nextPoint = 0;	//下一個點
-	//var wPoint =  120.51431010230766;	//points[nextPoint][1];//120.5116;		//最西點
-	//var recentLongi = 120.51431010230766;
-	//ar ePoint = 120.52;		//最東點
-//var nPoint = 22.659517486714293;	//points[nextPoint][0];//22.659;		//最北點
-	//var recentLati = 22.659517486714293;
 	var Point01 = [22.659517486714293,120.51431010230766, "田中巷"];	
 	var Point02 = [22.666152566994903, 120.50087279317975,"後門"];
 	var recentPoint = Point02;
@@ -175,7 +170,12 @@ var tasks = [[
 
 	//var scrPoint = gps2scr(recentPoint);
 	const voice = new Audio();
-	voice.volume = 0.5;
+	//voice.volume = 0.5;//預設值為何?
+	if(window.plus) plus.device.setVolume( 0.5 );	//設定音量
+	
+    if(window.plus)plus.screen.setBrightness( 0.5 );	// 設定亮度 https://www.itread01.com/content/1549661065.html
+
+	
 	 var startGestX = -1;
 	var startGestY = -1;
 	var zoom0 = -1;
@@ -195,7 +195,11 @@ function init(){
 	skipTask();
 	
 	startGPS();
-	noSleep();
+	//noSleep();note 9 上, chrome有效, 三星無效
+	if(window.plus) plus.device.setWakelock( true );
+	
+
+
 	
 	clearMap();
 	newSpace();
@@ -376,7 +380,7 @@ function gridCmd(x,y){
 		
 		if(x < gridW && y > gridH*2){//左下角
 			//console.log("左下角_測試音效");
-			voice.src = "newtask.wav";
+			voice.src = "../voice/通過.wav";
 			voice.load();
 			voice.play();
 			return;
@@ -512,7 +516,7 @@ strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();		//+"."+d.getM
 str = "時間：" + strTime;
 //alert(str);
 //str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
-str += "<br/>速度："+ Math.round(evt.coords.speed*3.6, 1) + "公里/小時。";	//原單位：米/秒
+str += "<br/>速度："+ (evt.coords.speed*3.6).toFix(1) + "公里/小時。";	//原單位：米/秒
 	str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
 str += "<br />目標：" + points[nextPoint][2];
 //	str += "("+ points[nextPoint][0] +", " + points[nextPoint][1];
@@ -523,15 +527,19 @@ str += "<br />距離：" + nextDist  + "公里";
 
 //時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒
 //TODO 距離改用投影點座標, 要加上速度參數, (例：距離/速度 > 10秒)
-	if(alarmON && nextDist < 0.05){	//50公尺才通知?? 
+	if(alarmON && nextDist < 0.05){	//50公尺才通知?? (步行4公里/小時)
 		playVoice(points[nextPoint][3]);
 		alarmON = false;
 	}
 
-
-if (nextDist < 0.02 && (nextDist > preDist) ){	//目標20公尺內才判斷是否通過, 要看速度決定?
+//判定為通過：
+//a.小於指定距離且距離變大。
+//b.小於指定距離後, 又大於指定距離。
+if (nextDist < 0.02 && (nextDist > preDist) ){	
 	skipPoint();
 	playVoice("通過");
+	 
+	if(window.plus) plus.device.beep( 3 );	
 	alarmON = true;
 }else{
 	preDist = nextDist;
@@ -551,26 +559,25 @@ document.getElementById("msg").innerText = str;
 }
 
 function geoNo(evt){
-//限https? win10本機檔用Chrome可開允許,但仍取得失敗。 手機note9待測
-debugMsg = "GPS取得失敗。";
-document.getElementById("watchStr").innerHTML=debugMsg;
+	//限https? win10本機檔用Chrome可開允許,但仍取得失敗。 手機note9待測
+	showMsg("GPS啟動中...");
 }
 
 var watchID;
 function startGPS(){
 	var options = {
-	  enableHighAccuracy: true,
+	  enableHighAccuracy: true,	//高精度, 更新間隔1秒, 否則為20秒。
 	  timeout: 5000,
 	  maximumAge: 0
 	};
 	watchID = navigator.geolocation.watchPosition( geoYes, geoNo, options);
 
-	document.getElementById("watchStr").innerHTML="GPS正在監控中...";
+	showMsg("啟用GPS。");
 }
 
 function stopGPS(){
 	navigator.geolocation.clearWatch( watchID );
-	document.getElementById("watchStr").innerHTML="GPS停止監控...";
+	showMsg("停止GPS。";
 }
 
 function getDistance(lat1, lon1, lat2, lon2) {	//兩座標間的距離, 傳回：單位公里, 小數點後三位
@@ -598,15 +605,17 @@ function  showMsg(str){
 	document.getElementById("watchStr").innerHTML= str;
 }
 
-function delCache(){
-	//將static快取中的key全部刪除
-caches.open('gps').then(function(cache) {
-  cache.keys().then(function(keys) {
-    keys.forEach(function(request, index, array) {
-      cache.delete(request);
-    });
-  });
-})
+function newCache(){
+	//將"gps"快取中的key全部刪除
+	caches.open('gps')
+		.then(function(cache) {
+			cache.keys()
+			.then(function(keys) {
+				keys.forEach(function(request, index, array) {
+					cache.delete(request);
+				});
+			});
+		})
 
 }
 </script>

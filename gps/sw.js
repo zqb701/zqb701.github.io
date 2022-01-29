@@ -26,9 +26,7 @@ self.addEventListener('install', (event) => {
     //await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
 	cache.add('.');
 	cache.add('index.html');
-	cache.add('newtask.wav');
-	cache.add('duck.jpg');
-	cache.add('通過.wav');
+		
 	cache.add('voice/新任務.wav');
 	cache.add('voice/去程.wav');
 	cache.add('voice/回程.wav');
@@ -38,6 +36,11 @@ self.addEventListener('install', (event) => {
 	cache.add('voice/坑洞.wav');
 	cache.add('voice/急彎.wav');
 	cache.add('voice/號誌.wav');
+	//測試用
+	cache.add('../voice/newtask.wav');
+	cache.add('../voice/通過.wav');
+	cache.add('duck.jpg');
+	cache.add('通過.wav');
 		
   })());
   // Force the waiting service worker to become the active service worker.
@@ -155,36 +158,39 @@ self.addEventListener('fetch', function(event) {
 
 self.addEventListener('fetch', function(event) {
 console.log("需要" + event.request.url);
-if (event.request.headers.get('range')) {
+if (event.request.headers.get('range')) {		//若是要求的資源有range參數。用來判斷為影音檔。
 	//https://googlechrome.github.io/samples/service-worker/prefetch-video/index.html
     var pos =
     Number(/^bytes\=(\d+)\-$/g.exec(event.request.headers.get('range'))[1]);
     console.log('Range request for', event.request.url,
       ', starting position:', pos);
-    event.respondWith(
-      caches.open("gps")
-      .then(function(cache) {
-        return cache.match(event.request.url);
-      }).then(function(res) {
-        if (!res) {
-          return fetch(event.request)
-          .then(res => {
-            return res.arrayBuffer();
-          });
-        }
-        return res.arrayBuffer();
-      }).then(function(ab) {
-        return new Response(
-          ab.slice(pos),
-          {
-            status: 206,
-            statusText: 'Partial Content',
-            headers: [
-              // ['Content-Type', 'video/webm'],
-              ['Content-Range', 'bytes ' + pos + '-' +
-                (ab.byteLength - 1) + '/' + ab.byteLength]]
-          });
-      }));
+	event.respondWith(
+		caches.open("gps")		//cache查找範圍為"gps"
+			.then(function(cache) {
+				return cache.match(event.request.url);	//找到資源
+			})
+			.then(function(res) {
+				if (!res) {
+					return fetch(event.request)
+						.then(res => {
+							return res.arrayBuffer();
+						});
+				}
+				return res.arrayBuffer();
+			})
+			.then(function(ab) {
+				return new Response(
+					ab.slice(pos),
+					{
+					status: 206,
+					statusText: 'Partial Content',
+					headers: [
+					// ['Content-Type', 'video/webm'],
+					['Content-Range', 'bytes ' + pos + '-' +
+					(ab.byteLength - 1) + '/' + ab.byteLength]]
+					});
+					})
+	  );
   } else {
 // https://stackoverflow.com/questions/57905153
 event.respondWith((async () => {
