@@ -25,9 +25,10 @@ self.addEventListener('install', (event) => {
     const cache = await caches.open("gps");
     // Setting {cache: 'reload'} in the new request will ensure that the response
     // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
+	// 翻譯：該參數可確保當cache找不到時, 會從網路下載???
     //await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
-	cache.add('.');
-	cache.add('index.html');
+	//cache.add('.');
+	//cache.add('index.html');
 		
 	cache.add('voice/新任務.wav');
 	cache.add('voice/去程.wav');
@@ -164,8 +165,7 @@ if (event.request.headers.get('range')) {		//若是要求的資源有range參數
 	//https://googlechrome.github.io/samples/service-worker/prefetch-video/index.html
     var pos =
     Number(/^bytes\=(\d+)\-$/g.exec(event.request.headers.get('range'))[1]);
-    // console.log('Range request for', event.request.url,
-      ', starting position:', pos);
+    // console.log('Range request for', event.request.url,       ', starting position:', pos);
 	event.respondWith(
 		caches.open("gps")		//cache查找範圍為"gps"
 			.then(function(cache) {

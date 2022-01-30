@@ -563,13 +563,13 @@ function geoNo(evt){
 var watchID;
 function startGPS(){
 	var options = {
-	  enableHighAccuracy: true,	//高精度, 更新間隔1秒, 否則為20秒。
+	  enableHighAccuracy: true,	//高精度, 實測更新間隔約1秒, 否則約20秒。
 	  timeout: 5000,
 	  maximumAge: 0
 	};
 	watchID = navigator.geolocation.watchPosition( geoYes, geoNo, options);
 
-	showMsg("啟用GPS。");
+	//showMsg("啟用GPS。");
 }
 
 function stopGPS(){
