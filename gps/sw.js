@@ -30,18 +30,21 @@ self.addEventListener('install', (event) => {
 	//cache.add('.');
 	//cache.add('index.html');
 		
-	cache.add('voice/新任務.wav');
-	cache.add('voice/去程.wav');
-	cache.add('voice/回程.wav');
-	cache.add('voice/跳過.wav');
+	cache.add('../voice/新任務.wav');
+	cache.add('../voice/去程.wav');
+	cache.add('../voice/回程.wav');
+	cache.add('../voice/跳過.wav');
 	
-	cache.add('voice/通過.wav');
-	cache.add('voice/坑洞.wav');
-	cache.add('voice/急彎.wav');
-	cache.add('voice/號誌.wav');
+	cache.add('../voice/通過.wav');
+	cache.add('../voice/坑洞.wav');
+	cache.add('../voice/急彎.wav');
+	cache.add('../voice/號誌.wav');
+	
+	cache.add('../voice/交流道.wav');
+	cache.add('../voice/廁所.wav');
 	//測試用
 	cache.add('../voice/newtask.wav');
-	cache.add('../voice/通過.wav');
+	
 	cache.add('duck.jpg');
 	cache.add('通過.wav');
 		
