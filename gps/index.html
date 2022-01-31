@@ -644,7 +644,9 @@ function newCache(){
 			});
 		});
 		
-	const cache = caches.open("gps");
+	      caches.open('gps')
+        .then(function(cache){
+
 	cache.add('../voice/新任務.wav');
 	cache.add('../voice/去程.wav');
 	cache.add('../voice/回程.wav');
@@ -654,6 +656,7 @@ function newCache(){
 	cache.add('../voice/坑洞.wav');
 	cache.add('../voice/急彎.wav');
 	cache.add('../voice/號誌.wav');
+	});
 }
 </script>
 </html>

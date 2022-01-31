@@ -205,7 +205,7 @@ event.respondWith((async () => {
 	  // console.log("來自網路");
 	if (false) {//TODO 視需求, 每次更新?
 		const responseToCache = response.clone();
-		const cache = await caches.open("gps"),
+		const cache = await caches.open("gps");
 		await cache.put(event.request, response.clone());
 	}
     return response;
