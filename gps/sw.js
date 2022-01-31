@@ -19,8 +19,8 @@ const CACHE_NAME = 'offline';
 const OFFLINE_URL = 'gps02.html';
 const voideCache = ["",];
 const voiceList = [
-	"新任務 ","去程 ","回程 ","跳過 ","全圖","置中","通過 ",
-	"坑洞 ","急彎 ","號誌 ","交流道 ","廁所"];
+	"新任務","去程","回程","跳過","全圖","置中","通過",
+	"坑洞","急彎","號誌","交流道","廁所"];
 //註冊時執行一次, 或內容更新(且舊版未控制資源), 或DevTools勾選「重新載入時更新」
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
@@ -31,7 +31,7 @@ self.addEventListener('install', (event) => {
     //await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
 	for(i=0;i<voiceList.length;i++){
 		voiceList[i]= "../voice/" + voiceList[i] + ".wav";
-		console.log(voiceList[0]);
+		console.log(voiceList[i]);
 	}
 	cache.addAll(voiceList);
 	/*
