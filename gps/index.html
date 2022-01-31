@@ -18,7 +18,6 @@
 	<f function html_body(){}/>
 	<canvas id="canvas"></canvas>
 	<font size="7">
-	<p id="title">任務：</p>
 	<p id="posStr">111222</p>
 	</font>
 	<font size="6">
@@ -30,7 +29,7 @@
 	<input type="button" value="更新快取" onClick="newCache();">
 	<img src="duck.jpg">
 	<a href="newtask.wav">newtask</a>
-	版本：13:52 2022年1月30日
+	版本： 08:21 2022年1月31日
 </body>
 
 <script memo="座標圖資">
@@ -59,6 +58,7 @@ var tasks = [[
 		[22.659390282100908, 120.51514639840148, "瑞光路口", "號誌"],
 		
 		[22.658030217493362, 120.514628916623, "國仁路口"],
+		[22.655579780727386, 120.51407578585876, "彎道"],
 		[22.652150360224123, 120.51053770124854, "歸禮巷"],
 		[22.651995666533377, 120.5111949090511, "彎01"],
 		[22.651445528597453, 120.51110103173282, "彎02"],
@@ -148,13 +148,13 @@ var tasks = [[
 </script>
 
 <script title="程式碼">
-		var debugMsg = "script 開始.";
-		var taskID = -1;
-		var points = [];
-		var taskTitle = "";
-		var zoom = -1;
-		
-		var nextPoint = 0;	//下一個點
+	var debugMsg = "script 開始.";
+	var taskID = -1;
+	var points = [];
+	var taskTitle = "";
+	var zoom = -1;
+	
+	var nextPoint = 0;	//下一個點
 	var Point01 = [22.659517486714293,120.51431010230766, "田中巷"];	
 	var Point02 = [22.666152566994903, 120.50087279317975,"後門"];
 	var recentPoint = Point02;
@@ -206,7 +206,7 @@ function init(){
 	//document.getElementById("posStr").innerHTML="script finish.";
 	document.getElementById("watchStr").innerHTML=debugMsg;
 	//alert("run drawMap()");
-	skipTask();
+	newTask();
 	
 	startGPS();
 	noSleep();	//note 9 上, chrome有效, 三星無效
@@ -214,6 +214,7 @@ function init(){
 	clearMap();
 	newSpace();
 	drawBaseMap();
+	showData();
 }
 function newSpace(){	//計算適當的繪圖位置
  /*
@@ -234,17 +235,17 @@ for(p in points){
 	if(points[p][1] < maxW) maxW = points[p][1];
 }
 
-	if((maxN - maxS) >(maxE - maxW)){	//範圍大的用來算比例
+	if((maxN - maxS) >(maxE - maxW)){	//範圍最大的拿來算比例
 		zoom = canvas.height * 0.9/(maxN - maxS);
 	}else{
 		zoom = canvas.width * 0.9/(maxE - maxW);
 	}
 	zoom0 = zoom;
-recentPoint[0] = (maxN + maxS)/2;
-recentPoint[1] = (maxE + maxW)/2;
+	recentPoint[0] = (maxN + maxS)/2;
+	recentPoint[1] = (maxE + maxW)/2;
 
-centerCoords[0] = recentPoint[0];
-centerCoords[1] = recentPoint[1];
+	centerCoords[0] = recentPoint[0];
+	centerCoords[1] = recentPoint[1];
 }
 
 function touchStart(e){
@@ -252,10 +253,12 @@ function touchStart(e){
 	gesturesStart(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
 	e.preventDefault();//避免觸發 click()
 }
+
 function mouseDown(e){
 	gesturesStart(e.pageX, e.pageY);
 	e.preventDefault();
 }
+
 function gesturesStart(x,y){
 //	showMsg("gesturesStart()");
 		//手勢起始位置在九宮格中央才會運作
@@ -297,28 +300,28 @@ function touchMove(e){
 	gesturesMove(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
 	e.preventDefault();
 }
+
 function mouseMove(e){
 	gesturesMove(e.pageX,e.pageY);
 	e.preventDefault();
 }
 
 function gesturesEnd(){
-//showMsg("gesturesEnd()"+", enGestures=" + enGestures);
-	//oldClickTimes = new Date().getTime();
 	if(enGestures){
 		enGestures = false;
 	}else{
 		gridCmd(endGestX, endGestY);
 	}
 }
+
 function touchEnd(e){
 	gesturesEnd();
 	e.preventDefault();
 }
+
 function mouseUp(e){
 	gesturesEnd();
 	e.preventDefault();
-	//e.stopPropagation();
 }
 
 async function noSleep(){	//不自動休眠, Note9 chrome有效, 但三星browser無作用。
@@ -357,17 +360,19 @@ function gridCmd(x,y){
 		var gridH = canvas.height/3;
 		oldClickTimes = new Date().getTime();
 		
-		if(x > gridW*2 && y > gridH*2){	//右下角
-		//console.log("右下角_任務切換");
-			skipTask();
-			
+		if(x > gridW*2 && x < canvas.width-50 && y > gridH*2){	//右下角
+		//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
+			newTask();		
+			playVoice("新任務");
+			showData();
 			return;
 		}
 
-		if(x > gridW*2 && y < gridH){//右上角
-			//console.log("右上角_跳過目標");
+		if(x > gridW*2 && x < canvas.width-50 && y < gridH){//右上角
+			//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
 			skipPoint();
 			playVoice("跳過");
+			showData();
 			return;
 		}
 		
@@ -375,16 +380,16 @@ function gridCmd(x,y){
 			//console.log("左上角_去回切換");
 			if(vector ==1){
 				vector = -1;//回程
-				nextPoint = points.length;
-				document.getElementById("title").innerHTML="任務："+ taskTitle +"(回程)";
+				nextPoint = points.length-1;
+				// document.getElementById("title").innerHTML="任務："+ taskTitle +"(回程)";
 					playVoice("回程");
 			}else{
 				vector = 1;//去程
 				nextPoint = 0;
-				document.getElementById("title").innerHTML="任務："+ taskTitle;
+				// document.getElementById("title").innerHTML="任務："+ taskTitle;
 				playVoice("去程");
 			}
-			
+			showData();
 			return;
 		}
 		
@@ -412,7 +417,8 @@ function playVoice(str){
 		voice.play();
 }
 
-function skipTask(){	//任務切換
+function newTask(){
+//任務切換
 	nextPoint = 0;
 	 nextDist = -1;
 	preDist = 0;
@@ -422,16 +428,13 @@ function skipTask(){	//任務切換
 	if (taskID == tasks.length) taskID = 0;
 	points = tasks[taskID];
 	
-	taskTitle = points[0][2] + " - " + points[points.length-1][2];
-	document.getElementById("title").innerHTML="任務："+ taskTitle;
 	newSpace();
 	clearMap();
 	drawBaseMap();
-
-	playVoice("新任務");
 }	
 
-function skipPoint(){	//跳下一點
+function skipPoint(){
+		//跳下一點
 	nextPoint += vector;
 	preDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
 }	
@@ -507,12 +510,14 @@ function drawPoint(lat, lon, color, width){
 function geoYes(evt){
 	recentPoint[0] = evt.coords.latitude;
 	recentPoint[1] = evt.coords.longitude;
-/*
-recentPoint[0]= Math.round(evt.coords.latitude, -5);
-recentPoint[1]= Math.round(evt.coords.longitude,-5);
-*/
-nextDist  = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
-//TODO 改用投影距離
+
+nextDist  = getDistance(
+	recentPoint[0].toFixed(5), //精度降到小數5位
+	recentPoint[1].toFixed(5),  
+	points[nextPoint][0].toFixed(5), 
+	points[nextPoint][1].toFixed(5)
+);
+
 drawPoint(recentPoint[0], recentPoint[1]);
 /*
 	var drawX =  (recentPoint[1] - centerCoords[1])* zoom+ centerX;
@@ -525,20 +530,9 @@ drawPoint(recentPoint[0], recentPoint[1]);
 	ctx.stroke();
 */
 
-var d=new Date();
-strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();		//+"."+d.getMilliseconds;
-str = "時間：" + strTime;
-//alert(str);
-//str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
-str += "<br/>速度："+ (evt.coords.speed*3.6).toFixed(1) + "公里/小時。";	//原單位：米/秒
-	str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
-str += "<br />目標：" + points[nextPoint][2];
-//	str += "("+ points[nextPoint][0] +", " + points[nextPoint][1];
-str += "<br />距離：" + nextDist  + "公里";
-// prevLati = evt.coords.latitude;
-//prevLongi = evt.coords.longitude;
-	document.getElementById("posStr").innerHTML=str;
-
+showData(evt);
+	
+//TODO 改用投影距離
 //時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒
 //TODO 距離改用投影點座標, 要加上速度參數, (例：距離/速度 > 10秒)
 	if(enAlarm && nextDist < evt.coords.speed/1000 * 20){	//20秒前通知?? (步行4公里/小時)
@@ -611,8 +605,29 @@ function getDistance(lat1, lon1, lat2, lon2) {	//兩座標間的距離, 傳回�
     return dist.toFixed(3);		//小數點後三位(四捨「六入」)
 }
 
-function showGPS(){
+function showData(evt){
+	str = "任務：" + points[0][2] + " - " + points[points.length-1][2];
+	if(vector == -1){
+		str += "(回程)";
+	}
+	str += "<br />目標：" + points[nextPoint][2];
 	
+	var d=new Date();
+	strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();		//+"."+d.getMilliseconds;
+	str += "<br/><br/>時間：" + strTime;
+	
+	if(evt == undefined){
+		str += "<br />距離：<br />速度：";
+	}else{
+	str += "<br />距離：" + nextDist  + "公里";
+	//alert(str);
+	//str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
+	str += "<br/>速度："+ (evt.coords.speed*3.6).toFixed(1) + "公里/小時。";	//原單位：米/秒
+	str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
+	}
+	//	str += "("+ points[nextPoint][0] +", " + points[nextPoint][1];
+	
+	document.getElementById("posStr").innerHTML=str;
 }
 
 function  showMsg(str){

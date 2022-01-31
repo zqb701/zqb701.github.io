@@ -203,6 +203,11 @@ event.respondWith((async () => {
   const response = await fetch(event.request);
   if (!response || response.status !== 200 || response.type !== 'basic') {
 	  // console.log("來自網路");
+	if (false) {//TODO 視需求, 每次更新?
+		const responseToCache = response.clone();
+		const cache = await caches.open("gps"),
+		await cache.put(event.request, response.clone());
+	}
     return response;
   }
   
@@ -211,13 +216,6 @@ event.respondWith((async () => {
 	  // console.log("來自cache");
     return cachedResponse;
   }
-
-  if (false) {//動態cache
-    const responseToCache = response.clone();
-    const cache = await caches.open(DYNAMIC_CACHE)
-    await cache.put(event.request, response.clone());
-  }
-
   return response;
 })());//end if respondWith
 } //end of if...get range
