@@ -29,7 +29,7 @@
 	<input type="button" value="更新快取" onClick="newCache();">
 	<img src="duck.jpg">
 	<a href="newtask.wav">newtask</a>
-	版本： 08:21 2022年1月31日
+	版本： 09:43 2022年1月31日
 </body>
 
 <script memo="座標圖資">
@@ -148,7 +148,7 @@ var tasks = [[
 </script>
 
 <script title="程式碼">
-	var debugMsg = "script 開始.";
+
 	var taskID = -1;
 	var points = [];
 	var taskTitle = "";
@@ -201,13 +201,10 @@ function init(){
 	if( navigator.geolocation ) {
 		navigator.geolocation.getCurrentPosition( geoYes, geoNo);
 	}else {
-		debugMsg += "navigator.geolocation物件失敗。";
+		showMsg("navigator.geolocation物件失敗。");
 	}
-	//document.getElementById("posStr").innerHTML="script finish.";
-	document.getElementById("watchStr").innerHTML=debugMsg;
-	//alert("run drawMap()");
+
 	newTask();
-	
 	startGPS();
 	noSleep();	//note 9 上, chrome有效, 三星無效
 
@@ -645,8 +642,18 @@ function newCache(){
 					cache.delete(request);
 				});
 			});
-		})
-
+		});
+		
+	const cache = await caches.open("gps");
+	cache.add('../voice/新任務.wav');
+	cache.add('../voice/去程.wav');
+	cache.add('../voice/回程.wav');
+	cache.add('../voice/跳過.wav');
+	
+	cache.add('../voice/通過.wav');
+	cache.add('../voice/坑洞.wav');
+	cache.add('../voice/急彎.wav');
+	cache.add('../voice/號誌.wav');
 }
 </script>
 </html>
