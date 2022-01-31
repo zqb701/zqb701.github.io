@@ -30,10 +30,10 @@ self.addEventListener('install', (event) => {
 	// 翻譯：該參數可確保當cache找不到時, 會從網路下載
     //await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
 	for(i=0;i<voiceList.length;i++){
-		voiceList[0]= "../voice/" + voiceList[0] + ".wav";
+		voiceList[i]= "../voice/" + voiceList[i] + ".wav";
 		console.log(voiceList[0]);
 	}
-	cache.addall(voiceList);
+	cache.addAll(voiceList);
 	/*
 	//cache.add('.');
 //cache.add('index.html');
