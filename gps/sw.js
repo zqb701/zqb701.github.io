@@ -31,6 +31,7 @@ self.addEventListener('install', (event) => {
     //await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
 	for(i=0;i<voiceList.length;i++){
 		voiceList[0]= "../voice/" + voiceList[0] + ".wav";
+		console.log(voiceList[0];
 	}
 	cache.addall(voiceList);
 	/*
