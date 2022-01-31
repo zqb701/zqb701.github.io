@@ -25,7 +25,7 @@ self.addEventListener('install', (event) => {
     const cache = await caches.open("gps");
     // Setting {cache: 'reload'} in the new request will ensure that the response
     // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
-	// 翻譯：該參數可確保當cache找不到時, 會從網路下載???
+	// 翻譯：該參數可確保當cache找不到時, 會從網路下載??? 是否代表不需用fatch控制, 也用不到sw
     //await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
 	//cache.add('.');
 	//cache.add('index.html');
