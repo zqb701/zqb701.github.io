@@ -18,22 +18,31 @@ const CACHE_NAME = 'offline';
 // Customize this with a different URL if needed.
 const OFFLINE_URL = 'gps02.html';
 const voideCache = ["",];
-
+const voiceList = [
+	"新任務 ","去程 ","回程 ","跳過 ","全圖","置中","通過 ",
+	"坑洞 ","急彎 ","號誌 ","交流道 ","廁所"];
 //註冊時執行一次, 或內容更新(且舊版未控制資源), 或DevTools勾選「重新載入時更新」
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open("gps");
     // Setting {cache: 'reload'} in the new request will ensure that the response
     // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
-	// 翻譯：該參數可確保當cache找不到時, 會從網路下載??? 是否代表不需用fatch控制, 也用不到sw
+	// 翻譯：該參數可確保當cache找不到時, 會從網路下載
     //await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
+	for(i=0;i<voiceList.length;i++){
+		voiceList[0]= "../voice/" + voiceList[0] + ".wav";
+	}
+	cache.addall(voiceList);
+	/*
 	//cache.add('.');
-	//cache.add('index.html');
+//cache.add('index.html');
+
 		
 	cache.add('../voice/新任務.wav');
 	cache.add('../voice/去程.wav');
 	cache.add('../voice/回程.wav');
 	cache.add('../voice/跳過.wav');
+	
 	
 	cache.add('../voice/通過.wav');
 	cache.add('../voice/坑洞.wav');
@@ -42,12 +51,12 @@ self.addEventListener('install', (event) => {
 	
 	cache.add('../voice/交流道.wav');
 	cache.add('../voice/廁所.wav');
-	//測試用
-	cache.add('../voice/newtask.wav');
+	// 測試用
+	// cache.add('../voice/newtask.wav');
 	
-	cache.add('duck.jpg');
-	cache.add('通過.wav');
-		
+	// cache.add('duck.jpg');
+	// cache.add('通過.wav');
+		*/
   })());
   // Force the waiting service worker to become the active service worker.
   self.skipWaiting();
@@ -181,6 +190,7 @@ if (event.request.headers.get('range')) {		//若是要求的資源有range參數
 							return res.arrayBuffer();
 						});
 				}
+				console.log("SW：從cache取得" + event.request.url);
 				return res.arrayBuffer();
 			})
 			.then(function(ab) {
@@ -213,7 +223,7 @@ event.respondWith((async () => {
   
   const cachedResponse = await caches.match(event.request);
   if (cachedResponse) {
-	  // console.log("來自cache");
+	  console.log("SW：從cache取得" + event.request.url);
     return cachedResponse;
   }
   return response;

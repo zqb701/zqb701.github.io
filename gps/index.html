@@ -158,6 +158,9 @@ var tasks = [[
 	var Point01 = [22.659517486714293,120.51431010230766, "田中巷"];	
 	var Point02 = [22.666152566994903, 120.50087279317975,"後門"];
 	var recentPoint = Point02;
+	var zoom0 = -1;
+	var zoom1 = -1;
+	var centerCoords0 = [23,120.5];
 	var centerCoords = [23,120.5];
 	
 	var nextDist = -1;
@@ -192,10 +195,11 @@ var tasks = [[
 
 	 var startGestX = -1;
 	var startGestY = -1;
-	var zoom0 = -1;
-	var zoom1 = -1;
-	var oldClickTimes = -1;
 
+	var oldClickTimes = -1;
+	var viewMode = 1;
+	
+	
 function init(){
 	//alert("init");
 	if( navigator.geolocation ) {
@@ -213,7 +217,8 @@ function init(){
 	drawBaseMap();
 	showData();
 }
-function newSpace(){	//計算適當的繪圖位置
+function newSpace(){	
+//計算適當的繪圖位置
  /*
  for(p in points){
 	points[p][0] = Math.round(points[p][0], -5);
@@ -238,11 +243,11 @@ for(p in points){
 		zoom = canvas.width * 0.9/(maxE - maxW);
 	}
 	zoom0 = zoom;
-	recentPoint[0] = (maxN + maxS)/2;
-	recentPoint[1] = (maxE + maxW)/2;
+	centerCoords0[0] = (maxN + maxS)/2;
+	centerCoords0[1] = (maxE + maxW)/2;
 
-	centerCoords[0] = recentPoint[0];
-	centerCoords[1] = recentPoint[1];
+	centerCoords[0] = centerCoords0[0];
+	centerCoords[1] = centerCoords0[1];
 }
 
 function touchStart(e){
@@ -392,9 +397,20 @@ function gridCmd(x,y){
 		
 		if(x < gridW && y > gridH*2){//左下角
 			//console.log("左下角_測試音效");
-			voice.src = "../voice/通過.wav";
-			voice.load();
-			voice.play();
+			
+			viewMode *= -1;		//兩種模式切換
+			if(viewMode == 1){
+				playVoice("全圖");
+				centerCoords = centerCoords0;
+			}else{
+				
+				playVoice("置中");
+				//centerCoords = recentPoint;
+				centerCoords = [22.666085540968158, 120.50100909238924];
+			}
+			
+			clearMap();
+			drawBaseMap();
 			return;
 		}
 	}
@@ -644,19 +660,6 @@ function newCache(){
 			});
 		});
 		
-	      caches.open('gps')
-        .then(function(cache){
-
-	cache.add('../voice/新任務.wav');
-	cache.add('../voice/去程.wav');
-	cache.add('../voice/回程.wav');
-	cache.add('../voice/跳過.wav');
-	
-	cache.add('../voice/通過.wav');
-	cache.add('../voice/坑洞.wav');
-	cache.add('../voice/急彎.wav');
-	cache.add('../voice/號誌.wav');
-	});
 }
 </script>
 </html>
