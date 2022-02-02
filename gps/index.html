@@ -30,7 +30,7 @@
 	<input type="button" value="通知測試" onClick="displayNotification();">
 
 
-	版本： 06:23 2022年2月1日
+	版本： 19:53 2022年2月2日
 </body>
 
 <script memo="座標圖資">
@@ -202,13 +202,14 @@ var tasks = [[
 	
 	
 function init(){
-	//alert("init");
+	showMsg("start init()");
 	if( navigator.geolocation ) {
 		navigator.geolocation.getCurrentPosition( geoYes, geoNo);
 	}else {
 		showMsg("navigator.geolocation物件失敗。");
 	}
 	//file://即使同意, 仍然禁止
+	/*
 	if ('Notification' in window) {
 		Notification.requestPermission(function(status){
 			console.log('User Choice', status);
@@ -220,6 +221,7 @@ function init(){
 		});
 	new Notification('訂閱成功！！！');
 	}
+	*/
 	newTask();
 	startGPS();
 	noSleep();	//note 9 上, chrome有效, 三星無效
@@ -543,7 +545,7 @@ function geoYes(evt){
 
 	if(viewMode == 1){		//全圖, 只畫點
 		drawPoint(recentPoint[0], recentPoint[1]);
-	}else{		//置中, 全重畫,
+	}else{		//置中, 全重畫, 不畫點
 		centerCoords[0] = recentPoint[0];
 		centerCoords[1] = recentPoint[1];
 		clearMap();
