@@ -27,6 +27,7 @@
 	<input type="button" value="停止GPS更新" onClick="stopGPS();">
 	<br />
 	<input type="button" value="更新快取" onClick="newCache();">
+	<input type="button" value="通知測試" onClick="displayNotification();">
 
 
 	版本： 06:23 2022年2月1日
@@ -207,7 +208,18 @@ function init(){
 	}else {
 		showMsg("navigator.geolocation物件失敗。");
 	}
+	//file://即使同意, 仍然禁止
+	if ('Notification' in window) {
+		Notification.requestPermission(function(status){
+			console.log('User Choice', status);
+			if (status !== 'granted') {
+				console.log('推播允許被拒絕了!');
+			} else {
 
+			}
+		});
+	new Notification('訂閱成功！！！');
+	}
 	newTask();
 	startGPS();
 	noSleep();	//note 9 上, chrome有效, 三星無效
@@ -372,8 +384,6 @@ function gridCmd(x,y){
 		if(x > gridW*2 && x < canvas.width-50 && y < gridH){//右上角
 			//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
 			skipPoint();
-			playVoice("跳過");
-			showData();
 			return;
 		}
 		
@@ -401,10 +411,12 @@ function gridCmd(x,y){
 			if(viewMode == 1){
 				playVoice("全圖");
 				centerCoords = centerCoords0;
+				zoom = zoom0;
 			}else{
 				
 				playVoice("置中");
-				centerCoords = recentPoint;
+				centerCoords[0] = recentPoint[0];
+				centerCoords[1] = recentPoint[1];
 				// centerCoords = [22.666085540968158, 120.50100909238924];
 			}
 			
@@ -427,6 +439,7 @@ function playVoice(str){
 		voice.load();
 	//TODO : 大檔可能要先load(), 再檢查可否撥放, 再catch 播放異常
 		voice.play();
+		showMsg(fileName);
 }
 
 function newTask(){
@@ -448,7 +461,10 @@ function newTask(){
 function skipPoint(){
 		//跳下一點
 	nextPoint += vector;
+	enAlarm = true;
+	playVoice("通過");
 	preDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
+			showData();
 }	
 
 function viewSwitch(){	//檢視模式切換,全景/置中
@@ -523,62 +539,38 @@ function geoYes(evt){
 	recentPoint[0] = evt.coords.latitude;
 	recentPoint[1] = evt.coords.longitude;
 
-nextDist  = getDistance(
-	recentPoint[0].toFixed(5), //精度降到小數5位
-	recentPoint[1].toFixed(5),  
-	points[nextPoint][0].toFixed(5), 
-	points[nextPoint][1].toFixed(5)
-);
+	nextDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1] );
 
-drawPoint(recentPoint[0], recentPoint[1]);
-/*
-	var drawX =  (recentPoint[1] - centerCoords[1])* zoom+ centerX;
-	var drawY = -(recentPoint[0] - centerCoords[0])*zoom + centerY;
-
-	ctx.strokeStyle ="red";	//線條色
-	ctx.lineWidth = 1;	//線條粗度
-	ctx.beginPath();
-    ctx.arc(drawX, drawY,1,0,Math.PI*2,true);
-	ctx.stroke();
-*/
-
-showData(evt);
+	if(viewMode == 1){		//全圖, 只畫點
+		drawPoint(recentPoint[0], recentPoint[1]);
+	}else{		//置中, 全重畫,
+		centerCoords[0] = recentPoint[0];
+		centerCoords[1] = recentPoint[1];
+		clearMap();
+		drawBaseMap();
+		//TODO 還要在中央畫箭頭
+	}
+			
+			
+	showData(evt);
 	
-//TODO 改用投影距離
-//時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒
-//TODO 距離改用投影點座標, 要加上速度參數, (例：距離/速度 > 10秒)
-	if(enAlarm && nextDist < evt.coords.speed/1000 * 20){	//20秒前通知?? (步行4公里/小時)
+	//時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒
+	//20秒前通知 (步行4公里/小時)
+	if(enAlarm && nextDist < evt.coords.speed/1000 * 20){
 		playVoice(points[nextPoint][3]);
 		enAlarm = false;
 	}
-
-//判定為通過：
-//a.小於指定距離且距離變大。
-//b.小於指定距離後, 又大於指定距離。
-if (nextDist < 0.02 && (nextDist > preDist) ){	
-	skipPoint();
-	playVoice("通過");
-	enAlarm = true;
-}else{
-	preDist = nextDist;
-}
-
-//document.getElementById("watchStr").innerHTML = "GPS ok.";
-/*
-str = "https://maps.googleapis.com/maps/api/staticmap"+
-        "?zoom=15&size=300x300&sensor=false&center=" + 
-        evt.coords.latitude +","+ evt.coords.longitude+
-        "&markers=color:red%7C"+evt.coords.latitude +","+
-         evt.coords.longitude;
- document.getElementById("map").src = str;    //要附API Key才能用。
-//Google Map 2018.07.16以後開始收費
-document.getElementById("msg").innerText = str;
-*/
+	//判定為通過：	//a.距離變大。
+	if (nextDist > preDist ){
+		skipPoint();
+	}else{
+		preDist = nextDist;
+	}
 }
 
 function geoNo(evt){
 	//限https? win10本機檔用Chrome可開允許,但仍取得失敗。 手機note9待測
-	showMsg("GPS啟動中...");
+	showMsg(evt.code + ", " + evt.message);
 }
 
 var watchID;
@@ -598,9 +590,14 @@ function stopGPS(){
 	showMsg("停止GPS。");
 }
 
-function getDistance(lat1, lon1, lat2, lon2) {	//兩座標間的距離, 傳回：單位公里, 小數點後三位
+function getDistance(lat1, lon1, lat2, lon2) {
+	//兩座標間的距離, 傳回：單位公里, 小數點後三位
     //本函式來源 https://www.geodatasource.com/developers/javascript
-
+	lat1 = lat1.toFixed(5);	//用小數5位算距離
+	lon1 = lon1.toFixed(5);
+	lat2 = lat2.toFixed(5);
+	lon2= lon2.toFixed(5);
+	
     var radlat1 = Math.PI * lat1/180;
     var radlat2 = Math.PI * lat2/180;
     var theta = lon1-lon2;
@@ -629,12 +626,12 @@ function showData(evt){
 	str += "<br/><br/>時間：" + strTime;
 	
 	if(evt == undefined){
-		str += "<br />距離：<br />速度：";
+		str += "<br />距離：<br />時速：";
 	}else{
 	str += "<br />距離：" + nextDist  + "公里";
 	//alert(str);
 	//str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
-	str += "<br/>速度："+ (evt.coords.speed*3.6).toFixed(1) + "公里/小時。";	//原單位：米/秒
+	str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
 	str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
 	}
 	//	str += "("+ points[nextPoint][0] +", " + points[nextPoint][1];
@@ -659,6 +656,19 @@ function newCache(){
 			});
 		});
 		
+}
+
+function displayNotification(){
+    if('serviceWorker' in navigator){
+        var options = {
+            body: '歡迎進入30天PWA的世界'           
+        };
+        navigator.serviceWorker.ready
+            .then(function(sw){
+                sw.showNotification('訂閱成功！！！', options);
+            })
+    }  
+     
 }
 </script>
 </html>
