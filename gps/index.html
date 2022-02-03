@@ -183,9 +183,9 @@ var tasks = [[
 	
 	var ctx = canvas.getContext("2d");
 
-//canvas.width = 950;canvas.height = 950;		//寬高預設值為300×150
-	canvas.width = window.innerWidth;
-	canvas.height = canvas.width;
+canvas.width = 950;canvas.height = 950;		//寬高預設值為300×150
+	// canvas.width = window.innerWidth;
+	// canvas.height = canvas.width;
 	var centerX = canvas.width  / 2;
 	var centerY = canvas.height / 2;
 	
@@ -450,6 +450,7 @@ function newTask(){
 	 nextDist = -1;
 	preDist = 0;
 	vector = 1;
+	viewMode = 1;
 	
 	taskID ++;
 	if (taskID == tasks.length) taskID = 0;
@@ -556,14 +557,14 @@ function geoYes(evt){
 			
 	showData(evt);
 	
-	//時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒
-	//20秒前通知 (步行4公里/小時)
+	//時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒(步行4公里/小時)
+	//20秒前通知, 依速度換算距離 
 	if(enAlarm && nextDist < evt.coords.speed/1000 * 20){
 		playVoice(points[nextPoint][3]);
 		enAlarm = false;
 	}
-	//判定為通過：	//a.距離變大。
-	if (nextDist > preDist ){
+	//判定為通過：	//a.距離變大, 且距離30米。b.距離增加超過3次(至少要3秒?)
+	if (nextDist < evt.coords.speed/1000 * 2 && nextDist > preDist ){
 		skipPoint();
 	}else{
 		preDist = nextDist;
@@ -669,7 +670,9 @@ function displayNotification(){
             .then(function(sw){
                 sw.showNotification('訂閱成功！！！', options);
             })
-    }  
+    }  else{
+		
+	}
      
 }
 </script>

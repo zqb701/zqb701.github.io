@@ -21,8 +21,9 @@ const voideCache = ["",];
 const voiceList = [
 	"新任務","去程","回程","跳過","全圖","置中","通過",
 	"坑洞","急彎","號誌","交流道","廁所"];
-//註冊時執行一次, 或內容更新(且舊版未控制資源), 或DevTools勾選「重新載入時更新」
+function install_Listener(){}
 self.addEventListener('install', (event) => {
+	//註冊時執行一次, 或內容更新(且舊版未控制資源), 或DevTools勾選「重新載入時更新」
   event.waitUntil((async () => {
     const cache = await caches.open("gps");
     // Setting {cache: 'reload'} in the new request will ensure that the response
@@ -171,7 +172,7 @@ self.addEventListener('fetch', function(event) {
 */
 
 
-
+function fetch_Listener(){}
 self.addEventListener('fetch', function(event) {
 // console.log("需要" + event.request.url);
 if (event.request.headers.get('range')) {		//若是要求的資源有range參數。用來判斷為影音檔。
@@ -208,25 +209,27 @@ if (event.request.headers.get('range')) {		//若是要求的資源有range參數
 					})
 	  );
   } else {
-// https://stackoverflow.com/questions/57905153
+// https://stackoverflow.com/questions/57905153, 用async替代then, 因為...
 event.respondWith((async () => {
 
-  const response = await fetch(event.request);
-  if (!response || response.status !== 200 || response.type !== 'basic') {
-	  // console.log("來自網路");
-	if (false) {//TODO 視需求, 每次更新?
-		const responseToCache = response.clone();
-		const cache = await caches.open("gps");
-		await cache.put(event.request, response.clone());
-	}
-    return response;
-  }
-  
   const cachedResponse = await caches.match(event.request);
   if (cachedResponse) {
 	  console.log("SW：從cache取得" + event.request.url);
     return cachedResponse;
   }
+  
+  const response = await fetch(event.request);
+  if (!response || response.status !== 200 || response.type !== 'basic') {
+	  // console.log("來自網路");
+    return response;
+  }
+  
+  if (false) {//TODO 視需求, 每次更新?
+		const responseToCache = response.clone();
+		const cache = await caches.open("gps");
+		await cache.put(event.request, response.clone());
+	}
+
   return response;
 })());//end if respondWith
 } //end of if...get range
