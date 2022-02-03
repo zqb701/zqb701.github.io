@@ -63,7 +63,7 @@ self.addEventListener('install', (event) => {
   // Force the waiting service worker to become the active service worker.
   self.skipWaiting();
 });
-/*
+
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     // Enable navigation preload if it's supported.
@@ -73,8 +73,11 @@ self.addEventListener('activate', (event) => {
     }
   // Tell the active service worker to take control of the page immediately.
   self.clients.claim();
-});
+  showMsg();
+}));
+)}
 
+/*
 self.addEventListener_XX('fetch', (event) => {	//只把名字加XX會報錯
   // We only want to call event.respondWith() if this is a navigation request
   // for an HTML page.
@@ -209,7 +212,8 @@ if (event.request.headers.get('range')) {		//若是要求的資源有range參數
 					})
 	  );
   } else {
-// https://stackoverflow.com/questions/57905153, 用async替代then, 因為...
+// https://stackoverflow.com/questions/57905153,
+//在async函數內部，最好使用await而不是.then()鏈來構建基於 Promise 的邏輯。
 event.respondWith((async () => {
 
   const cachedResponse = await caches.match(event.request);
@@ -235,3 +239,15 @@ event.respondWith((async () => {
 } //end of if...get range
 });//end of 'fetch'
 
+function showMsg(){
+	self.clients.matchAll().then(function(clients) {
+  console.log(clients);
+  clients.forEach(function(client) {
+    console.log(client);
+    if (client.url.includes('/gps/index.html')) {
+      // 首页
+      client.postMessage('hello world' + client.id);
+    }
+  });
+});
+}
