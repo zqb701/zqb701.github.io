@@ -172,6 +172,8 @@ var tasks = [[
 	
 	var nextDist = -1;
 	var preDist = 0;
+	var receGap = 0;
+	var prevGap = 0;
 	var vector = 1;
 	var enAlarm = true;
 	var canvas = document.getElementById("canvas");
@@ -229,20 +231,24 @@ function init(){
 	}
 	*/
 	newTask();
+	newSpace();
+
 	startGPS();
 	noSleep();	//note 9 上, chrome有效, 三星無效
 
 	clearMap();
-	newSpace();
 	drawBaseMap();
 	showData();
 }
+
 function newSpace(){	
-//計算適當的繪圖位置
+/**計算適當的繪圖位置
+	找出所有點分佈範圍的邊界值, 算中心點及比例
+*/
  /*
  for(p in points){
-	points[p][0] = Math.round(points[p][0], -5);
-	points[p][1] = Math.round(points[p][1], -5);
+	points[p][0] = Math.round(points[p][0], 5);
+	points[p][1] = Math.round(points[p][1], 5);
  }
  */
  	//找出四邊的點以算出放大值zoom
@@ -250,6 +256,7 @@ var maxN = points[0][0];
 var maxS = points[0][0];
 var maxE = points[0][1];
 var maxW = points[0][1];
+
 for(p in points){
 	if(points[p][0] > maxN) maxN = points[p][0];
 	if(points[p][0] < maxS) maxS = points[p][0];
@@ -257,7 +264,7 @@ for(p in points){
 	if(points[p][1] < maxW) maxW = points[p][1];
 }
 
-	if((maxN - maxS) >(maxE - maxW)){	//範圍最大的拿來算比例
+	if((maxN - maxS) >(maxE - maxW)){	//比較長與寛,較大者的拿來算比例
 		zoom = canvas.height * 0.9/(maxN - maxS);
 	}else{
 		zoom = canvas.width * 0.9/(maxE - maxW);
@@ -417,6 +424,7 @@ function gridCmd(x,y){
 			//console.log("左下角_測試音效");
 			
 			viewMode *= -1;		//兩種模式切換
+			//showMsg(recentPoint[0]);
 			if(viewMode == 1){
 				playVoice("全圖");
 				centerCoords[0] = centerCoords0[0];
@@ -427,6 +435,7 @@ function gridCmd(x,y){
 				playVoice("置中");
 				centerCoords[0] = recentPoint[0];
 				centerCoords[1] = recentPoint[1];
+				
 				// centerCoords = [22.666085540968158, 120.50100909238924];
 			}
 			
@@ -481,16 +490,10 @@ function skipPoint(){
 		while(!points[nextPoint][4 - vector]){
 			showMsg("略過" +points[nextPoint][2]);
 			nextPoint += vector;
-		}
-		preDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
-		
+		}		
 	}
 	showData();
 }	
-
-function viewSwitch(){	//檢視模式切換,全景/置中
-	
-}
 
 function clearMap(){
 	ctx.fillStyle = "black";	//填滿色
@@ -499,6 +502,7 @@ function clearMap(){
 	ctx.lineWidth = 2;	//線條粗度
 	ctx.strokeRect(0,0,canvas.width,canvas.height);
 	ctx.strokeRect(canvas.width/3,canvas.height/3,canvas.width/3,canvas.height/3);
+
 }
 
 function drawBaseMap(){
@@ -561,7 +565,7 @@ function geoYes(evt){
 	recentPoint[0] = evt.coords.latitude;
 	recentPoint[1] = evt.coords.longitude;
 
-	nextDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1] );
+	nextDist = getDistance(recentPoint,  points[nextPoint]);
 
 	if(viewMode == 1){		//全圖：只畫點
 		drawPoint(recentPoint[0], recentPoint[1]);
@@ -569,11 +573,21 @@ function geoYes(evt){
 		centerCoords[0] = recentPoint[0];
 		centerCoords[1] = recentPoint[1];
 		clearMap();
-		drawBaseMap();
-		//TODO 還要在中央畫箭頭
+				drawBaseMap();
+				
+	ctx.strokeStyle = "white";	//線條色
+	ctx.lineWidth = "5";	//線條粗度
+	ctx.beginPath();
+	ctx.moveTo(centerX, centerY);
+	start = Math.PI*(evt.coords.heading/180 - 0.5);
+    ctx.arc( centerX, centerY,10,start,start-Math.PI*2,true);
+	ctx.stroke();
+
+		//TODO 還要在中央畫箭頭,並指向
 	}
-			
-			
+							
+
+	
 	showData(evt);
 	
 	//時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒(步行4公里/小時)
@@ -584,10 +598,15 @@ function geoYes(evt){
 	}
 	//判定為通過：	//a.距離變大, 且距離30米。b.距離增加超過3次(至少要3秒?)
 	//c.從分角線的一邊到另一邊
-	if (nextDist < evt.coords.speed/1000 * 2 && nextDist > preDist ){
+	//if (nextDist < evt.coords.speed/1000 * 2 && nextDist > preDist ){
+	receGap = nextDist - preDist;
+	if(receGap * prevGap < 0){
+		//靠近時gap會小於零, 遠離時會大於零,變換時一正一負,相乘為負
 		skipPoint();
+		preDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
 	}else{
 		preDist = nextDist;
+		prevGap = receGap;
 	}
 }
 
@@ -618,13 +637,13 @@ function stopGPS(){
 	showMsg("停止GPS。");
 }
 
-function getDistance(lat1, lon1, lat2, lon2) {
+function getDistance(coord1, coord2) {
 	//兩座標間的距離, 傳回：單位公里, 小數點後三位
     //本函式來源 https://www.geodatasource.com/developers/javascript
-	lat1 = lat1.toFixed(5);	//用小數5位算距離
-	lon1 = lon1.toFixed(5);
-	lat2 = lat2.toFixed(5);
-	lon2= lon2.toFixed(5);
+	lat1 = coord1[0].toFixed(5);	//用小數5位算距離
+	lon1 = coord1[1].toFixed(5);
+	lat2 = coord2[0].toFixed(5);
+	lon2= coord2[1].toFixed(5);
 	
     var radlat1 = Math.PI * lat1/180;
     var radlat2 = Math.PI * lat2/180;
