@@ -592,7 +592,12 @@ function geoYes(evt){
 }
 
 function geoNo(evt){
-	//限https? win10本機檔用Chrome可開允許,但仍取得失敗。 手機note9待測
+	/*
+		限https? win10本機檔用Chrome可開允許,但仍取得失敗。 手機note9待測
+		Only secure origins are allowed 安全來源才可用geo...
+		https://kknews.cc/zh-tw/tech/4qgkxq2.html
+	*/
+
 	showMsg(evt.code + ", " + evt.message);
 }
 
@@ -600,7 +605,7 @@ var watchID;
 function startGPS(){
 	var options = {
 	  enableHighAccuracy: true,	//高精度, 實測更新間隔約1秒, 否則約20秒。
-	  timeout: 5000,
+	  //timeout: 5000,						//在note9用chrome會Timeout expired。
 	  maximumAge: 0
 	};
 	watchID = navigator.geolocation.watchPosition( geoYes, geoNo, options);
