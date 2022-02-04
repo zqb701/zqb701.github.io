@@ -36,7 +36,7 @@
 	<input type="button" value="通知測試" onClick="displayNotification();">
 
 
-	版本：08:12 2022年2月4日
+	版本：16:48 2022年2月4日
 </body>
 
 <script memo="座標圖資">
@@ -604,10 +604,11 @@ function geoYes(evt){
 		//靠近時gap會小於零, 遠離時會大於零,變換時一正一負,相乘為負
 		skipPoint();
 		preDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
+		// prevGap = 0;
 	}else{
 		preDist = nextDist;
-		prevGap = receGap;
 	}
+	prevGap = receGap;
 }
 
 function geoNo(evt){
