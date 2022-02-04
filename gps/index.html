@@ -35,8 +35,7 @@
 	<input type="button" value="更新快取" onClick="newCache();">
 	<input type="button" value="通知測試" onClick="displayNotification();">
 
-
-	版本：16:48 2022年2月4日
+	版本：17:00 2022年2月4日
 </body>
 
 <script memo="座標圖資">
@@ -598,9 +597,11 @@ function geoYes(evt){
 	}
 	//判定為通過：	//a.距離變大, 且距離30米。b.距離增加超過3次(至少要3秒?)
 	//c.從分角線的一邊到另一邊
-	//if (nextDist < evt.coords.speed/1000 * 2 && nextDist > preDist ){
 	receGap = nextDist - preDist;
-	if(receGap * prevGap < 0){
+	// if(receGap * prevGap < 0){//定位誤差會觸動
+	if (nextDist < evt.coords.speed/1000 * 2 + 0.01 && nextDist > preDist ){	//路邊與路中央的差距
+	
+	
 		//靠近時gap會小於零, 遠離時會大於零,變換時一正一負,相乘為負
 		skipPoint();
 		preDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
