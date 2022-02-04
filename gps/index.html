@@ -36,7 +36,7 @@
 	<input type="button" value="通知測試" onClick="displayNotification();">
 
 
-	版本：14:39 2022年2月3日
+	版本：08:12 2022年2月4日
 </body>
 
 <script memo="座標圖資">
@@ -345,7 +345,8 @@ function mouseUp(e){
 	e.preventDefault();
 }
 
-async function noSleep(){	//不自動休眠, Note9 chrome有效, 但三星browser無作用。
+async function noSleep(){	
+//不自動休眠, Note9 chrome有效, 但三星browser無作用。
 	// The wake lock sentinel.
 	let wakeLock = null;
 	// Function that attempts to request a screen wake lock.
@@ -562,9 +563,9 @@ function geoYes(evt){
 
 	nextDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1] );
 
-	if(viewMode == 1){		//全圖, 只畫點
+	if(viewMode == 1){		//全圖：只畫點
 		drawPoint(recentPoint[0], recentPoint[1]);
-	}else{		//置中, 全重畫, 不畫點
+	}else{		//置中：全重畫, 不畫點
 		centerCoords[0] = recentPoint[0];
 		centerCoords[1] = recentPoint[1];
 		clearMap();

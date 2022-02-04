@@ -21,6 +21,8 @@ const voideCache = ["",];
 const voiceList = [
 	"新任務","去程","回程","跳過","全圖","置中","通過",
 	"坑洞","急彎","號誌","交流道","廁所"];
+	
+	
 function install_Listener(){}
 self.addEventListener('install', (event) => {
 	//註冊時執行一次, 或內容更新(且舊版未控制資源), 或DevTools勾選「重新載入時更新」
@@ -35,46 +37,26 @@ self.addEventListener('install', (event) => {
 		console.log(voiceList[i]);
 	}
 	cache.addAll(voiceList);
-	/*
-	//cache.add('.');
-//cache.add('index.html');
 
-		
-	cache.add('../voice/新任務.wav');
-	cache.add('../voice/去程.wav');
-	cache.add('../voice/回程.wav');
-	cache.add('../voice/跳過.wav');
-	
-	
-	cache.add('../voice/通過.wav');
-	cache.add('../voice/坑洞.wav');
-	cache.add('../voice/急彎.wav');
-	cache.add('../voice/號誌.wav');
-	
-	cache.add('../voice/交流道.wav');
-	cache.add('../voice/廁所.wav');
-	// 測試用
-	// cache.add('../voice/newtask.wav');
-	
-	// cache.add('duck.jpg');
-	// cache.add('通過.wav');
-		*/
+		//cache.add('.');
+		//cache.add('index.html');
   })());
   // Force the waiting service worker to become the active service worker.
   self.skipWaiting();
 });
 
+function activate_Listerer(){}
 self.addEventListener('activate', (event) => {
-  event.waitUntil((async () => {
-    // Enable navigation preload if it's supported.
-    // See https://developers.google.com/web/updates/2017/02/navigation-preload
-    if ('navigationPreload' in self.registration) {
-      await self.registration.navigationPreload.enable();
-    }
-  // Tell the active service worker to take control of the page immediately.
-  self.clients.claim();
-  showMsg();
-}));
+	event.waitUntil((async () => {
+		// Enable navigation preload if it's supported.
+		// See https://developers.google.com/web/updates/2017/02/navigation-preload
+		if ('navigationPreload' in self.registration) {
+		  await self.registration.navigationPreload.enable();
+		}
+		// Tell the active service worker to take control of the page immediately.
+		self.clients.claim();
+		showMsg();
+	}));
 )}
 
 /*
@@ -219,6 +201,7 @@ event.respondWith((async () => {
   const cachedResponse = await caches.match(event.request);
   if (cachedResponse) {
 	  console.log("SW：從cache取得" + event.request.url);
+	 showMsg("SW：從cache取得" + event.request.url);
     return cachedResponse;
   }
   
