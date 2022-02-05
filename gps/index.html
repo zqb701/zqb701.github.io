@@ -21,7 +21,7 @@
 </head>
 
 <body onload="init();" bgcolor="black" text="white" topmargin="0" leftmargin="0">
-	<f function html_body(){}/>
+	<f function HTML_body(){}/>
 	<canvas id="canvas"></canvas>
 	<font size="7">
 	<p id="posStr">111222</p>
@@ -144,9 +144,9 @@ var tasks = [[
 		[22.666540670813557, 120.50113642730727, "民利路"],
 		[22.66728729803525, 120.4997624132888, "民教路"],
 		[22.668284731721105, 120.49808200934285, "廣東路"],
-		[22.667523721107013, 120.4978306934891, "民生路"],
+		[22.667523721107013, 120.4978306934891, "民生路","號誌"],
 		[22.66566750271852, 120.4961204306436, "民有一路"],
-		[22.664495102608665, 120.49399094587267, "台糖三街"],
+		[22.664495102608665, 120.49399094587267, "台糖三街","號誌"],
 		[22.66472029116734, 120.49111723281767, "台糖一街"],
 		[22.662416069802465, 120.49028271413977, "台糖街"],
 		[22.66159915133573, 120.49302542015064, "台糖三街2"]
@@ -164,6 +164,10 @@ var tasks = [[
 	var Point01 = [22.659517486714293,120.51431010230766, "田中巷"];	
 	var Point02 = 		[22.66528466599206,		120.5017954343364,	"殺蛇溪", "號誌",,"號誌"];
 	var recentPoint = Point02;
+	//上一個通過的點
+	var passPoint = [0,0];
+		passPoint[0] = recentPoint[0];
+		passPoint[1] = recentPoint[1];
 	var zoom0 = -1;
 	var zoom1 = -1;
 	var centerCoords0 = [23,120.5];
@@ -495,7 +499,9 @@ function skipPoint(){
 		while(!points[nextPoint][4 - vector]){
 			showMsg("略過" +points[nextPoint][2]);
 			nextPoint += vector;
-		}		
+		}
+		passPoint[0] = points[nextPoint - vector][0];
+		passPoint[1] = points[nextPoint - vector][1];
 	}
 	showData();
 }	
@@ -574,7 +580,7 @@ function geoYes(evt){
 	recentPoint[1] = evt.coords.longitude;
 
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
-	heading =  Math.atan((recentPoint[1]- points[nextPoint][1])/(recentPoint[0] - points[nextPoint][0]));
+	heading =  Math.atan((passPoint[1]- points[nextPoint][1])/(passPoint[0] - points[nextPoint][0]));
 	//heading = evt.coords.heading;
 	newDist2 = Math.cos(2*Math.PI *heading/360 -heading)*nextDist;
 	
@@ -686,7 +692,7 @@ function showData(evt){
 	if(evt == undefined){
 		str += "<br />距離：<br />時速：";
 	}else{
-	str += "<br />距離：" + nextDist  + "公里(" + newDist2.toFixed(3) +")方向：" + 360*heading/2/Math.PI+"。";
+	str += "<br />距離：" + nextDist  + "公里(" + newDist2.toFixed(3) +")方向：" + (360*heading/2/Math.PI).toFixed(2)+"。";
 	//alert(str);
 	//str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
 	str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
