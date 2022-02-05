@@ -35,7 +35,7 @@
 	<input type="button" value="更新快取" onClick="newCache();">
 	<input type="button" value="通知測試" onClick="displayNotification();">
 
-	版本：17:00 2022年2月4日
+	版本：13:00 2022年2月5日
 </body>
 
 <script memo="座標圖資">
@@ -170,11 +170,13 @@ var tasks = [[
 	var centerCoords = [23,120.5];
 	var nextDist = -1;
 	var newDist2 = -1;
+	var heading = -1;	//目標的方向0~360(以前一目標計算,但初值以移動點計算)
 	
 	var preDist = 0;
 	var receGap = 0;
 	var prevGap = 0;
-	var vector = 1;
+	//任務的去回行程, 回程為-1
+	var vector = 1;	
 	var enAlarm = true;
 	var canvas = document.getElementById("canvas");
 	//canvas.addEventListener("click", click, false);
@@ -572,7 +574,9 @@ function geoYes(evt){
 	recentPoint[1] = evt.coords.longitude;
 
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
-	newDist2 = Math.cos(2*Math.PI *150/360 - Math.atan((recentPoint[1]- points[nextPoint][1])/(recentPoint[0] - points[nextPoint][0])))*nextDist;
+	heading =  Math.atan((recentPoint[1]- points[nextPoint][1])/(recentPoint[0] - points[nextPoint][0]));
+	//heading = evt.coords.heading;
+	newDist2 = Math.cos(2*Math.PI *heading/360 -heading)*nextDist;
 	
 	if(viewMode == 1){		//全圖：只畫點
 		drawPoint(recentPoint[0], recentPoint[1]);
@@ -679,19 +683,18 @@ function showData(evt){
 	}
 	str += "<br />目標：" + points[nextPoint][2];
 	
-	var d=new Date();
-	strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();		//+"."+d.getMilliseconds;
-	str += "<br/><br/>時間：" + strTime;
-	
 	if(evt == undefined){
 		str += "<br />距離：<br />時速：";
 	}else{
-	str += "<br />距離：" + nextDist  + "公里(" + newDist2.toFixed(3) +")";
+	str += "<br />距離：" + nextDist  + "公里(" + newDist2.toFixed(3) +")方向：" + 360*heading/2/Math.PI+"。";
 	//alert(str);
 	//str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
 	str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
 	str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
 	}
+	var d=new Date();
+	strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();		//+"."+d.getMilliseconds;
+	str += "<br/>時間：" + strTime;
 	//	str += "("+ points[nextPoint][0] +", " + points[nextPoint][1];
 	
 	document.getElementById("posStr").innerHTML=str;
