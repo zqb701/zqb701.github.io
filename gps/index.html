@@ -686,7 +686,7 @@ function showData(evt){
 	if(evt == undefined){
 		str += "<br />距離：<br />時速：";
 	}else{
-	str += "<br />距離：" + nextDist  + "公里(" + newDist2 +"pixel)";
+	str += "<br />距離：" + nextDist  + "公里(" + newDist2.toFixed(3) +")";
 	//alert(str);
 	//str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
 	str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
