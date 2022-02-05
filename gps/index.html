@@ -162,14 +162,15 @@ var tasks = [[
 	
 	var nextPoint = 0;	//下一個點
 	var Point01 = [22.659517486714293,120.51431010230766, "田中巷"];	
-	var Point02 = [22.666152566994903, 120.50087279317975,"後門"];
+	var Point02 = 		[22.66528466599206,		120.5017954343364,	"殺蛇溪", "號誌",,"號誌"];
 	var recentPoint = Point02;
 	var zoom0 = -1;
 	var zoom1 = -1;
 	var centerCoords0 = [23,120.5];
 	var centerCoords = [23,120.5];
-	
 	var nextDist = -1;
+	var newDist2 = -1;
+	
 	var preDist = 0;
 	var receGap = 0;
 	var prevGap = 0;
@@ -237,6 +238,9 @@ function init(){
 
 	clearMap();
 	drawBaseMap();
+		nextDist = getDistance(recentPoint,  points[nextPoint]);
+		newDist2 = Math.cos(2*Math.PI *150/360 - Math.atan((recentPoint[1]- points[nextPoint][1])/(recentPoint[0] - points[nextPoint][0])))*nextDist;
+	console.log(nextDist + ", " + newDist2);
 	showData();
 }
 
@@ -402,7 +406,7 @@ function gridCmd(x,y){
 			return;
 		}
 		
-		if(x < gridW && y < gridH){//左上角
+		if(x < gridW && x > 50 && y < gridH){//左上角
 			//console.log("左上角_去回切換");
 			if(vector ==1){
 				vector = -1;//回程
@@ -419,7 +423,7 @@ function gridCmd(x,y){
 			return;
 		}
 		
-		if(x < gridW && y > gridH*2){//左下角
+		if(x < gridW && x > 50 && y > gridH*2){//左下角
 			//console.log("左下角_測試音效");
 			
 			viewMode *= -1;		//兩種模式切換
@@ -539,7 +543,10 @@ function drawBaseMap(){
 	ctx.fill(circle2);
 }
 
-function gps2scr(sourcePs){		//經緯度座標「批次」轉螢幕座標
+function gps2scr(sourcePs){
+	//經緯度座標「批次」轉螢幕座標
+	//「假設」經緯度間隔等比例
+	//但到時圖片貼上就偏了...
 	var newPs=new Array();
 	for(var i=0; i<sourcePs.length; i++){
 		newPs[i] = new Array();
@@ -565,7 +572,8 @@ function geoYes(evt){
 	recentPoint[1] = evt.coords.longitude;
 
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
-
+	newDist2 = Math.cos(2*Math.PI *150/360 - Math.atan((recentPoint[1]- points[nextPoint][1])/(recentPoint[0] - points[nextPoint][0])))*nextDist;
+	
 	if(viewMode == 1){		//全圖：只畫點
 		drawPoint(recentPoint[0], recentPoint[1]);
 	}else{		//置中：全重畫, 不畫點
@@ -585,8 +593,6 @@ function geoYes(evt){
 		//TODO 還要在中央畫箭頭,並指向
 	}
 							
-
-	
 	showData(evt);
 	
 	//時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒(步行4公里/小時)
@@ -595,11 +601,14 @@ function geoYes(evt){
 		playVoice(points[nextPoint][3]);
 		enAlarm = false;
 	}
-	//判定為通過：	//a.距離變大, 且距離30米。b.距離增加超過3次(至少要3秒?)
-	//c.從分角線的一邊到另一邊
+	//判定為通過：	
+	//a.近距離內距離變大。依車速修正
+	//b.距離增加超過3次(至少要3秒?)
+	//c.從分角線的一邊到另一邊(距離從正變負數, 所以相乘為負)
 	receGap = nextDist - preDist;
 	// if(receGap * prevGap < 0){//定位誤差會觸動
-	if (nextDist < evt.coords.speed/1000 * 2 + 0.01 && nextDist > preDist ){	//路邊與路中央的差距
+	if (nextDist < evt.coords.speed/1000 * 2 + 0.01 && nextDist > preDist ){
+		//路邊與路中央的差距
 	
 	
 		//靠近時gap會小於零, 遠離時會大於零,變換時一正一負,相乘為負
@@ -677,7 +686,7 @@ function showData(evt){
 	if(evt == undefined){
 		str += "<br />距離：<br />時速：";
 	}else{
-	str += "<br />距離：" + nextDist  + "公里";
+	str += "<br />距離：" + nextDist  + "公里(" + newDist2 +"pixel)";
 	//alert(str);
 	//str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
 	str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
