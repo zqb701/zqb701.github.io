@@ -123,6 +123,7 @@ var tasks = [[
 		[23.32108328032145, 120.40447735836689, "民有街","廁所"]
 		
 	],[
+
 		[22.66870485598517, 120.48572274512632,"台鐵屏東南二門","廁所"],
 		[22.668258854960587, 120.48931283122437,"復興路口","號誌"],
 		[22.666716941498812, 120.48890159338008, "自由復興路口","號誌"],
@@ -159,6 +160,7 @@ var tasks = [[
 		[22.58972948061996, 120.63908090610973, "112基地"],
 		[22.59007659798934, 120.64766077466638,"橋","急彎",,"急彎"],
 		[22.582703739665064, 120.64590316103639, "彎道"],
+		
 		[22.58156375746854, 120.64774690725149,"急彎A","急彎",,"急彎"],
 		[22.58345391607421, 120.64720794662499,"急彎B","急彎",,"急彎"],
 		[22.580992567577628, 120.64849052598437,"急彎C","急彎",,"急彎"],
@@ -442,6 +444,10 @@ function gridCmd(x,y){
 		if(x > gridW*2 && x < canvas.width-50 && y < gridH){//右上角
 			//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
 			skipPoint();
+			// centerCoords[0] = points[nextPoint][0];
+			// centerCoords[1] = points[nextPoint][1];
+			// clearMap();
+			// drawBaseMap();
 			return;
 		}
 		
@@ -535,6 +541,7 @@ function skipPoint(){
 		}
 		passPoint[0] = points[nextPoint - vector][0];
 		passPoint[1] = points[nextPoint - vector][1];
+
 	}
 	showData();
 }	
@@ -582,6 +589,14 @@ function drawBaseMap(){
 	  
 	ctx.fillStyle = "black";
 	ctx.fill(circle2);
+	/*
+	ctx.lineJoin="miter";	//轉折點的樣式, miter(default), round扇形 和 bevel三角形
+ctx.miterLimit=5;		//最大斜接長度。斜接長度指的是在兩條線交匯處內角和外角之間的距離。
+
+lineCap 線條端點的樣式, butt(default)方形, square 和 round圓形
+setLineDash 方法和 lineDashOffset 屬性來制定虛線樣式
+來源 https://kknews.cc/zh-tw/code/6azm5bl.html
+	*/
 }
 
 function gps2scr(sourcePs){
