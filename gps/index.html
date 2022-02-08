@@ -34,8 +34,9 @@
 	<br />
 	<input type="button" value="更新快取" onClick="newCache();">
 	<input type="button" value="通知測試" onClick="displayNotification();">
-
-	版本：18:14 2022年2月7日
+	
+	<input type="file" multiple id="input" style='display:none;'>
+	版本：18:15 2022年2月7日
 </body>
 
 <script memo="座標圖資">
@@ -104,15 +105,17 @@ var tasks = [[
 		[22.701213109756527, 120.51893681604922,"盛豐彎道2"],
 		[22.70880261417915, 120.52199195978083, "德和路", "號誌",,"號誌"],
 		[22.7151486520024, 120.52903378461157, "海豐交流道", "號誌",,"號誌"],
-		[22.750761908833823, 120.49581611646227,"九如交流道北上","交流道"],
-		[22.754971844490264, 120.48822900583846,"九如交流道南下",,,"交流道"],
-		[22.781743751146067, 120.42710366572875,"燕巢系統北上","交流道"],
-		[22.788120943037764, 120.42565509716601,"燕巢系統南下",,,"交流道"],
-		[22.973949208217125, 120.32844256590585,"關廟系統北上","交流道"],
-		[23.027997431413084, 120.3274748859639,"新化休息站北上","廁所"],
-		[23.057282166801983, 120.32177438852385,"新化系統北上","交流道"],
-		[23.161439516944956, 120.34981917353,"官田系統北上","交流道"],
-		[23.260020487052973, 120.37624205308241,"柳營交流道北上","交流道"],
+		
+		[22.749973605486066, 120.49659819389186,"九如交流道北上","交流道"],
+		[22.755737015999156, 120.4862825614745,"九如交流道南下",,,"交流道"],
+		[22.77964242423787, 120.427908073193665,"燕巢系統北上","交流道"],
+		[22.794471334710444, 120.42609095864529,"燕巢系統南下",,,"交流道"],	//接國10匣道加長
+		[22.972969515201683, 120.33025066426973,"關廟系統北上","交流道"],
+		[23.026761370636468, 120.32717946883794,"新化休息站北上","廁所"],
+		[23.055614880035566, 120.3213650686524,"新化系統北上","交流道"],
+		[23.160111264166215, 120.34888474924794,"官田系統北上","交流道"],
+		[23.259032533296, 120.3761323379591,"柳營交流道北上","交流道"],
+		
 		[23.270214334942427, 120.37907987648953,"閘道","急彎"],
 		[23.26791494025789, 120.38048922441678,"165路口","號誌"],
 		[23.27072646483229, 120.38336295538674, "旭山路口","號誌",,"號誌"],
@@ -135,7 +138,7 @@ var tasks = [[
 		[22.65990848834937, 120.51121889337335, "和生路口","號誌",,"號誌"],
 		[22.658034247616996, 120.5146302173418,"國仁路口", "號誌"],
 		[22.651514894343208, 120.52598275892676,"麟洛路口", "號誌"],
-		[22.6400416, 120.5362810, "麟洛國中路口", "號誌"],
+		[22.6400899784641, 120.53628286483544, "麟洛國中路口", "號誌"],
 
 		[22.655381953796578, 120.55160925823591, "科大路口", "號誌",,"號誌"],
 		[22.653958635505553, 120.56099718185452, "南豐路口","號誌",,"號誌"],
@@ -192,6 +195,7 @@ var tasks = [[
 
 	var taskID = -1;
 	var points = [];
+	var mapPoints = [];
 	var taskTitle = "";
 	var zoom = -1;
 	
@@ -214,13 +218,16 @@ var tasks = [[
 	var shadowDist = -1;
 	var preDist = 0;
 // var heading = -1;	//目標的方向0~360(以前一目標計算,但初值以移動點計算)
-	pathAngle = -1;
+	var pathAngle = -1;
 	
 	var receGap = 0;
 	var prevGap = 0;
 	//任務的去回行程, 回程為-1
 	var vector = 1;	
+	/** 一般提醒*/
 	var enAlarm = true;
+	/** 高速第一次提醒*/
+	var enAlarmHigh = true;
 	var canvas = document.getElementById("canvas");
 	//canvas.addEventListener("click", click, false);
 
@@ -236,7 +243,7 @@ var tasks = [[
 	
 	var ctx = canvas.getContext("2d");
 
-canvas.width = 950;canvas.height = 950;		//寬高預設值為300×150
+	canvas.width = 950;canvas.height = 950;		//寬高預設值為300×150
 	// canvas.width = window.innerWidth;
 	// canvas.height = canvas.width;
 	var centerX = canvas.width  / 2;
@@ -449,6 +456,7 @@ function gridCmd(x,y){
 		if(x > gridW*2 && x < canvas.width-50 && y < gridH){//右上角
 			//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
 			skipPoint();
+			 
 			// centerCoords[0] = points[nextPoint][0];
 			// centerCoords[1] = points[nextPoint][1];
 			// clearMap();
@@ -526,13 +534,17 @@ function newTask(){
 	if (taskID == tasks.length) taskID = 0;
 	points = tasks[taskID];
 	
+	
 	newSpace();
+	mapPoints = gps2scr(points);
+	
 	drawClearMap();
 	drawBaseMap();
 }	
 
 function skipPoint(){
 	enAlarm = true;
+	enAlarmHigh = true;
 	nextPoint += vector;
 	if(nextPoint < 0 || nextPoint >=points.length){
 		//playVoice("端點");
@@ -576,7 +588,7 @@ function drawMiddleCross(){
 	
 }
 function drawBaseMap(){
-	var mapPoints = gps2scr(points);
+	// mapPoints = gps2scr(points);
 	
      var circle = new Path2D();		//綠色節點
 	 var circle0 = new Path2D();	//紅色節點, 有語音者
@@ -595,7 +607,7 @@ function drawBaseMap(){
 			circle2.arc(mapPoints[p][0], mapPoints[p][1],5,0,Math.PI*2,true);
 			path.lineTo(mapPoints[p][0], mapPoints[p][1]);
 	}
-	
+	ctx.lineJoin="round";	//轉折點的樣式, miter(default), round扇形
 	ctx.strokeStyle = "green";	//線條色
 	ctx.lineWidth = 10;	//線條粗度
 	ctx.stroke(path);
@@ -646,12 +658,6 @@ function geoYes(evt){
 	recentPoint[0] = evt.coords.latitude;
 	recentPoint[1] = evt.coords.longitude;
 
-	nextDist = getDistance(recentPoint,  points[nextPoint]);
-	
-	
-	angle1 = Math.atan((recentPoint[0]- points[nextPoint][0])/(recentPoint[1] - points[nextPoint][1]));
-	shadowDist = Math.cos(angle1- pathAngle) * nextDist;
-	
 	if(viewMode == 1){		//全圖：只畫點
 		drawPoint(recentPoint[0], recentPoint[1]);
 	}else{		//置中：全重畫, 不畫點
@@ -661,22 +667,34 @@ function geoYes(evt){
 		drawMiddleCross();
 		drawBaseMap();		
 	}
-							
+	
+	nextDist = getDistance(recentPoint,  points[nextPoint]);
+	
+	//投影距離無法適用較大的轉角, 還是要用分角線y=ax+b
+	angle1 = Math.atan((recentPoint[0]- points[nextPoint][0])/(recentPoint[1] - points[nextPoint][1]));
+	shadowDist = Math.sin(angle1- pathAngle) * nextDist;	//用sin則為與路中線的距離
+					
 	showData(evt);
+	
+		//時速90以上(高速公路, 開80不提醒?), 2公里前第一次提醒
+	if(enAlarmHigh && nextDist < 2 && evt.coords.speed >25){
+		playVoice(points[nextPoint][3]);
+		enAlarmHigh = false;
+		return;
+	}
 	/** 事前提醒*/
 	//時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒(步行4公里/小時)
 	//車速每10公里提前2秒通知：
+	//		120公里提前24秒, 33*24=792
 	//		30公里時提前6秒通知,約8.1*6=48公尺。
 	//		15公里,3秒,約4.1*3公尺,。
-	//100公里提前20秒...
+	
 	//最後加10公尺給單車時,路中與路邊的距離補償用
 	minDist = evt.coords.speed/1000 * evt.coords.speed*3.6/10*2 + 0.01;
-	
-	if(enAlarm ){
-		if(nextDist < minDist){
+	if(enAlarm  && nextDist < minDist){
 			playVoice(points[nextPoint][3]);
 			enAlarm = false;
-		}
+			return;
 	}
 	/**判定為通過*/
 	//a.近距離內距離變大。依車速修正
@@ -821,5 +839,12 @@ function displayNotification(){
 	}
      
 }
+
+
+// document.getElementById('input').click();
+// fileInput.onchange = () => {
+  // const selectedFiles = [...fileInput.files];
+  // console.log(selectedFiles);
+// }
 </script>
 </html>
