@@ -20,7 +20,7 @@
 </script>
 </head>
 
-<body onload="init();" bgcolor="black" text="white" topmargin="0" leftmargin="0">
+<body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -203,15 +203,19 @@ var tasks = [[
 	var passPoint = [0,0];
 		passPoint[0] = recentPoint[0];
 		passPoint[1] = recentPoint[1];
+		
 	var zoom0 = -1;
 	var zoom1 = -1;
+	
 	var centerCoords0 = [23,120.5];
 	var centerCoords = [23,120.5];
-	var nextDist = -1;
-	var newDist2 = -1;
-	var heading = -1;	//目標的方向0~360(以前一目標計算,但初值以移動點計算)
 	
+	var nextDist = -1;
+	var shadowDist = -1;
 	var preDist = 0;
+// var heading = -1;	//目標的方向0~360(以前一目標計算,但初值以移動點計算)
+	pathAngle = -1;
+	
 	var receGap = 0;
 	var prevGap = 0;
 	//任務的去回行程, 回程為-1
@@ -277,12 +281,13 @@ function init(){
 	startGPS();
 	noSleep();	//note 9 上, chrome有效, 三星無效
 
-	clearMap();
+	drawClearMap();
 	drawBaseMap();
 		nextDist = getDistance(recentPoint,  points[nextPoint]);
 		newDist2 = Math.cos(2*Math.PI *150/360 - Math.atan((recentPoint[1]- points[nextPoint][1])/(recentPoint[0] - points[nextPoint][0])))*nextDist;
 	console.log(nextDist + ", " + newDist2);
 	showData();
+
 }
 
 function newSpace(){	
@@ -362,7 +367,7 @@ function gesturesMove(x, y){
 	endGestX = x;
 	endGestY = y;
 	if(enGestures && zoom>= zoom0/3){		//縮小不能小於1/3。那放大呢???
-		 clearMap();
+		 drawClearMap();
 		 zoom =zoom1 *(1+(y-startGestY)*0.01);
 		 if(zoom < zoom0/3)zoom = zoom0/3;
 		 drawBaseMap();
@@ -487,7 +492,7 @@ function gridCmd(x,y){
 				// centerCoords = [22.666085540968158, 120.50100909238924];
 			}
 			
-			clearMap();
+			drawClearMap();
 			drawBaseMap();
 			return;
 		}
@@ -500,13 +505,13 @@ function playVoice(str){
 	
 	var fileName = "../voice/"+ str+".wav";
 	//var fileName = str+".wav";
-	//TODO : 先檢查檔案是否存在, 
+	//TODO : 錯誤處理, 讀檔失敗, 
 	//console.log(fileName);
 		voice.src = fileName;	//voice.setAttribute('src',fileName);
 		voice.load();
 	//TODO : 大檔可能要先load(), 再檢查可否撥放, 再catch 播放異常
 		voice.play();
-		showMsg(fileName);
+		showMsg(str);
 }
 
 function newTask(){
@@ -522,7 +527,7 @@ function newTask(){
 	points = tasks[taskID];
 	
 	newSpace();
-	clearMap();
+	drawClearMap();
 	drawBaseMap();
 }	
 
@@ -546,7 +551,7 @@ function skipPoint(){
 	showData();
 }	
 
-function clearMap(){
+function drawClearMap(){
 	ctx.fillStyle = "black";	//填滿色
 	ctx.fillRect(0,0,canvas.width,canvas.height);
 	ctx.strokeStyle = "blue";	//線條色
@@ -556,6 +561,20 @@ function clearMap(){
 
 }
 
+function drawMiddleCross(){
+				//在畫面中央畫十字
+		ctx.strokeStyle = "white";	//線條色
+		ctx.lineWidth = "2";	//線條粗度
+		ctx.beginPath();
+		ctx.moveTo(centerX-20, centerY);
+		ctx.lineTo(centerX+20, centerY);
+		ctx.moveTo(centerX, centerY-20);
+		ctx.lineTo(centerX, centerY+20);
+		// start = Math.PI*(evt.coords.heading/180 - 0.5);
+		// ctx.arc( centerX, centerY,10,start,start-Math.PI*2,true);
+		ctx.stroke();
+	
+}
 function drawBaseMap(){
 	var mapPoints = gps2scr(points);
 	
@@ -628,51 +647,48 @@ function geoYes(evt){
 	recentPoint[1] = evt.coords.longitude;
 
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
-	heading =  Math.atan((passPoint[1]- points[nextPoint][1])/(passPoint[0] - points[nextPoint][0]));
-	//heading = evt.coords.heading;
-	newDist2 = Math.cos(2*Math.PI *heading/360 -heading)*nextDist;
+	
+	
+	angle1 = Math.atan((recentPoint[0]- points[nextPoint][0])/(recentPoint[1] - points[nextPoint][1]));
+	shadowDist = Math.cos(angle1- pathAngle) * nextDist;
 	
 	if(viewMode == 1){		//全圖：只畫點
 		drawPoint(recentPoint[0], recentPoint[1]);
 	}else{		//置中：全重畫, 不畫點
 		centerCoords[0] = recentPoint[0];
 		centerCoords[1] = recentPoint[1];
-		clearMap();
-				drawBaseMap();
-				
-	ctx.strokeStyle = "white";	//線條色
-	ctx.lineWidth = "5";	//線條粗度
-	ctx.beginPath();
-	ctx.moveTo(centerX, centerY);
-	start = Math.PI*(evt.coords.heading/180 - 0.5);
-    ctx.arc( centerX, centerY,10,start,start-Math.PI*2,true);
-	ctx.stroke();
-
-		//TODO 還要在中央畫箭頭,並指向
+		drawClearMap();
+		drawMiddleCross();
+		drawBaseMap();		
 	}
 							
 	showData(evt);
-	
+	/** 事前提醒*/
 	//時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒(步行4公里/小時)
-	//車速每10公里提前2秒通知, 30公里時提前6秒通知,約48公尺。100公里提前20秒...
-	minDist = evt.coords.speed/1000 * evt.coords.speed*3.6/10*2;
-	if(enAlarm && nextDist < minDist){
-		playVoice(points[nextPoint][3]);
-		enAlarm = false;
+	//車速每10公里提前2秒通知：
+	//		30公里時提前6秒通知,約8.1*6=48公尺。
+	//		15公里,3秒,約4.1*3公尺,。
+	//100公里提前20秒...
+	//最後加10公尺給單車時,路中與路邊的距離補償用
+	minDist = evt.coords.speed/1000 * evt.coords.speed*3.6/10*2 + 0.01;
+	
+	if(enAlarm ){
+		if(nextDist < minDist){
+			playVoice(points[nextPoint][3]);
+			enAlarm = false;
+		}
 	}
-	//判定為通過：	
+	/**判定為通過*/
 	//a.近距離內距離變大。依車速修正
 	//b.距離增加超過3次(至少要3秒?)
 	//c.從分角線的一邊到另一邊(距離從正變負數, 所以相乘為負)
 	receGap = nextDist - preDist;
 	// if(receGap * prevGap < 0){//定位誤差會觸動
 	if (nextDist > preDist && nextDist < evt.coords.speed/1000 * 2 + 0.01 ){
-		//路邊與路中央的差距
-	
-	
-		//靠近時gap會小於零, 遠離時會大於零,變換時一正一負,相乘為負
+	//靠近時gap會小於零, 遠離時會大於零,變換時一正一負,相乘為負
 		skipPoint();
-		preDist = getDistance(recentPoint[0], recentPoint[1],  points[nextPoint][0], points[nextPoint][1]);
+		preDist = getDistance(recentPoint,  points[nextPoint]);
+		pathAngle =  Math.atan((passPoint[0]- points[nextPoint][0])/(passPoint[1] - points[nextPoint][1]));
 		// prevGap = 0;
 	}else{
 		preDist = nextDist;
@@ -741,7 +757,7 @@ function showData(evt){
 	if(evt == undefined){
 		str += "<br />距離：<br />時速：";
 	}else{
-		str += "<br />距離：" + nextDist  + "公里(" + newDist2.toFixed(3) +")方向：" + (360*heading/2/Math.PI).toFixed(2)+"。";
+		str += "<br />距離：" + nextDist  + "公里(" + shadowDist.toFixed(3) +")。";
 		//alert(str);
 		//str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
 		str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
@@ -760,18 +776,18 @@ var msgList = ["","","","",""];
 var msgID = 0;
 function  showMsg(str){
 	msgList[msgID] = str;
-	output = "";
+	output = msgList[msgID] + "<br/>";
 
-	for(i=msgID; i < msgList.length; i++){
-		output += msgList[i] + "<br/>";
+	for(i=msgID+1; i < msgList.length; i++){
+		output += msgList[i] + "。";
 	}
 	for(i=0; i < msgID; i++){
-		output += msgList[i] + "<br/>";
+		output += msgList[i] + "。";
 	}
 	// console.log(output);
 	document.getElementById("watchStr").innerHTML= output;
 	
-	msgID --;
+	msgID --;	//新的訊息放前面
 	if(msgID < 0){
 		msgID = msgList.length - 1;
 	}

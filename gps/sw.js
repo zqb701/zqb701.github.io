@@ -20,7 +20,7 @@ const OFFLINE_URL = 'gps02.html';
 const voideCache = ["",];
 const voiceList = [
 	"新任務","去程","回程","跳過","全圖","置中","通過",
-	"坑洞","急彎","號誌","交流道","廁所"];
+	"坑洞","急彎","號誌","交流道","廁所","測速"];
 	
 	
 function install_Listener(){}
