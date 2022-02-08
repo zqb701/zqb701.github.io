@@ -36,7 +36,7 @@
 	<input type="button" value="通知測試" onClick="displayNotification();">
 	
 	<input type="file" multiple id="input" style='display:none;'>
-	版本：18:16 2022年2月7日
+	版本：18:17 2022年2月7日
 </body>
 
 <script memo="座標圖資">
@@ -689,7 +689,7 @@ function geoYes(evt){
 	//		30公里時提前6秒通知,約8.1*6=48公尺。
 	//		15公里,3秒,約4.1*3公尺,。
 	//最後加10公尺給單車時,路中與路邊的距離補償用
-	minDist = evt.coords.speed/3.6 * evt.coords.speed*3.6/10*2 + 0.01;
+	minDist = evt.coords.speed*3.6 * evt.coords.speed*3.6/10*2 + 0.01;
 	if(enAlarm  && nextDist < minDist){
 		playVoice(points[nextPoint][3]);
 		enAlarm = false;
