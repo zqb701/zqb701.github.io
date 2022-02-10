@@ -46,18 +46,19 @@ self.addEventListener('install', (event) => {
 });
 
 function activate_Listerer(){}
+
 self.addEventListener('activate', (event) => {
 	event.waitUntil((async () => {
 		// Enable navigation preload if it's supported.
 		// See https://developers.google.com/web/updates/2017/02/navigation-preload
 		if ('navigationPreload' in self.registration) {
-		  await self.registration.navigationPreload.enable();
+			await self.registration.navigationPreload.enable();
 		}
 		// Tell the active service worker to take control of the page immediately.
 		self.clients.claim();
 		showMsg();
 	}));
-)}
+});
 
 /*
 self.addEventListener_XX('fetch', (event) => {	//只把名字加XX會報錯
@@ -228,8 +229,7 @@ function showMsg(){
   clients.forEach(function(client) {
     console.log(client);
     if (client.url.includes('/gps/index.html')) {
-      // 首页
-      client.postMessage('hello world' + client.id);
+       client.postMessage('hello world' + client.id);
     }
   });
 });
