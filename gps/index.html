@@ -36,7 +36,7 @@
 	<input type="button" value="通知測試" onClick="displayNotification();">
 	
 	<input type="file" multiple id="input" style='display:none;'>
-	版本：18:19 2022年2月7日
+	版本：02/10 21:00
 </body>
 
 <script memo="座標圖資">
@@ -785,7 +785,7 @@ function showData(evt){
 	if(evt == undefined){
 		str += "<br />距離：<br />時速：";
 	}else{
-		str += "<br />距離：" + nextDist  + "公里(" + shadowDist.toFixed(3) +")。"+nextDist*1000/evt.coords.speed+"秒";
+		str += "<br />距離：" + nextDist  + "公里(" + shadowDist.toFixed(3) +")。"+(nextDist*1000/evt.coords.speed).toFixed(3)+"秒";
 		//alert(str);
 		//str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
 		str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
