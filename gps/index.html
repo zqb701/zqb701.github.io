@@ -58,7 +58,7 @@
 	<input type="button" value="通知測試" onClick="displayNotification();">
 	
 	<input type="file" multiple id="input" style='display:none;'>
-	版本：02/10 21:00
+	版本：02/11 19:44
 	<p id="insertCoord"></p>
 </body>
 
@@ -325,12 +325,13 @@ function init(){
 	showData();
 
 }
-
+var ins = document.getElementById("insertCoord");
 function insertCoord(){
 	//console.log("insertCoord()");
 		//document.getElementById("watchStr").innerHTML= output;
-	document.getElementById("insertCoord").innerHTML +=  
-		points[nextPoint][2]+":"+recentPoint[0].toFixed(7)+","+recentPoint[1].toFixed(7) + "<br/>";
+	
+	ins.innerHTML =   
+		points[nextPoint][2]+":"+recentPoint[0].toFixed(7)+","+recentPoint[1].toFixed(7) + "<br/>"+ins.innerHTML +;
 	//showMsg(recentPoint[0].toFixed(7)+","+recentPoint[1].toFixed(7));
 }
 
@@ -728,8 +729,8 @@ function geoYes(evt){
 	//		10公里,3秒,約4.1*3公尺,。
 	//最後加10公尺給單車時,路中與路邊的距離補償用
 	minDist = evt.coords.speed/1000 * evt.coords.speed*3.6/10*2 + 0.01;
-	if(minDist < 30){
-		minDist = 30;
+	if(minDist < 0.03){
+		minDist = 0.03;
 	}
 	if(enAlarm  && nextDist < minDist){
 		//showMsg("minDist=" + minDist);
