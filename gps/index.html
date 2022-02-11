@@ -20,9 +20,31 @@
 </script>
 </head>
 
+<style>  
+	.cmdBox {
+		width:200px;
+		height:200px;
+		border-width:3px;
+		border-style:dashed;
+		order-color:#FFAC55;
+		padding:5px;
+	}  
+</style>  
+
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
+	測試文字
+	<br>
 	<canvas id="canvas"></canvas>
+	<div style="display: flex; justify-content: flex-end;">
+		<div style="width:200px;height:200px;">AAAA</div>
+		<div style="width:200px;height:200px; ">BBBB</div>  
+		<div style="height:200px;height:200px;">C</div>
+		<div class="cmdBox" onclick="newTask();">新任務</div>
+		<div style="width:200px; height:200px; border-width:3px; border-style:dashed;border-color:#FFAC55;padding:5px;" onclick="insertCoord();">
+			自訂點</div>
+	</div>
+	
 	<font size="7">
 	<p id="posStr">111222</p>
 	</font>
@@ -37,6 +59,7 @@
 	
 	<input type="file" multiple id="input" style='display:none;'>
 	版本：02/10 21:00
+	<p id="insertCoord"></p>
 </body>
 
 <script memo="座標圖資">
@@ -298,9 +321,17 @@ function init(){
 	drawBaseMap();
 		nextDist = getDistance(recentPoint,  points[nextPoint]);
 		newDist2 = Math.cos(2*Math.PI *150/360 - Math.atan((recentPoint[1]- points[nextPoint][1])/(recentPoint[0] - points[nextPoint][0])))*nextDist;
-	console.log(nextDist + ", " + newDist2);
+	//console.log(nextDist + ", " + newDist2);
 	showData();
 
+}
+
+function insertCoord(){
+	//console.log("insertCoord()");
+		//document.getElementById("watchStr").innerHTML= output;
+	document.getElementById("insertCoord").innerHTML +=  
+		points[nextPoint][2]+":"+recentPoint[0].toFixed(7)+","+recentPoint[1].toFixed(7) + "<br/>";
+	//showMsg(recentPoint[0].toFixed(7)+","+recentPoint[1].toFixed(7));
 }
 
 function newSpace(){	
@@ -463,7 +494,7 @@ function gridCmd(x,y){
 		if(x > gridW*2 && x < canvas.width-50 && y < gridH){//右上角
 			//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
 			skipPoint();
-			 
+			showData();	 
 			// centerCoords[0] = points[nextPoint][0];
 			// centerCoords[1] = points[nextPoint][1];
 			// clearMap();
@@ -567,7 +598,6 @@ function skipPoint(){
 		passPoint[1] = points[nextPoint - vector][1];
 
 	}
-	showData();
 }	
 
 function drawClearMap(){
@@ -679,7 +709,8 @@ function geoYes(evt){
 	
 	//投影距離無法適用較大的轉角, 還是要用分角線y=ax+b
 	angle1 = Math.atan((recentPoint[0]- points[nextPoint][0])/(recentPoint[1] - points[nextPoint][1]));
-	shadowDist = Math.sin((angle1- pathAngle)/360*Math.PI*2) * nextDist;	//用sin則為與路中線的距離
+	shadowDist = Math.cos((angle1- pathAngle)/360*Math.PI*2) * nextDist;
+	//cos為距節點的投影距離, 用sin則為與路徑中線的距離
 					
 	showData(evt);
 	
@@ -754,9 +785,9 @@ function stopGPS(){
 function getDistance(coord1, coord2) {
 	//兩座標間的距離, 傳回：單位公里, 小數點後三位
     //本函式來源 https://www.geodatasource.com/developers/javascript
-	lat1 = coord1[0].toFixed(5);	//用小數5位算距離
-	lon1 = coord1[1].toFixed(5);
-	lat2 = coord2[0].toFixed(5);
+	lat1	= coord1[0].toFixed(5);	//用小數5位算距離
+	lon1= coord1[1].toFixed(5);
+	lat2	= coord2[0].toFixed(5);
 	lon2= coord2[1].toFixed(5);
 	
     var radlat1 = Math.PI * lat1/180;
@@ -785,7 +816,10 @@ function showData(evt){
 	if(evt == undefined){
 		str += "<br />距離：<br />時速：";
 	}else{
-		str += "<br />距離：" + nextDist  + "公里(" + shadowDist.toFixed(3) +")。"+(nextDist*1000/evt.coords.speed).toFixed(3)+"秒";
+		str += "<br />距離：" + nextDist  + "公里(" + shadowDist.toFixed(3) +")。";
+			if(nextDist < 1){
+				str += (nextDist*1000/evt.coords.speed).toFixed(0)+"秒";
+			}
 		//alert(str);
 		//str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
 		str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
