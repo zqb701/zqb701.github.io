@@ -58,7 +58,7 @@
 	<input type="button" value="清除軌跡數據" onClick="ins.innerHTML='';">
 	
 	<input type="file" multiple id="input" style='display:none;'>
-	版本：02/11 19:52
+	版本：02/12 11:36
 	<p id="insertCoord"></p>
 </body>
 
@@ -68,7 +68,7 @@
 function var_tasks(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 var tasks = [[
 		[22.6660872645837,		120.50037043288955,	"工業路口","號誌",,"號誌"],
-		[22.665707901738443,	120.5010424041541,	"69巷"],
+		[22.665707901738443,	120.5010424041541,	"69巷","號誌"],
 		[22.66528466599206,		120.5017954343364,	"殺蛇溪", "號誌",,"號誌"],
 		
 		[22.665066241181687, 120.50217027304704, "民福路","號誌"],
@@ -721,7 +721,7 @@ function geoYes(evt){
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
 	
 	//投影距離無法適用較大的轉角, 還是要用分角線y=ax+b
-	angle1 = Math.atan((recentPoint[1]- points[nextPoint][1])/(recentPoint[2] - points[nextPoint][2]));
+	angle1 = Math.atan((recentPoint[1]- points[nextPoint][1])/(recentPoint[0] - points[nextPoint][0]));
 	shadowDist = Math.cos((angle1- pathAngle)/360*Math.PI*2) * nextDist;
 	//cos為距節點的投影距離, 用sin則為與路徑中線的距離
 					
