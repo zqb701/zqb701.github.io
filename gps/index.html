@@ -51,11 +51,11 @@
 	<font size="6">
 	<p id="watchStr">監控狀態</p>
 	</font>
-	<input type="button" value="啟動GPS" onClick="startGPS();">
-	<input type="button" value="停止GPS" onClick="stopGPS();">
-	<br />
+	<input type="button" value="啟動定位" onClick="startGPS();">
+	<input type="button" value="停止定位" onClick="stopGPS();">
 	<input type="button" value="更新快取" onClick="newCache();">
 	<input type="button" value="通知測試" onClick="displayNotification();">
+	<input type="button" value="清除軌跡數據" onClick="ins.innerHTML='';">
 	
 	<input type="file" multiple id="input" style='display:none;'>
 	版本：02/11 19:52
@@ -222,7 +222,7 @@ var tasks = [[
 
 <script title="程式碼">
 
-	var taskID = -1;
+	var taskID = 2;
 	var points = [];
 	//var mapPoints = [];
 	var taskTitle = "";
@@ -230,8 +230,8 @@ var tasks = [[
 	
 	var nextPoint = 0;	//下一個點
 	var Point01 = [22.659517486714293,120.51431010230766, "田中巷"];	
-	var Point02 = 		[22.582703739665064, 120.64590316103639];
-	var recentPoint = Point01;
+	var Point02 = 		[22.66613321392555, 120.50085349955407,"一樓"];
+	var recentPoint = Point02;
 	//上一個通過的點
 	var passPoint = [0,0];
 		passPoint[0] = recentPoint[0];
@@ -327,6 +327,7 @@ function init(){
 }
 var ins = document.getElementById("insertCoord");
 function insertCoord(){
+	//	新增點, 插入陣列內, 陣列滙出, 5種新增鈕
 	//console.log("insertCoord()");
 		//document.getElementById("watchStr").innerHTML= output;
 	
@@ -558,13 +559,13 @@ function playVoice(str){
 		voice.load();
 	//TODO : 大檔可能要先load(), 再檢查可否撥放, 再catch 播放異常
 		voice.play();
-		showMsg(str);
+		//showMsg(str);
 }
 
 function newTask(){
 //任務切換
 	nextPoint = 0;
-	 nextDist = -1;
+	nextDist = -1;
 	preDist = 0;
 	vector = 1;
 	viewMode = 1;
@@ -573,12 +574,23 @@ function newTask(){
 	if (taskID == tasks.length) taskID = 0;
 	points = tasks[taskID];
 	
+	//從路徑上找到最近的下一目標點
+	//但,讀到GPS前, 現在位置為預設值
+	//但,就算找到, 可能是適當點的前一點
+	var shortstDist = getDistance(recentPoint,  points[0]);
+	for(var i=1; i< points.length; i++){
+		dist = getDistance(recentPoint,  points[i]);
+		//console.log(points[i][2], dist);
+		if(dist < shortstDist){
+			shortstDist = dist;
+			nextPoint = i;
+		}
+	}
 	
 	newSpace();
-	//mapPoints = gps2scr(points);
-	
 	drawClearMap();
 	drawBaseMap();
+	showData();
 }	
 
 function skipPoint(){
@@ -709,7 +721,7 @@ function geoYes(evt){
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
 	
 	//投影距離無法適用較大的轉角, 還是要用分角線y=ax+b
-	angle1 = Math.atan((recentPoint[0]- points[nextPoint][0])/(recentPoint[1] - points[nextPoint][1]));
+	angle1 = Math.atan((recentPoint[1]- points[nextPoint][1])/(recentPoint[2] - points[nextPoint][2]));
 	shadowDist = Math.cos((angle1- pathAngle)/360*Math.PI*2) * nextDist;
 	//cos為距節點的投影距離, 用sin則為與路徑中線的距離
 					
@@ -818,8 +830,9 @@ function showData(evt){
 		str += "<br />距離：<br />時速：";
 	}else{
 		str += "<br />距離：" + nextDist  + "公里(" + shadowDist.toFixed(3) +")。";
-			if(nextDist < 1){
-				str += (nextDist*1000/evt.coords.speed).toFixed(0)+"秒";
+			arriveSec =  nextDist*1000/evt.coords.speed;
+			if(arriveSec < 99){
+				str += arriveSec.toFixed(0)+"秒";
 			}
 		//alert(str);
 		//str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
