@@ -21,28 +21,27 @@
 </head>
 
 <style>  
-	.cmdBox {
+	.cmdButton {
 		width:200px;
 		height:200px;
 		border-width:3px;
 		border-style:dashed;
-		order-color:#FFAC55;
+		border-color:#FFAC55;
 		padding:5px;
 	}  
 </style>  
 
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	測試文字
+	版本：364
 	<br>
 	<canvas id="canvas"></canvas>
 	<div style="display: flex; justify-content: flex-end;">
-		<div style="width:200px;height:200px;">AAAA</div>
-		<div style="width:200px;height:200px; ">BBBB</div>  
-		<div style="height:200px;height:200px;">C</div>
-		<div class="cmdBox" onclick="newTask();">新任務</div>
-		<div style="width:200px; height:200px; border-width:3px; border-style:dashed;border-color:#FFAC55;padding:5px;" onclick="insertCoord();">
-			自訂點</div>
+		<div class="cmdButton" onclick="insertCoord('坑洞');">坑洞</div>
+		<div class="cmdButton" onclick="insertCoord('急彎');">急彎</div>  
+		<div class="cmdButton" onclick="insertCoord('號誌');">號誌</div>
+		<div class="cmdButton" onclick="newTask();">新任務</div>
+		<div class="cmdButton"></div>
 	</div>
 	
 	<font size="7">
@@ -57,8 +56,9 @@
 	<input type="button" value="通知測試" onClick="displayNotification();">
 	<input type="button" value="清除軌跡數據" onClick="ins.innerHTML='';">
 	
+	<input type="button" value="匯出" onClick="exportCoord();">
 	<input type="file" multiple id="input" style___='display:none;'>
-	版本：02/12 11:36
+	
 	<p id="insertCoord"></p>
 </body>
 
@@ -206,7 +206,7 @@ var tasks = [[
 		[22.59176168536461, 120.67935691835952,"貨櫃屋","坑洞"],
 		[22.595115994968776, 120.68506473873026, "觀自在"],
 		[22.606633881440352, 120.69482779987918, "廁所","急彎",,"急彎"],
-		[22.6145008,120.7017865,"武山停車場","廁所",,"廁所"]
+		[22.6145008,120.7017865,"泰武停車場","廁所",,"廁所"]
 	],[
 		[22.666540670813557, 120.50113642730727, "民利路","號誌"],
 		[22.66728729803525, 120.4997624132888, "民教路","號誌"],
@@ -326,13 +326,16 @@ function init(){
 
 }
 var ins = document.getElementById("insertCoord");
-function insertCoord(){
+function insertCoord(strTmp){
 	//	新增點, 插入陣列內, 陣列滙出, 5種新增鈕
 	//console.log("insertCoord()");
 		//document.getElementById("watchStr").innerHTML= output;
 	
 	ins.innerHTML =   
-		points[nextPoint][2]+":"+recentPoint[0].toFixed(7)+","+recentPoint[1].toFixed(7) + "<br/>"+ins.innerHTML ;
+		points[nextPoint][2]+":"+
+		recentPoint[0].toFixed(7)+","+recentPoint[1].toFixed(7) + ",自訂點,"+
+		strTmp +
+		"<br/>"+ins.innerHTML ;
 	//showMsg(recentPoint[0].toFixed(7)+","+recentPoint[1].toFixed(7));
 }
 
@@ -603,12 +606,13 @@ function skipPoint(){
 		return;
 	}else{
 		playVoice("通過");
+		passPoint[0] = points[nextPoint][0];
+		passPoint[1] = points[nextPoint][1];
 		while(!points[nextPoint][4 - vector]){
 			showMsg("略過" +points[nextPoint][2]);
 			nextPoint += vector;
 		}
-		passPoint[0] = points[nextPoint - vector][0];
-		passPoint[1] = points[nextPoint - vector][1];
+
 
 	}
 }	
@@ -720,9 +724,10 @@ function geoYes(evt){
 	
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
 	
+	
+	angle1 = Math.atan((recentPoint[0]- points[nextPoint][0])/(recentPoint[1] - points[nextPoint][1]));
+	shadowDist = Math.cos(angle1- pathAngle) * nextDist;
 	//投影距離無法適用較大的轉角, 還是要用分角線y=ax+b
-	angle1 = Math.atan((recentPoint[1]- points[nextPoint][1])/(recentPoint[0] - points[nextPoint][0]));
-	shadowDist = Math.cos((angle1- pathAngle)/360*Math.PI*2) * nextDist;
 	//cos為距節點的投影距離, 用sin則為與路徑中線的距離
 					
 	showData(evt);
@@ -744,6 +749,7 @@ function geoYes(evt){
 	if(minDist < 0.05){
 		minDist = 0.05;
 	}
+	
 	if(enAlarm  && nextDist < minDist){
 		//showMsg("minDist=" + minDist);
 		playVoice(points[nextPoint][3]);
@@ -897,12 +903,33 @@ function displayNotification(){
 	}
      
 }
+function exportCoord(){
 
+  var fileName = "a.csv";//匯出的檔名
+  var data = "第一欄,第二欄,abc,第四欄,第五欄\r\n"
+  var blob = new Blob([data], {
+    type : "application/octet-stream"
+  });
+  var href = URL.createObjectURL(blob);
+  var link = document.createElement("a");
+  document.body.appendChild(link);
+  link.href = href;
+  link.download = fileName;
+  link.click();
+
+}
 
 document.getElementById('input').click();
 fileInput.onchange = () => {
   const selectedFiles = [...fileInput.files];
   console.log(selectedFiles);
 }
+/**
+	程式功能：特定路線路況提示
+	目標1：泰武山路, 坑洞與急彎要提前通知
+		資料源：除用gmap取得座標外, 移動中要即時記錄,儲存
+			儲存：csv匯入indexDB, 插入, 匯出
+				設定：5個按鈕直接顯示在畫面上, 開車者要去按。
+*/
 </script>
 </html>
