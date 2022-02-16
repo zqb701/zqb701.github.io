@@ -60,7 +60,7 @@
 	<input type="button" value="停止定位" onClick="stopGPS();">
 	<input type="button" value="更新快取" onClick="newCache();">
 	<input type="button" value="通知測試" onClick="displayNotification();">
-	<input type="button" value="清除軌跡數據" onClick="ins.innerHTML='';">
+	<input type="button" value="清除軌跡數據" onClick="ins.innerHTML='';localStorage.insertCoord='';">
 	
 	<input type="button" value="匯出" onClick="exportCoord();">
 	<input type="file" multiple id="input" style___='display:none;'>
@@ -260,6 +260,7 @@ var tasks = [[
 	var preDist = 0;
 // var heading = -1;	//目標的方向0~360(以前一目標計算,但初值以移動點計算)
 	var pathAngle = -1;
+	var searchPoint=true;
 	
 	var receGap = 0;
 	var prevGap = 0;
@@ -338,16 +339,24 @@ function init(){
 
 }
 var ins = document.getElementById("insertCoord");
-function insertCoord(strTmp){
+
+function insertCoord(coordType){
 	//	新增點, 插入陣列內, 陣列滙出, 5種新增鈕
 	//console.log("insertCoord()");
 		//document.getElementById("watchStr").innerHTML= output;
 	
-	ins.innerHTML =   
+	strtmp =   
 		points[nextPoint][2]+":"+
 		recentPoint[0].toFixed(7)+","+recentPoint[1].toFixed(7) + ",自訂點,"+
-		strTmp +
-		"<br/>"+ins.innerHTML ;
+		coordType +		"<br/>" ;
+		
+		if (typeof (Storage) != "undefined"){
+        if (localStorage.insertCoord != "undefined"){
+            //msg.innerText = localStorage.playVolume;
+			localStorage.insertCoord = strtmp + localStorage.insertCoord;
+            ins.innerHTML = localStorage.insertCoord;
+        }
+	}
 	//showMsg(recentPoint[0].toFixed(7)+","+recentPoint[1].toFixed(7));
 }
 
@@ -584,23 +593,13 @@ function newTask(){
 	preDist = 0;
 	vector = 1;
 	viewMode = 1;
+	searchPoint = true;
 	
 	taskID ++;
 	if (taskID == tasks.length) taskID = 0;
 	points = tasks[taskID];
 	
-	//從路徑上找到最近的下一目標點
-	//但,讀到GPS前, 現在位置為預設值
-	//但,就算找到, 可能是適當點的前一點
-	var shortstDist = getDistance(recentPoint,  points[0]);
-	for(var i=1; i< points.length; i++){
-		dist = getDistance(recentPoint,  points[i]);
-		//console.log(points[i][2], dist);
-		if(dist < shortstDist){
-			shortstDist = dist;
-			nextPoint = i;
-		}
-	}
+
 	
 	newSpace();
 	drawClearMap();
@@ -723,7 +722,21 @@ function drawPoint(lat, lon, color, width){
 function geoYes(evt){
 	recentPoint[0] = evt.coords.latitude;
 	recentPoint[1] = evt.coords.longitude;
-
+	
+	if(searchPoint){
+		searchPooint = false;
+		//從路徑上找到最近的下一目標點, 但可能是適當點的前一點
+		var shortstDist = getDistance(recentPoint,  points[0]);
+		for(var i=1; i< points.length; i++){
+			dist = getDistance(recentPoint,  points[i]);
+			//console.log(points[i][2], dist);
+			if(dist < shortstDist){
+				shortstDist = dist;
+				nextPoint = i;
+			}
+		}
+	}
+	
 	if(viewMode == 1){		//全圖：只畫點
 		drawPoint(recentPoint[0], recentPoint[1]);
 	}else{		//置中：全重畫, 不畫點
@@ -788,22 +801,40 @@ function geoYes(evt){
 
 function geoNo(evt){
 	/*
+		TODO 本函式塞到 watchPosition內。
 		限https? win10本機檔用Chrome可開允許,但仍取得失敗。 手機note9待測
 		Only secure origins are allowed 安全來源才可用geo...
 		https://kknews.cc/zh-tw/tech/4qgkxq2.html
 	*/
-
-	showMsg(evt.code + ", " + evt.message);
+	if(evt.code == 1){
+		showMsg("GPS禁用中！");
+	}else{
+		showMsg(evt.code + ", " + evt.message);
+	}
 }
 
 var watchID;
 function startGPS(){
+	
+	if (!navigator.geolocation) {
+		showMsg("不支援GPS。");
+		return;
+	}
+	
 	var options = {
 	  enableHighAccuracy: true,	//高精度, 實測更新間隔約1秒, 否則約20秒。
 	  //timeout: 5000,						//在note9用chrome會Timeout expired。
-	  maximumAge: 0
+	  //maximumAge: 0						//快取的過期時間，單位是毫秒，設為0來禁用快取讀取。
 	};
-	watchID = navigator.geolocation.watchPosition( geoYes, geoNo, options);
+	watchID = navigator.geolocation.watchPosition( geoYes, 
+		(evt) =>{
+				if(evt.code == 1){
+		showMsg("GPS禁用中！");
+	}else{
+		showMsg(evt.code + ", " + evt.message);
+	}
+		}, {
+		enableHighAccuracy: true});
 
 	//showMsg("啟用GPS。");
 }
@@ -920,30 +951,30 @@ var IntervalID;
 var countRun = false;
 var isMarch = -1;
 var march = document.getElementById("march");
-var timeNum = [40,,60];
+var timeNum = [40,,60];	//TODO 連續號誌使用同一時序。轉向時兩個值互換。
 var colorList = ["red",,"green"];
-
+/**紅綠燈讀秒, 時間到或用戶點選時會變色及重數 */
 function swColor(){
 	if(!countRun){
 		//停止狀態則啟動
-		IntervalID = window.setInterval(( () =>  countDown() ) , 1000);
+		IntervalID = window.setInterval(( () =>  {
+			//休眠狀態將回調函數放在隊列中,等瀏覽器再次打開的時候，一瞬間全部執行
+			if(count < 0){
+				isMarch *= -1;
+				count = timeNum[1+isMarch];
+				march.style.color = colorList[1+isMarch];
+			}
+			march.innerText = count--;
+		}	) , 1000);
 		count = timeNum[1+isMarch];
 		countRun=true;
-		return;
+	}else{
+		isMarch *= -1;
+		count = timeNum[1+isMarch];
+		march.style.color = colorList[1+isMarch];
+		march.innerText = count--;
 	}
-	isMarch *= -1;
-	count = timeNum[1+isMarch];
-	march.style.color = colorList[1+isMarch];
-		march.innerText = count--;
 }
-    function countDown(){
-  		if(count < 0){
-			isMarch *= -1;
-			count = timeNum[1+isMarch];
-			march.style.color = colorList[1+isMarch];
-		}
-		march.innerText = count--;
-    }
 
 function exportCoord(){
 
@@ -973,7 +1004,9 @@ function exportCoord(){
 		資料源：除用gmap取得座標,內建路徑, 移動中要即時記錄,儲存
 			儲存：csv匯入indexDB, 插入, 匯出
 				設定：5個按鈕直接顯示在畫面上, 開車者要去按。
+					暫時方案：存到本地變數
 	目標2：紅綠燈讀秒(先手動)
+	必要條件：依現在位置, 找到下一目標點
 */
 </script>
 </html>
