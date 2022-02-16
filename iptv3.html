@@ -25,7 +25,7 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
     	display: none;			/*隱藏body層次的滾動條*/
 	}
 	
-	#player {					
+	#player_ {					
 		pointer-events: none;	/*設定對滑鼠不反應。
 								結果游標不會消失,也不能點畫面的連結不能關廣告(播放結束時)
 								因為用滑鼠點過畫面後,按鍵全失效, 包含youtube的。
@@ -69,7 +69,7 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 <div style="position:relative;width:100%;padding-bottom:56.25%;">
   <iframe id="player" style="position:absolute;width:100%;height:100%"
   
-  src="https://www.youtube.com/embed/XxJKnDLYZz4?enablejsapi=1&fs=0&modestbranding=1&controls=0&disablekb=1"></iframe>
+  src="https://www.youtube.com/embed/XxJKnDLYZz4?enablejsapi=1&fs=0&rel=0&modestbranding=1&controls=1&disablekb=1&hd=1&vq=HD480"></iframe>
 </div>
 </body>
 
@@ -140,12 +140,14 @@ function onYouTubeIframeAPIReady() {
 	  modestbranding: 1,      	// 隱藏YouTube Logo, 但滑鼠移入才會出現
 	  disablekb:1,				//關閉鍵盤功能,
 	  rel:0 						//播放結束不要顯示相關影片預設為1
+	  //&hd=1&vq=hd720畫質
 	  // loop=1循環播放,預設值為0(即不循環)
 	  //border]設定是否顯示影片的外框，值為0或1，預設值為0(即不顯示)
       //start:30
     },
       events: {
-        'onReady': onPlayerReady
+        'onReady': onPlayerReady,
+		'onStateChange': onPlayerStateChange
       }
     });
 }
@@ -154,6 +156,12 @@ function onPlayerReady(e) {
 	ch(8);
 	e.target.unMute().playVideo();
 	e.target.setVolume(5);	//初始音量
+}
+
+function onPlayerStateChange(event) {
+    if (event.data == YT.PlayerState.PLAYING) {
+        event.target.setPlaybackQuality('hd720');  // <-- WORKS!
+    }
 }
 
 function volume(flag){
@@ -199,10 +207,16 @@ function scrModeCh(){
 	　break;
 	case "1":
 	　window.resizeTo(scrWs,scrHs);
+	pauseVideo();
+       player.setPlaybackQuality('hd480');
+       playVideo();
 	　break;
 	case "2":
 	//alert(scrWm + "," + scrHm);
 	  window.resizeTo(scrWm,scrHm);
+	  pauseVideo();
+       player.setPlaybackQuality('hd720');
+       playVideo();
 	　break;
 	case "3":
 		document.getElementById("scrModeSe").value = "1";

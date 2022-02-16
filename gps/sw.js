@@ -20,7 +20,9 @@ const OFFLINE_URL = 'gps02.html';
 const voideCache = ["",];
 const voiceList = [
 	"新任務","去程","回程","跳過","全圖","置中","通過",
-	"坑洞","急彎","號誌","交流道","廁所","測速"];
+	"坑洞","急彎","號誌","交流道","廁所","測速","路口","休息站",
+	"靠左","靠右",
+	"三十","五十","六十","七十"];
 	
 	
 function install_Listener(){}
@@ -38,8 +40,8 @@ self.addEventListener('install', (event) => {
 	}
 	cache.addAll(voiceList);
 
-		//cache.add('.');
-		//cache.add('index.html');
+		cache.add('.');
+		cache.add('index.html');
   })());
   // Force the waiting service worker to become the active service worker.
   self.skipWaiting();
