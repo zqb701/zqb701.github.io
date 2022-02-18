@@ -25,7 +25,7 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
     	display: none;			/*隱藏body層次的滾動條*/
 	}
 	
-	#player_ {					
+	#player {					
 		pointer-events: none;	/*設定對滑鼠不反應。
 								結果游標不會消失,也不能點畫面的連結不能關廣告(播放結束時)
 								因為用滑鼠點過畫面後,按鍵全失效, 包含youtube的。
@@ -69,14 +69,16 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 <div style="position:relative;width:100%;padding-bottom:56.25%;">
   <iframe id="player" style="position:absolute;width:100%;height:100%"
   
-  src="https://www.youtube.com/embed/XxJKnDLYZz4?enablejsapi=1&fs=0&rel=0&modestbranding=1&controls=1&disablekb=1&hd=1&vq=HD480"></iframe>
+  src="https://www.youtube.com/embed/XxJKnDLYZz4?enablejsapi=1&fs=0&rel=0&modestbranding=1&controls=0&disablekb=1&hd=1&vq=HD480"></iframe>
 </div>
 </body>
 
 
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
+//https://developers.google.com/youtube/iframe_api_reference
   var player;
+  var isUserStop = false;
   var myiframe;
   var scrMode = "0";
   //var vol = 13;
@@ -124,11 +126,23 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	myiframe = document.getElementById('player');
 	//myiframe.focus();
 	
-	window.addEventListener('online', () => {
+	window.addEventListener('online', () => {	//網路連線要重新自動播放, 待測
 		player.playVideo();
 	});
 
-}
+	document.onvisibilitychange = function () {
+		if (document.visibilityState == "visible") { 	//hidden, prerender, unloaded
+			if(isUserStop){
+				
+			}else{
+				player.playVideo();	////結束休眠會自動播放, ok。(用戶按停播除外)
+			}
+		}else{
+			player.stopVideo();
+		}
+	}
+}//end of init()
+
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
 	videoId:"XxJKnDLYZz4",
@@ -184,10 +198,12 @@ function stop() {
 	state = player.getPlayerState();
 	if(state == 1){
 		player.pauseVideo();
+		isUserStop = true;
 	}
 
 	if((state == 2) || (state ==-1)){
 		player.playVideo();
+		isUserStop = false;
 	}
 }
 
