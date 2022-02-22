@@ -199,29 +199,18 @@ if (event.request.headers.get('range')) {		//若是要求的資源有range參數
   } else {
 // https://stackoverflow.com/questions/57905153,
 //在async函數內部，最好使用await而不是.then()鏈來構建基於 Promise 的邏輯。
-event.respondWith((async () => {
-
-  const cachedResponse = await caches.match(event.request);
-  if (cachedResponse) {
-	  console.log("SW：從cache取得" + event.request.url);
-	 showMsg("SW：從cache取得" + event.request.url);
-    return cachedResponse;
-  }
-  
-  const response = await fetch(event.request);
-  if (!response || response.status !== 200 || response.type !== 'basic') {
-	  // console.log("來自網路");
-    return response;
-  }
-  
-  if (false) {//TODO 視需求, 每次更新?
-		const responseToCache = response.clone();
-		const cache = await caches.open("gps");
-		await cache.put(event.request, response.clone());
-	}
-
-  return response;
-})());//end if respondWith
+event.respondWith(
+        fetch(event.request).then(function(res) {
+			console.log("fetch成功。");
+            return caches.open("gps").then(function(cache) {
+                cache.put(event.request.url, res.clone());
+                return res;
+            })
+        }).catch(function(err) {		
+			console.log("去cache找。");
+            return caches.match(event.request)
+        })
+    );//end if respondWith
 } //end of if...get range
 });//end of 'fetch'
 

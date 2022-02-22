@@ -36,9 +36,11 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
    </head>
 <body topmargin="0" leftmargin="0" 
 	onload="init();" 
-	onkeydown="doKeyDown(event);" onclick="stop();"
-	onkeydown_="doKeyDown(event);" ondrop="alert('沒反應!');"
-	onmouseover="dspCtrlPal('block')" onmouseleave="dspCtrlPal('none')">
+	onkeydown="doKeyDown(event);"
+	onclick="stop();"
+	onkeydown_="doKeyDown(event);"
+	ondrop="alert('沒反應!');"
+	>
 
 <div id="btnGrp" style="display:none; position: absolute; z-index:1;background:#737373;"
 	onclick="event.stopPropagation();">
@@ -92,6 +94,10 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	const CHANNEL_NO=0;
 	const CHANNEL_ID = 1;
 	const CHANNEL_TITLE=2;
+	
+	var oldTime=-1;
+	var oTimerId;
+	var idelCount = 0;
 /*影片來源:
 	a.youtube,以videoID表示,a1直播, a2單一影片
 	b.獨立網址,直播
@@ -126,10 +132,49 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	myiframe = document.getElementById('player');
 	//myiframe.focus();
 	
-	window.addEventListener('online', () => {	//網路連線要重新自動播放, 待測
-		player.playVideo();
-	});
+	// window.addEventListener('online', () => {	//網路連線要重新自動播放, 待測
+	// });
 
+
+	
+	// document.addEventListener('mouseenter', () => {
+		 // document.getElementById("btnGrp").style.display = "block";
+		 // oldTime = new Date().getTime();
+	// });
+	
+	document.addEventListener('mousemove', () => {
+		 oldTime = new Date().getTime();
+		 // console.log("oTimerId="+oTimerId);
+		// if(idelCount == 0){
+		if(oTimerId == undefined){
+					document.getElementById("btnGrp").style.display = "block";
+					document.body.style.cursor = "";
+			 oTimerId = setInterval(()=>{
+				newT = new Date().getTime();
+				idelCount ++;
+				// console.log(newT - oldTime);
+				// console.log(idelCount)
+				if( newT-oldTime > 5000){	//滑鼠閒置5秒, 關閉功能表
+				// if(idelCount > 5){
+					// dspCtrlPal("none");
+					document.getElementById("btnGrp").style.display = "none";
+					clearInterval(oTimerId);
+					document.body.style.cursor = "none";
+					// idelCount = 0;
+					oTimerId = undefined;
+				}
+			}, 1000);	//每秒檢查一次
+		}
+	});
+	
+	document.addEventListener('mouseleave', () => {
+		// dspCtrlPal('none');
+		document.getElementById("btnGrp").style.display = "none";
+		clearInterval(oTimerId);
+		// idelCount = 0;
+		oTimerId = undefined;
+	});
+ 
 	document.onvisibilitychange = function () {
 		if (document.visibilityState == "visible") { 	//hidden, prerender, unloaded
 			if(isUserStop){
@@ -207,8 +252,9 @@ function stop() {
 	}
 }
 
-function dspCtrlPal(mode){	//display Control Panel
+function dspCtrlPal(mode){
 	document.getElementById("btnGrp").style.display = mode;
+	oldTime = new Date().getTime();
 }
 	
 function zoon(flag){

@@ -949,7 +949,10 @@ function  showMsg(str){
 }
 
 function newCache(){
+			cache.delete('.');
+		cache.delete('index.html');
 	//將"gps"快取中的key全部刪除
+	/*
 	caches.open('gps')
 		.then(function(cache) {
 			cache.keys()
@@ -959,7 +962,7 @@ function newCache(){
 				});
 			});
 		});
-		
+	*/	
 }
 
 function displayNotification(){
