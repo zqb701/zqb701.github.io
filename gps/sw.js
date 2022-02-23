@@ -199,29 +199,29 @@ if (event.request.headers.get('range')) {		//若是要求的資源有range參數
   } else {
 // https://stackoverflow.com/questions/57905153,
 //在async函數內部，最好使用await而不是.then()鏈來構建基於 Promise 的邏輯。
-event.respondWith(
-        fetch(event.request).then(function(res) {
-			console.log("fetch成功。");
-            return caches.open("gps").then(function(cache) {
-                cache.put(event.request.url, res.clone());
-                return res;
-            })
-        }).catch(function(err) {		
-			console.log("去cache找。");
-            return caches.match(event.request)
-        })
-    );//end if respondWith
-} //end of if...get range
-});//end of 'fetch'
+		event.respondWith(
+			fetch(event.request).then(function(res) {
+				console.log("fetch成功。");
+				return caches.open("gps").then(function(cache) {
+					cache.put(event.request.url, res.clone());
+					return res;
+				})
+			}).catch(function(err) {		
+				console.log("去cache找。");
+				return caches.match(event.request)
+			})
+		);//end if "respondWith"
+	} //end of if "header range"
+});//end of  "Listen fetch"
 
 function showMsg(){
 	self.clients.matchAll().then(function(clients) {
-  console.log(clients);
-  clients.forEach(function(client) {
-    console.log(client);
-    if (client.url.includes('/gps/index.html')) {
-       client.postMessage('hello world' + client.id);
-    }
-  });
-});
+		console.log(clients);
+		clients.forEach(function(client) {
+			console.log(client);
+			if (client.url.includes('/gps/index.html')) {
+			   client.postMessage('hello world' + client.id);
+			}
+		});
+	});
 }
