@@ -37,7 +37,7 @@
 
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	版本：367
+	版本：368
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -135,14 +135,14 @@ var tasks = [[
 		[22.70880261417915, 120.52199195978083, "德和路", "號誌",,"號誌"],
 		[22.7151486520024, 120.52903378461157, "海豐交流道", "號誌",,"號誌"],
 		
-		[22.749973605486066, 120.49659819389186,"九如交流道北上","交流道"],
-		[22.755737015999156, 120.4862825614745,"九如交流道南下",,,"交流道"],
-		[22.77964242423787, 120.427908073193665,"燕巢系統北上","交流道"],
-		[22.794471334710444, 120.42609095864529,"燕巢系統南下",,,"交流道"],	//接國10匣道加長
+		[22.749973605486066, 120.49659819389186,"九如交流道北上"],
+		[22.755737015999156, 120.4862825614745,"九如交流道南下"],
+		[22.77964242423787, 120.427908073193665,"燕巢系統北上"],
+		[22.794471334710444, 120.42609095864529,"燕巢系統南下"],	//接國10匣道加長
 		[22.972969515201683, 120.33025066426973,"關廟系統北上","交流道"],
-		[23.026761370636468, 120.32717946883794,"新化休息站北上","廁所"],
-		[23.055614880035566, 120.3213650686524,"新化系統北上","交流道"],
-		[23.160111264166215, 120.34888474924794,"官田系統北上","交流道"],
+		[23.026761370636468, 120.32717946883794,"新化休息站北上"],
+		[23.055614880035566, 120.3213650686524,"新化系統北上"],
+		[23.160111264166215, 120.34888474924794,"官田系統北上"],
 		[23.259032533296, 120.3761323379591,"柳營交流道北上","交流道"],
 		
 		[23.270214334942427, 120.37907987648953,"閘道","急彎"],
@@ -230,13 +230,13 @@ var tasks = [[
 		[22.97668452704216, 120.32249768738073, "關廟彎道", "靠右"],
 		[22.975157067181804, 120.31877334375743, "台19甲","號誌",,"號誌"],
 		[22.971278480819183, 120.31327247513406, "測速","測速"],
-		[22.94149314730315, 120.30124755313828, "彎道"],
+		[22.94149314730315, 120.30124755313828, "彎道01"],
 		[22.934595270792208, 120.26099575774114, "彎道上崙交流道"],
 		[22.942623194631146, 120.24965817528305, "彎道仁德系統"],
 		[22.932049664423836, 120.22499353058586, "台一交流道東", "交流道"],
 		[22.9314528036442, 120.22194023530919, "閘道"],
 		[22.937275501642834, 120.22099726418344, "文華路口", "號誌",,"號誌"],
-		[22.941787731378756, 120.22095711150357, "彎道"],
+		[22.941787731378756, 120.22095711150357, "彎道02"],
 		[22.93992471408244, 120.2210067902625, "測速",,,"測速"],
 		[22.94405536181032, 120.22033245507691, "文賢路口","號誌",,"號誌"],
 		[22.952419382785543, 120.21798832077249, "亞航街前", "號誌"],
@@ -531,7 +531,7 @@ function gridCmd(x,y){
 		if(x > gridW*2 && x < canvas.width-50 && y < gridH){//右上角
 			//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
 			//skipPoint();
-			searchPoint = false;
+			searchPoint = true;
 			return;
 		}
 		
@@ -577,6 +577,8 @@ function viewSW(){
 	drawClearMap();
 	drawBaseMap();	
 }
+function TODO(){}
+var todo = new TODO();
 
 function playVoice(str){
 	//語音來源：22/1/30雅婷文字轉語音下載wav檔, https://tts.yating.tw/
@@ -584,17 +586,18 @@ function playVoice(str){
 	if(str == undefined) return ;
 	
 	var fileName = "../voice/"+ str+".wav";
-	//TODO : 錯誤處理, 讀檔失敗, 用fetch...
 		voice.src = fileName;
+		todo._找不到語音檔要要報錯_並播放其它 = function(){}	//AAAAAAAA
 		try {
 			voice.load();
 			voice.play();
-		}catch (e) {
+		}catch (e) {	//完全抓不到error
 			showMsg(e);
 		}
 }
 
-function newTask(){
+//var a.newTask = function (){
+	function newTask(){
 //任務切換
 	nextPoint = 0;
 	nextDist = -1;
@@ -835,27 +838,19 @@ function startGPS(){
 		// navigator.geolocation.getCurrentPosition( geoYes, geoNo);
 	navigator.permissions.query({name:'geolocation'}).then(function(result) {
 		//權限判斷以乎對重覆檢查GPS是否啟用沒有關聯。
-		//showMsg("權限："+ result.state);
-		if (result.state == 'granted') {	//允許
-
-		} else if (result.state == 'prompt') {	//
-
-		} else if (result.state == 'denied') {	//禁用
+		if (result.state == 'denied') {	//denied禁用, prompt詢問, granted允許
 			showMsg("GPS禁用！");
 		}
 		result.onchange = function() {
-
 		}
 	});
-
-
-	
-	
+	/*
 	var options = {
 	  enableHighAccuracy: true,	//高精度, 實測更新間隔約1秒, 否則約20秒。
-	  //timeout: 5000,						//在note9用chrome會Timeout expired。
-	  //maximumAge: 0						//快取的過期時間，單位是毫秒，設為0來禁用快取讀取。
+	  timeout: 5000,						//在note9用chrome會Timeout expired。
+	  maximumAge: 0						//快取的過期時間，單位是毫秒，設為0來禁用快取讀取。
 	};
+	*/
 	watchID = navigator.geolocation.watchPosition( geoYes, 
 		//就算成功, 但中途失敗不會告知?
 		(evt) =>{
@@ -865,11 +860,7 @@ function startGPS(){
 				}else{
 					showMsg(evt.code + ", " + evt.message);
 				}
-		}, {
-		enableHighAccuracy: true}
-		);
-
-	//showMsg("啟用GPS。");
+		}, {enableHighAccuracy: true});
 }
 
 function stopGPS(){
@@ -902,20 +893,21 @@ function getDistance(coord1, coord2) {
 }
 
 function showData(evt){
-	str = "任務：" + points[0][2] + " - " + points[points.length-1][2];
+	//str = "任務：" + points[0][2] + " - " + points[points.length-1][2];
+	str = "";
 	if(vector == -1){
 		str += "(回程)";
 	}
-	str += "<br />目標：" + points[nextPoint][2];
+	str += "目標：" + points[nextPoint][2];
 	
 	if(evt == undefined){
-		str += "<br />距離：<br />時速：";
+		//str += "<br />距離：<br />時速：";
 	}else{
-		str += "<br />距離：" + nextDist  + "公里(" + shadowDist.toFixed(3) +")。";
-			arriveSec =  nextDist*1000/evt.coords.speed;
-			if(arriveSec < 99){
-				str += arriveSec.toFixed(0)+"秒";
-			}
+		str += "，" + nextDist  + "公里，";
+		arriveSec =  nextDist*1000/evt.coords.speed;
+		if(arriveSec < 99){
+			str += arriveSec.toFixed(0)+"秒。";
+		}
 		//alert(str);
 		//str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
 		str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
@@ -990,7 +982,9 @@ var march = document.getElementById("march");
 var timeNum = [40,,60];	//TODO 連續號誌使用同一時序。轉向時兩個值互換。
 var colorList = ["red",,"green"];
 /**紅綠燈讀秒, 時間到或用戶點選時會變色及重數 */
+
 function swColor(){
+	todo._紅綠燈讀秒 = function(){}	//AAAAAAAA
 	if(!countRun){
 		//停止狀態則啟動
 		IntervalID = window.setInterval(( () =>  {
@@ -1037,16 +1031,17 @@ function exportCoord(){
 /**
 	程式功能：手機/GPS, 於特定路線上目標點提示路況(提早放油門, 減少煞車)
 	目標1：山路有坑洞與急彎要提前通知
-		資料源：除用gmap取得座標,內建路徑, 移動中要即時記錄,儲存
+		資料源：除用gmap取得座標,內建路徑, 移動中要即時記錄,儲存(小數後七位不夠)
 			儲存：csv匯入indexDB, 插入, 匯出
 				設定：5個按鈕直接顯示在畫面上, 開車者要去按。
 					暫時方案：存到本地變數
 		語音：先上網下載並cache。之後可自行錄音, 存到cache
+				
 		
 	目標2：平面道路紅綠燈讀秒(先手動)
-	目標3：提醒下交流道
+	目標3：提醒下交流道???
 	
-	必要條件：GPS沒開要持續watch, 中途沒GPS要提示
+	必要條件：GPS沒開要持續watch, 中途沒GPS要提示, 卡住了
 	
 	錯誤處理：
 		手機上的文字大小會變動???
