@@ -37,7 +37,7 @@
 
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	版本：368
+	版本：369
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -156,8 +156,8 @@ var tasks = [[
 		[23.29493901838239, 120.38556569359515, "東河路口","號誌",,"號誌"],
 		[23.307793557109218, 120.39991497924557, "北馬彎1","急彎"],
 		[23.30941176650411, 120.39979334024561, , "北馬彎2",,,"急彎"],
-		[23.318507349252233, 120.40299714640597, "公園路口","號誌",,"號誌"],
 		[23.31062426006925, 120.40028523189007, "測速",,,"測速"],
+		[23.318507349252233, 120.40299714640597, "公園路口","號誌",,"號誌"],
 		[23.321184332623805, 120.40322488355994, "民有街口","路口"],
 		[23.32108328032145, 120.40447735836689, "民有街","休息站"]
 		
@@ -582,7 +582,7 @@ function viewSW(){
 	drawBaseMap();	
 }
 function TODO(){}
-var todo = new TODO();
+var _todo = new TODO();
 
 function playVoice(str){
 	//語音來源：22/1/30雅婷文字轉語音下載wav檔, https://tts.yating.tw/
@@ -591,7 +591,7 @@ function playVoice(str){
 	
 	var fileName = "../voice/"+ str+".wav";
 		voice.src = fileName;
-		todo._找不到語音檔要要報錯_並播放其它 = function(){}	//AAAAAAAA
+		_todo._找不到語音檔要報錯_並播放其它 = function(){}	//AAAAAAAA
 		try {
 			voice.load();
 			voice.play();
@@ -635,10 +635,11 @@ function skipPoint(){
 		playVoice("通過");
 		passPoint[0] = points[nextPoint][0];
 		passPoint[1] = points[nextPoint][1];
-		while(!points[nextPoint][4 - vector]){
+		while(!points[nextPoint][4 - vector]){	//語音欄位空白也要跳過
 			//showMsg("略過" +points[nextPoint][2]);
 			nextPoint += vector;
 		}
+		_todo._下下點更近也要跳過 = function(){}
 		showData();	 
 	}
 }	
@@ -799,6 +800,7 @@ function geoYes(evt){
 		enAlarm = false;
 		return;
 	}
+	_todo._監看矩離變化_如跳點失敗要跳下一點 = function(){}	//AAAAAAAA
 	/**判定為通過*/
 	//a.近距離內距離變大。依車速修正
 	//b.距離增加超過3次(至少要3+1秒?)
@@ -912,7 +914,7 @@ function showData(evt){
 		if(nextDist >1){
 			str += "，" + nextDist.toFixed()  + "公里，";
 		}else{
-			str += "，" + (nextDist /1000).toFixed() + "公尺，";
+			str += "，" + (nextDist*1000).toFixed() + "公尺，";
 		}
 		
 		arriveSec =  nextDist*1000/evt.coords.speed;
@@ -995,7 +997,7 @@ var colorList = ["red",,"green"];
 /**紅綠燈讀秒, 時間到或用戶點選時會變色及重數 */
 
 function swColor(){
-	todo._紅綠燈讀秒 = function(){}	//AAAAAAAA
+	_todo._紅綠燈讀秒 = function(){}	//AAAAAAAA
 	if(!countRun){
 		//停止狀態則啟動
 		IntervalID = window.setInterval(( () =>  {
@@ -1018,7 +1020,7 @@ function swColor(){
 }
 
 function exportCoord(){
-
+_todo._座標清單匯出檔案_用Http_file_server = function(){}	//AAAAAAAA
   var fileName = "a.csv";//匯出的檔名
   var data = "第一欄,第二欄,abc,第四欄,第五欄\r\n"
   var blob = new Blob([data], {
@@ -1030,7 +1032,6 @@ function exportCoord(){
   link.href = href;
   link.download = fileName;
   link.click();
-
 }
 
 //document.getElementById('input').click();
