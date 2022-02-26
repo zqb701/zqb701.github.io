@@ -37,7 +37,7 @@
 
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	版本：369
+	版本：001
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -1022,7 +1022,7 @@ function swColor(){
 function exportCoord(){
 _todo._座標清單匯出檔案_用Http_file_server = function(){}	//AAAAAAAA
   var fileName = "a.csv";//匯出的檔名
-  var data = "第一欄,第二欄,abc,第四欄,第五欄\r\n"
+  var data = ins.innerHTML;
   var blob = new Blob([data], {
     type : "application/octet-stream"
   });
