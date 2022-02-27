@@ -180,7 +180,10 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 			if(isUserStop){
 				
 			}else{
-				player.playVideo();	////結束休眠會自動播放, ok。(用戶按停播除外)
+				player.playVideo();
+				////結束休眠會自動播放, ok。(用戶按停播除外)
+				//切換用戶再切用也OK
+				//但, 停止狀態結束休眠則播放失敗要重載。
 			}
 		}else{
 			player.stopVideo();
