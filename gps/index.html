@@ -24,7 +24,7 @@
 
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	版本：005
+	版本：006
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -756,6 +756,7 @@ function geoYes(evt){
 			}
 		}
 	}
+	showMsg("searchPoint()");
 	
 	if(viewMode == 1){		//全圖：只畫點
 		drawPoint(recentPoint[0], recentPoint[1]);
@@ -767,6 +768,7 @@ function geoYes(evt){
 		drawBaseMap();
 	}
 	
+	showMsg("viewMode()");
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
 	angle1 = Math.atan((recentPoint[0]- points[nextPoint][0])/(recentPoint[1] - points[nextPoint][1]));
 	shadowDist = Math.cos(angle1- pathAngle) * nextDist;
