@@ -739,7 +739,7 @@ function drawPoint(lat, lon, color, width){
 }
 
 function geoYes(evt){
-	showMsg("geoYes()");
+	// showMsg("geoYes()");
 	recentPoint[0] = evt.coords.latitude;
 	recentPoint[1] = evt.coords.longitude;
 	
@@ -756,7 +756,7 @@ function geoYes(evt){
 			}
 		}
 	}
-	showMsg("searchPoint()");
+	// showMsg("searchPoint()");
 	
 	if(viewMode == 1){		//全圖：只畫點
 		drawPoint(recentPoint[0], recentPoint[1]);
@@ -768,13 +768,14 @@ function geoYes(evt){
 		drawBaseMap();
 	}
 	
-	showMsg("viewMode()");
+	showMsg(",23");
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
+	showMsg("nextDist=" + nextDist);
 	angle1 = Math.atan((recentPoint[0]- points[nextPoint][0])/(recentPoint[1] - points[nextPoint][1]));
 	shadowDist = Math.cos(angle1- pathAngle) * nextDist;
 	//投影距離無法適用較大的轉角, 還是要用分角線y=ax+b
 	//cos為距節點的投影距離, 用sin則為與路徑中線的距離
-	showMsg("nextDist=" + nextDist.toFixed(1));
+	
 
 	showData(evt);
 	
@@ -800,7 +801,7 @@ function geoYes(evt){
 		//showMsg("minDist=" + minDist);
 		playVoice(points[nextPoint][4-vector]);
 		enAlarm = false;
-		return;
+		// return;
 	}
 	
 	/**判定為通過*/
@@ -823,6 +824,7 @@ function geoYes(evt){
 		preDist = nextDist;
 		incDistCnt = 0;
 	}
+	showMsg(",33");
 }
 
 function _geoNo(evt){
