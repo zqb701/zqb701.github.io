@@ -24,7 +24,7 @@
 
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	版本：009
+	版本：010
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -741,7 +741,7 @@ function drawPoint(lat, lon, color, width){
 
 function geoYes(evt){
 	// showMsg("geoYes()");
-	showMsg(new Date().getSeconds()+":");
+	
 	recentPoint[0] = evt.coords.latitude;
 	recentPoint[1] = evt.coords.longitude;
 	
@@ -772,16 +772,23 @@ function geoYes(evt){
 	
 	//showMsg(",23");
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
-	showMsg(",目標:"+points[nextPoint][2]);
-	showMsg(",距離:" + nextDist);
+
 	
 	angle1 = Math.atan((recentPoint[0]- points[nextPoint][0])/(recentPoint[1] - points[nextPoint][1]));
 	shadowDist = Math.cos(angle1- pathAngle) * nextDist;
 	//投影距離無法適用較大的轉角, 還是要用分角線y=ax+b
 	//cos為距節點的投影距離, 用sin則為與路徑中線的距離
 
-		
-	showData(evt);
+		str = new Date().getSeconds()+",";
+			if(vector == -1){
+		str += "(回程)";
+	}else{
+		str += "(去程)";
+	}
+		str += ","+points[nextPoint][2];
+	str += "," + nextDist+"公里");
+	document.getElementById("posStr").innerHTML=str;
+	//showData(evt);
 	
 		//時速80以上(高速公路, 開80不提醒?), 2公里前第一次提醒
 	if(enAlarmHigh && nextDist < 2 && evt.coords.speed*3.6 >80){
