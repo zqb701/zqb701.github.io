@@ -4,20 +4,7 @@
 	<meta charset="utf-8">
 	<!-- 程式來源 https://blog.xuite.net/gkyo0510/wretch/242769650 -->
 	<title>GPS02-2</title>
-<script defer>
-	//defer:資源載入後才執行, async同, 但不保證照順序, 空白則立即執行,
-	//等同 window.addEventListener('load', function() {...}
-    if ('serviceWorker' in navigator) {
-		navigator.serviceWorker.register('sw.js')	//參數scope設定掌管範圍, 預設為???
-		.then(reg => console.log('完成 SW 設定!', reg))
-            .catch(err => console.log('Error!', err));
-		//sw.js須為獨立檔案, 無法把程式全部塞在一個檔案。
-		
-		navigator.serviceWorker.addEventListener("message", function(event) {
-			showMsg(event.data);
-		});
-    }
-</script>
+
 </head>
 
 <style>  
@@ -67,8 +54,19 @@
 	
 	<p id="insertCoord"></p>
 </body>
-
-<script >
+<script defer>
+	//defer:資源載入後才執行, async同, 但不保證照順序, 空白則立即執行,
+	//等同 window.addEventListener('load', function() {...}
+    if ('serviceWorker' in navigator) {
+		navigator.serviceWorker.register('sw.js')	//參數scope設定掌管範圍, 預設為???
+		.then(reg => console.log('完成 SW 設定!', reg))
+            .catch(err => console.log('Error!', err));
+		//sw.js須為獨立檔案, 無法把程式全部塞在一個檔案。
+		
+		navigator.serviceWorker.addEventListener("message", function(event) {
+			showMsg(event.data);
+		});
+    }
 
 //TODO 到指定網站下載gps檔(並cache)
 function var_tasks(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
@@ -806,7 +804,9 @@ function geoYes(evt){
 	//c.從分角線的一邊到另一邊(距離從正變負數, 所以相乘為負)
 
 	if (nextDist > preDist ){
-		incDistCnt ++;
+		if(nextDist - preDist >0.002){
+			incDistCnt ++;
+		}
 		if(incDistCnt == 2  ||	//距離增加連續2次
 			nextDist < evt.coords.speed/1000 * 2 + 0.01 ){		//靠近後距離增加
 			skipPoint();
