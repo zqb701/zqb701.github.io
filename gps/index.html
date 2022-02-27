@@ -24,7 +24,7 @@
 
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	版本：015
+	<a>版本：015</a>
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -90,15 +90,19 @@ var tasks = [[
 		[22.65982669905339, 120.51235318458225, "田中巷口", "路口",,"路口"],
 		
 		[22.65956412062677, 120.5130726983204, "二橫巷","測速",,"測速"],
-		[22.659505837597436, 120.5143833817605, "10號", "休息站"],
+		[22.659505837597436, 120.5143833817605, "10號", "休息站",, "休息站"],
 		[22.659390282100908, 120.51514639840148, "瑞光路口", "路口",,"路口"],
-		
+		[22.658633168724144, 120.51504245069331, "彎道急診室"],
 		[22.658030217493362, 120.514628916623, "國仁路口", "號誌",, "號誌"],
 		[22.655579780727386, 120.51407578585876, "彎道"],
+		[22.654285266265962,120.51290058024507, "歸智巷","路口",,"路口"],
+		[22.653399707004777,120.51195347112373, "XX巷","路口",,"路口"],
 		[22.652150360224123, 120.51053770124854, "歸禮巷","路口",,"路口"],
 		[22.651995666533377, 120.5111949090511, "彎01"],
 		[22.651445528597453, 120.51110103173282, "彎02"],
-		[22.65037439483884, 120.51412461031919, "歸義段", "休息站"]
+		[22.650827243046646, 120.51339330202197, "彎03"],
+		[22.65037439483884, 120.51412461031919, "歸義段", "休息站"],
+		[22.649837544510383, 120.51520394582404, "巷口"]
 	],[
 		[22.658034247616996, 120.5146302173418,"國仁路口"],
 		[22.659914735641667, 120.51117374021372,"屏商路口"],
@@ -326,7 +330,15 @@ var tasks = [[
 
 	class TODO {}// function TODO(){}
 	var _todo = new TODO();
-	_todo._110函式用物件分組 = function(){}
+	
+	class canvas01{}
+	var myCanvas = new canvas01();
+	
+	class map01{}
+	var myMap = new map01();
+	
+	class control01{}
+	var myCtl = new control01();
 	
 function init(){
 		//file://即使同意, 仍然禁止
@@ -351,8 +363,8 @@ function init(){
 	// startGPS();
 	noSleep();	//note 9 上, chrome有效, 三星無效
 
-	drawClearMap();
-	drawBaseMap();
+	myCanvas.drawClearMap();
+	myCanvas.drawBaseMap();
 		nextDist = getDistance(recentPoint,  points[nextPoint]);
 		newDist2 = Math.cos(2*Math.PI *150/360 - Math.atan((recentPoint[1]- points[nextPoint][1])/(recentPoint[0] - points[nextPoint][0])))*nextDist;
 	//console.log(nextDist + ", " + newDist2);
@@ -457,10 +469,10 @@ function gesturesMove(x, y){
 	endGestX = x;
 	endGestY = y;
 	if(enGestures && zoom>= zoom0/3){		//縮小不能小於1/3。那放大呢???
-		 drawClearMap();
+		 myCanvas.drawClearMap();
 		 zoom =zoom1 *(1+(y-startGestY)*0.01);
 		 if(zoom < zoom0/3)zoom = zoom0/3;
-		 drawBaseMap();
+		 myCanvas.drawBaseMap();
 	 }
 }
 
@@ -581,8 +593,8 @@ function viewSW(){
 		centerCoords[0] = recentPoint[0];
 		centerCoords[1] = recentPoint[1];
 	}
-	drawClearMap();
-	drawBaseMap();	
+	myCanvas.drawClearMap();
+	myCanvas.drawBaseMap();	
 }
 
 function playVoice(str){
@@ -616,8 +628,8 @@ function newTask(){
 	points = tasks[taskID];
 	
 	newSpace();
-	drawClearMap();
-	drawBaseMap();
+	myCanvas.drawClearMap();
+	myCanvas.drawBaseMap();
 	
 	playVoice("新任務");
 	showData();
@@ -643,7 +655,7 @@ function skipPoint(){
 	showData();	 
 }	
 
-function drawClearMap(){
+myCanvas.drawClearMap = function (){
 	ctx.fillStyle = "black";	//填滿色
 	ctx.fillRect(0,0,canvas.width,canvas.height);
 	ctx.strokeStyle = "blue";	//線條色
@@ -652,7 +664,7 @@ function drawClearMap(){
 	ctx.strokeRect(canvas.width/3,canvas.height/3,canvas.width/3,canvas.height/3);
 }
 
-function drawMiddleCross(){
+myCanvas.drawMiddleCross = function(){
 				//在畫面中央畫十字
 		ctx.strokeStyle = "white";	//線條色
 		ctx.lineWidth = "2";	//線條粗度
@@ -667,7 +679,7 @@ function drawMiddleCross(){
 	
 }
 
-function drawBaseMap(){
+myCanvas.drawBaseMap = function(){
 	 var mapPoints = gps2scr(points);
 	
      var circle = new Path2D();		//綠色節點
@@ -728,7 +740,7 @@ function gps2scr(sourcePs){
 	return newPs;
 }
 
-function drawPoint(lat, lon, color, width){
+myCanvas.drawPoint=function (lat, lon, color, width){
 	var drawX = (lon - centerCoords[1] )* zoom + centerX;
 	var drawY = -(lat - centerCoords[0] )*zoom + centerY;
 	//console.log(drawX + "," + drawY);
@@ -739,7 +751,7 @@ function drawPoint(lat, lon, color, width){
 	ctx.stroke();
 }
 
-function geoYes(evt){
+function geoYes (evt){
 	// showMsg("geoYes()");
 	
 	recentPoint[0] = evt.coords.latitude;
@@ -761,13 +773,13 @@ function geoYes(evt){
 	// showMsg("searchPoint()");
 	
 	if(viewMode == 1){		//全圖：只畫點
-		drawPoint(recentPoint[0], recentPoint[1]);
+		myCanvas.drawPoint(recentPoint[0], recentPoint[1]);
 	}else{		//置中：全重畫, 不畫點
 		centerCoords[0] = recentPoint[0];
 		centerCoords[1] = recentPoint[1];
-		drawClearMap();
-		drawMiddleCross();
-		drawBaseMap();
+		myCanvas.drawClearMap();
+		myCanvas.drawMiddleCross();
+		myCanvas.drawBaseMap();
 	}
 	
 	//showMsg(",23");
@@ -786,7 +798,11 @@ function geoYes(evt){
 		str += "(去程)";
 	}
 		str += ","+points[nextPoint][2];
+		if(nextDist >= 1){
 	str += "," + nextDist+"公里";
+		}else{	
+			str += "," + (nextDist*1000).toFixed()+"公尺";
+		}
 	document.getElementById("posStr").innerHTML=str;
 	// showData(evt);
 	
@@ -802,8 +818,8 @@ function geoYes(evt){
 	//		120公里提前24秒, 33*24=792
 	//		30公里時提前6秒通知,約8.1*6=48公尺。
 	//		10公里,3秒,約4.1*3公尺,。
-	//最後加10公尺給單車時,路中與路邊的距離補償用
-	minDist = evt.coords.speed/1000 * evt.coords.speed*3.6/10*2 + 0.01;
+	//最後加12公尺給單車時,路中與路邊的距離補償用
+	minDist = evt.coords.speed/1000 * evt.coords.speed*3.6/10*2 + 0.012;
 	if(minDist < 0.05){
 		minDist = 0.05;
 	}
@@ -821,11 +837,11 @@ function geoYes(evt){
 	//c.從分角線的一邊到另一邊(距離從正變負數, 所以相乘為負)
 
 	if (nextDist > preDist ){
-		// if(nextDist - preDist >0.002){
-			// incDistCnt ++;
-		// }
+		if(nextDist - preDist >0.01){
+			incDistCnt ++;
+		}
 		if(incDistCnt == 2  ||	//距離增加連續2次
-			nextDist < evt.coords.speed/1000 * 2 + 0.01 ){		//靠近後距離增加
+			nextDist < evt.coords.speed/1000 * 2 + 0.012 ){		//靠近後距離增加
 			// showMsg("incCnt=" + incDistCnt +"。");
 			skipPoint();
 			incDistCnt = 0;
@@ -877,7 +893,7 @@ function startGPS(){
 	  maximumAge: 0						//快取的過期時間，單位是毫秒，設為0來禁用快取讀取。
 	};
 	*/
-	watchID = navigator.geolocation.watchPosition( geoYes, 
+	watchID = navigator.geolocation.watchPosition(geoYes, 
 		//就算成功, 但中途失敗不會告知?
 		(evt) =>{
 				if(evt.code == 1){
@@ -916,7 +932,7 @@ function getDistance(coord1, coord2) {
     dist = dist * 60 * 1.1515;	//不明常數
     dist = dist * 1.609344 ;		//英浬轉公里
 
-    return dist.toFixed(4);		//小數點後三位(四捨「六入」)
+    return dist.toFixed(3);		//小數點後三位(四捨「六入」)
 }
 
 function showData(evt){
