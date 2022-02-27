@@ -42,7 +42,7 @@
 	<canvas id="canvas"></canvas>
 	<font size="7">
 	<div style="display: flex; justify-content: flex-end;">
-		<div class="cmdButton" onclick="insertCoord('坑洞');">坑洞</div>
+		<div class="cmdButton" onclick="insertCoord('坑洞');" ontouchend="this.click;">坑洞</div>
 		<div class="cmdButton" onclick="insertCoord('急彎');">急彎</div>  
 		<div class="cmdButton" onclick="insertCoord('號誌');">號誌</div>
 		<div class="cmdButton" onclick="newTask();">新任務</div>
@@ -68,7 +68,7 @@
 	<p id="insertCoord"></p>
 </body>
 
-<script memo="座標圖資">
+<script >
 
 //TODO 到指定網站下載gps檔(並cache)
 function var_tasks(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
@@ -77,7 +77,7 @@ var tasks = [[
 		[22.665707901738443,	120.5010424041541,	"69巷","號誌"],
 		[22.66528466599206,		120.5017954343364,	"殺蛇溪", "號誌",,"號誌"],
 		
-		[22.665066241181687, 120.50217027304704, "民福路","號誌"],
+		[22.665066241181687, 120.50217027304704, "民福路","號誌",,"號誌"],
 		[22.6642219442753, 120.50369274070279, "民生校區",,, "號誌"],
 		[22.66339089234732, 120.50520474477672, "菸廠路", "號誌"],
 		
@@ -86,19 +86,19 @@ var tasks = [[
 		[22.660783934931143, 120.50977659008726, "瑞屏街口",,, "號誌"],
 		
 		[22.65990848834937, 120.51121889337335, "和生路口","號誌",,"號誌"],
-		[22.659470893607228, 120.51209569251994, "安心四橫巷", "號誌",,"號誌"],
-		[22.65982669905339, 120.51235318458225, "田中巷口", "號誌",,"號誌"],
+		[22.659470893607228, 120.51209569251994, "安心四橫巷", "路口",,"路口"],
+		[22.65982669905339, 120.51235318458225, "田中巷口", "路口",,"路口"],
 		
-		[22.65956412062677, 120.5130726983204, "二橫巷","交流道",,"交流道"],
-		[22.659505837597436, 120.5143833817605, "10號", "廁所"],
-		[22.659390282100908, 120.51514639840148, "瑞光路口", "交流道"],
+		[22.65956412062677, 120.5130726983204, "二橫巷","測速",,"測速"],
+		[22.659505837597436, 120.5143833817605, "10號", "休息站"],
+		[22.659390282100908, 120.51514639840148, "瑞光路口", "路口",,"路口"],
 		
-		[22.658030217493362, 120.514628916623, "國仁路口", "號誌"],
+		[22.658030217493362, 120.514628916623, "國仁路口", "號誌",, "號誌"],
 		[22.655579780727386, 120.51407578585876, "彎道"],
-		[22.652150360224123, 120.51053770124854, "歸禮巷","交流道"],
+		[22.652150360224123, 120.51053770124854, "歸禮巷","路口",,"路口"],
 		[22.651995666533377, 120.5111949090511, "彎01"],
 		[22.651445528597453, 120.51110103173282, "彎02"],
-		[22.65037439483884, 120.51412461031919, "歸義段", "廁所"]
+		[22.65037439483884, 120.51412461031919, "歸義段", "休息站"]
 	],[
 		[22.658034247616996, 120.5146302173418,"國仁路口"],
 		[22.659914735641667, 120.51117374021372,"屏商路口"],
@@ -248,11 +248,8 @@ var tasks = [[
 		[22.964595069946935, 120.21645445767052, "生產路","號誌",,"號誌"],
 		[22.972416153855065, 120.21481356468252, "中華路","號誌",,"號誌"],
 		[22.97629414889348, 120.21394046244464, "大林路", "號誌",,"號誌"],
-		[22.9807394351853, 120.2123072481083, "大同路100巷", "路口"],
+		[22.9807394351853, 120.2123072481083, "大同路100巷", "路口"]
 	]];
-</script>
-
-<script title="程式碼">
 
 	var taskID = 2;
 	var points = [];
@@ -262,7 +259,7 @@ var tasks = [[
 	
 	var nextPoint = 0;	//下一個點
 	var Point01 = [22.659517486714293,120.51431010230766, "田中巷"];	
-	var Point02 = 		[22.66613321392555, 120.50085349955407,"一樓"];
+	var Point02 = [22.66613321392555, 120.50085349955407,"一樓"];
 	var recentPoint = Point02;
 	//上一個通過的點
 	var passPoint = [0,0];
@@ -278,6 +275,7 @@ var tasks = [[
 	var nextDist = -1;
 	var shadowDist = -1;
 	var preDist = 0;
+	var incDistCnt = 0;
 // var heading = -1;	//目標的方向0~360(以前一目標計算,但初值以移動點計算)
 	var pathAngle = -1;
 	// 尋標,新任務或去回程切換時要開啟, 有GPS的狀態時依據當前座標找到最近點
@@ -289,8 +287,9 @@ var tasks = [[
 	var vector = 1;	
 	/** 一般提醒*/
 	var enAlarm = true;
-	/** 高速第一次提醒*/
+	/** 高速提醒*/
 	var enAlarmHigh = true;
+	
 	var canvas = document.getElementById("canvas");
 	//canvas.addEventListener("click", click, false);
 
@@ -324,6 +323,10 @@ var tasks = [[
 	var viewMode = 1;
 	
 	var ins = document.getElementById("insertCoord");
+
+	class TODO {}// function TODO(){}
+	var _todo = new TODO();
+	_todo._110函式用物件分組 = function(){}
 	
 function init(){
 		//file://即使同意, 仍然禁止
@@ -356,7 +359,6 @@ function init(){
 	showData();
 
 }
-
 
 function insertCoord(coordType){
 	//	新增點, 插入陣列內, 陣列滙出, 5種新增鈕
@@ -534,7 +536,8 @@ function gridCmd(x,y){
 
 		if(x > gridW*2 && x < canvas.width-50 && y < gridH){//右上角
 			//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
-			skipPoint();
+			skipPoint();	//手動跳一點, 差太多點則切換方向重找最近點
+				//
 			// searchPoint = true;
 			return;
 		}
@@ -581,8 +584,6 @@ function viewSW(){
 	drawClearMap();
 	drawBaseMap();	
 }
-function TODO(){}
-var _todo = new TODO();
 
 function playVoice(str){
 	//語音來源：22/1/30雅婷文字轉語音下載wav檔, https://tts.yating.tw/
@@ -591,7 +592,7 @@ function playVoice(str){
 	
 	var fileName = "../voice/"+ str+".wav";
 		voice.src = fileName;
-		_todo._找不到語音檔要報錯_並播放其它 = function(){}	//AAAAAAAA
+		_todo._710找不到語音檔要報錯_並播放其它 = function(){}	//AAAAAAAA
 		try {
 			voice.load();
 			voice.play();
@@ -600,12 +601,12 @@ function playVoice(str){
 		}
 }
 
-//var a.newTask = function (){
-	function newTask(){
-//任務切換
+function newTask(){
+	//任務切換
 	nextPoint = 0;
 	nextDist = -1;
 	preDist = 0;
+	incDistCnt = 0
 	vector = 1;
 	viewMode = 1;
 	searchPoint = true;
@@ -620,6 +621,7 @@ function playVoice(str){
 	
 	playVoice("新任務");
 	showData();
+	_todo._220路徑併接模式 = function(){}
 }	
 
 function skipPoint(){
@@ -627,21 +629,18 @@ function skipPoint(){
 	enAlarmHigh = true;
 	nextPoint += vector;
 	
-	if(nextPoint < 0 || nextPoint >=points.length){
+	if((nextPoint < 0 ) || (nextPoint == points.length)){
 		//playVoice("端點");
 		showMsg("端點");
 		return;
 	}else{
-		playVoice("通過");
-		passPoint[0] = points[nextPoint][0];
-		passPoint[1] = points[nextPoint][1];
-		while(!points[nextPoint][4 - vector]){	//語音欄位空白也要跳過
-			//showMsg("略過" +points[nextPoint][2]);
-			nextPoint += vector;
+		if(points[nextPoint-vector][4-vector]){
+			playVoice("通過");
 		}
-		_todo._下下點更近也要跳過 = function(){}
-		showData();	 
+		passPoint[0] = points[nextPoint-vector][0];
+		passPoint[1] = points[nextPoint-vector][1];
 	}
+	showData();	 
 }	
 
 function drawClearMap(){
@@ -651,7 +650,6 @@ function drawClearMap(){
 	ctx.lineWidth = 2;	//線條粗度
 	ctx.strokeRect(0,0,canvas.width,canvas.height);
 	ctx.strokeRect(canvas.width/3,canvas.height/3,canvas.width/3,canvas.height/3);
-
 }
 
 function drawMiddleCross(){
@@ -676,18 +674,23 @@ function drawBaseMap(){
 	 var circle0 = new Path2D();	//紅色節點, 有語音者
 	 var circle2 = new Path2D();	//所有節點中間填滿黑色
 	 var path = new Path2D();
-	 
+	 var circleTmp;
  	for ( p=0;p< mapPoints.length;p++){		//TODO 改用Path2D物件
-			if(points[p][3] == undefined){
-				circle.moveTo(mapPoints[p][0], mapPoints[p][1]);
-				circle.arc(mapPoints[p][0], mapPoints[p][1],7,0,Math.PI*2,true);
-			}else{
-				circle0.moveTo(mapPoints[p][0], mapPoints[p][1]);
-				circle0.arc(mapPoints[p][0], mapPoints[p][1],7,0,Math.PI*2,true);
-			}
-			circle2.moveTo(mapPoints[p][0], mapPoints[p][1]);
-			circle2.arc(mapPoints[p][0], mapPoints[p][1],5,0,Math.PI*2,true);
-			path.lineTo(mapPoints[p][0], mapPoints[p][1]);
+		if(points[p][4-vector] == undefined){
+			circleTmp = circle;
+			// circle.moveTo(mapPoints[p][0], mapPoints[p][1]);
+			// circle.arc(mapPoints[p][0], mapPoints[p][1],7,0,Math.PI*2,true);
+		}else{
+			circleTmp = circle0;
+			// circle0.moveTo(mapPoints[p][0], mapPoints[p][1]);
+			// circle0.arc(mapPoints[p][0], mapPoints[p][1],7,0,Math.PI*2,true);
+		}
+		circleTmp.moveTo(mapPoints[p][0], mapPoints[p][1]);
+		circleTmp.arc(mapPoints[p][0], mapPoints[p][1],7,0,Math.PI*2,true);
+			
+		circle2.moveTo(mapPoints[p][0], mapPoints[p][1]);
+		circle2.arc(mapPoints[p][0], mapPoints[p][1],5,0,Math.PI*2,true);
+		path.lineTo(mapPoints[p][0], mapPoints[p][1]);
 	}
 	ctx.lineJoin="round";	//轉折點的樣式, miter(default), round扇形
 	ctx.strokeStyle = "green";	//線條色
@@ -747,13 +750,11 @@ function geoYes(evt){
 		var shortstDist = getDistance(recentPoint,  points[0]);
 		for(var i=1; i< points.length; i++){
 			dist = getDistance(recentPoint,  points[i]);
-			//console.log(points[i][2], dist);
 			if(dist < shortstDist){
 				shortstDist = dist;
 				nextPoint = i;
 			}
 		}
-		//showMsg("取得定位。");
 	}
 	
 	if(viewMode == 1){		//全圖：只畫點
@@ -767,8 +768,6 @@ function geoYes(evt){
 	}
 	
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
-	
-	
 	angle1 = Math.atan((recentPoint[0]- points[nextPoint][0])/(recentPoint[1] - points[nextPoint][1]));
 	shadowDist = Math.cos(angle1- pathAngle) * nextDist;
 	//投影距離無法適用較大的轉角, 還是要用分角線y=ax+b
@@ -776,9 +775,9 @@ function geoYes(evt){
 					
 	showData(evt);
 	
-		//時速90以上(高速公路, 開80不提醒?), 2公里前第一次提醒
-	if(enAlarmHigh && nextDist < 2 && evt.coords.speed*3.6 >90){
-		playVoice(points[nextPoint][3]);
+		//時速80以上(高速公路, 開80不提醒?), 2公里前第一次提醒
+	if(enAlarmHigh && nextDist < 2 && evt.coords.speed*3.6 >80){
+		playVoice(points[nextPoint][4-vector]);
 		enAlarmHigh = false;
 		return;
 	}
@@ -796,27 +795,29 @@ function geoYes(evt){
 	
 	if(enAlarm  && nextDist < minDist){
 		//showMsg("minDist=" + minDist);
-		playVoice(points[nextPoint][3]);
+		playVoice(points[nextPoint][4-vector]);
 		enAlarm = false;
 		return;
 	}
-	_todo._監看矩離變化_如跳點失敗要跳下一點 = function(){}	//AAAAAAAA
+	
 	/**判定為通過*/
-	//a.近距離內距離變大。依車速修正
+	//a.近距離內距離變大。依車速修正(2秒距離)
 	//b.距離增加超過3次(至少要3+1秒?)
 	//c.從分角線的一邊到另一邊(距離從正變負數, 所以相乘為負)
-	receGap = nextDist - preDist;
-	// if(receGap * prevGap < 0){//定位誤差會觸動
-	if (nextDist > preDist && nextDist < evt.coords.speed/1000 * 3 + 0.01 ){
-	//靠近時gap會小於零, 遠離時會大於零,變換時一正一負,相乘為負
-		skipPoint();
-		preDist = getDistance(recentPoint,  points[nextPoint]);
-		pathAngle =  Math.atan((passPoint[0]- points[nextPoint][0])/(passPoint[1] - points[nextPoint][1]));
-		// prevGap = 0;
+
+	if (nextDist > preDist ){
+		incDistCnt ++;
+		if(incDistCnt == 2  ||	//距離增加連續2次
+			nextDist < evt.coords.speed/1000 * 2 + 0.01 ){		//靠近後距離增加
+			skipPoint();
+			incDistCnt = 0;
+			preDist = getDistance(recentPoint,  points[nextPoint]);
+			pathAngle =  Math.atan((passPoint[0]- points[nextPoint][0])/(passPoint[1] - points[nextPoint][1]));
+		}
 	}else{
 		preDist = nextDist;
+		incDistCnt = 0;
 	}
-	prevGap = receGap;
 }
 
 function _geoNo(evt){
@@ -997,7 +998,7 @@ var colorList = ["red",,"green"];
 /**紅綠燈讀秒, 時間到或用戶點選時會變色及重數 */
 
 function swColor(){
-	_todo._紅綠燈讀秒 = function(){}	//AAAAAAAA
+	_todo._810紅綠燈讀秒 = function(){}	//AAAAAAAA
 	if(!countRun){
 		//停止狀態則啟動
 		IntervalID = window.setInterval(( () =>  {
@@ -1020,12 +1021,13 @@ function swColor(){
 }
 
 function exportCoord(){
-_todo._座標清單匯出檔案_用Http_file_server = function(){}	//AAAAAAAA
+//座標清單匯出檔案,再用Http_file_server傳到電腦
   var fileName = "a.csv";//匯出的檔名
-  var data = ins.innerHTML;
+  var data = ins.innerHTML;	//TODO 要把BR改成\n\r
   var blob = new Blob([data], {
     type : "application/octet-stream"
   });
+  //實作一個標簽, 好像不正規。
   var href = URL.createObjectURL(blob);
   var link = document.createElement("a");
   document.body.appendChild(link);
