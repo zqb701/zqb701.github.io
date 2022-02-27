@@ -24,7 +24,7 @@
 
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	版本：011
+	版本：012
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -787,8 +787,8 @@ function geoYes(evt){
 	}
 		str += ","+points[nextPoint][2];
 	str += "," + nextDist+"公里";
-	document.getElementById("posStr").innerHTML=str;
-	//showData(evt);
+	//document.getElementById("posStr").innerHTML=str;
+	showData(evt);
 	
 		//時速80以上(高速公路, 開80不提醒?), 2公里前第一次提醒
 	if(enAlarmHigh && nextDist < 2 && evt.coords.speed*3.6 >80){
@@ -835,7 +835,7 @@ function geoYes(evt){
 		preDist = nextDist;
 		incDistCnt = 0;
 	}
-	showMsg(",33");
+	// showMsg(",33");
 }
 
 function _geoNo(evt){
