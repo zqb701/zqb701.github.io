@@ -24,7 +24,7 @@
 
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	版本：006
+	版本：007
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -768,9 +768,9 @@ function geoYes(evt){
 		drawBaseMap();
 	}
 	
-	showMsg(",23");
+	//showMsg(",23");
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
-	showMsg("nextDist=" + nextDist);
+	//showMsg("nextDist=" + nextDist);
 	angle1 = Math.atan((recentPoint[0]- points[nextPoint][0])/(recentPoint[1] - points[nextPoint][1]));
 	shadowDist = Math.cos(angle1- pathAngle) * nextDist;
 	//投影距離無法適用較大的轉角, 還是要用分角線y=ax+b
@@ -910,6 +910,10 @@ function getDistance(coord1, coord2) {
 function showData(evt){
 	//str = "任務：" + points[0][2] + " - " + points[points.length-1][2];
 	str = "";
+			var d=new Date();
+		strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();		//+"."+d.getMilliseconds;
+		str += strTime;
+		str +="<br>";
 	if(vector == -1){
 		str += "(回程)";
 	}else{
@@ -936,9 +940,7 @@ function showData(evt){
 		//str += "<br />位置：" + recentPoint[0] + ", "+ recentPoint[1];
 		str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
 		str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
-		var d=new Date();
-		strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();		//+"."+d.getMilliseconds;
-		str += "。時間：" + strTime;
+
 	}
 
 	//	str += "("+ points[nextPoint][0] +", " + points[nextPoint][1];
