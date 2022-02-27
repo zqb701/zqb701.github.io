@@ -762,7 +762,7 @@ function geoYes(evt){
 		centerCoords[1] = recentPoint[1];
 		drawClearMap();
 		drawMiddleCross();
-		drawBaseMap();		
+		drawBaseMap();
 	}
 	
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
@@ -770,7 +770,7 @@ function geoYes(evt){
 	shadowDist = Math.cos(angle1- pathAngle) * nextDist;
 	//投影距離無法適用較大的轉角, 還是要用分角線y=ax+b
 	//cos為距節點的投影距離, 用sin則為與路徑中線的距離
-	showMsg("showData()");	
+	// showMsg("showData()");	
 	showData(evt);
 	
 		//時速80以上(高速公路, 開80不提醒?), 2公里前第一次提醒
@@ -914,7 +914,7 @@ function showData(evt){
 		//str += "<br />距離：<br />時速：";
 
 		// if(nextDist >1){
-			str += "，" + nextDist.toFixed()  + "公里，";
+			str += "，" + nextDist.toFixed(1)  + "公里，";
 		// }else{
 			// str += "，" + (nextDist*1000).toFixed() + "公尺，";
 			// }
