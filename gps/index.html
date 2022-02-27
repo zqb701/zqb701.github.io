@@ -770,7 +770,7 @@ function geoYes(evt){
 	shadowDist = Math.cos(angle1- pathAngle) * nextDist;
 	//投影距離無法適用較大的轉角, 還是要用分角線y=ax+b
 	//cos為距節點的投影距離, 用sin則為與路徑中線的距離
-					
+	showMsg("showData()");	
 	showData(evt);
 	
 		//時速80以上(高速公路, 開80不提醒?), 2公里前第一次提醒
@@ -866,6 +866,7 @@ function startGPS(){
 					//失敗後就不管了, 如何每秒檢查一次?
 				}else{
 					showMsg(evt.code + ", " + evt.message);
+					//2, Network location provider at 'https://www.googleapis.com/' : ERR_NAME_NOT_RESOLVED
 				}
 		}, {enableHighAccuracy: true});
 }
