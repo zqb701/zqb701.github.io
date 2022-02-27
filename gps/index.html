@@ -37,7 +37,7 @@
 
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	版本：001
+	版本：002
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -896,7 +896,7 @@ function getDistance(coord1, coord2) {
     dist = dist * 60 * 1.1515;	//不明常數
     dist = dist * 1.609344 ;		//英浬轉公里
 
-    return dist.toFixed(3);		//小數點後三位(四捨「六入」)
+    return dist.toFixed(4);		//小數點後三位(四捨「六入」)
 }
 
 function showData(evt){
