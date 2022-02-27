@@ -24,7 +24,7 @@
 
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	版本：007
+	版本：008
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -72,6 +72,7 @@
 //TODO 到指定網站下載gps檔(並cache)
 function var_tasks(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 var tasks = [[
+		[22.667523721107013, 120.4978306934891, "民生廣東路口","號誌"],
 		[22.6660872645837,		120.50037043288955,	"工業路口","號誌",,"號誌"],
 		[22.665707901738443,	120.5010424041541,	"69巷","號誌"],
 		[22.66528466599206,		120.5017954343364,	"殺蛇溪", "號誌",,"號誌"],
@@ -740,6 +741,7 @@ function drawPoint(lat, lon, color, width){
 
 function geoYes(evt){
 	// showMsg("geoYes()");
+	showMsg(new Date().getSeconds()+":");
 	recentPoint[0] = evt.coords.latitude;
 	recentPoint[1] = evt.coords.longitude;
 	
@@ -770,12 +772,14 @@ function geoYes(evt){
 	
 	//showMsg(",23");
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
-	//showMsg("nextDist=" + nextDist);
+	showMsg(",目標:"+points[nextPoint][2]);
+	showMsg(",距離:" + nextDist);
+	
 	angle1 = Math.atan((recentPoint[0]- points[nextPoint][0])/(recentPoint[1] - points[nextPoint][1]));
 	shadowDist = Math.cos(angle1- pathAngle) * nextDist;
 	//投影距離無法適用較大的轉角, 還是要用分角線y=ax+b
 	//cos為距節點的投影距離, 用sin則為與路徑中線的距離
-shotMsg(new Date().getSeconds()+":nextDist=" + nextDist);
+
 		
 	showData(evt);
 	
