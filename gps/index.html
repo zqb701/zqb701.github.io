@@ -912,11 +912,11 @@ function showData(evt){
 	if(evt == undefined){
 		//str += "<br />距離：<br />時速：";
 	}else{
-		if(nextDist >1){
+		// if(nextDist >1){
 			str += "，" + nextDist.toFixed()  + "公里，";
-		}else{
-			str += "，" + (nextDist*1000).toFixed() + "公尺，";
-		}
+		// }else{
+			// str += "，" + (nextDist*1000).toFixed() + "公尺，";
+			// }
 		
 		arriveSec =  nextDist*1000/evt.coords.speed;
 		if(arriveSec < 99){
