@@ -24,7 +24,7 @@
 
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	版本：003
+	版本：004
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -918,7 +918,9 @@ function showData(evt){
 		// }else{
 			// str += "，" + (nextDist*1000).toFixed() + "公尺，";
 			// }
-		
+	if(evt == undefined){
+			str+= evt;
+	}else{
 		arriveSec =  nextDist*1000/evt.coords.speed;
 		if(arriveSec < 99){
 			str += arriveSec.toFixed(0)+"秒。";
@@ -930,7 +932,7 @@ function showData(evt){
 		var d=new Date();
 		strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();		//+"."+d.getMilliseconds;
 		str += "。時間：" + strTime;
-
+	}
 
 	//	str += "("+ points[nextPoint][0] +", " + points[nextPoint][1];
 	
