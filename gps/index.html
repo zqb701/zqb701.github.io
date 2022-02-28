@@ -24,7 +24,7 @@
 
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	<a>版本：015</a>
+	<a>版本：016</a>
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -72,6 +72,19 @@
 //TODO 到指定網站下載gps檔(並cache)
 function var_tasks(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 var tasks = [[
+		[22.683493730273277, 120.49835715263679, "廣東仁愛路口","號誌",,"號誌"],
+		[22.681135369442668, 120.50103519150333, "廣東大連路口","號誌",,"號誌"],
+		[22.680503680227538, 120.50166215785417, "廣東路468巷","號誌",,"號誌"],
+		[22.68001666152951, 120.50172601825584, "廣東路456巷","號誌",,"號誌"],
+		[22.67709462074551, 120.50092146003797,"廣東建豐路口","號誌",,"號誌"],
+		[22.676454250884152, 120.50072968208876, "廣東勝利路口","號誌",,"號誌"],
+		[22.676016199057848, 120.50058752501798, "廣東高豐街口","號誌",,"號誌"],
+		[22.674161811466448, 120.49996566902554,"廣東民學路口","號誌",,"號誌"],
+		[22.671873370117144, 120.49922917511516, "廣東公園路口","號誌",,"號誌"],
+		[22.671026831904392, 120.49895754739023,"廣東林森路口","號誌",,"號誌"],
+		[22.670303645732268, 120.4987238326765, "廣東民和路口","號誌",,"號誌"],
+		[22.669749249959157, 120.49854948908974, "廣東師校巷口","號誌",,"號誌"],
+		[22.668284679096782, 120.49808161964651, "廣東民利路口","號誌",,"號誌"],
 		[22.667523721107013, 120.4978306934891, "民生廣東路口","號誌"],
 		[22.6660872645837,		120.50037043288955,	"工業路口","號誌",,"號誌"],
 		[22.665707901738443,	120.5010424041541,	"69巷","號誌"],
@@ -256,6 +269,8 @@ var tasks = [[
 	]];
 
 	var taskID = 2;
+	
+	
 	var points = [];
 	//var mapPoints = [];
 	var taskTitle = "";
@@ -264,7 +279,7 @@ var tasks = [[
 	var nextPoint = 0;	//下一個點
 	var Point01 = [22.659517486714293,120.51431010230766, "田中巷"];	
 	var Point02 = [22.66613321392555, 120.50085349955407,"一樓"];
-	var recentPoint = Point02;
+	var recentPoint = Point01;
 	//上一個通過的點
 	var passPoint = [0,0];
 		passPoint[0] = recentPoint[0];
@@ -355,9 +370,12 @@ function init(){
 	new Notification('訂閱成功！！！');
 	}
 	*/
+
 	startGPS();
-	
+	//保存最後任務編號
+	taskID = localStorage.taskID ? localStorage.taskID : taskID;
 	newTask();
+		nextPoint = nearPoint();//	無GPS時測試用。
 	newSpace();
 
 	// startGPS();
@@ -472,6 +490,7 @@ function gesturesMove(x, y){
 		 myCanvas.drawClearMap();
 		 zoom =zoom1 *(1+(y-startGestY)*0.01);
 		 if(zoom < zoom0/3)zoom = zoom0/3;
+		 myCanvas.drawMiddleCross();
 		 myCanvas.drawBaseMap();
 	 }
 }
@@ -542,6 +561,7 @@ function gridCmd(x,y){
 		
 		if(x > gridW*2 && x < canvas.width-50 && y > gridH*2){	//右下角
 		//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
+			taskID ++;
 			newTask();		
 			return;
 		}
@@ -583,6 +603,7 @@ function vectorMode(){
 
 function viewSW(){
 	viewMode *= -1;		//兩種模式切換
+		myCanvas.drawClearMap();
 	if(viewMode == 1){
 		playVoice("全圖");
 		centerCoords[0] = centerCoords0[0];
@@ -592,8 +613,9 @@ function viewSW(){
 		playVoice("置中");
 		centerCoords[0] = recentPoint[0];
 		centerCoords[1] = recentPoint[1];
+		myCanvas.drawMiddleCross();
 	}
-	myCanvas.drawClearMap();
+
 	myCanvas.drawBaseMap();	
 }
 
@@ -622,8 +644,9 @@ function newTask(){
 	vector = 1;
 	viewMode = 1;
 	searchPoint = true;
+	localStorage.taskID = taskID;
+	// taskID = localStorage.taskID ? localStorage.taskID-1 : taskID;
 	
-	taskID ++;
 	if (taskID == tasks.length) taskID = 0;
 	points = tasks[taskID];
 	
@@ -750,7 +773,22 @@ myCanvas.drawPoint=function (lat, lon, color, width){
     ctx.arc(drawX, drawY,1,0,Math.PI*2,true);
 	ctx.stroke();
 }
-
+function nearPoint(){
+	//從路徑上找到最近的下一目標點, 但可能是適當點的前一點
+	var i=0;
+	var shortstDist = getDistance(recentPoint,  points[i]);
+	
+	for(; i < points.length; i++){
+		dist = getDistance(recentPoint,  points[i]);
+		if(dist < shortstDist){
+			shortstDist = dist;
+			if(dist < 0.03){		//30公尺內就不要再找了
+				break;
+			}
+		}
+	}
+	return i;
+}
 function geoYes (evt){
 	// showMsg("geoYes()");
 	
@@ -758,17 +796,8 @@ function geoYes (evt){
 	recentPoint[1] = evt.coords.longitude;
 	
 	if(searchPoint){
+		nextPoint = nearPoint();
 		searchPoint = false;
-		//從路徑上找到最近的下一目標點, 但可能是適當點的前一點
-		//最近點距離過大可能表示不在路徑上
-		var shortstDist = getDistance(recentPoint,  points[0]);
-		for(var i=1; i< points.length; i++){
-			dist = getDistance(recentPoint,  points[i]);
-			if(dist < shortstDist){
-				shortstDist = dist;
-				nextPoint = i;
-			}
-		}
 	}
 	// showMsg("searchPoint()");
 	
@@ -792,67 +821,52 @@ function geoYes (evt){
 	//cos為距節點的投影距離, 用sin則為與路徑中線的距離
 
 		str = new Date().getSeconds()+",";
-			if(vector == -1){
-		str += "(回程)";
-	}else{
-		str += "(去程)";
-	}
+			// if(vector == -1){
+				// str += "(回程)";
+			// }else{
+				// str += "(去程)";
+			// }
+		str += vector ==1? "(去程)":"(回程)";
 		str += ","+points[nextPoint][2];
-		if(nextDist >= 1){
-	str += "," + nextDist+"公里";
-		}else{	
-			str += "," + (nextDist*1000).toFixed()+"公尺";
-		}
+		// if(nextDist >= 1){
+			// str += "," + nextDist+"公里";
+		// }else{	
+			// str += "," + (nextDist*1000).toFixed()+"公尺";
+		// }
+		str += nextDist >1 ? nextDist+"公里" : (nextDist*1000).toFixed()+"公尺";
 	document.getElementById("posStr").innerHTML=str;
-	// showData(evt);
-	
-		//時速80以上(高速公路, 開80不提醒?), 2公里前第一次提醒
-	if(enAlarmHigh && nextDist < 2 && evt.coords.speed*3.6 >80){
-		playVoice(points[nextPoint][4-vector]);
-		enAlarmHigh = false;
-		return;
-	}
-	/** 事前提醒*/
-	//時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒(步行4公里/小時)
-	//車速每10公里提前2秒通知：
-	//		120公里提前24秒, 33*24=792
-	//		30公里時提前6秒通知,約8.1*6=48公尺。
-	//		10公里,3秒,約4.1*3公尺,。
-	//最後加12公尺給單車時,路中與路邊的距離補償用
-	minDist = evt.coords.speed/1000 * evt.coords.speed*3.6/10*2 + 0.012;
-	if(minDist < 0.05){
-		minDist = 0.05;
-	}
-	
-	if(enAlarm  && nextDist < minDist){
-		//showMsg("minDist=" + minDist);
-		playVoice(points[nextPoint][4-vector]);
-		enAlarm = false;
-		// return;
-	}
-	
-	/**判定為通過*/
-	//a.近距離內距離變大。依車速修正(2秒距離)
-	//b.距離增加超過3次(至少要3+1秒?)
-	//c.從分角線的一邊到另一邊(距離從正變負數, 所以相乘為負)
 
-	if (nextDist > preDist ){
-		if(nextDist - preDist >0.01){
-			incDistCnt ++;
-		}
-		if(incDistCnt == 2  ||	//距離增加連續2次
-			nextDist < evt.coords.speed/1000 * 2 + 0.012 ){		//靠近後距離增加
-			// showMsg("incCnt=" + incDistCnt +"。");
+	if (nextDist > preDist ){	//遠離中
+		if(nextDist < evt.coords.speed/1000 * 2 + 0.012 ){
+			//近距離內(車速的2秒),判定為通過
 			skipPoint();
-			incDistCnt = 0;
 			preDist = getDistance(recentPoint,  points[nextPoint]);
 			pathAngle =  Math.atan((passPoint[0]- points[nextPoint][0])/(passPoint[1] - points[nextPoint][1]));
 		}
-	}else{
-		preDist = nextDist;
-		incDistCnt = 0;
+	}else{		//接近中
+		
+		if(enAlarmHigh && nextDist < 2 && evt.coords.speed*3.6 >80){
+			//時速80以上, 2公里前提醒一次
+			playVoice(points[nextPoint][4-vector]);
+			enAlarmHigh = false;
+		}
+		/** 事前提醒*/
+		//時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒(步行4公里/小時)
+		//車速每10公里提前2秒通知：
+		//		120公里提前24秒, 33*24=792
+		//		30公里時提前6秒通知,約8.1*6=48公尺。
+		//		10公里,3秒,約4.1*3公尺,。
+		//最後加12公尺給單車時,路中與路邊的距離補償用
+		
+		if(enAlarm ){
+			minDist = evt.coords.speed/1000 * evt.coords.speed*3.6/10*2 + 0.012;
+			if(nextDist < 0.05 || nextDist < minDist){
+				playVoice(points[nextPoint][4-vector]);
+				enAlarm = false;
+			}
+		}		
 	}
-	// showMsg(",33");
+	preDist = nextDist;
 }
 
 function _geoNo(evt){
