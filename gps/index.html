@@ -24,7 +24,7 @@
 
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	<a>版本：017</a>
+	<a>版本：018</a>
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -82,6 +82,7 @@ var tasks = [[
 		[22.674161811466448, 120.49996566902554,"廣東民學路口","號誌",,"號誌"],
 		[22.671873370117144, 120.49922917511516, "廣東公園路口","號誌",,"號誌"],
 		[22.671026831904392, 120.49895754739023,"廣東林森路口","號誌",,"號誌"],
+		
 		[22.670303645732268, 120.4987238326765, "廣東民和路口","號誌",,"號誌"],
 		[22.669749249959157, 120.49854948908974, "廣東師校巷口","號誌",,"號誌"],
 		[22.668284679096782, 120.49808161964651, "廣東民利路口","號誌",,"號誌"],
@@ -375,7 +376,7 @@ function init(){
 	//保存最後任務編號
 	taskID = localStorage.taskID ? localStorage.taskID : taskID;
 	newTask();
-		nextPoint = nearPoint();//	無GPS時測試用。
+	nearPoint();//	無GPS時測試用。
 	newSpace();
 
 	// startGPS();
@@ -782,13 +783,14 @@ function nearPoint(){
 		dist = getDistance(recentPoint,  points[i]);
 		if(dist < shortstDist){
 			shortstDist = dist;
+			nextPoint = i;
 			if(dist < 0.03){		//30公尺內就不要再找了
 				break;
 			}
 		}
 	}
-	return i;
 }
+
 function geoYes (evt){
 	// showMsg("geoYes()");
 	
@@ -796,7 +798,7 @@ function geoYes (evt){
 	recentPoint[1] = evt.coords.longitude;
 	
 	if(searchPoint){
-		nextPoint = nearPoint();
+		nearPoint();
 		console.log(nextPoint);
 		searchPoint = false;
 	}
