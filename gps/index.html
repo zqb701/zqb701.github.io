@@ -24,7 +24,7 @@
 
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	<a>版本：020</a>
+	<a>版本：001</a>
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -827,12 +827,13 @@ function geoYes (evt){
 	//cos為距節點的投影距離, 用sin則為與路徑中線的距離
 
 		str = points[nextPoint][2] + ", ";
-	document.getElementById("posStr").innerHTML=str;
-		str += nextDist >1 ? nextDist+"公里" : nextDist*1000+"公尺";
-		document.getElementById("posStr").innerHTML=str;
+	// document.getElementById("posStr").innerHTML=str;
+		str += nextDist <1 ? nextDist*1000+"公尺" : nextDist+"公里";
+		// document.getElementById("posStr").innerHTML=str;
 		str += ", " + new Date().getSeconds()+"。";
+		
 document.getElementById("posStr").innerHTML=str;
-		tmpID = vector ==1? points.length:0;
+		tmpID = vector ==1? points.length-1:0;
 		str += "<br>往" + points[tmpID][2];
 	document.getElementById("posStr").innerHTML=str;
 	//需要判定的項目
