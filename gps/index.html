@@ -24,7 +24,7 @@
 
 <body onload="init();" bgcolor="black" text="gray" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	<a>版本：004</a>
+	<a>版本：005</a>
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -834,8 +834,14 @@ function geoYes (evt){
 		str += ", " + new Date().getSeconds()+"。";
 		
 document.getElementById("posStr").innerHTML=str;
-		tmpID = vector ==1? points.length-1:0;
-		str += "<br>往" + points[tmpID][2];
+		if(vector ==1){
+			tmp0 = 0;
+			tmp1 = points.length-1;
+		}else{
+			tmp0 = points.length-1;
+			tmp1 = 0;
+		}
+		str += "<br>" + points[tmp0][2] + " ~ " +points[tmp1][2];
 	document.getElementById("posStr").innerHTML=str;
 	//需要判定的項目
 	//1.通過點, 才能繼續導航
@@ -976,11 +982,13 @@ function showData(evt){
 		// }else{
 			// str += "，" + (nextDist*1000).toFixed() + "公尺，";
 			// }
-	if(evt == undefined){
-			str+= evt;
-	}else{
+
+	// if(evt == undefined){
+			// str+= evt;
+	// }else{
 		str += "，" + nextDist.toFixed(1)  + "公里，";
 		arriveSec =  nextDist*1000/evt.coords.speed;
+		
 		if(arriveSec < 99){
 			str += arriveSec.toFixed(0)+"秒。";
 		}
@@ -989,11 +997,11 @@ function showData(evt){
 		str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
 		str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
 
-	}
+	// }
 
 	//	str += "("+ points[nextPoint][0] +", " + points[nextPoint][1];
 	
-	document.getElementById("posStr").innerHTML=str;
+
 }
 
 var msgList = ["","","","",""];

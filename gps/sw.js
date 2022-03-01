@@ -34,14 +34,20 @@ self.addEventListener('install', (event) => {
     // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
 	// 翻譯：該參數可確保當cache找不到時, 會從網路下載
     //await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
+	/*
 	for(i=0;i<voiceList.length;i++){
 		voiceList[i]= "../voice/" + voiceList[i] + ".wav";
 		console.log(voiceList[i]);
 	}
+	*/
+	// 陣列, https://ithelp.ithome.com.tw/users/20104175/ironman/2584
+	voiceList.forEach(function(value, index, array){
+		array[index] = "../voice/" + value + ".wav";
+	});
+	
 	cache.addAll(voiceList);
-
-		cache.add('.');
-		cache.add('index.html');
+	cache.add('.');
+	cache.add('index.html');
   })());
   // Force the waiting service worker to become the active service worker.
   self.skipWaiting();
