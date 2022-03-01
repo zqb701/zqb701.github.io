@@ -828,7 +828,7 @@ function geoYes (evt){
 
 		str = points[nextPoint][2] + ", ";
 	document.getElementById("posStr").innerHTML=str;
-		str += nextDist >1 ? nextDist+"公里" : (nextDist*1000).toFixed()+"公尺";
+		str += nextDist >1 ? nextDist+"公里" : nextDist*1000+"公尺";
 		document.getElementById("posStr").innerHTML=str;
 		str += ", " + new Date().getSeconds()+"。";
 document.getElementById("posStr").innerHTML=str;
