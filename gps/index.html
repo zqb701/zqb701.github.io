@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	<a>版本：008</a>
+	<a>版本：009</a>
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -31,7 +31,7 @@
 		<div class="cmdButton" onclick="insertCoord('坑洞');" ontouchend="this.click;">坑洞</div>
 		<div class="cmdButton" onclick="insertCoord('急彎');">急彎</div>  
 		<div class="cmdButton" onclick="insertCoord('測速');">測速</div>
-		<div class="cmdButton" >空白</div>
+		<div class="cmdButton" onclick="nearPoint();">找路</div>
 		<div class="cmdButton" >
 		<div id="march" style="color:red; font-size:120px;font-weight:bolder;" onclick="swColor();">99</div>
 		</div>
@@ -305,11 +305,13 @@ var tasks = [[																	//廣東路
 		[23.352307148834168, 120.46367140205685,"虎子墓02", "號誌",,"號誌"],
 		[23.352295278291262, 120.46795001308695, "南98白河水庫", "號誌",,"號誌"],
 		[23.345975279208922, 120.47300827746007, "仙草外環", "號誌",,"號誌"],
+		
 		[23.344536783584005, 120.47493729997255, "南172乙仙草", "號誌",,"號誌"],
 		[23.340355027385485, 120.49928365378014, "捷徑"],
 		[23.340419604980966, 120.50247185780395, "白水橋"],
 		[23.342090346811354, 120.50372659572749, "南175", "號誌",,"號誌"],
 		[23.337751346472697, 120.50537706769376, "彎道"],
+		
 		[23.339344792930895, 120.50313343078629, "彎道"],
 		[23.33638531525768, 120.50398936957284, "彎道"],
 		[23.334149222954125, 120.50311720366186, "捷徑"],
@@ -819,21 +821,25 @@ myCanvas.drawPoint=function (lat, lon, color, width){
     ctx.arc(drawX, drawY,1,0,Math.PI*2,true);
 	ctx.stroke();
 }
+
 function nearPoint(){
+	// showMsg("nearPoint():"+recentPoint+";"+tasks[0][0]);
 	//從路徑上找到最近的下一目標點, 但可能是適當點的前一點
 	
 	var shortstDist = getDistance(recentPoint,  tasks[0][0]);
 	
 	for(var t=0; t < tasks.length; t++){
-		for(var i=0; i < points.length; i++){
+		// console.log(tasks[t][0][2]);
+		for(var i=0; i < tasks[t].length; i++){
 			dist = getDistance(recentPoint,  tasks[t][i]);
 			if(dist < shortstDist){
 				shortstDist = dist;
 				nextPoint = i;
-				taskID = t
+				taskID = t;
 			}
 		}
 	}
+	showMsg("最近點:" + tasks[taskID][nextPoint][2]);
 	//TODO 最近點不在任何路徑範圍內
 }
 
