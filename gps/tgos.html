@@ -13,8 +13,8 @@
 		//------------------------------須自行修改的參數,包含點位坐標,訊息視窗內容及圖示檔案來源設定------------------------------
 		
 		var infotext = '<B>內政部資訊中心</B><br>台北市松江路469巷4號';		//地標名稱及訊息視窗內容
-		// var markerPoint = new TGOS.TGPoint(303895, 2773227);				//地標坐標位置
-		var markerPoint = new TGOS.TGPoint(199412, 2581121);				//景大WGS84轉TWD97
+		 var markerPoint = new TGOS.TGPoint(303895, 2773227);				//地標坐標位置
+		
 		// var markerPoint = new TGOS.TGPoint(23.3318885,120.5053049);
 		// var markerPoint = new TGOS.TGPoint(120.5053049,23.3318885);
 		var imgUrl = "https://api.tgos.tw/TGOS_API/images/marker2.png";	//標記點圖示來源
@@ -39,8 +39,8 @@
 			pMap.setCenter(markerPoint);	//初始地圖中心點
 			
 			//------------------建立標記點---------------------
-			var markerImg = new TGOS.TGImage(imgUrl, new TGOS.TGSize(38, 33), new TGOS.TGPoint(0, 0), new TGOS.TGPoint(10, 33));	//設定標記點圖片及尺寸大小
-			var pTGMarker = new TGOS.TGMarker(pMap, markerPoint,'', markerImg);	//建立機關單位標記點
+			markerImg = new TGOS.TGImage(imgUrl, new TGOS.TGSize(38, 33), new TGOS.TGPoint(0, 0), new TGOS.TGPoint(10, 33));	//設定標記點圖片及尺寸大小
+			pTGMarker = new TGOS.TGMarker(pMap, markerPoint,'', markerImg);	//建立機關單位標記點
 			
 			//-----------------建立訊息視窗--------------------
 			var InfoWindowOptions = {
@@ -60,8 +60,23 @@
 		function closeInfoWindow() {	//關閉訊息視窗函式
 			messageBox.close();
 		}
+		
+		var markerImg;
+		var pTGMarker;
+		function next(){
+			markerPoint = new TGOS.TGPoint(199412, 2581121);				//景大WGS84轉TWD97
+			pMap.setCenter(markerPoint);	//初始地圖中心點
+			
+			pTGMarker = new TGOS.TGMarker(pMap, markerPoint,'', markerImg);	//建立機關單位標記點
+
+		}
+		
+		
 	</script>
 </head>
-<body style="margin:0px" onload="InitWnd();">
-	<div id="OMap" style="position:absolute; top:5px; left:5px; width:900px; height:900px; border:1px solid #000000;"></div>
+<body style="margin:0px" onload="InitWnd();" onClick="next();">
+009
+	<div id="OMap" style="position:absolute_;浮動模式; top:5px; left:5px; width:900px; height:900px; border:1px solid #000000;"></div>
+<input type="button" value="next" onClick="next();">
+	</body>
 </html>                            
