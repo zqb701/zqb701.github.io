@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	<a>版本：010</a>
+	<a>版本：011</a>
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -31,7 +31,7 @@
 		<div class="cmdButton" onclick="insertCoord('坑洞');" ontouchend="this.click;">坑洞</div>
 		<div class="cmdButton" onclick="insertCoord('急彎');">急彎</div>  
 		<div class="cmdButton" onclick="insertCoord('測速');">測速</div>
-		<div class="cmdButton" onclick="nearPoint();">找路</div>
+		<div class="cmdButton" onclick="nearPoint();initTask();">找路</div>
 		<div class="cmdButton" >
 		<div id="march" style="color:red; font-size:120px;font-weight:bolder;" onclick="swColor();">99</div>
 		</div>
