@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	<a>版本：007</a>
+	<a>版本：008</a>
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -31,9 +31,9 @@
 		<div class="cmdButton" onclick="insertCoord('坑洞');" ontouchend="this.click;">坑洞</div>
 		<div class="cmdButton" onclick="insertCoord('急彎');">急彎</div>  
 		<div class="cmdButton" onclick="insertCoord('測速');">測速</div>
-		<div class="cmdButton" onclick="newTask();">新任務</div>
-		<div class="cmdButton">
-		<div id="march" style="color:red; font-size:120px;font-weight:bolder;" onclick="swColor();">99</div></div>
+		<div class="cmdButton" >空白</div>
+	
+		<div id="march" style="color:red; font-size:120px;font-weight:bolder;" onclick="swColor();">99</div>
 	</div>
 		
 	<p id="posStr">111222</p>
@@ -420,8 +420,8 @@ function init(){
 	startGPS();
 	//保存最後任務編號
 	taskID = localStorage.taskID ? localStorage.taskID : taskID;
-	newTask();
-	//nearPoint();//	無GPS時測試用。
+	initTask();
+	// nearPoint();//	無GPS時測試用。
 	newSpace();
 
 	// startGPS();
@@ -605,9 +605,9 @@ function gridCmd(x,y){
 		
 		if(x > gridW*2 && x < canvas.width-50 && y > gridH*2){	//右下角
 		//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
-			taskID ++;
-			if (taskID == tasks.length) taskID = 0;
-			newTask();		
+			// taskID ++;
+			if (++taskID == tasks.length) taskID = 0;
+			initTask();		
 			return;
 		}
 
@@ -680,7 +680,7 @@ function playVoice(str){
 		}
 }
 
-function newTask(){
+function initTask(){
 	//任務切換
 	nextPoint = 0;
 	nextDist = -1;
@@ -688,14 +688,13 @@ function newTask(){
 	incDistCnt = 0
 	vector = 1;
 	viewMode = 1;
-	searchPoint = true;
-	
+
+	localStorage.taskID = taskID;
 	// taskID = localStorage.taskID ? localStorage.taskID-1 : taskID;
 	
-	
-	localStorage.taskID = taskID;
-	
+
 	points = tasks[taskID];
+	
 	newSpace();
 	myCanvas.drawClearMap();
 	myCanvas.drawBaseMap();
@@ -819,11 +818,12 @@ myCanvas.drawPoint=function (lat, lon, color, width){
     ctx.arc(drawX, drawY,1,0,Math.PI*2,true);
 	ctx.stroke();
 }
-
 function nearPoint(){
 	//從路徑上找到最近的下一目標點, 但可能是適當點的前一點
+	
 	var shortstDist = getDistance(recentPoint,  tasks[0][0]);
-	for(var t=0; t<tasks.length; t++){
+	
+	for(var t=0; t < tasks.length; t++){
 		for(var i=0; i < points.length; i++){
 			dist = getDistance(recentPoint,  tasks[t][i]);
 			if(dist < shortstDist){
@@ -833,7 +833,7 @@ function nearPoint(){
 			}
 		}
 	}
-	points = tasks[t];
+	//TODO 最近點不在任何路徑範圍內
 }
 
 function geoYes (evt){
@@ -844,6 +844,7 @@ function geoYes (evt){
 	
 	if(searchPoint){
 		nearPoint();
+		initTask();
 		console.log(nextPoint);
 		searchPoint = false;
 	}
@@ -1038,7 +1039,7 @@ function showData(evt){
 		str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
 		str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
 
-	// }
+	}
 
 	//	str += "("+ points[nextPoint][0] +", " + points[nextPoint][1];
 	

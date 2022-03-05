@@ -1,4 +1,4 @@
-<!--程式碼範例-->
+<!-- 程式碼範例  -->
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
@@ -6,6 +6,7 @@
 	<!--呼叫TGOS MAP API (lite)-->
 	<script type="text/javascript" src="https://api.tgos.tw/TGOS_API/tgos?ver=2&AppID=x+JLVSx85Lk=&APIKey=in8W74q0ogpcfW/STwicK8D5QwCdddJf05/7nb+OtDh8R99YN3T0LurV4xato3TpL/fOfylvJ9Wv/khZEsXEWxsBmg+GEj4AuokiNXCh14Rei21U5GtJpIkO++Mq3AguFK/ISDEWn4hMzqgrkxNe1Q==" charset="utf-8"></script>
 	<script type="text/javascript"> 
+	//程式來源 https://api.tgos.tw/TGOS_MAP_API/docs/site/web/LiteInit
 		var messageBox;		//訊息視窗物件	
 		var pMap;			//初始化地圖物件
 		
@@ -13,7 +14,7 @@
 		
 		var infotext = '<B>內政部資訊中心</B><br>台北市松江路469巷4號';		//地標名稱及訊息視窗內容
 		// var markerPoint = new TGOS.TGPoint(303895, 2773227);				//地標坐標位置
-		var markerPoint = new TGOS.TGPoint(199412, 2581121);				//地標坐標位置
+		var markerPoint = new TGOS.TGPoint(199412, 2581121);				//景大WGS84轉TWD97
 		// var markerPoint = new TGOS.TGPoint(23.3318885,120.5053049);
 		// var markerPoint = new TGOS.TGPoint(120.5053049,23.3318885);
 		var imgUrl = "https://api.tgos.tw/TGOS_API/images/marker2.png";	//標記點圖示來源
@@ -62,5 +63,5 @@
 	</script>
 </head>
 <body style="margin:0px" onload="InitWnd();">
-	<div id="OMap" style="position:absolute; top:5px; left:5px; width:495px; height:400px; border:1px solid #000000;"></div>
+	<div id="OMap" style="position:absolute; top:5px; left:5px; width:900px; height:900px; border:1px solid #000000;"></div>
 </html>                            
