@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	<a>版本：006</a>
+	<a>版本：007</a>
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -421,7 +421,7 @@ function init(){
 	//保存最後任務編號
 	taskID = localStorage.taskID ? localStorage.taskID : taskID;
 	newTask();
-	nearPoint();//	無GPS時測試用。
+	//nearPoint();//	無GPS時測試用。
 	newSpace();
 
 	// startGPS();
@@ -606,6 +606,7 @@ function gridCmd(x,y){
 		if(x > gridW*2 && x < canvas.width-50 && y > gridH*2){	//右下角
 		//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
 			taskID ++;
+			if (taskID == tasks.length) taskID = 0;
 			newTask();		
 			return;
 		}
@@ -688,12 +689,13 @@ function newTask(){
 	vector = 1;
 	viewMode = 1;
 	searchPoint = true;
-	localStorage.taskID = taskID;
+	
 	// taskID = localStorage.taskID ? localStorage.taskID-1 : taskID;
 	
-	if (taskID == tasks.length) taskID = 0;
-	points = tasks[taskID];
 	
+	localStorage.taskID = taskID;
+	
+	points = tasks[taskID];
 	newSpace();
 	myCanvas.drawClearMap();
 	myCanvas.drawBaseMap();
@@ -817,21 +819,21 @@ myCanvas.drawPoint=function (lat, lon, color, width){
     ctx.arc(drawX, drawY,1,0,Math.PI*2,true);
 	ctx.stroke();
 }
+
 function nearPoint(){
 	//從路徑上找到最近的下一目標點, 但可能是適當點的前一點
-	var i=0;
-	var shortstDist = getDistance(recentPoint,  points[i]);
-	
-	for(; i < points.length; i++){
-		dist = getDistance(recentPoint,  points[i]);
-		if(dist < shortstDist){
-			shortstDist = dist;
-			nextPoint = i;
-			if(dist < 0.03){		//30公尺內就不要再找了
-				break;
+	var shortstDist = getDistance(recentPoint,  tasks[0][0]);
+	for(var t=0; t<tasks.length; t++){
+		for(var i=0; i < points.length; i++){
+			dist = getDistance(recentPoint,  tasks[t][i]);
+			if(dist < shortstDist){
+				shortstDist = dist;
+				nextPoint = i;
+				taskID = t
 			}
 		}
 	}
+	points = tasks[t];
 }
 
 function geoYes (evt){
@@ -1022,9 +1024,9 @@ function showData(evt){
 			// str += "，" + (nextDist*1000).toFixed() + "公尺，";
 			// }
 
-	// if(evt == undefined){
-			// str+= evt;
-	// }else{
+	if(evt == undefined){
+			str+= evt;
+	}else{
 		str += "，" + nextDist.toFixed(1)  + "公里，";
 		arriveSec =  nextDist*1000/evt.coords.speed;
 		
