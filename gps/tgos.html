@@ -4,6 +4,7 @@
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
 	<title>TGOS MAP API (lite) 版範例</title>
 	<!--呼叫TGOS MAP API (lite)-->
+		<script src="https://wdms.epa.gov.tw/idms/_js/CoordTrans.js"></script>
 	<script type="text/javascript" src="https://api.tgos.tw/TGOS_API/tgos?ver=2&AppID=x+JLVSx85Lk=&APIKey=in8W74q0ogpcfW/STwicK8D5QwCdddJf05/7nb+OtDh8R99YN3T0LurV4xato3TpL/fOfylvJ9Wv/khZEsXEWxsBmg+GEj4AuokiNXCh14Rei21U5GtJpIkO++Mq3AguFK/ISDEWn4hMzqgrkxNe1Q==" charset="utf-8"></script>
 	<script type="text/javascript"> 
 	//程式來源 https://api.tgos.tw/TGOS_MAP_API/docs/site/web/LiteInit
@@ -64,15 +65,47 @@
 		var markerImg;
 		var pTGMarker;
 		function next(){
-			markerPoint = new TGOS.TGPoint(199412, 2581121);				//景大WGS84轉TWD97
-			pMap.setCenter(markerPoint);	//初始地圖中心點
+			geoYes();
+			// markerPoint = new TGOS.TGPoint(199412, 2581121);				//景大WGS84轉TWD97
+			// pMap.setCenter(markerPoint);	//初始地圖中心點
 			
-			pTGMarker = new TGOS.TGMarker(pMap, markerPoint,'', markerImg);	//建立機關單位標記點
+			// pTGMarker = new TGOS.TGMarker(pMap, markerPoint,'', markerImg);	//建立機關單位標記點
 
 		}
+		var pLL = [22.659517486714293,120.51431010230766];
+		var pUTM =LatLon2UTM(pLL[0], pLL[1],0, 0);
+		console.log(pUTM[0],pUTM[1]);	//200086, 2506662
 		
+		var 	watchID = navigator.geolocation.watchPosition(geoYes, 
+		//就算成功, 但中途失敗不會告知?
+		(evt) =>{
+				if(evt.code == 1){
+					console.log("GPS沒開！");	//User denied Geolocation
+					//失敗後就不管了, 如何每秒檢查一次?
+				}else{
+					console.log(evt.code + ", " + evt.message);
+					//2, Network location provider at 'https://www.googleapis.com/' : ERR_NAME_NOT_RESOLVED
+				}
+		}, {enableHighAccuracy: true});
+	
+	
+	function geoYes (evt){
+		console.log("geoYes()");
+		 var pLL = [22.659517486714293,120.51431010230766];
+		 if(evt != undefined){
+			pLL[0] = evt.coords.latitude;
+			pLL[1] = evt.coords.longitude;
+		}
 		
-	</script>
+		var pUTM =LatLon2UTM(pLL[0], pLL[1], 0, 0);
+		// console.log(pUTM[0],pUTM[1]);	//200086, 2506662
+		
+			markerPoint = new TGOS.TGPoint(pUTM[0], pUTM[1]);
+			pMap.setCenter(markerPoint);	//初始地圖中心點
+			pTGMarker = new TGOS.TGMarker(pMap, markerPoint,'', markerImg);	//建立機關單位標記點
+	}
+</script>
+
 </head>
 <body style="margin:0px" onload="InitWnd();" onClick="next();">
 009

@@ -610,6 +610,7 @@ function gridCmd(x,y){
 		//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
 			// taskID ++;
 			if (++taskID == tasks.length) taskID = 0;
+			nextPoint = 0;
 			initTask();		
 			return;
 		}
