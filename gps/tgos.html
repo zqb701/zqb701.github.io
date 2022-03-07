@@ -89,31 +89,37 @@
 		}, {enableHighAccuracy: true});
 	
 	var pTGMarker;
+	var pUTM;
+	var pLL = [22.659517486714293,120.51431010230766];
+	
 	function geoYes (evt){
 		console.log("geoYes()");
-		 var pLL = [22.659517486714293,120.51431010230766];
 		 if(evt != undefined){
 			pLL[0] = evt.coords.latitude;
 			pLL[1] = evt.coords.longitude;
 		}
+		pLL[0] += 0.0002;
 		//轉換程式來源 https://wdms.epa.gov.tw/idms/coordtrans.htm
 		//官方轉換 https://api.tgos.tw/TGOS_MAP_API/docs/site/web/Transform
-		var pUTM =LatLon2UTM(pLL[0], pLL[1], 0, 0);
+		pUTM =LatLon2UTM(pLL[0], pLL[1], 0, 0);
 		// console.log(pUTM[0],pUTM[1]);	//200086, 2506662
 		
 			pCenter = new TGOS.TGPoint(pUTM[0], pUTM[1]);
 			pMap.setCenter(pCenter);	//初始地圖中心點
-		if(pTGMarker == undefined){
-			pTGMarker = new TGOS.TGMarker(pMap, pCenter,'', markerImg);
-		}else{
-			pTGMarker.setPosition(pUTM[0], pUTM[1]);
-		}
+			
+		// if(pTGMarker == undefined){
+			 pTGMarker.setMap();
+			 pTGMarker = new TGOS.TGMarker(pMap, pCenter,'', markerImg);
+		// }else{
+			
+			//pTGMarker.setPosition(pUTM[0], pUTM[1]);
+		// }
 	}
 </script>
 
 </head>
 <body style="margin:0px" onload="InitWnd();" onClick="next();">
-010
+011
 	<div id="OMap" style="position:absolute_;浮動模式; top:5px; left:5px; width:900px; height:900px; border:1px solid #000000;"></div>
 <input type="button" value="next" onClick="next();">
 	</body>
