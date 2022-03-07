@@ -98,7 +98,7 @@
 			pLL[0] = evt.coords.latitude;
 			pLL[1] = evt.coords.longitude;
 		}
-		pLL[0] += 0.0002;
+		// pLL[0] += 0.0002;
 		//轉換程式來源 https://wdms.epa.gov.tw/idms/coordtrans.htm
 		//官方轉換 https://api.tgos.tw/TGOS_MAP_API/docs/site/web/Transform
 		pUTM =LatLon2UTM(pLL[0], pLL[1], 0, 0);
