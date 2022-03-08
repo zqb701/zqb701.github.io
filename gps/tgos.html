@@ -40,7 +40,13 @@
 			pMap.setCenter(markerPoint);	//初始地圖中心點
 			
 			//------------------建立標記點---------------------
-			markerImg = new TGOS.TGImage(imgUrl, new TGOS.TGSize(38, 33), new TGOS.TGPoint(0, 0), new TGOS.TGPoint(10, 33));	//設定標記點圖片及尺寸大小
+			markerImg = new TGOS.TGImage(
+				imgUrl, 										//圖片路徑
+				new TGOS.TGSize(38, 33), 	//標記的方框範圍, 會觸發滑鼠事件
+				new TGOS.TGPoint(0, 0), 		//圖片放置在方框的位置
+				new TGOS.TGPoint(10, 33)	//方框上用來對準地圖的點
+			);	//設定標記點圖片及尺寸大小
+			
 			pTGMarker = new TGOS.TGMarker(pMap, markerPoint,'', markerImg);	//建立機關單位標記點
 			
 			//-----------------建立訊息視窗--------------------
@@ -65,7 +71,10 @@
 		var markerImg;
 		var pTGMarker;
 		function next(){
+					pLL[0] += 0.0002;
+					
 			geoYes();
+			autoDriver = false;
 			// markerPoint = new TGOS.TGPoint(199412, 2581121);				//景大WGS84轉TWD97
 			// pMap.setCenter(markerPoint);	//初始地圖中心點
 			
@@ -91,24 +100,33 @@
 	var pTGMarker;
 	var pUTM;
 	var pLL = [22.659517486714293,120.51431010230766];
-	
+	var autoDriver = true;
 	function geoYes (evt){
 		console.log("geoYes()");
 		 if(evt != undefined){
 			pLL[0] = evt.coords.latitude;
 			pLL[1] = evt.coords.longitude;
 		}
-		// pLL[0] += 0.0002;
+
 		//轉換程式來源 https://wdms.epa.gov.tw/idms/coordtrans.htm
 		//官方轉換 https://api.tgos.tw/TGOS_MAP_API/docs/site/web/Transform
 		pUTM =LatLon2UTM(pLL[0], pLL[1], 0, 0);
-		// console.log(pUTM[0],pUTM[1]);	//200086, 2506662
+		console.log("epa:"+pUTM[0]+","+pUTM[1]);	//200086.4680174616,2506684.9846851244
+		
+		var TT = new TGOS.TGTransformation();
+		TT.wgs84totwd97(pLL[1],pLL[0]);
+		// console.log("TGOS:"+TT.transResult.x + "," +TT.transResult.y);
+		pUTM[0] = TT.transResult.x;
+		pUTM[1] = TT.transResult.y;
+		console.log("TGOS:"+pUTM[0]+","+pUTM[1]);//200086.46801750833,2506684.9541607485
 		
 			pCenter = new TGOS.TGPoint(pUTM[0], pUTM[1]);
-			pMap.setCenter(pCenter);	//初始地圖中心點
-			
+			if(autoDriver){
+				pMap.setCenter(pCenter);	//置中
+			}
 		// if(pTGMarker == undefined){
-			 pTGMarker.setMap();
+			//Markers.push(marker); TODO 標記點陣列
+			 pTGMarker.setMap();		//「刪除」舊標記, 而非「移動」
 			 pTGMarker = new TGOS.TGMarker(pMap, pCenter,'', markerImg);
 		// }else{
 			
@@ -118,7 +136,7 @@
 </script>
 
 </head>
-<body style="margin:0px" onload="InitWnd();" onClick="next();">
+<body style="margin:0px" onload="InitWnd();" onClick="next();" bgcolor="black" text="white">
 011
 	<div id="OMap" style="position:absolute_;浮動模式; top:5px; left:5px; width:900px; height:900px; border:1px solid #000000;"></div>
 <input type="button" value="next" onClick="next();">
