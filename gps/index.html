@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	<a>版本：011</a>
+	<a>版本：012</a>
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -271,6 +271,7 @@ var tasks = [[																	//廣東路
 		[22.58924109879525, 120.66460999148127, "大武山之門","路口",,"路口"],
 		[22.593386038796442, 120.67046156816451, "返璞","坑洞",,"坑洞"],
 		[22.59176168536461, 120.67935691835952,"貨櫃屋","坑洞"],
+		[22.592039093947136,120.6809451159679,"坑洞041","坑洞",,"坑洞"],
 		[22.591599051656083, 120.68486212232875, "坑洞05","坑洞",,"坑洞"],
 		[22.592177531280022, 120.68483357628378, "坑洞06-1","坑洞",,"坑洞"],
 		[22.592630575345552,120.68464827381979,"坑洞06-2","坑洞",,"坑洞"],
@@ -407,6 +408,7 @@ var tasks = [[																	//廣東路
 	var myCtl = new control01();
 	
 function init(){
+	//console.log(nextDist.toFixed());
 		//file://即使同意, 仍然禁止
 	/*
 	if ('Notification' in window) {
@@ -446,8 +448,9 @@ function insertCoord(coordType){
 	//console.log("insertCoord()");
 		//document.getElementById("watchStr").innerHTML= output;
 	
-	strtmp =  recentPoint[0]+","+recentPoint[1] + ",自訂點,"+
-		coordType +	"," + points[nextPoint][2]+"~"+points[nextPoint-vector][2]+"<br/>" ;
+	strtmp =  recentPoint[0]+","+recentPoint[1] + ",<br/>自訂點,"+
+		coordType +	"," + points[nextPoint][2]+"~"+points[nextPoint-vector][2]+","+
+		new Date().getHours()+":"+new Date().getMinutes() +":"+ new Date().getSeconds() +"<br/>" ;
 		
 	if (typeof (Storage) != "undefined"){
         if (localStorage.insertCoord != "undefined"){
@@ -721,20 +724,19 @@ function initTask(){
 function skipPoint(){
 	enAlarm = true;
 	enAlarmHigh = true;
-	nextPoint += vector;
 	
-	if((nextPoint < 0 ) || (nextPoint == points.length)){
-		//playVoice("端點");
-		showMsg("端點");
-		return;
-	}else{
-		if(points[nextPoint-vector][4-vector]){
-			playVoice("通過");
-		}
-		passPoint[0] = points[nextPoint-vector][0];
-		passPoint[1] = points[nextPoint-vector][1];
+	if(points[nextPoint][4-vector]){
+		playVoice("通過");
 	}
-	showData();	 
+	passPoint[0] = points[nextPoint][0];
+	passPoint[1] = points[nextPoint][1];
+		
+	nextPoint += vector;
+	if((nextPoint < 0 ) || (nextPoint == points.length)){
+		nextPoint -= vector;
+		showMsg("端點");
+		searchPoint = true;
+	}
 }	
 
 myCanvas.drawClearMap = function (){
@@ -888,7 +890,7 @@ function geoYes (evt){
 
 		str = points[nextPoint][2] + ", ";
 	// document.getElementById("posStr").innerHTML=str;
-		str += nextDist <1 ? nextDist*1000+"公尺" : nextDist+"公里";
+		str += (nextDist < 1) ? (nextDist*1000+"公尺") : (nextDist.toFixed()+"公里");
 		// document.getElementById("posStr").innerHTML=str;
 		str += ", " + new Date().getSeconds()+"。";
 		
