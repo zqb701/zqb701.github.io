@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	<a>版本：013</a>
+	<a>版本：014</a>
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -868,10 +868,10 @@ function geoYes (evt){
 	if(searchPoint){
 		nearPoint();
 		initTask();
-		console.log(nextPoint);
 		searchPoint = false;
+		showMsg("1_nextPoint=" + nextPoint);
 	}
-	// showMsg("searchPoint()");
+	
 	
 	if(viewMode == 1){		//全圖：只畫點
 		myCanvas.drawPoint(recentPoint[0], recentPoint[1]);
@@ -892,9 +892,9 @@ function geoYes (evt){
 	//cos為距節點的投影距離, 用sin則為與路徑中線的距離
 
 		str = points[nextPoint][2] + ", ";
-	// document.getElementById("posStr").innerHTML=str;
+	showMsg(str);
 		str += (nextDist < 1) ? (nextDist*1000+"公尺") : (nextDist.toFixed()+"公里");
-		// document.getElementById("posStr").innerHTML=str;
+	showMsg(str);
 		str += ", " + new Date().getSeconds()+"。";
 		
 document.getElementById("posStr").innerHTML=str;
