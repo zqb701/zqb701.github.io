@@ -60,6 +60,7 @@
 			TGOS.TGEvent.addListener(pTGMarker, "mouseout", closeInfoWindow);	//滑鼠監聽事件--關閉訊息視窗
 			*/
 			TGOS.TGEvent.addListener(pMap, "dragstart", viewMode);
+			document.getElementById("OMap").addEventListener('touchstart',viewMode);
 			// TGOS.TGEvent.addListener(pMap, "dragend", ()=>{alert("e");});
 			// TGOS.TGEvent.addListener(pMap, "dragstart", ()=>{autoDriver=false;});
 			// TGOS.TGEvent.addListener(pMap, "dragstart", ()=>{autoDriver=false;});
