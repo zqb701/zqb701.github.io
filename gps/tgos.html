@@ -59,14 +59,17 @@
 			TGOS.TGEvent.addListener(pTGMarker, "mouseover", openInfoWindow);	//滑鼠監聽事件--開啟訊息視窗
 			TGOS.TGEvent.addListener(pTGMarker, "mouseout", closeInfoWindow);	//滑鼠監聽事件--關閉訊息視窗
 			*/
-			// TGOS.TGEvent.addListener(pMap, "dragstart", ()=>{alert("a");});
-			TGOS.TGEvent.addListener(pMap, "dragstart", ()=>{autoDriver=false;});
+			TGOS.TGEvent.addListener(pMap, "dragstart", viewMode);
+			// TGOS.TGEvent.addListener(pMap, "dragend", ()=>{alert("e");});
+			// TGOS.TGEvent.addListener(pMap, "dragstart", ()=>{autoDriver=false;});
+			// TGOS.TGEvent.addListener(pMap, "dragstart", ()=>{autoDriver=false;});
 			// console.log("init ok.");
 		}
 		
 		function viewMode(e){
 			// alert("a");
 			autoDriver=false;
+			document.getElementById("msg").innerHTML = "a";
 			// console.log("xxx");
 			
 		}
@@ -165,7 +168,7 @@
 </style>  
 <body style="margin:0px" onload="InitWnd();" bgcolor="black" text="white">
 011
-	<div id="OMap" style="position:absolute_;浮動模式; top:0px; left:0px; width:950px; height:1500px; border:1px solid #000000;"></div>
+	<div id="OMap" style="position:absolute_;浮動模式; top:0px; left:0px; width:950px; height:1400px; border:1px solid #000000;"></div>
 
 	<font size="7">
 	<div style="display: flex; justify-content: flex-end;">
@@ -176,7 +179,7 @@
 		<div class="cmdButton" onclick="autoDriver=true;">置中</div>
 	</div>
 		
-	<p id="posStr">111222</p>
+	<p id="msg">111222</p>
 	</font>
 	</body>
 </html>                            
