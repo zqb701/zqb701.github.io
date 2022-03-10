@@ -93,7 +93,7 @@
 			pLL[1] = evt.coords.longitude;
 			localStorage.savePoint = pLL;	//TODO 程式結束才儲存
 		}
-
+document.getElementById("msg").innerHTML = "a";
 		//轉換程式來源 https://wdms.epa.gov.tw/idms/coordtrans.htm
 		//官方轉換 https://api.tgos.tw/TGOS_MAP_API/docs/site/web/Transform
 		//pUTM =LatLon2UTM(pLL[0], pLL[1], 0, 0);
@@ -107,7 +107,7 @@
 		// pUTM[1] = TT.transResult.y;
 		// console.log(pUTM);
 		// console.log("TGOS:"+pUTM[0]+","+pUTM[1]);//200086.46801750833,2506684.9541607485
-		
+		document.getElementById("msg").innerHTML = "b";
 			recentPoint = new TGOS.TGPoint(TT.transResult.x, TT.transResult.y);
 			if(autoDriver){
 				pMap.setCenter(recentPoint);	//置中
@@ -117,6 +117,7 @@
 		if(pTGMarker != undefined){
 			 pTGMarker.setMap();		//「刪除」舊標記, 而非「移動」
 		}
+		document.getElementById("msg").innerHTML = "c";
 			 pTGMarker = new TGOS.TGMarker(pMap, recentPoint,'', markerImg);
 		// }else{
 			
