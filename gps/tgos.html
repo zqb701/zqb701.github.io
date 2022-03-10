@@ -48,7 +48,7 @@
 			);	//設定標記點圖片及尺寸大小
 			
 			pTGMarker = new TGOS.TGMarker(pMap, markerPoint,'', markerImg);	//建立機關單位標記點
-			
+			/*
 			//-----------------建立訊息視窗--------------------
 			var InfoWindowOptions = {
 				  maxWidth:4000,	//訊息視窗的最大寬度
@@ -58,8 +58,19 @@
 			messageBox = new TGOS.TGInfoWindow(infotext, markerPoint, InfoWindowOptions);	//建立訊息視窗							
 			TGOS.TGEvent.addListener(pTGMarker, "mouseover", openInfoWindow);	//滑鼠監聽事件--開啟訊息視窗
 			TGOS.TGEvent.addListener(pTGMarker, "mouseout", closeInfoWindow);	//滑鼠監聽事件--關閉訊息視窗
+			*/
+			// TGOS.TGEvent.addListener(pMap, "dragstart", ()=>{alert("a");});
+			TGOS.TGEvent.addListener(pMap, "dragstart", ()=>{autoDriver=false;});
+			// console.log("init ok.");
 		}
 		
+		function viewMode(e){
+			// alert("a");
+			autoDriver=false;
+			// console.log("xxx");
+			
+		}
+		/*
 		function openInfoWindow() {	//開啟訊息視窗函式
 			messageBox.open(pMap);
 		}
@@ -67,7 +78,7 @@
 		function closeInfoWindow() {	//關閉訊息視窗函式
 			messageBox.close();
 		}
-		
+		*/
 		var markerImg;
 		var pTGMarker;
 		function next(){
@@ -101,6 +112,7 @@
 	var pUTM;
 	var pLL = [22.659517486714293,120.51431010230766];
 	var autoDriver = true;
+	
 	function geoYes (evt){
 		console.log("geoYes()");
 		 if(evt != undefined){
@@ -136,9 +148,35 @@
 </script>
 
 </head>
-<body style="margin:0px" onload="InitWnd();" onClick="next();" bgcolor="black" text="white">
+
+<style>  
+	.cmdButton {
+		width:200px;
+		height:200px;
+		border-width:3px;
+		border-style:dashed;
+		border-color:#FFAC55;
+		padding:5px;
+		
+		text-align:center;	//水平置中
+		top:0px;
+		line-height:200px;//文字垂直置中(行高等於容器高度),單行適用
+	}  
+</style>  
+<body style="margin:0px" onload="InitWnd();" bgcolor="black" text="white">
 011
-	<div id="OMap" style="position:absolute_;浮動模式; top:0px; left:0px; width:950px; height:1600px; border:1px solid #000000;"></div>
-<input type="button" value="next" onClick="next();">
+	<div id="OMap" style="position:absolute_;浮動模式; top:0px; left:0px; width:950px; height:1500px; border:1px solid #000000;"></div>
+
+	<font size="7">
+	<div style="display: flex; justify-content: flex-end;">
+		<div class="cmdButton" onclick="next();" >測試</div>
+		<div class="cmdButton" >急</div>  
+		<div class="cmdButton" >測</div>
+		<div class="cmdButton" >找</div>
+		<div class="cmdButton" onclick="autoDriver=true;">置中</div>
+	</div>
+		
+	<p id="posStr">111222</p>
+	</font>
 	</body>
 </html>                            

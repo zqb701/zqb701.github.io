@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" topmargin="0" leftmargin="0">
 	<f function HTML_body(){}/>
-	<a>版本：014</a>
+	<a>版本：016</a>
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -32,9 +32,7 @@
 		<div class="cmdButton" onclick="insertCoord('急彎');">急彎</div>  
 		<div class="cmdButton" onclick="insertCoord('測速');">測速</div>
 		<div class="cmdButton" onclick="nearPoint();initTask();">找路</div>
-		<div class="cmdButton" >
-		<div id="march" style="color:red; font-size:120px;font-weight:bolder;" onclick="swColor();">99</div>
-		</div>
+		<div class="cmdButton" >		</div>
 	</div>
 		
 	<p id="posStr">111222</p>
@@ -138,7 +136,7 @@ var tasks = [[																	//廣東路
 		[22.659470893607228, 120.51209569251994, "安心四橫巷", "路口",,"路口"],
 		[22.65982669905339, 120.51235318458225, "田中巷口", "路口",,"路口"],	
 		[22.65956412062677, 120.5130726983204, "二橫巷","測速",,"測速"],
-		[22.659505837597436, 120.5143833817605, "10號", "休息站",, "休息站"],
+		[22.659505837597436, 120.5143833817605, "2-10號", "休息站",, "休息站"],
 		[22.659390282100908, 120.51514639840148, "瑞光路口", "路口",,"路口"],
 		[22.658633168724144, 120.51504245069331, "彎道急診室"],
 		[22.658030217493362, 120.514628916623, "國仁路口", "號誌",, "號誌"],
@@ -410,7 +408,9 @@ var tasks = [[																	//廣東路
 	var myCtl = new control01();
 	
 function init(){
-	//console.log(nextDist.toFixed());
+	// nextDist = 3.234;
+	// showMsg(Math.round(nextDist));
+	// showMsg(nextDist.toFixed());
 		//file://即使同意, 仍然禁止
 	/*
 	if ('Notification' in window) {
@@ -625,7 +625,7 @@ function gridCmd(x,y){
 		if(x > gridW*2 && x < canvas.width-50 && y < gridH){//右上角
 			//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
 			skipPoint();	//手動跳一點, 差太多點則切換方向重找最近點
-			nextPoint = 0;
+			showData();
 				//
 			// searchPoint = true;
 			return;
@@ -735,6 +735,8 @@ function skipPoint(){
 	passPoint[1] = points[nextPoint][1];
 		
 	nextPoint += vector;
+	preDist = getDistance(recentPoint,  points[nextPoint]);
+	
 	if((nextPoint < 0 ) || (nextPoint == points.length)){
 		nextPoint -= vector;
 		showMsg("端點");
@@ -794,7 +796,7 @@ myCanvas.drawBaseMap = function(){
 	ctx.lineJoin="round";	//轉折點的樣式, miter(default), round扇形
 	ctx.strokeStyle = "green";	//線條色
 	ctx.lineWidth = 10;	//線條粗度
-	ctx.stroke(path);
+	//2022/3/10取消畫線 ctx.stroke(path);
 		  
 	ctx.lineWidth = 3;	//線條粗度
 	ctx.stroke(circle);
@@ -886,39 +888,29 @@ function geoYes (evt){
 	//showMsg(",23");
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
 	
-	angle1 = Math.atan((recentPoint[0]- points[nextPoint][0])/(recentPoint[1] - points[nextPoint][1]));
-	shadowDist = Math.cos(angle1- pathAngle) * nextDist;
+	// angle1 = Math.atan((recentPoint[0]- points[nextPoint][0])/(recentPoint[1] - points[nextPoint][1]));
+	// shadowDist = Math.cos(angle1- pathAngle) * nextDist;
 	//投影距離無法適用較大的轉角, 還是要用分角線y=ax+b
 	//cos為距節點的投影距離, 用sin則為與路徑中線的距離
 
-		str = points[nextPoint][2] + ", ";
-	showMsg(str);
-		str += (nextDist < 1) ? (nextDist*1000+"公尺") : (nextDist.toFixed()+"公里");
-	showMsg(str);
-		str += ", " + new Date().getSeconds()+"。";
-		
-document.getElementById("posStr").innerHTML=str;
-		if(vector ==1){
-			tmp0 = 0;
-			tmp1 = points.length-1;
-		}else{
-			tmp0 = points.length-1;
-			tmp1 = 0;
-		}
-		str += "<br>" + points[tmp0][2] + " ~ " +points[tmp1][2];
-	document.getElementById("posStr").innerHTML=str;
+
+
+	
+
 	//需要判定的項目
 	//1.通過點, 才能繼續導航
 	//2.提醒,及高速提醒
 	//3.路線切換 ???
 	//4.沒在路線上不可亂報
+	fcolor = "";
 	if (nextDist > preDist ){	//遠離中
 		if(nextDist < evt.coords.speed/1000 * 2 + 0.015 ){
 			//近距離內(車速的2秒),判定為通過
 			skipPoint();
-			preDist = getDistance(recentPoint,  points[nextPoint]);
-			pathAngle =  Math.atan((passPoint[0]- points[nextPoint][0])/(passPoint[1] - points[nextPoint][1]));
+			
+			// pathAngle =  Math.atan((passPoint[0]- points[nextPoint][0])/(passPoint[1] - points[nextPoint][1]));
 		}
+		fcolor = "color='red'";
 	}else{		//接近中
 		
 		if(enAlarmHigh && nextDist < 2 && evt.coords.speed*3.6 >70){
@@ -942,6 +934,8 @@ document.getElementById("posStr").innerHTML=str;
 			}
 		}		
 	}
+	
+	showData();
 	preDist = nextDist;
 }
 
@@ -1024,20 +1018,35 @@ function getDistance(coord1, coord2) {
 
     return dist.toFixed(3);		//小數點後三位(四捨「六入」)
 }
-
+	var fcolor = "";
 function showData(evt){
-	//str = "任務：" + points[0][2] + " - " + points[points.length-1][2];
-	str = "";
-			var d=new Date();
-		strTime = d.getHours()+":" + d.getMinutes()+ ":" +d.getSeconds();		//+"."+d.getMilliseconds;
-		str += strTime;
-		str +="<br>";
-	if(vector == -1){
-		str += "(回程)";
-	}else{
-		str += "(去程)";
+	
+	try{
+		str = nextPoint+ "_"+points[nextPoint][2] + ", ";
+		str += (nextDist < 1) ? ("<font "+ fcolor+">" + nextDist*1000+"</font>公尺") : (Math.round(nextDist)+"公里");
+		if(evt != undefined){
+			arriveSec =  nextDist*1000/evt.coords.speed;
+			if(arriveSec < 99){
+				str += arriveSec.toFixed(0)+"秒。";
+			}
+
+			str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
+			str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
+		}
+			if(vector ==1){
+			tmp0 = 0;
+			tmp1 = points.length-1;
+		}else{
+			tmp0 = points.length-1;
+			tmp1 = 0;
+		}
+		str += "<br>" + points[tmp0][2] + " ~ " +points[tmp1][2];
+
+	} catch(e){
+		str += e.message;
+	}finally {
+		document.getElementById("posStr").innerHTML=str;
 	}
-	str += points[nextPoint][2];
 	
 
 		//str += "<br />距離：<br />時速：";
@@ -1047,13 +1056,13 @@ function showData(evt){
 		// }else{
 			// str += "，" + (nextDist*1000).toFixed() + "公尺，";
 			// }
-
+/*
 	if(evt == undefined){
 			str+= evt;
 	}else{
 		str += "，" + nextDist.toFixed(1)  + "公里，";
-		arriveSec =  nextDist*1000/evt.coords.speed;
 		
+		arriveSec =  nextDist*1000/evt.coords.speed;
 		if(arriveSec < 99){
 			str += arriveSec.toFixed(0)+"秒。";
 		}
@@ -1063,10 +1072,17 @@ function showData(evt){
 		str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
 
 	}
-
+			if(vector ==1){
+			tmp0 = 0;
+			tmp1 = points.length-1;
+		}else{
+			tmp0 = points.length-1;
+			tmp1 = 0;
+		}
+		str += "<br>" + points[tmp0][2] + " ~ " +points[tmp1][2];
 	//	str += "("+ points[nextPoint][0] +", " + points[nextPoint][1];
 		document.getElementById("posStr").innerHTML=str;
-
+*/
 }
 
 var msgList = ["","","","",""];
