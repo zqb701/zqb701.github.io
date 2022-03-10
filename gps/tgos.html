@@ -14,12 +14,17 @@
 		//------------------------------須自行修改的參數,包含點位坐標,訊息視窗內容及圖示檔案來源設定------------------------------
 		
 	
-		 //var markerPoint = new TGOS.TGPoint(303895, 2773227);				//地標坐標位置
+		 //'var markerPoint = new TGOS.TGPoint(303895, 2773227);				//地標坐標位置
 		
 		// var markerPoint = new TGOS.TGPoint(23.3318885,120.5053049);
 		// var markerPoint = new TGOS.TGPoint(120.5053049,23.3318885);
 		var imgUrl = "https://api.tgos.tw/TGOS_API/images/marker2.png";	//標記點圖示來源
-		
+				var markerImg;
+	var pTGMarker;
+	// var pUTM;
+	var pLL = [22.659517486714293,120.51431010230766];
+	var autoDriver = true;
+	var recentPoint;
 		//------------------------------若網頁介面依照範例網頁的預設設定,以下程式碼可不修改---------------------------------------
 		function init()	{
 			//------------------初始化地圖--------------------
@@ -51,23 +56,22 @@
 			// pTGMarker = new TGOS.TGMarker(pMap, markerPoint,'', markerImg);	//建立機關單位標記點
 
 			//在手機上沒反應 TGOS.TGEvent.addListener(pMap, "dragstart", viewMode);
-			pOMap.addEventListener('touchstart',()=>{autoDriver=false;});
-			pOMap.addEventListener('click',()=>{autoDriver=true;pMap.setCenter(recentPoint);});
+			pOMap.addEventListener('touchstart',()=>{
+				autoDriver=false;
+			});
+			pOMap.addEventListener('click',()=>{
+				autoDriver=true;
+				if(recentPoint != undefined){
+					pMap.setCenter(recentPoint);
+				}
+				// geoYes();
+			});
 			
 			savePoint = localStorage.savePoint;
 			if(savePoint != undefined){
 				pLL = savePoint;
 			}
-		}
-
-
-		var markerImg;
-		var pTGMarker;
-		var pLL = [22.659517486714293,120.51431010230766];
-		var pUTM =LatLon2UTM(pLL[0], pLL[1],0, 0);
-		console.log(pUTM[0],pUTM[1]);	//200086, 2506662
-		
-		var 	watchID = navigator.geolocation.watchPosition(geoYes, 
+	var 	watchID = navigator.geolocation.watchPosition(geoYes, 
 		//就算成功, 但中途失敗不會告知?
 		(evt) =>{
 				if(evt.code == 1){
@@ -78,15 +82,12 @@
 					//2, Network location provider at 'https://www.googleapis.com/' : ERR_NAME_NOT_RESOLVED
 				}
 		}, {enableHighAccuracy: true});
-	
-	var pTGMarker;
-	var pUTM;
-	var pLL = [22.659517486714293,120.51431010230766];
-	var autoDriver = true;
-	var recentPoint;
-	
+		}
+
+	var TT = new TGOS.TGTransformation();
+	// var pUTM;
 	function geoYes (evt){
-		console.log("geoYes()");
+		// document.getElementById("msg").innerHTML = "geoYes()";
 		 if(evt != undefined){		//geoYes被直接呼叫才會evt = und...
 			pLL[0] = evt.coords.latitude;
 			pLL[1] = evt.coords.longitude;
@@ -95,17 +96,19 @@
 
 		//轉換程式來源 https://wdms.epa.gov.tw/idms/coordtrans.htm
 		//官方轉換 https://api.tgos.tw/TGOS_MAP_API/docs/site/web/Transform
-		pUTM =LatLon2UTM(pLL[0], pLL[1], 0, 0);
+		//pUTM =LatLon2UTM(pLL[0], pLL[1], 0, 0);
 		// console.log("epa:"+pUTM[0]+","+pUTM[1]);	//200086.4680174616,2506684.9846851244
+		// console.log(pLL);
 		
-		var TT = new TGOS.TGTransformation();
+		
 		TT.wgs84totwd97(pLL[1],pLL[0]);
-		// console.log("TGOS:"+TT.transResult.x + "," +TT.transResult.y);
-		pUTM[0] = TT.transResult.x;
-		pUTM[1] = TT.transResult.y;
+		 // console.log("TGOS:"+TT.transResult.x + "," +TT.transResult.y);
+		// pUTM[0] = TT.transResult.x;
+		// pUTM[1] = TT.transResult.y;
+		// console.log(pUTM);
 		// console.log("TGOS:"+pUTM[0]+","+pUTM[1]);//200086.46801750833,2506684.9541607485
 		
-			recentPoint = new TGOS.TGPoint(pUTM[0], pUTM[1]);
+			recentPoint = new TGOS.TGPoint(TT.transResult.x, TT.transResult.y);
 			if(autoDriver){
 				pMap.setCenter(recentPoint);	//置中
 			}
@@ -126,6 +129,6 @@
 
   
 	<body style="margin:0px" onload="init();" bgcolor="black" text="white">
-		<div id="OMap" style="position:absolute;浮動模式; top:0px; left:0px; width:950px; height:1700px; border:1px solid #000000;"></div>
+		<div id="OMap" style="position:absolute_;浮動模式; top:0px; left:0px; width:960px; height:1500px; border:1px solid #000000;"></div>
 	</body>
 </html>                            
