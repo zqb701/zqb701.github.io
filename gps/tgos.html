@@ -14,7 +14,7 @@
 		//------------------------------須自行修改的參數,包含點位坐標,訊息視窗內容及圖示檔案來源設定------------------------------
 		
 	
-		 'var markerPoint = new TGOS.TGPoint(303895, 2773227);				//地標坐標位置
+		 var markerPoint = new TGOS.TGPoint(303895, 2773227);				//地標坐標位置
 		
 		// var markerPoint = new TGOS.TGPoint(23.3318885,120.5053049);
 		// var markerPoint = new TGOS.TGPoint(120.5053049,23.3318885);
@@ -61,16 +61,16 @@
 			});
 			pOMap.addEventListener('click',()=>{
 				autoDriver=true;
-				if(recentPoint != undefined){
-					pMap.setCenter(recentPoint);
-				}
+				// if(recentPoint != undefined){
+					// pMap.setCenter(recentPoint);
+				// }
 				geoYes();
 			});
 			
 			savePoint = localStorage.savePoint;
-			if(savePoint != undefined){
-				pLL = savePoint;
-			}
+			// if(savePoint != undefined){
+				// pLL = savePoint;
+			// }
 	var 	watchID = navigator.geolocation.watchPosition(geoYes, 
 		//就算成功, 但中途失敗不會告知?
 		(evt) =>{
@@ -130,7 +130,7 @@ document.getElementById("msg").innerHTML += "a";
 
   
 	<body style="margin:0px" onload="init();" bgcolor="black" text="white">
-		<div id="msg">123</div>
+		<div id="msg">003</div>
 		<div id="OMap" style="position:absolute_;浮動模式; top:0px; left:0px; width:960px; height:1500px; border:1px solid #000000;"></div>
 	</body>
 </html>                            
