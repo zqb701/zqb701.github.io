@@ -126,6 +126,17 @@
 			//pTGMarker.setPosition(pUTM[0], pUTM[1]);
 		// }
 	}
+	function go(){
+		
+		autoDriver = false;
+		TT.wgs84totwd97(120.19407213756156,22.981419365554874 );
+		pAct = new TGOS.TGPoint(TT.transResult.x, TT.transResult.y);
+		pMap.setCenter(pAct);
+		pTGMarker = new TGOS.TGMarker(pMap, pAct,'', markerImg);
+		//setPosition
+		pTGMarker.setDraggable(true);
+		pTGMarker.setTitle("香積");
+	}
 </script>
 
 </head>
@@ -152,7 +163,7 @@
 		<div class="cmdButton" onclick="geoYes();">測試</div>
 		<div class="cmdButton" >急</div>  
 		<div class="cmdButton" >測</div>
-		<div class="cmdButton" >找</div>
+		<div class="cmdButton" onclick="go();">香積</div>
 		<div class="cmdButton" onclick="autoDriver=true;pMap.setCenter(recentPoint);">置中</div>
 	</div>
 	<div id="msg">004</div>
