@@ -40,10 +40,10 @@
 			};
 
 			pMap = new TGOS.TGOnlineMap(pOMap, TGOS.TGCoordSys.EPSG3826, mapOptiions);	//建立地圖,選擇TWD97坐標
-			//建構時會載入嘉義大林的位置???
-			
-			pMap.setZoom(14);				//初始地圖縮放層級
-			pMap.setCenter(markerPoint);	//初始地圖中心點
+			//中心點預設為嘉義大林
+			// console.log(pMap.getZoom());
+			pMap.setZoom(14);				//預設值為4
+			// pMap.setCenter(markerPoint);	//初始地圖中心點
 			
 			//------------------建立標記點---------------------
 			markerImg = new TGOS.TGImage(
@@ -89,13 +89,13 @@
 	var TT = new TGOS.TGTransformation();
 	// var pUTM;
 	function geoYes (evt){
-		document.getElementById("msg").innerHTML += "geoYes()";
+		// document.getElementById("msg").innerHTML += "geoYes()";
 		 if(evt != undefined){		//geoYes被直接呼叫才會evt = und...
 			pLL[0] = evt.coords.latitude;
 			pLL[1] = evt.coords.longitude;
 			localStorage.savePoint = pLL;	//TODO 程式結束才儲存
 		}
-document.getElementById("msg").innerHTML += "a";
+// document.getElementById("msg").innerHTML += "a";
 		//轉換程式來源 https://wdms.epa.gov.tw/idms/coordtrans.htm
 		//官方轉換 https://api.tgos.tw/TGOS_MAP_API/docs/site/web/Transform
 		//pUTM =LatLon2UTM(pLL[0], pLL[1], 0, 0);
@@ -109,7 +109,7 @@ document.getElementById("msg").innerHTML += "a";
 		// pUTM[1] = TT.transResult.y;
 		// console.log(pUTM);
 		// console.log("TGOS:"+pUTM[0]+","+pUTM[1]);//200086.46801750833,2506684.9541607485
-		document.getElementById("msg").innerHTML += "TGOS:"+TT.transResult.x+","+ TT.transResult.y;
+		// document.getElementById("msg").innerHTML += "TGOS:"+TT.transResult.x+","+ TT.transResult.y;
 			recentPoint = new TGOS.TGPoint(TT.transResult.x, TT.transResult.y);
 			if(autoDriver){
 				pMap.setCenter(recentPoint);	//置中
@@ -119,7 +119,7 @@ document.getElementById("msg").innerHTML += "a";
 		if(pTGMarker != undefined){
 			 pTGMarker.setMap();		//「刪除」舊標記, 而非「移動」
 		}
-		document.getElementById("msg").innerHTML += "c";
+		// document.getElementById("msg").innerHTML += "c";
 			 pTGMarker = new TGOS.TGMarker(pMap, recentPoint,'', markerImg);
 		// }else{
 			
@@ -145,8 +145,8 @@ document.getElementById("msg").innerHTML += "a";
 </style>  
   
 	<body style="margin:0px" onload="init();" bgcolor="black" text="white">
-		<div id="msg">003</div>
-		<div id="OMap" style="position:absolute_;浮動模式; top:0px; left:0px; width:960px; height:1300px; border:1px solid #000000;"></div>
+		
+		<div id="OMap" style="position:absolute_;浮動模式; top:0px; left:0px; width:960px; height:1500px; border:1px solid #000000;"></div>
 		<font size="7">
 	<div style="display: flex; justify-content: flex-end;">
 		<div class="cmdButton" onclick="geoYes();">測試</div>
@@ -155,11 +155,7 @@ document.getElementById("msg").innerHTML += "a";
 		<div class="cmdButton" >找</div>
 		<div class="cmdButton" onclick="autoDriver=true;pMap.setCenter(recentPoint);">置中</div>
 	</div>
-		
-	<p id="posStr">111222</p>
-	</font>
-	<font size="6">
-	<p id="watchStr">監控狀態</p>
-	</font>
+	<div id="msg">004</div>
+		</font>
 	</body>
 </html>                            
