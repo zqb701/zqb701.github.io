@@ -42,7 +42,7 @@
 			pMap = new TGOS.TGOnlineMap(pOMap, TGOS.TGCoordSys.EPSG3826, mapOptiions);	//建立地圖,選擇TWD97坐標
 			//建構時會載入嘉義大林的位置???
 			
-			pMap.setZoom(11);				//初始地圖縮放層級
+			pMap.setZoom(14);				//初始地圖縮放層級
 			pMap.setCenter(markerPoint);	//初始地圖中心點
 			
 			//------------------建立標記點---------------------
@@ -59,7 +59,7 @@
 			pOMap.addEventListener('touchstart',()=>{
 				autoDriver=false;
 			});
-			pOMap.addEventListener('touchend',(e)=>{
+			pOMap.addEventListener('touchend__',(e)=>{
 				if( e.targetTouches[0].pageX<100 && e.targetTouches[0].pageY < 100){
 					autoDriver=true;
 				}
@@ -129,10 +129,37 @@ document.getElementById("msg").innerHTML += "a";
 </script>
 
 </head>
-
+<style>  
+	.cmdButton {
+		width:200px;
+		height:200px;
+		border-width:3px;
+		border-style:dashed;
+		border-color:#FFAC55;
+		padding:5px;
+		
+		text-align:center;	//水平置中
+		top:0px;
+		line-height:200px;//文字垂直置中(行高等於容器高度),單行適用
+	}  
+</style>  
   
 	<body style="margin:0px" onload="init();" bgcolor="black" text="white">
 		<div id="msg">003</div>
-		<div id="OMap" style="position:absolute_;浮動模式; top:0px; left:0px; width:960px; height:1500px; border:1px solid #000000;"></div>
+		<div id="OMap" style="position:absolute_;浮動模式; top:0px; left:0px; width:960px; height:1300px; border:1px solid #000000;"></div>
+		<font size="7">
+	<div style="display: flex; justify-content: flex-end;">
+		<div class="cmdButton" onclick="geoYes();">測試</div>
+		<div class="cmdButton" >急</div>  
+		<div class="cmdButton" >測</div>
+		<div class="cmdButton" >找</div>
+		<div class="cmdButton" onclick="autoDriver=true;pMap.setCenter(recentPoint);">置中</div>
+	</div>
+		
+	<p id="posStr">111222</p>
+	</font>
+	<font size="6">
+	<p id="watchStr">監控狀態</p>
+	</font>
 	</body>
 </html>                            
