@@ -64,7 +64,7 @@
 				if(recentPoint != undefined){
 					pMap.setCenter(recentPoint);
 				}
-				// geoYes();
+				geoYes();
 			});
 			
 			savePoint = localStorage.savePoint;
@@ -87,7 +87,7 @@
 	var TT = new TGOS.TGTransformation();
 	// var pUTM;
 	function geoYes (evt){
-		// document.getElementById("msg").innerHTML = "geoYes()";
+		document.getElementById("msg").innerHTML = "geoYes()";
 		 if(evt != undefined){		//geoYes被直接呼叫才會evt = und...
 			pLL[0] = evt.coords.latitude;
 			pLL[1] = evt.coords.longitude;
@@ -129,6 +129,7 @@
 
   
 	<body style="margin:0px" onload="init();" bgcolor="black" text="white">
+		<div id="msg">123</div>
 		<div id="OMap" style="position:absolute_;浮動模式; top:0px; left:0px; width:960px; height:1500px; border:1px solid #000000;"></div>
 	</body>
 </html>                            
