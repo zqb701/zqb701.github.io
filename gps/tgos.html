@@ -21,7 +21,7 @@
 		var imgUrl = "https://api.tgos.tw/TGOS_API/images/marker2.png";	//標記點圖示來源
 		
 		//------------------------------若網頁介面依照範例網頁的預設設定,以下程式碼可不修改---------------------------------------
-		function InitWnd()
+		function init()
 		{
 			//------------------初始化地圖--------------------
 			var pOMap = document.getElementById("OMap");
@@ -36,8 +36,10 @@
 			};
 //3857為Google座標
 			pMap = new TGOS.TGOnlineMap(pOMap, TGOS.TGCoordSys.EPSG3826, mapOptiions);	//建立地圖,選擇TWD97坐標
+			//建構時會載入嘉義大林的位置???
+			
 			pMap.setZoom(11);				//初始地圖縮放層級
-			pMap.setCenter(markerPoint);	//初始地圖中心點
+			// pMap.setCenter(markerPoint);	//初始地圖中心點
 			
 			//------------------建立標記點---------------------
 			markerImg = new TGOS.TGImage(
@@ -47,7 +49,7 @@
 				new TGOS.TGPoint(10, 33)	//方框上用來對準地圖的點
 			);	//設定標記點圖片及尺寸大小
 			
-			pTGMarker = new TGOS.TGMarker(pMap, markerPoint,'', markerImg);	//建立機關單位標記點
+			// pTGMarker = new TGOS.TGMarker(pMap, markerPoint,'', markerImg);	//建立機關單位標記點
 			/*
 			//-----------------建立訊息視窗--------------------
 			var InfoWindowOptions = {
@@ -59,12 +61,13 @@
 			TGOS.TGEvent.addListener(pTGMarker, "mouseover", openInfoWindow);	//滑鼠監聽事件--開啟訊息視窗
 			TGOS.TGEvent.addListener(pTGMarker, "mouseout", closeInfoWindow);	//滑鼠監聽事件--關閉訊息視窗
 			*/
-			TGOS.TGEvent.addListener(pMap, "dragstart", viewMode);
-			document.getElementById("OMap").addEventListener('touchstart',viewMode);
-			// TGOS.TGEvent.addListener(pMap, "dragend", ()=>{alert("e");});
-			// TGOS.TGEvent.addListener(pMap, "dragstart", ()=>{autoDriver=false;});
-			// TGOS.TGEvent.addListener(pMap, "dragstart", ()=>{autoDriver=false;});
-			// console.log("init ok.");
+			
+			//在手機上沒反應 TGOS.TGEvent.addListener(pMap, "dragstart", viewMode);
+			pOMap.addEventListener('touchstart',()=>{autoDriver=false;});
+			savePoint = localStorage.savePoint;
+			if(savePoint != undefined){
+				pLL = savePoint;
+			}
 		}
 		
 		function viewMode(e){
@@ -89,7 +92,7 @@
 					pLL[0] += 0.0002;
 					
 			geoYes();
-			autoDriver = false;
+			// autoDriver = false;
 			// markerPoint = new TGOS.TGPoint(199412, 2581121);				//景大WGS84轉TWD97
 			// pMap.setCenter(markerPoint);	//初始地圖中心點
 			
@@ -116,34 +119,38 @@
 	var pUTM;
 	var pLL = [22.659517486714293,120.51431010230766];
 	var autoDriver = true;
+	var recentPoint;
 	
 	function geoYes (evt){
 		console.log("geoYes()");
-		 if(evt != undefined){
+		 if(evt != undefined){		//geoYes被直接呼叫才會evt = und...
 			pLL[0] = evt.coords.latitude;
 			pLL[1] = evt.coords.longitude;
+			localStorage.savePoint = pLL;	//TODO 程式結束才儲存
 		}
 
 		//轉換程式來源 https://wdms.epa.gov.tw/idms/coordtrans.htm
 		//官方轉換 https://api.tgos.tw/TGOS_MAP_API/docs/site/web/Transform
 		pUTM =LatLon2UTM(pLL[0], pLL[1], 0, 0);
-		console.log("epa:"+pUTM[0]+","+pUTM[1]);	//200086.4680174616,2506684.9846851244
+		// console.log("epa:"+pUTM[0]+","+pUTM[1]);	//200086.4680174616,2506684.9846851244
 		
 		var TT = new TGOS.TGTransformation();
 		TT.wgs84totwd97(pLL[1],pLL[0]);
 		// console.log("TGOS:"+TT.transResult.x + "," +TT.transResult.y);
 		pUTM[0] = TT.transResult.x;
 		pUTM[1] = TT.transResult.y;
-		console.log("TGOS:"+pUTM[0]+","+pUTM[1]);//200086.46801750833,2506684.9541607485
+		// console.log("TGOS:"+pUTM[0]+","+pUTM[1]);//200086.46801750833,2506684.9541607485
 		
-			pCenter = new TGOS.TGPoint(pUTM[0], pUTM[1]);
+			recentPoint = new TGOS.TGPoint(pUTM[0], pUTM[1]);
 			if(autoDriver){
-				pMap.setCenter(pCenter);	//置中
+				pMap.setCenter(recentPoint);	//置中
 			}
 		// if(pTGMarker == undefined){
 			//Markers.push(marker); TODO 標記點陣列
+		if(pTGMarker != undefined){
 			 pTGMarker.setMap();		//「刪除」舊標記, 而非「移動」
-			 pTGMarker = new TGOS.TGMarker(pMap, pCenter,'', markerImg);
+		}
+			 pTGMarker = new TGOS.TGMarker(pMap, recentPoint,'', markerImg);
 		// }else{
 			
 			//pTGMarker.setPosition(pUTM[0], pUTM[1]);
@@ -167,9 +174,9 @@
 		line-height:200px;//文字垂直置中(行高等於容器高度),單行適用
 	}  
 </style>  
-<body style="margin:0px" onload="InitWnd();" bgcolor="black" text="white">
+<body style="margin:0px" onload="init();" bgcolor="black" text="white">
 011
-	<div id="OMap" style="position:absolute_;浮動模式; top:0px; left:0px; width:950px; height:1400px; border:1px solid #000000;"></div>
+	<div id="OMap" style="position:absolute_;浮動模式; top:0px; left:0px; width:950px; height:1300px; border:1px solid #000000;"></div>
 
 	<font size="7">
 	<div style="display: flex; justify-content: flex-end;">
@@ -177,7 +184,7 @@
 		<div class="cmdButton" >急</div>  
 		<div class="cmdButton" >測</div>
 		<div class="cmdButton" >找</div>
-		<div class="cmdButton" onclick="autoDriver=true;">置中</div>
+		<div class="cmdButton" onclick="autoDriver=true;pMap.setCenter(recentPoint);">置中</div>
 	</div>
 		
 	<p id="msg">111222</p>
