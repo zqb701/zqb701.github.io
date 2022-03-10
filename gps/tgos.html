@@ -59,8 +59,10 @@
 			pOMap.addEventListener('touchstart',()=>{
 				autoDriver=false;
 			});
-			pOMap.addEventListener('click',()=>{
-				autoDriver=true;
+			pOMap.addEventListener('touchend',(e)=>{
+				if( e.targetTouches[0].pageX<100 && e.targetTouches[0].pageY < 100){
+					autoDriver=true;
+				}
 				// if(recentPoint != undefined){
 					// pMap.setCenter(recentPoint);
 				// }
@@ -87,7 +89,7 @@
 	var TT = new TGOS.TGTransformation();
 	// var pUTM;
 	function geoYes (evt){
-		document.getElementById("msg").innerHTML = "geoYes()";
+		document.getElementById("msg").innerHTML += "geoYes()";
 		 if(evt != undefined){		//geoYes被直接呼叫才會evt = und...
 			pLL[0] = evt.coords.latitude;
 			pLL[1] = evt.coords.longitude;
