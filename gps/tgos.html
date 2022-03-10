@@ -14,7 +14,7 @@
 		//------------------------------須自行修改的參數,包含點位坐標,訊息視窗內容及圖示檔案來源設定------------------------------
 		
 	
-		 //'var markerPoint = new TGOS.TGPoint(303895, 2773227);				//地標坐標位置
+		 'var markerPoint = new TGOS.TGPoint(303895, 2773227);				//地標坐標位置
 		
 		// var markerPoint = new TGOS.TGPoint(23.3318885,120.5053049);
 		// var markerPoint = new TGOS.TGPoint(120.5053049,23.3318885);
@@ -43,7 +43,7 @@
 			//建構時會載入嘉義大林的位置???
 			
 			pMap.setZoom(11);				//初始地圖縮放層級
-			// pMap.setCenter(markerPoint);	//初始地圖中心點
+			pMap.setCenter(markerPoint);	//初始地圖中心點
 			
 			//------------------建立標記點---------------------
 			markerImg = new TGOS.TGImage(
@@ -93,7 +93,7 @@
 			pLL[1] = evt.coords.longitude;
 			localStorage.savePoint = pLL;	//TODO 程式結束才儲存
 		}
-document.getElementById("msg").innerHTML = "a";
+document.getElementById("msg").innerHTML += "a";
 		//轉換程式來源 https://wdms.epa.gov.tw/idms/coordtrans.htm
 		//官方轉換 https://api.tgos.tw/TGOS_MAP_API/docs/site/web/Transform
 		//pUTM =LatLon2UTM(pLL[0], pLL[1], 0, 0);
@@ -107,7 +107,7 @@ document.getElementById("msg").innerHTML = "a";
 		// pUTM[1] = TT.transResult.y;
 		// console.log(pUTM);
 		// console.log("TGOS:"+pUTM[0]+","+pUTM[1]);//200086.46801750833,2506684.9541607485
-		document.getElementById("msg").innerHTML = "b";
+		document.getElementById("msg").innerHTML += "TGOS:"+TT.transResult.x+","+ TT.transResult.y;
 			recentPoint = new TGOS.TGPoint(TT.transResult.x, TT.transResult.y);
 			if(autoDriver){
 				pMap.setCenter(recentPoint);	//置中
@@ -117,7 +117,7 @@ document.getElementById("msg").innerHTML = "a";
 		if(pTGMarker != undefined){
 			 pTGMarker.setMap();		//「刪除」舊標記, 而非「移動」
 		}
-		document.getElementById("msg").innerHTML = "c";
+		document.getElementById("msg").innerHTML += "c";
 			 pTGMarker = new TGOS.TGMarker(pMap, recentPoint,'', markerImg);
 		// }else{
 			
