@@ -59,14 +59,19 @@
 			pOMap.addEventListener('touchstart',()=>{
 				autoDriver=false;
 			});
-			pOMap.addEventListener('touchend__',(e)=>{
-				if( e.targetTouches[0].pageX<100 && e.targetTouches[0].pageY < 100){
-					autoDriver=true;
+				var pTGMarker3;
+			pOMap.addEventListener('touchmove',(e)=>{
+				if(pTGMarker3){
+					pTGMarker2.setPosition(pMap.getCenter());
+				}else{
+				markerImg3 = new TGOS.TGImage(
+				"https://zqb701.github.io/images/marker2.png", //圖片路徑, 不能用相對路徑???
+				new TGOS.TGSize(38, 33), 	//標記的方框範圍, 會觸發滑鼠事件
+				new TGOS.TGPoint(0, 0), 		//圖片放置在方框的位置
+				new TGOS.TGPoint(10, 33)	//方框上用來對準地圖的點
+			);
+		pTGMarker3 = new TGOS.TGMarker(pMap, pMap.getCenter(),'', markerImg2);
 				}
-				// if(recentPoint != undefined){
-					// pMap.setCenter(recentPoint);
-				// }
-				geoYes();
 			});
 			
 			savePoint = localStorage.savePoint;
