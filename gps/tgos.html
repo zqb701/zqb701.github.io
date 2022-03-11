@@ -62,15 +62,15 @@
 				var pTGMarker3;
 			pOMap.addEventListener('touchmove',(e)=>{
 				if(pTGMarker3){
-					pTGMarker2.setPosition(pMap.getCenter());
+					pTGMarker3.setPosition(pMap.getCenter());
 				}else{
-				markerImg3 = new TGOS.TGImage(
-				"https://zqb701.github.io/images/marker2.png", //圖片路徑, 不能用相對路徑???
-				new TGOS.TGSize(38, 33), 	//標記的方框範圍, 會觸發滑鼠事件
-				new TGOS.TGPoint(0, 0), 		//圖片放置在方框的位置
-				new TGOS.TGPoint(10, 33)	//方框上用來對準地圖的點
-			);
-		pTGMarker3 = new TGOS.TGMarker(pMap, pMap.getCenter(),'', markerImg2);
+					markerImg3 = new TGOS.TGImage(
+						"https://zqb701.github.io/images/marker2.png", //圖片路徑, 不能用相對路徑???
+						new TGOS.TGSize(38, 33), 	//標記的方框範圍, 會觸發滑鼠事件
+						new TGOS.TGPoint(0, 0), 		//圖片放置在方框的位置
+						new TGOS.TGPoint(10, 33)	//方框上用來對準地圖的點
+					);
+					pTGMarker3 = new TGOS.TGMarker(pMap, pMap.getCenter(),'', markerImg2);
 				}
 			});
 			
@@ -178,12 +178,13 @@
 		<font size="7">
 	<div style="display: flex; justify-content: flex-end;">
 		<div class="cmdButton" onclick="geoYes();">測試</div>
-		<div class="cmdButton" >急</div>  
+		<div class="cmdButton" 
+			onclick="pTGMarker4 = new TGOS.TGMarker(pMap, pMap.getCenter(),'', markerImg2);">記錄</div>  
 		<div class="cmdButton" >測</div>
 		<div class="cmdButton" onclick="go();">香積</div>
 		<div class="cmdButton" onclick="autoDriver=true;pMap.setCenter(recentPoint);">置中</div>
 	</div>
-	<div id="msg">006</div>
+	<div id="msg">007</div>
 		</font>
 	</body>
 </html>                            
