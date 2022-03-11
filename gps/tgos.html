@@ -90,7 +90,7 @@
 	// var pUTM;
 	function geoYes (evt){
 		// document.getElementById("msg").innerHTML += "geoYes()";
-		 if(evt != undefined){		//geoYes被直接呼叫才會evt = und...
+		 if(evt){		//geoYes被直接呼叫才會evt = und...
 			pLL[0] = evt.coords.latitude;
 			pLL[1] = evt.coords.longitude;
 			localStorage.savePoint = pLL;	//TODO 程式結束才儲存
@@ -116,11 +116,12 @@
 			}
 		// if(pTGMarker == undefined){
 			//Markers.push(marker); TODO 標記點陣列
-		if(pTGMarker != undefined){
+		if(pTGMarker){
 			 pTGMarker.setMap();		//「刪除」舊標記, 而非「移動」
 		}
 		// document.getElementById("msg").innerHTML += "c";
 			 pTGMarker = new TGOS.TGMarker(pMap, recentPoint,'', markerImg);
+			 pTGMarker.setTitle("置中");
 		// }else{
 			
 			//pTGMarker.setPosition(pUTM[0], pUTM[1]);
@@ -129,11 +130,13 @@
 	function go(){
 		
 		autoDriver = false;
+		
 		TT.wgs84totwd97(120.19407213756156,22.981419365554874 );
 		pAct = new TGOS.TGPoint(TT.transResult.x, TT.transResult.y);
 		pMap.setCenter(pAct);
-		pTGMarker = new TGOS.TGMarker(pMap, pAct,'', markerImg);
-		//setPosition
+		
+		// pTGMarker = new TGOS.TGMarker(pMap, pAct,'', markerImg);
+		pTGMarker.setPosition(pAct);
 		pTGMarker.setDraggable(true);
 		pTGMarker.setTitle("香積");
 	}
@@ -166,7 +169,7 @@
 		<div class="cmdButton" onclick="go();">香積</div>
 		<div class="cmdButton" onclick="autoDriver=true;pMap.setCenter(recentPoint);">置中</div>
 	</div>
-	<div id="msg">004</div>
+	<div id="msg">005</div>
 		</font>
 	</body>
 </html>                            
