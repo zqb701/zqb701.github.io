@@ -42,12 +42,12 @@
 			pMap = new TGOS.TGOnlineMap(pOMap, TGOS.TGCoordSys.EPSG3826, mapOptiions);	//建立地圖,選擇TWD97坐標
 			//中心點預設為嘉義大林
 			// console.log(pMap.getZoom());
-			pMap.setZoom(14);				//預設值為4
+			pMap.setZoom(11);				//預設值為4
 			// pMap.setCenter(markerPoint);	//初始地圖中心點
 			
 			//------------------建立標記點---------------------
 			markerImg = new TGOS.TGImage(
-				imgUrl, 										//圖片路徑
+				"https://zqb701.github.io/images/marker1.png", //圖片路徑, 不能用相對路徑???
 				new TGOS.TGSize(38, 33), 	//標記的方框範圍, 會觸發滑鼠事件
 				new TGOS.TGPoint(0, 0), 		//圖片放置在方框的位置
 				new TGOS.TGPoint(10, 33)	//方框上用來對準地圖的點
@@ -131,14 +131,23 @@
 		
 		autoDriver = false;
 		
-		TT.wgs84totwd97(120.19407213756156,22.981419365554874 );
+		// TT.wgs84totwd97(120.19407213756156,22.981419365554874 );//台南香積
+		// TT.wgs84totwd97(120.50172623636999,22.665346529258976);//屏東全家
+		TT.wgs84totwd97(120.50278208475794,22.66364713579636);//B10
+		
 		pAct = new TGOS.TGPoint(TT.transResult.x, TT.transResult.y);
 		pMap.setCenter(pAct);
 		
-		// pTGMarker = new TGOS.TGMarker(pMap, pAct,'', markerImg);
-		pTGMarker.setPosition(pAct);
-		pTGMarker.setDraggable(true);
-		pTGMarker.setTitle("香積");
+		markerImg2 = new TGOS.TGImage(
+				"https://zqb701.github.io/images/marker2.png", //圖片路徑, 不能用相對路徑???
+				new TGOS.TGSize(38, 33), 	//標記的方框範圍, 會觸發滑鼠事件
+				new TGOS.TGPoint(0, 0), 		//圖片放置在方框的位置
+				new TGOS.TGPoint(10, 33)	//方框上用來對準地圖的點
+			);
+		pTGMarker2 = new TGOS.TGMarker(pMap, pAct,'', markerImg2);
+		// pTGMarker2.setPosition(pAct);
+		// pTGMarker2.setDraggable(true);
+		// pTGMarker.setTitle("香積");
 	}
 </script>
 
@@ -169,7 +178,7 @@
 		<div class="cmdButton" onclick="go();">香積</div>
 		<div class="cmdButton" onclick="autoDriver=true;pMap.setCenter(recentPoint);">置中</div>
 	</div>
-	<div id="msg">005</div>
+	<div id="msg">006</div>
 		</font>
 	</body>
 </html>                            
