@@ -182,13 +182,13 @@
 		<div class="cmdButton" 
 			onclick="pTGMarker4 = new TGOS.TGMarker(pMap, pMap.getCenter(),'', markerImg2);">
 			記錄</div>  
-		<div class="cmdButton" >測</div>
+		<div class="cmdButton" onclick="pTGMarker3.setMap();">測</div>
 		<div class="cmdButton" onclick="go();">前往</div>
 		<div class="cmdButton" onclick="
 			autoDriver=true;
 			pMap.setCenter(recentPoint);
 			pTGMarker3.setVisible(false);
-			//pTGMarker.setMap();
+			pTGMarker3.setMap();
 			">置中</div>
 	</div>
 	<div id="msg">009</div>
