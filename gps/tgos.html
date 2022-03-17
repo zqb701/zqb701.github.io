@@ -22,6 +22,7 @@
 				var markerImg;
 				var markerImg2;
 	var pTGMarker;
+	var pTGMarker3;
 	// var pUTM;
 	var pLL = [22.659517486714293,120.51431010230766];
 	var autoDriver = true;
@@ -60,9 +61,17 @@
 			pOMap.addEventListener('touchstart',()=>{
 				autoDriver=false;
 			});
-				var pTGMarker3;
-			pOMap.addEventListener('touchmove',(e)=>{
+			
+			pOMap.addEventListener('mousedown',()=>{
+				autoDriver=false;
+			});
+				
+			pOMap.addEventListener('touchmove',gesturesMove);
+			pOMap.addEventListener('mousemove',gesturesMove);
+				
+			function gesturesMove(){
 				if(pTGMarker3){
+					pTGMarker3.setVisible(true);
 					pTGMarker3.setPosition(pMap.getCenter());
 				}else{
 					markerImg3 = new TGOS.TGImage(
@@ -73,7 +82,7 @@
 					);
 					pTGMarker3 = new TGOS.TGMarker(pMap, pMap.getCenter(),'', markerImg3);
 				}
-			});
+			}
 			
 			savePoint = localStorage.savePoint;
 			// if(savePoint != undefined){
@@ -188,10 +197,10 @@
 			autoDriver=true;
 			pMap.setCenter(recentPoint);
 			pTGMarker3.setVisible(false);
-			pTGMarker3.setMap();
+			// pTGMarker3.setMap();
 			">置中</div>
 	</div>
-	<div id="msg">009</div>
+	<div id="msg">010</div>
 		</font>
 	</body>
 </html>                            
