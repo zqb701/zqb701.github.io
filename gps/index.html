@@ -23,7 +23,8 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>版本：017</a>
+	<a>版本：019</a>
+	<input type="button" value="測試" onClick="test02();">
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -31,7 +32,7 @@
 		<div class="cmdButton" onclick="insertCoord('坑洞');" ontouchend="this.click;">坑洞</div>
 		<div class="cmdButton" onclick="insertCoord('急彎');">急彎</div>  
 		<div class="cmdButton" onclick="insertCoord('測速');">測速</div>
-		<div class="cmdButton" onclick="nearPoint();initTask();">找路</div>
+		<div class="cmdButton" onclick="nearPoint();initTask();">尋標</div>
 		<div class="cmdButton" >		</div>
 	</div>
 		
@@ -285,8 +286,8 @@ var tasks = [[																	//廣東路
 		[22.59176168536461, 120.67935691835952,"貨櫃屋","坑洞"],
 		[22.592039093947136,120.6809451159679,"坑洞041","坑洞",,"坑洞"],
 		[22.591599051656083, 120.68486212232875, "坑洞05","坑洞",,"坑洞"],
-		[22.592177531280022, 120.68483357628378, "坑洞06-1","坑洞",,"坑洞"],
-		[22.592630575345552,120.68464827381979,"坑洞06-2","坑洞",,"坑洞"],
+		[22.592177531280022, 120.68483357628378, "坑洞06-1","坑洞"],
+		[22.592630575345552,120.68464827381979,"坑洞06-2",,,"坑洞"],
 		[22.595115994968776, 120.68506473873026, "觀自在"],
 		[22.606633881440352, 120.69482779987918, "空地","急彎",,"急彎"],
 		[22.610869623490217,120.69874924464474,"坑洞07","坑洞",,"坑洞"],
@@ -331,6 +332,10 @@ var tasks = [[																	//廣東路
 		[23.33638531525768, 120.50398936957284, "彎道"],
 		[23.334149222954125, 120.50311720366186, "捷徑"],
 		[23.33385015664403, 120.5033061215673, "頂關子嶺", "號誌",,"號誌"]
+	],[
+		[22.6143515, 120.7016064, "基地台"],
+		[22.6291667, 120.7019444, "日湯真山"],
+		[22.6243669, 120.7148054, "管制站"]
 	]];
 
 	var taskID = 2;
@@ -418,8 +423,81 @@ var tasks = [[																	//廣東路
 	
 	class control01{}
 	var myCtl = new control01();
+	/**
+		
+	*/
+	function test02(){
+	p0=	[22.665588375791046, 120.50101392899106,""];
+		// [22.66654286222146, 120.50113602621077,"民利35巷"],
+		p1=[22.665285944517155, 120.50179304264677,"殺蛇橋"];
+		p2 = [22.66608654077297, 120.50036725372237,"工業路"];
+	angleOffset(p0,p1,p2);
+	}
+function angleOffset(p0,p1,p2){		
+	pp = [[,],[,],[,]];
+	pp[1][0] = p1[0];
+	pp[1][1] = p0[1];
+	d1y = getDistance(pp[1],p0);
+	if(p1[0] < p0[0]){
+		d1y *= -1;
+	}
+	d1x = getDistance(pp[1],p1);
+	if(p1[1] < p0[1]){
+		d1x *= -1;
+	}
 	
+	pp[2][0] = p2[0];
+	pp[2][1] = p0[1];
+	d2y = getDistance(pp[2],p0);
+	if(p2[0] < p0[0]){
+		d2y *= -1;
+	}
+	d2x = getDistance(pp[2],p2);
+	if(p2[1] < p0[1]){
+		d2x *= -1;
+	}
+	console.log(d1y,d1x,d2y,d2x)
+	a1= Math.atan2(d1y,d1x);
+	a2 = Math.atan2(d2y,d2x);
+	
+	dA = Math.abs(a1 - a2);
+	// dA = Math.abs(dA - Math.PI);
+	if(dA > Math.PI){
+		dA -= Math.PI;
+	}
+	// console.log(a1,a2,dA,dA*360/(2*Math.PI));	
+	return dA;
+}
+	
+	function test01(){
+			p=[	[22.66654286222146, 120.50113602621077,"民利35巷"],
+			[22.665285944517155, 120.50179304264677,"殺蛇橋"],
+			[22.66608654077297, 120.50036725372237,"工業路"]];
+	pp = [[,],[,],[,]];
+	
+	console.log(Math.atan(-1));
+	pp[1][0] = p[0][0];
+	pp[1][1] = p[1][1];
+	// per1=	(p[1][1]-p[0][1]) / (p[1][0]-p[0][0]);
+	per1=	getDistance( pp[1],p[0]) / -getDistance(pp[1],p[1]);
+	
+	an1 = Math.atan(per1);
+		an1 = Math.atan2(-getDistance(pp[1],p[0]),getDistance( pp[1],p[1]))
+	console.log(per1,an1);
+	
+	pp[2][0] = p[0][0];
+	pp[2][1] = p[2][1];
+	// per1=	(p[1][1]-p[0][1]) / (p[1][0]-p[0][0]);
+	per2=	getDistance( pp[2],p[0]) / getDistance(pp[2],p[2]);
+	an2 = Math.atan(per2);	
+
+	console.log(per2,an2);
+	// alert("stop!");
+
+		
+	}
 function init(){
+
 	// nextDist = 3.234;
 	// showMsg(Math.round(nextDist));
 	// showMsg(nextDist.toFixed());
@@ -1030,12 +1108,13 @@ function getDistance(coord1, coord2) {
     return dist.toFixed(3);		//小數點後三位(四捨「六入」)
 }
 	var fcolor = "";
+	
 function showData(evt){
 	
 	try{
 		str = nextPoint+ "_"+points[nextPoint][2] + ", ";
 		str += (nextDist < 1) ? ("<font "+ fcolor+">" + nextDist*1000+"</font>公尺") : (Math.round(nextDist)+"公里");
-		if(evt != undefined){
+		if(evt){
 			arriveSec =  nextDist*1000/evt.coords.speed;
 			if(arriveSec < 99){
 				str += arriveSec.toFixed(0)+"秒。";
@@ -1044,14 +1123,16 @@ function showData(evt){
 			str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
 			str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
 		}
-			if(vector ==1){
+		
+		if(vector ==1){
 			tmp0 = 0;
 			tmp1 = points.length-1;
 		}else{
 			tmp0 = points.length-1;
 			tmp1 = 0;
 		}
-		str += "<br>" + points[tmp0][2] + " ~ " +points[tmp1][2];
+		str += "<br>任務：" + points[tmp0][2] + " ~ " +points[tmp1][2];
+		str += "<br>角度：" + angleOffset(recentPoint,passPoint,points[nextPoint]).toFixed();
 
 	} catch(e){
 		str += e.message;
@@ -1098,6 +1179,7 @@ function showData(evt){
 
 var msgList = ["","","","",""];
 var msgID = 0;
+
 function  showMsg(str){
 	msgList[msgID] = str;
 	output = msgList[msgID] + "<br/>";
