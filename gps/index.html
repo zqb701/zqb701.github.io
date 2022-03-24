@@ -1061,7 +1061,7 @@ function nearPoint(){
 	_todo._220搜尋新路線 = function(){}	//AAAAAAAA
 	// showMsg("nearPoint():"+recentPoint+";"+tasks[0][0]);
 	//從路徑上找到最近的下一目標點, 但可能是適當點的前一點
-	myCanvas.drawPoint(recentPoint[0], recentPoint[1]);
+
 	var shortstDist = getDistance(recentPoint,  tasks[0][0]);
 	var bigAng = 0;
 	var bigPoint=0;
@@ -1084,7 +1084,7 @@ function nearPoint(){
 		}
 	}
 	showMsg("最近距離:" + tasks[taskID][nextPoint][2]);
-	showMsg("最大角度:" + tasks[bigTask][bigPoint][2]+", " + bigAng.toFixed(2));
+	showMsg("最大角度:" + tasks[bigTask][bigPoint][2]+"~"+tasks[bigTask][bigPoint-1][2]+", " + bigAng.toFixed(2));
 	//TODO 最近點不在任何路徑範圍內
 }
 
