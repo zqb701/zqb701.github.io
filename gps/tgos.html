@@ -18,7 +18,8 @@
 		
 		// var markerPoint = new TGOS.TGPoint(23.3318885,120.5053049);
 		// var markerPoint = new TGOS.TGPoint(120.5053049,23.3318885);
-		var imgUrl = "https://api.tgos.tw/TGOS_API/images/marker2.png";	//標記點圖示來源
+		// var imgUrl = "https://api.tgos.tw/TGOS_API/images/marker2.png";	
+		//標記點圖示來源
 				var markerImg;
 				var markerImg2;
 	var pTGMarker;
@@ -32,7 +33,7 @@
 			//------------------初始化地圖--------------------
 			var pOMap = document.getElementById("OMap");
 			var mapOptiions = {
-				scaleControl: false,		//不顯示比例尺
+				scaleControl: false,		//不顯示比例尺圖示
 				navigationControl: false,	//顯示地圖縮放控制項
 				navigationControlOptions: {	//設定地圖縮放控制項
 					controlPosition: TGOS.TGControlPosition.TOP_LEFT,	//控制項位置
@@ -49,7 +50,8 @@
 			
 			//------------------建立標記點---------------------
 			markerImg = new TGOS.TGImage(
-				"https://zqb701.github.io/images/marker1.png", //圖片路徑, 不能用相對路徑???
+				"https://zqb701.github.io/images/marker1.png", //紅色
+				//圖片路徑, 不能用相對路徑??? 用指令組合路徑與檔名
 				new TGOS.TGSize(38, 33), 	//標記的方框範圍, 會觸發滑鼠事件
 				new TGOS.TGPoint(0, 0), 		//圖片放置在方框的位置
 				new TGOS.TGPoint(10, 33),	//方框上用來對準地圖的點
@@ -165,6 +167,9 @@
 		// pTGMarker2.setDraggable(true);
 		// pTGMarker.setTitle("香積");
 	}
+	_todo._230現在位置圖片放大_含方向 = function(){}
+	_todo._530目的地標示及直線 = function(){}
+	_todo._630連結加座標 = function(){}
 </script>
 
 </head>
