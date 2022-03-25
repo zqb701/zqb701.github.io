@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>版本：021</a>
+	<a>版本：022</a>
 	<input type="button" value="測試" onClick="test02();">
 	<br>
 	<canvas id="canvas"></canvas>
@@ -32,8 +32,8 @@
 		<div class="cmdButton" onclick="insertCoord('坑洞');" ontouchend="this.click;">坑洞</div>
 		<div class="cmdButton" onclick="insertCoord('急彎');">急彎</div>  
 		<div class="cmdButton" onclick="insertCoord('測速');">測速</div>
-		<div class="cmdButton" onclick="nearPoint();initTask();playVoice('當');">尋標</div>
-		<div class="cmdButton" >		</div>
+		<div class="cmdButton" onclick="nearPoint();initTask();playVoice('新任務');">尋標</div>
+		<div class="cmdButton" ><div id="march" onclick="swColor();">0</div></div>
 	</div>
 		
 	<p id="posStr">111222</p>
@@ -589,7 +589,7 @@ function angleOffset(p0,p1,p2){
 	dA = Math.abs(a1 - a2);
 	// dA = Math.abs(dA - Math.PI);
 	if(dA > Math.PI){
-		dA -= Math.PI;
+		dA = Math.PI*2 -dA;
 	}
 	// console.log(a1,a2,dA,dA*360/(2*Math.PI));	
 	if(DEBUG) console.log("angleOffset(s), return:"+ dA);
@@ -827,21 +827,27 @@ function click(e){	//觸發座標為滑鼠放開處
 
 function gridCmd(x,y){
 //showMsg("gridCmd(), x=" + x +", y=" +y);
-		var gridW = canvas.width/3;
-		var gridH = canvas.height/3;
-		oldClickTimes = new Date().getTime();
-		
-		if(x > gridW*2 && x < canvas.width-50 && y > gridH*2){	//右下角
-		//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
-			// taskID ++;
-			if (++taskID == tasks.length) taskID = 0;
-			nextPoint = 0;
-			initTask();		
-			return;
+	var gridW = canvas.width/3;
+	var gridH = canvas.height/3;
+	oldClickTimes = new Date().getTime();
+	
+	if(x > gridW*2 && x < canvas.width-50 && y > gridH*2){	//右下角
+	//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
+		// taskID ++;
+		if (++taskID == tasks.length) {
+			taskID = 0;
 		}
+		nextPoint = 0;
+		initTask();
+		playVoice("當");
+		return;
+	}
 
 		if(x > gridW*2 && x < canvas.width-50 && y < gridH){//右上角
 			//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
+
+		playVoice("跳過");
+
 			skipPoint();	//手動跳一點, 差太多點則切換方向重找最近點
 			showData();
 				//
@@ -937,7 +943,6 @@ function initTask(){
 	myCanvas.drawClearMap();
 	myCanvas.drawBaseMap();
 	
-	playVoice("新任務");
 	showData();
 }	
 
@@ -945,9 +950,7 @@ function skipPoint(){
 	enAlarm = true;
 	enAlarmHigh = true;
 	
-	if(points[nextPoint][4-vector]){
-		playVoice("通過");
-	}
+
 	passPoint[0] = points[nextPoint][0];
 	passPoint[1] = points[nextPoint][1];
 		
@@ -1058,7 +1061,6 @@ myCanvas.drawPoint=function (lat, lon, color, width){
 }
 
 function nearPoint(){
-	_todo._220搜尋新路線 = function(){}	//AAAAAAAA
 	// showMsg("nearPoint():"+recentPoint+";"+tasks[0][0]);
 	//從路徑上找到最近的下一目標點, 但可能是適當點的前一點
 
@@ -1123,8 +1125,9 @@ function geoYes (evt){
 
 
 
-	_todo._250脫離路線自動判定 = function(){}	//AAAAAAAA
-
+	_todo._250判定脫離路線 = function(){}	//AAAAAAAA
+	_todo._220搜尋新路線 = function(){}	//AAAAAAAA
+	_todo._230判定新方向 = function(){}	//AAAAAAAA
 	//需要判定的項目
 	//1.通過點, 才能繼續導航
 	//2.提醒,及高速提醒
@@ -1134,6 +1137,9 @@ function geoYes (evt){
 	if (nextDist > preDist ){	//遠離中
 		if(nextDist < evt.coords.speed/1000 * 2 + 0.015 ){
 			//近距離內(車速的2秒),判定為通過
+			if(points[nextPoint][4-vector]){
+				playVoice("通過");
+			}
 			skipPoint();
 			
 			// pathAngle =  Math.atan((passPoint[0]- points[nextPoint][0])/(passPoint[1] - points[nextPoint][1]));
@@ -1163,7 +1169,7 @@ function geoYes (evt){
 		}		
 	}
 	
-	showData();
+	showData(evt);
 	preDist = nextDist;
 }
 
@@ -1264,7 +1270,7 @@ function showData(evt){
 			}
 
 			str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
-			str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針
+			str += "方向：" + Math.round(evt.coords.heading);	//方向為正北的順時針0~360
 		}
 		
 		if(vector ==1){	//去程
