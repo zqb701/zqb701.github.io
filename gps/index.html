@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>版本：024</a>
+	<a>版本：025</a>
 	<input type="button" value="測試" onClick="test02();">
 	<br>
 	<canvas id="canvas"></canvas>
@@ -693,7 +693,7 @@ function insertCoord(coordType){
 	strtmp =  recentPoint[0]+","+recentPoint[1] + ",'自訂點','"+
 		coordType +	"'," + 
 		points[nextPoint][2]+
-		// "~"+ points[nextPoint-vector][2] +","+
+		"~"+ points[nextPoint-vector][2] +","+
 		new Date().getHours()+":"+new Date().getMinutes() +":"+ new Date().getSeconds() +"<br/>" ;
 		console.log(strtmp);
 		
