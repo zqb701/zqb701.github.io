@@ -23,13 +23,13 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>版本：023</a>
+	<a>版本：024</a>
 	<input type="button" value="測試" onClick="test02();">
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
 	<div style="display: flex; justify-content: flex-end;">
-		<div class="cmdButton" onclick="insertCoord('坑洞');" ontouchend="this.click;">坑洞</div>
+		<div class="cmdButton" onclick="insertCoord('坑洞');" >坑洞</div>
 		<div class="cmdButton" onclick="insertCoord('急彎');">急彎</div>  
 		<div class="cmdButton" onclick="insertCoord('測速');">測速</div>
 		<div class="cmdButton" onclick="nearPoint();initTask();playVoice('新任務');">尋標</div>
@@ -350,12 +350,14 @@ var tasks = [[																	//廣東路
 		[22.61246586071109, 120.6200526260988, "彎道"],
 		[22.604416359284045, 120.62024646947125, "營區路口","號誌",,"號誌"],
 		[22.59858233469853, 120.62046577629641, "測速照相","測速"],
-		[22.591721713708438, 120.62115374455101, "佳平路口", "路口",,"路口"]
+		[22.591721713708438, 120.62115374455101, "台185_佳平路口", "路口",,"路口"]
 	],[	
-																				//屏120-1
-		[22.591721713708438, 120.62115374455101, "佳平路口", "路口",,"路口"],																		
+																				//
+		[22.591721713708438, 120.62115374455101, "屏120-1_佳平路口", "路口",,"路口"],																		
 		[22.590483410935843, 120.62465695816196,"水泉山公園","急彎",,"急彎"],
 		[22.592155787378577, 120.63335669509607,"消防隊","急彎",,"急彎"],
+		[22.588965173008408, 120.6347857736698,"彎道c2"],
+		[22.58463228957156, 120.63724489714178,"彎道c2"],
 		[22.587393230911395,120.63840873003024,"水溝蓋21","坑洞",,"坑洞"],
 		[22.58972948061996, 120.63908090610973, "112基地"],
 		[22.59007659798934, 120.64766077466638,"橋","急彎",,"急彎"],
@@ -380,7 +382,11 @@ var tasks = [[																	//廣東路
 		[22.592177531280022, 120.68483357628378, "坑洞06-1","坑洞"],
 		[22.592630575345552,120.68464827381979,"坑洞06-2",,,"坑洞"],
 		[22.595115994968776, 120.68506473873026, "觀自在"],
+		[22.598383562209477, 120.6845511475299,"彎道A3"],
+		
 		[22.606633881440352, 120.69482779987918, "空地","急彎",,"急彎"],
+		[22.60692827794966, 120.69154676474011, "彎道A1"],
+		[22.607947926654507, 120.691525188623,  "彎道A2"],
 		[22.610869623490217,120.69874924464474,"坑洞07","坑洞",,"坑洞"],
 		[22.6145008,120.7017865,"泰武停車場","休息站",,"休息站"],
 		[22.615443681182708, 120.70262923538111, "泰武斷崖","坑洞"]
@@ -459,7 +465,7 @@ var tasks = [[																	//廣東路
 	],[
 		[22.614245529733807, 120.70180073192317, "車輛入口"],
 		[22.61501512803279,120.70223332448214,"步行入口","路口"],
-		[22.615160672882556,120.70174126247534,"水泥底","路口"],
+		[22.615160672882556,120.70174126247534,"救難繩","路口"],
 		[22.619745623676106,120.70154845769152,"水泥頂","路口"],
 		[22.621937370512125,120.70367581710855,"休息站01","休息站"],
 		[22.626309106974965,120.70441736305555,"休息站02","休息站"],
@@ -468,7 +474,7 @@ var tasks = [[																	//廣東路
 		[22.625096216539994,120.71220141454029,"宿舍叉路","路口"],
 		[22.625370031788954,120.71345147109773,"宿舍旁","路口"],
 		[22.6282578294187,120.71216937843494,"水源橋","休息站"],
-		[22.627910793033372,120.71205956643135,"廁所路口"],
+		// [22.627910793033372,120.71205956643135,"廁所路口"],
 		[22.624396684841113,120.71457908355855,"管制站路口","路口"],
 		[22.6243669, 120.7148054, "管制站"],
 		[22.621937370512125,120.70367581710855,"休息站01"]	//重畳點
@@ -687,16 +693,18 @@ function insertCoord(coordType){
 	strtmp =  recentPoint[0]+","+recentPoint[1] + ",'自訂點','"+
 		coordType +	"'," + 
 		points[nextPoint][2]+
-		"~"+points[nextPoint-vector][2]+","+
-		new Date().getHours()+":"+new Date().getMinutes() +":"+ new Date().getSeconds() +"/n/r" ;
+		// "~"+ points[nextPoint-vector][2] +","+
+		new Date().getHours()+":"+new Date().getMinutes() +":"+ new Date().getSeconds() +"<br/>" ;
+		console.log(strtmp);
 		
-	if (typeof (Storage)){
-        if (localStorage.insertCoord){
+	// if (typeof (Storage) != "undefined"){
+        // if (localStorage.insertCoord != "undefined"){
             //msg.innerText = localStorage.playVolume;
 			localStorage.insertCoord = strtmp + localStorage.insertCoord;
             ins.innerHTML = localStorage.insertCoord;
-        }
-	}
+		// }
+	// }
+	// }
 	//showMsg(recentPoint[0].toFixed(7)+","+recentPoint[1].toFixed(7));
 }
 
@@ -965,6 +973,7 @@ function initTask(){
 }	
 
 function skipPoint(){
+		try{
 	enAlarm = true;
 	enAlarmHigh = true;
 	
@@ -975,12 +984,15 @@ function skipPoint(){
 	nextPoint += vector;
 	preDist = getDistance(recentPoint,  points[nextPoint]);
 	
-	if((nextPoint < 0 ) || (nextPoint == points.length)){
-		nextPoint -= vector;
-		showMsg("端點");
-		searchPoint = true;
-	}else{
-		showMsg("skipPoint(else);");
+
+
+		if((nextPoint < 0 ) || (nextPoint == points.length)){
+			nextPoint -= vector;
+			showMsg("端點");
+			searchPoint = true;
+		}
+	} catch (err) {
+		showMsg(`${err.name}, ${err.message}`);
 	}
 }	
 
