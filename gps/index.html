@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>版本：027</a>
+	<a>版本：028</a>
 	<input type="button" value="測試" onClick="test02();">
 	<br>
 	<canvas id="canvas"></canvas>
@@ -567,14 +567,7 @@ var tasks = [[																	//廣東路
 		[22.621937370512125,120.70367581710855,"休息站01b"],	//重畳點
 		[22.615160672882556,120.70174126247534,"救難繩","路口"],
 		[22.61501512803279,120.70223332448214,"日湯真_入口3","路口"]
-	],[
-		[22.666241921878417, 120.5014674579224,"民利路_33巷"],
-		[22.66654078376667, 120.50113486401222,"35巷"],
-		[22.667267017817426, 120.49974983957362, "民利路_民教路口a"]
-	],[
-		[22.66730043073093, 120.49977062669106, "民利路_民教路口b"],
-		[22.66767366181244, 120.49910276961953, "民利路_旭東巷"],
-		[22.668285292197318, 120.49808253838499, "民利路_廣東路口"]
+
 	]];
 
 	var taskID = 2;
@@ -745,7 +738,7 @@ function angleOffset(p0,p1,p2){
 	}
 	
 function init(){
-console.log("init(s)");
+// console.log("init(s)");
 	// nextDist = 3.234;
 	// showMsg(Math.round(nextDist));
 	// showMsg(nextDist.toFixed());
@@ -772,7 +765,7 @@ console.log("init(s)");
 	newSpace();
 
 	// startGPS();
-	noSleep();	//note 9 上, chrome有效, 三星無效
+	noSleep();	//note 9 上, chrome 92.0.4515.131有效, 三星16.2.1.56無效
 
 	myCanvas.drawClearMap();
 	myCanvas.drawBaseMap();
@@ -780,7 +773,7 @@ console.log("init(s)");
 		newDist2 = Math.cos(2*Math.PI *150/360 - Math.atan((recentPoint[1]- points[nextPoint][1])/(recentPoint[0] - points[nextPoint][0])))*nextDist;
 	//console.log(nextDist + ", " + newDist2);
 	// showData();
-console.log("init(e)");
+// console.log("init(e)");
 }
 
 function insertCoord(coordType){
@@ -970,10 +963,12 @@ function gridCmd(x,y){
 		if(x > gridW*2 && x < canvas.width-50 && y < gridH){//右上角
 			//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
 
-		playVoice("跳過");
 
-			skipPoint();	//手動跳一點, 差太多點則切換方向重找最近點
-			showData();
+
+			if(skipPoint()){	//手動跳一點, 差太多點則切換方向重找最近點
+				playVoice("跳過");
+				showData();
+			}
 				//
 			// searchPoint = true;
 			return;
@@ -993,11 +988,16 @@ function gridCmd(x,y){
 	}
 
 function vectorMode(){
+	
 	vector *=-1;
 	nextPoint += vector;
-	const vStr = ["回程",,"去程"];
-	playVoice(vStr[1+vector]);
-	showData();
+	if(nextPoint == -1 || nextPoint == points.length){
+		showMsg("vectorMode():端點");
+	}else{
+		const vStr = ["回程",,"去程"];
+		playVoice(vStr[1+vector]);
+		showData();
+	}
 }
 
 function vectorMode_(){
@@ -1071,7 +1071,10 @@ function initTask(){
 }	
 
 function skipPoint(){
-		try{
+	if(nextPoint == -1 || nextPoint == points.length){
+		return false;
+	}
+		// try{
 	enAlarm = true;
 	enAlarmHigh = true;
 	
@@ -1080,17 +1083,11 @@ function skipPoint(){
 	passPoint[1] = points[nextPoint][1];
 		
 	nextPoint += vector;
-	preDist = getDistance(recentPoint,  points[nextPoint]);
 	
-
-
-		if((nextPoint < 0 ) || (nextPoint == points.length)){
-			// nextPoint -= vector;
-			showMsg("端點");
-			searchPoint = true;
-		}
-	} catch (err) {
-		showMsg(`${err.name}, ${err.message}`);
+	if(nextPoint == -1 || nextPoint == points.length){
+		return false;
+	}else{
+		return true;
 	}
 }	
 
@@ -1273,6 +1270,14 @@ function geoYes (evt){
 				playVoice("通過");
 			}
 			skipPoint();
+			if((nextPoint < 0 ) || (nextPoint == points.length)){
+				// nextPoint -= vector;
+				showMsg("端點");
+				searchPoint = true;
+				return;
+			}else{
+				preDist = getDistance(recentPoint,  points[nextPoint]);
+			}
 			
 			// pathAngle =  Math.atan((passPoint[0]- points[nextPoint][0])/(passPoint[1] - points[nextPoint][1]));
 		}
@@ -1387,8 +1392,8 @@ function getDistance(coord1, coord2) {
 	var fcolor = "";
 	var strGPS = "\|/-";	//
 function showData(evt){
-	console.log("showData(s)");
-	try{
+	// showMsg("showData:nextPoint=" + nextPoint);
+	// try{
 		str="";
 		// str = nextPoint+ "_"
 		str += strGPS.charAt(0);
@@ -1415,11 +1420,11 @@ function showData(evt){
 		dA = angleOffset(recentPoint,passPoint,points[nextPoint]);
 		str += "<br>夾角：" + dA.toFixed(2);
 		str += "("+(dA*360/2/Math.PI).toFixed()+")";
-	} catch(e){
-		str += e.message;
-	}finally {
+	// } catch(e){
+		// str += e.message;
+	// }finally {
 		document.getElementById("posStr").innerHTML=str;
-	}
+	// }
 	
 
 		//str += "<br />距離：<br />時速：";
@@ -1456,7 +1461,7 @@ function showData(evt){
 	//	str += "("+ points[nextPoint][0] +", " + points[nextPoint][1];
 		document.getElementById("posStr").innerHTML=str;
 */
-console.log("showData(e)");
+// console.log("showData(e)");
 }
 
 var msgList = ["","","","",""];
