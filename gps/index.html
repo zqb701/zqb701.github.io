@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>版本：028</a>
+	<a>版本：029</a>
 	<input type="button" value="測試" onClick="test02();">
 	<br>
 	<canvas id="canvas"></canvas>
@@ -963,11 +963,12 @@ function gridCmd(x,y){
 		if(x > gridW*2 && x < canvas.width-50 && y < gridH){//右上角
 			//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
 
-
-
 			if(skipPoint()){	//手動跳一點, 差太多點則切換方向重找最近點
 				playVoice("跳過");
 				showData();
+			}else{
+				showMsg("端點");
+				searchPoint = true;
 			}
 				//
 			// searchPoint = true;
@@ -1085,6 +1086,7 @@ function skipPoint(){
 	nextPoint += vector;
 	
 	if(nextPoint == -1 || nextPoint == points.length){
+
 		return false;
 	}else{
 		return true;
@@ -1123,31 +1125,29 @@ myCanvas.drawBaseMap = function(){
 	 var circle2 = new Path2D();	//所有節點中間填滿黑色
 	 var path = new Path2D();
 	 var circleTmp;
+	 
  	for ( p=0;p< mapPoints.length;p++){		//TODO 改用Path2D物件
-		if(points[p][4-vector] == undefined){
-			circleTmp = circle;
-			// circle.moveTo(mapPoints[p][0], mapPoints[p][1]);
-			// circle.arc(mapPoints[p][0], mapPoints[p][1],7,0,Math.PI*2,true);
-		}else{
+		if(points[p][4-vector]){
 			circleTmp = circle0;
-			// circle0.moveTo(mapPoints[p][0], mapPoints[p][1]);
-			// circle0.arc(mapPoints[p][0], mapPoints[p][1],7,0,Math.PI*2,true);
+		}else{
+			circleTmp = circle;
 		}
 		circleTmp.moveTo(mapPoints[p][0], mapPoints[p][1]);
 		circleTmp.arc(mapPoints[p][0], mapPoints[p][1],7,0,Math.PI*2,true);
 			
 		circle2.moveTo(mapPoints[p][0], mapPoints[p][1]);
-		circle2.arc(mapPoints[p][0], mapPoints[p][1],5,0,Math.PI*2,true);
+		circle2.arc(mapPoints[p][0], mapPoints[p][1],4,0,Math.PI*2,true);
 		path.lineTo(mapPoints[p][0], mapPoints[p][1]);
 	}
 	ctx.lineJoin="round";	//轉折點的樣式, miter(default), round扇形
 	ctx.strokeStyle = "green";	//線條色
-	ctx.lineWidth = 10;	//線條粗度
+	ctx.lineWidth = 8;	//線條粗度
 	ctx.stroke(path);
 		  
 	ctx.lineWidth = 3;	//線條粗度
 	ctx.stroke(circle);
-	  
+	
+	ctx.lineWidth = 4;	//線條粗度
 	ctx.strokeStyle = "red";	//線條色
 	ctx.stroke(circle0);
 	  
@@ -1225,14 +1225,10 @@ function geoYes (evt){
 	strGPS = strGPS.substr(1,3)+strGPS.charAt(0);
 	
 	if(searchPoint){
-		showMsg("a" );
 		nearPoint();
-		showMsg("b" );
 		initTask();
 		searchPoint = false;
-		 showMsg("c" );
 	}
-	
 	
 	if(viewMode == 1){		//全圖：只畫點
 		myCanvas.drawPoint(recentPoint[0], recentPoint[1]);
@@ -1269,14 +1265,13 @@ function geoYes (evt){
 			if(points[nextPoint][4-vector]){
 				playVoice("通過");
 			}
-			skipPoint();
-			if((nextPoint < 0 ) || (nextPoint == points.length)){
-				// nextPoint -= vector;
+			if(skipPoint()){
+				preDist = getDistance(recentPoint,  points[nextPoint]);
+			}else{
+			// nextPoint -= vector;
 				showMsg("端點");
 				searchPoint = true;
 				return;
-			}else{
-				preDist = getDistance(recentPoint,  points[nextPoint]);
 			}
 			
 			// pathAngle =  Math.atan((passPoint[0]- points[nextPoint][0])/(passPoint[1] - points[nextPoint][1]));
