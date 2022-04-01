@@ -20,7 +20,7 @@
 		// var markerPoint = new TGOS.TGPoint(120.5053049,23.3318885);
 		// var imgUrl = "https://api.tgos.tw/TGOS_API/images/marker2.png";	
 		//標記點圖示來源
-				var markerImg;
+				var markerImg0;
 				var markerImg2;
 	var pTGMarker;
 	var pTGMarker3;
@@ -49,14 +49,13 @@
 			// pMap.setCenter(markerPoint);	//初始地圖中心點
 			
 			//------------------建立標記點---------------------
-			markerImg = new TGOS.TGImage(
-				"https://zqb701.github.io/images/hairline_trans.png", //紅色
-				// "https://zqb701.github.io/images/marker1.png", //紅色
-				// "file://C:\Users\zqb\Downloads\zqb\zqb701.github.io\images/marker1.png",
+			markerImg0 = new TGOS.TGImage(
+				
+				"https://zqb701.github.io/images/marker1.png", //紅色
 				//圖片路徑, 不能用相對路徑??? 用指令組合路徑與檔名
-				new TGOS.TGSize(91,91),	//38, 33), 	//標記的方框範圍, 會觸發滑鼠事件
+				new TGOS.TGSize(38, 33), 	//標記的方框範圍, 會觸發滑鼠事件
 				new TGOS.TGPoint(0, 0), 		//圖片放置在方框的位置
-				new TGOS.TGPoint(45,45),	//10, 33),	//方框上用來對準地圖的點
+				new TGOS.TGPoint(10, 33),	//方框上用來對準地圖的點
 				//new TGOS.TGSize(76, 66)		//放大後的尺寸???
 			);	//設定標記點圖片及尺寸大小
 			
@@ -80,11 +79,13 @@
 					pTGMarker3.setPosition(pMap.getCenter());
 				}else{
 					markerImg3 = new TGOS.TGImage(
-						"https://zqb701.github.io/images/marker2.png", //圖片路徑, 不能用相對路徑???
-						new TGOS.TGSize(38, 33), 	//標記的方框範圍, 會觸發滑鼠事件
-						new TGOS.TGPoint(0, 0), 		//圖片放置在方框的位置
-						new TGOS.TGPoint(10, 33)	//方框上用來對準地圖的點
+					"https://zqb701.github.io/images/hairline_33p_trans.png", 
+						// "https://zqb701.github.io/images/marker1.png", //圖片路徑, 不能用相對路徑???
+						new TGOS.TGSize(33,33),//38, 33), 	//標記的方框範圍, 會觸發滑鼠事件
+						new TGOS.TGPoint(0, 0), 		//圖片放置在方框的位置, 左上角起算
+						new TGOS.TGPoint(16, 16)	//方框上用來對準地圖的點
 					);
+					//沒有TGSymbol可用,  new TGOS.TGSymbol();
 					pTGMarker3 = new TGOS.TGMarker(pMap, pMap.getCenter(),'', markerImg3);
 				}
 			}
@@ -140,7 +141,7 @@
 			 pTGMarker.setMap();		//「刪除」舊標記, 而非「移動」
 		}
 		// document.getElementById("msg").innerHTML += "c";
-			 pTGMarker = new TGOS.TGMarker(pMap, recentPoint,'', markerImg);
+			 pTGMarker = new TGOS.TGMarker(pMap, recentPoint,'', markerImg0);
 			 pTGMarker.setTitle("置中");
 		// }else{
 			
@@ -211,7 +212,7 @@
 			// pTGMarker3.setMap();
 			">置中</div>
 	</div>
-	<div id="msg">011</div>
+	<div id="msg">012</div>
 		</font>
 	</body>
 </html>                            
