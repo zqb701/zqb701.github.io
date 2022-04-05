@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>版本：029</a>
+	<a>版本：030</a>
 	<input type="button" value="測試" onClick="test02();">
 	<br>
 	<canvas id="canvas"></canvas>
@@ -32,7 +32,7 @@
 		<div class="cmdButton" onclick="insertCoord('坑洞');" >坑洞</div>
 		<div class="cmdButton" onclick="insertCoord('急彎');">急彎</div>  
 		<div class="cmdButton" onclick="insertCoord('測速');">測速</div>
-		<div class="cmdButton" onclick="nearPoint();initTask();playVoice('新任務');">尋標</div>
+		<div class="cmdButton" onclick="nearPoint();	">尋標</div>
 		<div class="cmdButton" ><div id="march" onclick="swColor();">0</div></div>
 	</div>
 		
@@ -256,18 +256,31 @@ var tasks = [[																	//廣東路
 
 	],[
 		[23.485188208883738, 120.38434099171512, "國1_太保北上",,,"交流道"],
-		[23.424581019743666, 120.35661493424698,"嘉義系統"],
+		[23.444469495481073, 120.36693865260786, "水上"],
+		[23.424581019743666, 120.35661493424698,"嘉義系統(台82)"],
 		[23.35803491965871, 120.33825254669834, "新營收費站"],
 		[23.339912448572896, 120.3121423175039, "新營休息站"],
 		[23.30732464446435, 120.29080890577876, "新營"],
+		[23.27199334518172,120.2651591757541,'測速照相','測速'],
 		[23.219142537160913, 120.23911067598834, "下營系統(台84)"],
+		[23.201338264985267,120.23635636202462,'測速照相','測速'],
 		[23.191613212788408, 120.23620573095596, "麻豆南出","交流道"],
 		[23.182400329087255, 120.23565584201334, "麻豆"],
 		
 		[23.117642743896905, 120.24356043591008, "安定"],
-		[23.08579196837314, 120.25127435443811, "台南系統南向出口","交流道"],
+		[23.08579196837314, 120.25127435443811, "台南系統南下出口","交流道"],
 		[23.079167471361096, 120.25221238322186, "台南系統315k(國8)"],
-		[23.041946983666293, 120.25145678714567, "國1_永康"]
+		[23.041946983666293, 120.25145678714567, "國1_永康"],
+		
+		[22.935994105128767, 120.2523956860487,"仁德系統北上出口",,,"交流道"],
+		[22.90574129034984, 120.26585983467193, "仁德休"],
+		[22.879590258074288, 120.2791994070347, "路竹"],
+		[22.845846254754292, 120.2953351156559, "高科"],
+		[22.812226242941332, 120.31425831237283, "岡山收"],
+		[22.78783547514928, 120.32063020173459, "岡山交"],
+		[22.737139874816485, 120.33445440802357, "楠梓北"],
+		[22.72095165324913, 120.33240548078585,  "楠梓南"],
+		[22.675247074423822, 120.32899256604684, "鼎金系統(國10)"]
 
 	],[
 		[23.18240333534582, 120.2356561677857, "南176_麻豆交"],
@@ -378,12 +391,14 @@ var tasks = [[																	//廣東路
 		[22.593386038796442, 120.67046156816451, "返璞","坑洞",,"坑洞"],
 		[22.59176168536461, 120.67935691835952,"貨櫃屋","坑洞"],
 		[22.592039093947136,120.6809451159679,"坑洞041","坑洞",,"坑洞"],
+		[22.591389196902934,120.68206019691863,"坑洞042","坑洞",,"坑洞"],
+		[22.591747368731195,120.68422205249813,"坑洞043","坑洞",,"坑洞"],
 		[22.591599051656083, 120.68486212232875, "坑洞05","坑洞",,"坑洞"],
 		[22.592177531280022, 120.68483357628378, "坑洞06-1","坑洞"],
 		[22.592630575345552,120.68464827381979,"坑洞06-2",,,"坑洞"],
 		[22.595115994968776, 120.68506473873026, "觀自在"],
 		[22.598383562209477, 120.6845511475299,"彎道A3"],
-		
+		[22.60230411717502,120.6870893257944,'坑洞77','坑洞',,'坑洞'],
 		[22.606633881440352, 120.69482779987918, "空地","急彎",,"急彎"],
 		[22.60692827794966, 120.69154676474011, "彎道A1"],
 		[22.607947926654507, 120.691525188623,  "彎道A2"],
@@ -491,7 +506,7 @@ var tasks = [[																	//廣東路
 
 		
 		[22.619745623676106,120.70154845769152,"水泥頂a","路口"],
-		[22.61987573054951,120.70177984453117,"水泥頂b","路口"],
+		[22.61987573054951,120.70177984453117,"水泥頂b"],
 [22.6202190084102,	120.701741953508,	"07:19:29"],
 [22.6206172736401,	120.702108474635,	"07:20:36"],
 [22.6206737396570,	120.702341293050,	"07:21:35"],
@@ -517,9 +532,9 @@ var tasks = [[																	//廣東路
 [22.6260677994086,	120.704318429458,	"07:51:58"],
 [22.6261891033439,	120.704325080919,	"07:53:18"],
 
-		[22.626309106974965,120.70441736305555,"休息站02","休息站"],
+		[22.626309106974965,120.70441736305555,"休息站02"],
 		// [22.6291667, 120.7019444, "日湯真山"],
-[22.6264667292546,	120.704335983466,	"07:55:47"],
+[22.6264667292546,	120.704335983466,	"休息站02","休息站"],
 [22.6270069700570,	120.705182360752,	"08:00:44"],
 [22.6273599984907,	120.705660362859,	"08:02:14"],
 [22.6279503741011,	120.707077196570,	"08:05:44","路口"],
@@ -543,7 +558,8 @@ var tasks = [[																	//廣東路
 [22.6278737630738,	120.712140825887,	"08:37:28"],
 
 		[22.6282578294187,120.71216937843494,"水源橋","休息站"],
-		// [22.627910793033372,120.71205956643135,"廁所路口"],
+		// [22.627910793033372,120.71205956643135,"廁所路口","路口"],
+		[22.62508807796253,120.7139035355051,"廁所路口","路口","rep"],
 		[22.624396684841113,120.71457908355855,"管制站路口","路口"],
 		// [22.6243669, 120.7148054, "管制站"],
 [22.6242538200133,	120.713870062414,	"電桿90"],
@@ -553,7 +569,7 @@ var tasks = [[																	//廣東路
 [22.6239522638566,	120.712515969875,	"電桿86"],
 [22.6243490446910,	120.711944596435,	"電桿85"],
 [22.6240471334875,	120.711264514548,	"電桿84"],
-
+[22.6249466769935,120.71043541807936,"彎3"],
 [22.6249412959056,	120.708987779579,	"09:35:27"],
 [22.6248504560714,	120.708090057874,	"09:37:36"],
 [22.6244660704494,	120.707741331219,	"09:38:43"],
@@ -782,10 +798,13 @@ function insertCoord(coordType){
 		//document.getElementById("watchStr").innerHTML= output;
 	playVoice('當');
 	strtmp =  recentPoint[0]+","+recentPoint[1] + ",'自訂點','"+
-		coordType +	"'," + 
-		points[nextPoint][2]+
-		"~"+ points[nextPoint-vector][2] +","+
-		new Date().getHours()+":"+new Date().getMinutes() +":"+ new Date().getSeconds() +"<br/>" ;
+		coordType +	"'," + points[nextPoint][2]+	"~";
+	try{
+	strtmp += points[nextPoint-vector][2] ;
+	}catch(e){
+		strtmp += "null";
+	}
+		strtmp += ","+	new Date().getHours()+":"+new Date().getMinutes() +":"+ new Date().getSeconds() +"<br/>" ;
 		console.log(strtmp);
 		
 	// if (typeof (Storage) != "undefined"){
@@ -1128,27 +1147,30 @@ myCanvas.drawBaseMap = function(){
 	 
  	for ( p=0;p< mapPoints.length;p++){		//TODO 改用Path2D物件
 		if(points[p][4-vector]){
-			circleTmp = circle0;
-		}else{
-			circleTmp = circle;
-		}
-		circleTmp.moveTo(mapPoints[p][0], mapPoints[p][1]);
-		circleTmp.arc(mapPoints[p][0], mapPoints[p][1],7,0,Math.PI*2,true);
-			
-		circle2.moveTo(mapPoints[p][0], mapPoints[p][1]);
+			circle0.moveTo(mapPoints[p][0], mapPoints[p][1]);
+			circle0.arc(mapPoints[p][0], mapPoints[p][1],5,0,Math.PI*2,true);
+					circle2.moveTo(mapPoints[p][0], mapPoints[p][1]);
 		circle2.arc(mapPoints[p][0], mapPoints[p][1],4,0,Math.PI*2,true);
+		}else{
+
+					circle.moveTo(mapPoints[p][0], mapPoints[p][1]);
+		circle.arc(mapPoints[p][0], mapPoints[p][1],1,0,Math.PI*2,true);
+		}
+			
+
 		path.lineTo(mapPoints[p][0], mapPoints[p][1]);
 	}
 	ctx.lineJoin="round";	//轉折點的樣式, miter(default), round扇形
 	ctx.strokeStyle = "green";	//線條色
-	ctx.lineWidth = 8;	//線條粗度
+	ctx.lineWidth = 6;	//線條粗度
 	ctx.stroke(path);
-		  
-	ctx.lineWidth = 3;	//線條粗度
+	
+			ctx.strokeStyle = "red";	//線條色  
+	ctx.lineWidth = 2;	//線條粗度
 	ctx.stroke(circle);
 	
-	ctx.lineWidth = 4;	//線條粗度
-	ctx.strokeStyle = "red";	//線條色
+	ctx.lineWidth = 3;	//線條粗度
+
 	ctx.stroke(circle0);
 	  
 	ctx.fillStyle = "black";
@@ -1195,16 +1217,19 @@ function nearPoint(){
 	var bigAng = 0;
 	var bigPoint=0;
 	var bigTask = 0;
+	var oldTask = taskID;
+						
 	for(var t=0; t < tasks.length; t++){
 		// console.log(tasks[t][0][2]);
 		for(var i=1; i < tasks[t].length; i++){
+			// console.log(recentPoint,  tasks[t][i]);
 			dist = getDistance(recentPoint,  tasks[t][i]);
-			 ang = angleOffset(recentPoint, tasks[t][i-1], tasks[t][i]);
-			 if(ang > bigAng){
-				 bigPoint = i;
-				 bigTask = t;
-				 bigAng = ang;
-			 }
+			ang = angleOffset(recentPoint, tasks[t][i-1], tasks[t][i]);
+			if(ang > bigAng){
+				bigPoint = i;
+				bigTask = t;
+				bigAng = ang;
+			}
 			if(dist < shortstDist){
 				shortstDist = dist;
 				nextPoint = i;
@@ -1212,6 +1237,12 @@ function nearPoint(){
 			}
 		}
 	}
+
+
+		if(taskID != oldTask){
+			initTask();
+			playVoice('新任務');
+		}
 	// showMsg("最近距離:" + tasks[taskID][nextPoint][2]);
 	// showMsg("最大角度:" + tasks[bigTask][bigPoint][2]+"~"+tasks[bigTask][bigPoint-1][2]+", " + bigAng.toFixed(2));
 	//TODO 最近點不在任何路徑範圍內
@@ -1226,7 +1257,6 @@ function geoYes (evt){
 	
 	if(searchPoint){
 		nearPoint();
-		initTask();
 		searchPoint = false;
 	}
 	
@@ -1269,7 +1299,7 @@ function geoYes (evt){
 				preDist = getDistance(recentPoint,  points[nextPoint]);
 			}else{
 			// nextPoint -= vector;
-				showMsg("端點");
+				// showMsg("端點");
 				searchPoint = true;
 				return;
 			}
@@ -1392,8 +1422,8 @@ function showData(evt){
 		str="";
 		// str = nextPoint+ "_"
 		str += strGPS.charAt(0);
-		str += points[nextPoint][2] + ", ";
-		str += (nextDist < 1) ? ("<font "+ fcolor+">" + nextDist*1000+"</font>公尺") : (Math.round(nextDist)+"公里");
+		str += points[nextPoint][2] + ", " + "<font "+ fcolor+">" ;
+		str += (nextDist < 1) ? (+ nextDist*1000+"</font>公尺") : (Math.round(nextDist)+"</font>公里");
 		
 		if(evt){
 			arriveSec =  nextDist*1000/evt.coords.speed;
