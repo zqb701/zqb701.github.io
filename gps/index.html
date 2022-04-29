@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>版本：035</a>
+	<a>版本：036</a>
 	<input type="button" value="測試" onClick="test02();">
 	<br>
 	<canvas id="canvas"></canvas>
@@ -1601,7 +1601,7 @@ function startGPS(){
 					showMsg(evt.code + ", " + evt.message);
 					//2, Network location provider at 'https://www.googleapis.com/' : ERR_NAME_NOT_RESOLVED
 				}
-		}, {enableHighAccuracy: false});
+		}, {enableHighAccuracy: true});
 }
 
 function stopGPS(){
