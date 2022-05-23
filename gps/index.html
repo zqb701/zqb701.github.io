@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>版本：01</a>
+	<a>版本：02</a>
 	<input type="button" value="測試" onClick="test02();">
 	<br>
 	<canvas id="canvas"></canvas>
@@ -34,7 +34,7 @@
 		<div class="cmdButton" onclick="insertCoord('測速');">測速</div>
 		<div class="cmdButton" onclick="nearPoint();	">尋標</div>
 		<div class="cmdButton" >
-			<div id="march" onclick="swColor();">0</div>
+			<div id="march" onclick="swColor();" style="font-size: 150px;">0</div>
 		</div>
 	</div>
 		
@@ -260,7 +260,8 @@ var tasks = [[																	//廣東路
 		[22.812226242941332, 120.31425831237283, "岡山收"],
 		[22.78783547514928, 120.32063020173459, "岡山349k"],
 		//測速北353.3
-		[22.737139874816485, 120.33445440802357, "楠梓北356k(台22)"],
+		[22.74197214663059, 120.3344210662114, "楠梓南出","交流道"],
+		// [22.737139874816485, 120.33445440802357, "楠梓北356k(台22)"],
 		[22.72095165324913, 120.33240548078585,  "楠梓南356K(高183)"],
 		[22.675247074423822, 120.32899256604684, "國1_鼎金系統362(國10)"]
 		//測速北373.4
@@ -702,6 +703,7 @@ var tasks = [[																	//廣東路
 		[22.63405729798552, 120.38919031335351, "賓士路口","路口",,"路口"],
 		[22.636104199865386, 120.39206782215768, "八德路","號誌",,"號誌"],
 		[22.63938131993379, 120.40146185845819, "光明路","號誌",,"號誌"],
+		[22.64018092324017, 120.40530035412054, "光明小路",,,"路口"],
 		[22.642159446314253, 120.4185087722723, "磚仔窰","號誌",,"號誌"],
 		[22.644811662781876, 120.42788668062792, "高屏橋西"],
 		[22.649060457408485, 120.444090794445, "高屏橋東"]
@@ -1429,11 +1431,11 @@ myCanvas.drawBaseMap = function(){
 		path.lineTo(mapPoints[p][0], mapPoints[p][1]);
 	}
 	ctx.lineJoin="round";	//轉折點的樣式, miter(default), round扇形
-	ctx.strokeStyle = "Lime";	//線條色
+	ctx.strokeStyle = "Lime";	//鮮綠色
 	ctx.lineWidth = 2;	//線條粗度
 	ctx.stroke(path);
 	
-	ctx.strokeStyle = "Magenta";	//線條色  
+	ctx.strokeStyle = "Magenta";	//  粉紅色
 	ctx.lineWidth = 2;	//線條粗度
 	// ctx.stroke(circle);
 	
@@ -1824,7 +1826,7 @@ var countRun = false;
 var isMarch = -1;
 var march = document.getElementById("march");
 var timeNum = [40,,60];	//TODO 連續號誌使用同一時序。轉向時兩個值互換。
-var colorList = ["red",,"green"];
+var colorList = ["red",,"green"];//lime鮮綠色在這裡反變「深」綠色
 /**紅綠燈讀秒, 時間到或用戶點選時會變色及重數 */
 
 function swColor(){
