@@ -23,8 +23,8 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>版本：03</a>
-	<input type="button" value="測試" onClick="test02();">
+	<a>版本：04</a>
+	<input type="button" value="測試" onClick="test03();">
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
@@ -1070,7 +1070,7 @@ console.log(a1,a2);
 */
 	a1 = getAzimuth(p0,p1);
 	a2 = getAzimuth(p0,p2);
-	console.log(a1,a2);
+	// console.log(a1,a2);
 	
 	dA = Math.abs(a1 - a2);
 	// dA = Math.abs(dA - Math.PI);
@@ -1082,6 +1082,22 @@ console.log(a1,a2);
 	return dA;
 }
 	
+	function test03(){
+		p=[	[22.66654286222146, 120.50113602621077,"民利35巷"],
+			[22.665285944517155, 120.50179304264677,"殺蛇橋"],
+			[22.66608654077297, 120.50036725372237,"工業路"]];
+			a1 = getAzimuth(p[0], p[2]);
+			d1 = -a1 -(-Math.PI/2);
+			
+			if( d1 > Math.PI*2 ){
+				d1 -= Math.PI*2;
+			}
+
+			d1 *= 180/Math.PI;
+console.log(a1, d1);
+			
+			
+	}
 	function test01(){
 			p=[	[22.66654286222146, 120.50113602621077,"民利35巷"],
 			[22.665285944517155, 120.50179304264677,"殺蛇橋"],
@@ -1805,12 +1821,19 @@ function showData(evt){
 			}
 			str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
 			str += "方向：" + Math.round(evt.coords.heading);	//12點鐘方向為0, 順時針~360
-			recentDegree = recentVector +Math.PI/2;
-			if( recentDegree > 0 ){
-				recentDegree += Math.PI*2;
+						// d1 = -a1 -(-Math.PI/2);
+			
+			// if( d1 > Math.PI*2 ){
+				// d1 -= Math.PI*2;
+			// }
+
+			// d1 *= 180/Math.PI;
+			recentDegree = -recentVector -(-Math.PI/2);
+			if( recentDegree > Math.PI*2 ){
+				recentDegree -= Math.PI*2;
 			}
 			recentDegree *= 360/Math.PI*2;
-			str += " / " + recentVector+"("+recentDegree+")";
+			str += " / " + (recentVector).toFixed(2)+"("+recentDegree.toFixed()+")";
 		}
 		
 		if(vector ==1){	//去程
