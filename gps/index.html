@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>版本：05</a>
+	<a>版本：06</a>
 	<input type="button" value="測試" onClick="test03();">
 	<br>
 	<canvas id="canvas"></canvas>
@@ -1382,6 +1382,7 @@ function gridCmd(x,y){
 
 			if(skipPoint()){	//手動跳一點, 差太多點則切換方向重找最近點
 				playVoice("跳過");
+				recentVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);
 				showData();
 			}else{
 				showMsg("端點");
@@ -1624,21 +1625,21 @@ function nearPoint(mode){
 			dist = getDistance(recentPoint,  tasks[t][i]);
 			ang = angleOffset(recentPoint, tasks[t][i-1], tasks[t][i]);
 			if(ang > bigAng){
-				bigPoint = i;
-				bigTask = t;
-				bigAng = ang;
-			}
-			if(dist < shortstDist){
-				shortstDist = dist;
 				nextPoint = i;
 				taskID = t;
+				bigAng = ang;
 			}
+			// if(dist < shortstDist){
+				// shortstDist = dist;
+				// nextPoint = i;
+				// taskID = t;
+			// }
 		}
 	}
-	if(mode){
-		nextPoint =bigPoint;
-		taskID = bigTask;
-	}
+	// if(mode){
+		// nextPoint =bigPoint;
+		// taskID = bigTask;
+	// }
 
 		if(taskID != oldTask){
 			initTask();
@@ -1700,7 +1701,7 @@ function geoYes (evt){
 			if(skipPoint()){
 				myCanvas.drawPoint(points[nextPoint][0], points[nextPoint][1], "white", 2);
 				preDist = getDistance(recentPoint,  points[nextPoint]);
-				recentVector = getAzimuth(recentPoint,  points[nextPoint]);
+				recentVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);
 
 			}else{
 			// nextPoint -= vector;
@@ -1840,9 +1841,13 @@ function showData(evt){
 			}
 			str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
 			str += "方向：" + Math.round(evt.coords.heading);	//12點鐘方向為0, 順時針~360
-
-			
-							recentDegree = Math.PI/2 - recentVector;
+		}
+				// d1 = Math.PI/2 - a1;
+				// if(d1 < 0){
+					// d1 += Math.PI*2;
+				// }
+				
+				recentDegree = Math.PI/2 - recentVector;
 				if(recentDegree < 0){
 					recentDegree += Math.PI*2;
 				}
@@ -1850,13 +1855,13 @@ function showData(evt){
 			
 			// if( recentVector < Math.PI/2 ){
 				// recentDegree = Math.PI/2 - recentVector
-				recentDegree -= Math.PI*2;
+				// recentDegree -= Math.PI*2;
 			// }else{
 				// recentDegree = recentVector - Math.PI/2 
 			// }
 			recentDegree *= 180/Math.PI;
 			str += " / " + (recentVector).toFixed(2)+"("+recentDegree.toFixed()+")";
-		}
+
 		
 		if(vector ==1){	//去程
 			tmp0 = 0;
