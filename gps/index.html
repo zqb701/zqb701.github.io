@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>版本：07</a>
+	<a>版本：08</a>
 	<input type="button" value="測試" onClick="test03();">
 	<br>
 	<canvas id="canvas"></canvas>
@@ -1875,7 +1875,8 @@ function showData(evt){
 		str += "<br>夾角：" + dA.toFixed(2);
 		str += "("+(dA*180/Math.PI).toFixed();
 		if(evt){
-			if(Math.abs(evt.coords.heading - dA*180/Math.PI) > 135){
+			diff = Math.abs(evt.coords.heading - dA*180/Math.PI); 
+			if(diff > 90 && diff < 270){
 				str += "*";
 			}
 		}
