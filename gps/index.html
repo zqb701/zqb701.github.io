@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>版本：08</a>
+	<a>v:0.81</a>
 	<input type="button" value="測試" onClick="test03();">
 	<br>
 	<canvas id="canvas"></canvas>
@@ -107,24 +107,20 @@ var tasks = [[																	//廣東路
 		[22.669222036792192, 120.49452819798431, "自由路","號誌",,"號誌"],
 		[22.669049328652985, 120.49498868304266, "自立路"],
 		[22.668690566737276, 120.49578050428205, "民和路"],
-		[22.667523721107013, 120.4978306934891, "廣東路G60R40","號誌",,"號誌"],
-		[22.66665111203367, 120.49936391934412, "民教路"],
+		[22.667523721107013, 120.4978306934891, "廣東路G50R40","號誌",,"號誌"],
+		
+		[22.66665111203367, 120.49936391934412, "民教路G60R40"],
 		[22.6660872645837,		120.50037043288955,	"工業路G60R40","號誌",,"號誌"],
-		[22.665707901738443,	120.5010424041541,	"69巷","路口"],
-		
+		[22.665707901738443,	120.5010424041541,	"69巷","路口"],		
 		[22.66528466599206,		120.5017954343364,	"殺蛇溪", "號誌"],
-		[22.665066241181687, 120.50217027304704, "民福路",,,"號誌"],
-		
+		[22.665066241181687, 120.50217027304704, "民福路G60R40",,,"號誌"],
 		[22.6642219442753, 120.50369274070279, "民生校區"],
 		[22.66339089234732, 120.50520474477672, "菸廠路"],
-		[22.66279229323675, 120.50623662222313, "瑞民路演藝廳",],
-		[22.662224974588675, 120.50727148282286, "歸仁路G60R40", "號誌",,"號誌"],
-		[22.660783934931143, 120.50977659008726, "瑞屏街中油"],
+		[22.66279229323675, 120.50623662222313, "瑞民路演藝廳"],
 		
+		[22.662224974588675, 120.50727148282286, "歸仁路G50R40", "號誌",,"號誌"],
+		[22.660783934931143, 120.50977659008726, "瑞屏街中油"],		
 		[22.65990848834937, 120.51121889337335, "民生路_和生路口G60R40"]
-																						//台一(往南)
-
-
 	],[																					//田中巷
 		[22.659470893607228, 120.51209569251994, "安心四橫巷", "路口",,"路口"],
 		[22.65982669905339, 120.51235318458225, "田中巷口", "路口",,"路口"],	
@@ -197,7 +193,7 @@ var tasks = [[																	//廣東路
 		[23.002538936297594, 120.32017197763913, "彎354k路橋"],
 		[22.98198929030237, 120.32137500437895, "關廟南出(台86)","交流道"],
 		[22.976988169199117, 120.32451457757003, "關廟357"],		//不算「系統」交流道
-		[22.972969515201683, 120.33025066426973,"關廟北出(台86)",,,"交流道"],
+		[22.972969515201683, 120.33025066426973,"關廟北出(台86)",,"s","交流道"],
 		[22.970843068872675,120.33799371432511,"測速南358.6k","測速"],
 		[22.95513577884162, 120.35215292962923, "彎46"],
 		[22.928409690316805, 120.35144861748418, "關廟休363k"],
@@ -214,10 +210,14 @@ var tasks = [[																	//廣東路
 		[22.715142111757505, 120.52903480114699, "鹽埔396k"],
 		[22.696340598015862, 120.5553899586657, "長治400k"],
 		[22.68493499943817, 120.56275716716313, "彎35"],
-		[22.651404539183083, 120.5461149478058, "麟洛南出","交流道"],
+		[22.651404539183083, 120.5461149478058, "麟洛南出","交流道","s"],
 		[22.638461295240916, 120.5377207690429, "麟洛407k"],
 		[22.57146000799331, 120.52805817563673, "國3_竹田系統415k"]
-
+	],[
+		[22.651404539183083, 120.5461149478058, "麟洛南出"],
+		[22.648871967617648, 120.54400312679464, "彎1"],
+		[22.647870943228924, 120.54325403791405, "彎2"],
+		[22.643702797709295, 120.5405143484962, "彎3",,"s"]
 	],[
 		[23.5534635024959, 120.41575260224359, "國1_民雄257k"],
 		[23.494853866352237, 120.39151776091767, "嘉義264k"],
@@ -397,10 +397,11 @@ var tasks = [[																	//廣東路
 
 	],[
 		[22.635849179031137, 120.53125146842204, "屏37_信義路屏監"],
-		[22.640091466178593, 120.5362835094121, "台1路口", "路口",, "路口"],
+		[22.640091466178593, 120.5362835094121, "台1路口", ,"s", "路口"],
 		[22.643808327710612, 120.54063160448442, "國道下R40", "號誌"],
 		//[22.646887968356193, 120.54422751976801, "彎道"],	//不在回程路線上
 		[22.650260226458116, 120.54568906280016, "民生路g40r40", "號誌",,"號誌"],
+		
 		[22.655381953796578, 120.55160925823591, "科大路g30r60", "路口",,"路口"],
 		[22.653958635505553, 120.56099718185452, "南豐路g40r40","號誌",,"號誌"],
 		[22.652601671108002, 120.56930340677384, "彎33"],
@@ -411,6 +412,7 @@ var tasks = [[																	//廣東路
 		[22.637113564621217, 120.58562488958711, "西銀巷"],
 		[22.634758245038586, 120.58804450981617, "科大北路g20r60","號誌",,"號誌"],
 		[22.630047211459626, 120.59291416762996, "老埤路口g60r40", "路口",,"路口"],
+		
 		[22.63165203265637, 120.59484811574646, "福泰路R25"],
 		[22.6323789465293, 120.59747736025373, "南山路"],
 		[22.633128880246172, 120.59797113670795, "安通路口", "路口",,"路口"],
@@ -421,17 +423,18 @@ var tasks = [[																	//廣東路
 		[22.63129446897867, 120.61666081562409,  "彎26",,,"急彎"],
 		[22.631997564921065, 120.61860851239224, "彎22"],
 		[22.62871783050417, 120.62638157350078,"沿山路口", "路口",,"路口"],
+		
 		[22.62210667218307, 120.62556054399592, "保安路", "號誌",,"號誌"],
 		[22.61246586071109, 120.6200526260988, "彎66"],
 		[22.604416359284045, 120.62024646947125, "營區路R40","號誌",,"號誌"],
 		[22.59858233469853, 120.62046577629641, "測速順向路邊","測速"],
-		[22.591721713708438, 120.62115374455101, "佳平路口", "路口",,"路口"],
+		[22.591721713708438, 120.62115374455101, "佳平路口", "路口","s"],
 		[22.580727045914188, 120.62226591938521, "台185_富山路屏106"]
 			
 	],[	
 																				//
 		[22.590491294834035, 120.61556295866392, "屏120-1_屏99赤山"],
-		[22.591721713708438, 120.62115374455101, "佳平沿山路口",,,"路口"],																		
+		[22.591721713708438, 120.62115374455101, "佳平沿山路口",,"s","路口"],																		
 		[22.590483410935843, 120.62465695816196,"水泉山公園","急彎",,"急彎"],
 		[22.592155787378577, 120.63335669509607,"消防隊","急彎",,"急彎"],
 		[22.588965173008408, 120.6347857736698,"彎c21"],
@@ -654,11 +657,18 @@ var tasks = [[																	//廣東路
 		[22.94149314730315, 120.30124755313828, "彎01"],
 		[22.971278480819183, 120.31327247513406, "測速西",,,"測速"],
 		[22.975157067181804, 120.31877334375743, "台19甲","號誌",,"號誌"],
-		[22.97668452704216, 120.32249768738073, "同向匯合",,, "靠右"],
+		[22.976705195681916, 120.32280595255693, "同向匯合陸橋",,"s", "靠右"],
 		[22.976989521530918, 120.32450692479333, "國道下方"],
 		[22.9766912314565, 120.3266473226488,"反向匯合"],
 		[22.975325461556306, 120.32744965428243, "反曲點"],
 		[22.973940257514684, 120.32848339095966, "台86東_關廟交"]
+	],[
+		[22.976705195681916, 120.32280595255693, "匣道起點86南下國3同向匯合陸橋"],
+		[22.976659929908863, 120.32366393797008, "彎1"],
+		[22.976447560215362, 120.32443104974865, "彎2"],
+		[22.976447560215362, 120.32443104974865, "彎3"],
+		[22.975588200363244, 120.32562195055992, "彎4"],
+		[22.97471788502305, 120.32679886237133, "匣道末端86南下國3",,"s"]
 	],[
 																						//台1台南段
 		[23.006205068737728, 120.20609455278554, "台南_西門路北"],
@@ -798,14 +808,14 @@ var tasks = [[																	//廣東路
 		[22.659860060390763, 120.50601741683295,"歸仁路","號誌",,"號誌"],
 		
 		[22.659911101873785, 120.51121459162805,"民生路","號誌",,"號誌"],
-		[22.658034247616996, 120.5146302173418,"瑞光路口","號誌",,"號誌"],
+		[22.658034247616996, 120.5146302173418,"瑞光路口","號誌","s","號誌"],
 		[22.655539129939942, 120.51901611238941, "果菜市場g120r40","號誌",,"號誌"],
 		[22.65164196538594, 120.52577244459546,"測速n越線","測速"],
 		[22.650677214478804, 120.52685860645906, "民族路"],
-		[22.649322449799737, 120.52806492385191, "大同街g120r40", "號誌",,"號誌"],
-		[22.64284588050273, 120.5338488670412, "長安巷", "號誌",,"號誌"],	
-		[22.640091466178593, 120.5362835094121, "信義路(國3北)", "路口",, "路口"],
-		[22.637586406499317, 120.53851589333695, "內埔_永豐路(國3南)", "號誌",,"號誌"],
+		[22.649322449799737, 120.52806492385191, "大同街g120r40"],
+		[22.64284588050273, 120.5338488670412, "長安巷"],	
+		[22.640091466178593, 120.5362835094121, "信義路", "路口","s"],
+		[22.637586406499317, 120.53851589333695, "台1_內埔永豐路"],
 				],[
 														//屏東中段
 		[22.633538679437965, 120.54216382730912, "台1內埔_人和路", "號誌",,"號誌"],
@@ -917,11 +927,9 @@ var tasks = [[																	//廣東路
 		[23.341476178144084, 120.5024458216987, "彎77"],
 		[23.340419604980966, 120.50247185780395, "同翠橋"],
 		[23.340355027385485, 120.49928365378014, "關嶺_捷徑下重覆"]
-		
-
-
 	]];
-
+	
+	
 	var taskID = 2;
 	// var DEBUG = true;
 		var DEBUG = false;
@@ -935,7 +943,9 @@ var tasks = [[																	//廣東路
 	var Point02 = [22.66613321392555, 120.50085349955407,"一樓"];
 	var Point03 = [22.6243669, 120.7148054, "管制站"];
 	var recentPoint = Point03;
-	var recentVector = -1;
+	var edgeVector = -1;
+	var coords_heading = -1;	//最近一次的GPS方向
+	var coords_speed = -1;
 	//上一個通過的點
 	var passPoint = [0,0];
 		passPoint[0] = recentPoint[0];
@@ -958,7 +968,7 @@ var tasks = [[																	//廣東路
 	
 	var receGap = 0;
 	var prevGap = 0;
-	//任務的去回行程, 回程為-1
+	//路徑的順逆向,逆向為-1(路徑數據以向南及向東為順向)
 	var vector = 1;	
 	/** 一般提醒*/
 	var enAlarm = true;
@@ -1001,7 +1011,7 @@ var tasks = [[																	//廣東路
 
 	class TODO {}// function TODO(){}
 	var _todo = new TODO();
-	
+	_todo._500資料檔案化_匯出_匯入= function(){}	//
 	class canvas01{}
 	var myCanvas = new canvas01();
 	
@@ -1025,9 +1035,6 @@ var tasks = [[																	//廣東路
 	}
 
 function getAzimuth(p0, p1){	//方位角
-// pp = [[,],[,],[,]];
-	// pp[1][0] = p1[0];
-	// pp[1][1] = p0[1];
 	d1y = getDistance([p1[0],p0[1]],p0);
 	if(p1[0] < p0[0]){
 		d1y *= -1;
@@ -1036,57 +1043,24 @@ function getAzimuth(p0, p1){	//方位角
 	if(p1[1] < p0[1]){
 		d1x *= -1;
 	}
-	return Math.atan2(d1y,d1x);
+	//geometric angle幾何角度
+	ga = Math.atan2(d1y,d1x);
+	ga = Math.PI/2 - ga;
+	if(ga < 0){
+		ga += Math.PI*2;
+	}
+	return ga * 180/Math.PI;	//轉方位角0~360
 }
 
 
 function angleOffset(p0,p1,p2){		
-	if(DEBUG) console.log("angleOffset(s)");
-/*
-	pp = [[,],[,],[,]];
-	
-	pp[1][0] = p1[0];
-	pp[1][1] = p0[1];
-	d1y = getDistance(pp[1],p0);
-	d1y = getDistance([p1[0],p0[1]],p0);
-	if(p1[0] < p0[0]){
-		d1y *= -1;
-	}
-	d1x = getDistance(pp[1],p1);
-	d1x = getDistance([p1[0],p0[1]],p1);
-	if(p1[1] < p0[1]){
-		d1x *= -1;
-	}
-	a1= Math.atan2(d1y,d1x);
-
-	pp[2][0] = p2[0];
-	pp[2][1] = p0[1];
-	d2y = getDistance(pp[2],p0);
-	d2y = getDistance([p2[0],p0[1]],p0);
-	if(p2[0] < p0[0]){
-		d2y *= -1;
-	}
-	d2x = getDistance(pp[2],p2);
-	d2x = getDistance([p2[0],p0[1]],p2);
-	if(p2[1] < p0[1]){
-		d2x *= -1;
-	}
-	console.log(d1y,d1x,d2y,d2x)
-	//atan2：三點鐘為零度, 順時針~3.14, 逆時針~ -3.14
-	a2 = Math.atan2(d2y,d2x);
-console.log(a1,a2);
-*/
 	a1 = getAzimuth(p0,p1);
 	a2 = getAzimuth(p0,p2);
-	// console.log(a1,a2);
-	
 	dA = Math.abs(a1 - a2);
-	// dA = Math.abs(dA - Math.PI);
+
 	if(dA > Math.PI){
-		dA = Math.PI*2 -dA;
+		dA = Math.PI*2 - dA;
 	}
-	// console.log(a1,a2,dA,dA*360/(2*Math.PI));	
-	if(DEBUG) console.log("angleOffset(s), return:"+ dA);
 	return dA;
 }
 	
@@ -1382,7 +1356,7 @@ function gridCmd(x,y){
 
 			if(skipPoint()){	//手動跳一點, 差太多點則切換方向重找最近點
 				playVoice("跳過");
-				recentVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);
+				// edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);
 				showData();
 			}else{
 				showMsg("端點");
@@ -1496,7 +1470,6 @@ function skipPoint(){
 		// try{
 	enAlarm = true;
 	enAlarmHigh = true;
-	
 
 	passPoint[0] = points[nextPoint][0];
 	passPoint[1] = points[nextPoint][1];
@@ -1507,6 +1480,10 @@ function skipPoint(){
 
 		return false;
 	}else{
+		 if( points[nextPoint][4] == "s"){
+			 searchPoint = true;
+		 }
+		edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);
 		return true;
 	}
 }	
@@ -1627,10 +1604,10 @@ function nearPoint(mode){
 			if(ang > bigAng){
 				nextPoint = i;
 				taskID = t;
-				bigAng = ang;
+				bigAng = ang;	//與兩端夾角最大者
 			}
 			// if(dist < shortstDist){
-				// shortstDist = dist;
+				// shortstDist = dist;	//與端點距離最近者
 				// nextPoint = i;
 				// taskID = t;
 			// }
@@ -1645,6 +1622,12 @@ function nearPoint(mode){
 			initTask();
 			playVoice('新任務');
 		}
+		edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);
+			
+			diff = Math.abs(coords_heading - edgeVector); 
+			if(diff > 90 && diff < 270){
+				vector *= -1;
+			}
 	// showMsg("最近距離:" + tasks[taskID][nextPoint][2]);
 	// showMsg("最大角度:" + tasks[bigTask][bigPoint][2]+"~"+tasks[bigTask][bigPoint-1][2]+", " + bigAng.toFixed(2));
 	//TODO 最近點不在任何路徑範圍內
@@ -1655,6 +1638,9 @@ function geoYes (evt){
 	
 	recentPoint[0] = evt.coords.latitude;
 	recentPoint[1] = evt.coords.longitude;
+	coords_heading = evt.coords.heading;
+	coords_speed = evt.coords.speed;
+	
 	strGPS = strGPS.substr(1,3)+strGPS.charAt(0);
 	
 	if(searchPoint){
@@ -1684,7 +1670,7 @@ function geoYes (evt){
 
 	_todo._250判定脫離路線 = function(){}	//AAAAAAAA
 	_todo._220搜尋新路線 = function(){}	//手動鈕, 用角度與距離搜尋
-	_todo._230判定正確方向 = function(){}	//AAAAAAAA
+	_todo._230判定順逆向 = function(){}	//AAAAAAAA
 	//需要判定的項目
 	//1.通過點, 才能繼續導航
 	//2.提醒,及高速提醒
@@ -1701,18 +1687,17 @@ function geoYes (evt){
 			if(skipPoint()){
 				myCanvas.drawPoint(points[nextPoint][0], points[nextPoint][1], "white", 2);
 				preDist = getDistance(recentPoint,  points[nextPoint]);
-				recentVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);
-
 			}else{
 			// nextPoint -= vector;
 				// showMsg("端點");
 				searchPoint = true;
-				return;
+				// return;
 			}
 			
 			// pathAngle =  Math.atan((passPoint[0]- points[nextPoint][0])/(passPoint[1] - points[nextPoint][1]));
+		}else{
+			fcolor = "color='red'";
 		}
-		fcolor = "color='red'";
 	}else{		//接近中
 		
 		// if(enAlarmHigh && nextDist < 2 && evt.coords.speed*3.6 >70){
@@ -1739,7 +1724,7 @@ function geoYes (evt){
 		}		
 	}
 	
-	showData(evt);
+	showData();
 	preDist = nextDist;
 }
 
@@ -1824,44 +1809,29 @@ function getDistance(coord1, coord2) {
 }
 	var fcolor = "";
 	var strGPS = "\|/-";	//
-function showData(evt){
+function showData(){
 	// showMsg("showData:nextPoint=" + nextPoint);
 	// try{
 		str="";
-		// str = nextPoint+ "_"
 		str += strGPS.charAt(0);
-		str += "["+points[nextPoint][4-vector]+"]";
-		str += points[nextPoint][2] + ", " + "<font "+ fcolor+">" ;
-		str += (nextDist < 1) ? (+ nextDist*1000+"</font>公尺") : (Math.round(nextDist)+"</font>公里");
-		
-		if(evt){
-			arriveSec =  nextDist*1000/evt.coords.speed;
-			if(arriveSec < 99){
-				str += "(" + arriveSec.toFixed(0)+"秒)";
-			}
-			str += "<br/>時速："+ (evt.coords.speed*3.6).toFixed(1) + "公里。";	//原單位：米/秒
-			str += "方向：" + Math.round(evt.coords.heading);	//12點鐘方向為0, 順時針~360
+		voiceStr = points[nextPoint][4-vector];
+		if(voiceStr){
+			str += "[" + voiceStr + "]";
+		}else{
+			str += "[x]";
 		}
-				// d1 = Math.PI/2 - a1;
-				// if(d1 < 0){
-					// d1 += Math.PI*2;
-				// }
-				
-				recentDegree = Math.PI/2 - recentVector;
-				if(recentDegree < 0){
-					recentDegree += Math.PI*2;
-				}
-			
-			
-			// if( recentVector < Math.PI/2 ){
-				// recentDegree = Math.PI/2 - recentVector
-				// recentDegree -= Math.PI*2;
-			// }else{
-				// recentDegree = recentVector - Math.PI/2 
-			// }
-			recentDegree *= 180/Math.PI;
-			str += " / " + (recentVector).toFixed(2)+"("+recentDegree.toFixed()+")";
+		str += points[nextPoint][2];
+		str += "，" + edgeVector.toFixed() + "度";
+		
+		str += "<br>距離：<font "+ fcolor+">" ;
+		str += (nextDist < 1) ? (+ nextDist*1000+"</font>公尺") : (Math.round(nextDist)+"</font>公里");
 
+		arriveSec =  nextDist*1000/coords_speed;
+		if(arriveSec < 99){
+			str += "(" + arriveSec.toFixed(0)+"秒)";
+		}
+		str += "<br/>GPS："+ (coords_speed*3.6).toFixed(1) + "公里，";	//原單位：米/秒
+		str += Math.round(coords_heading) +"度";	//12點鐘方向為0, 順時針~360
 		
 		if(vector ==1){	//去程
 			tmp0 = 0;
@@ -1872,18 +1842,10 @@ function showData(evt){
 		}
 		str += "<br>任務：" + points[tmp0][2] + " ~ " +points[tmp1][2];
 		dA = angleOffset(recentPoint,passPoint,points[nextPoint]);
-		str += "<br>夾角：" + dA.toFixed(2);
-		str += "("+(dA*180/Math.PI).toFixed();
-		if(evt){
-			diff = Math.abs(evt.coords.heading - dA*180/Math.PI); 
-			if(diff > 90 && diff < 270){
-				str += "*";
-			}
-		}
-		str +=")";
-	// } catch(e){
-		// str += e.message;
-	// }finally {
+		str += "<br>夾角：" + (dA*180/Math.PI).toFixed();
+	
+
+
 		document.getElementById("posStr").innerHTML=str;
 	// }
 	
@@ -1980,43 +1942,44 @@ function displayNotification(){
 }
 
 var IntervalID;
-var countRun = false;
 var isMarch = -1;
 var march = document.getElementById("march");
 var timeNum = [40,,60];	//TODO 連續號誌使用同一時序。轉向時兩個值互換。
-var colorList = ["red",,"green"];//lime鮮綠色在這裡反變「深」綠色
+var colorList = ["red",,"lime"];
 /**紅綠燈讀秒, 時間到或用戶點選時會變色及重數 */
 
 function swColor(){
-	_todo._500資料檔案化 = function(){}	//
-	_todo._510紅綠燈記錄 = function(){}	
+
 	//初始綠色靜止秒數零, 按一下開始增加, 
 	//按一下(記錄綠色秒數G3)變紅且從零增加,
 	//再按一下(記錄G3R40)變綠且從零增加
 	//跳點後,存檔G3R40G24,畫面回復初始狀態
-	_todo._520紅綠燈讀秒 = function(){}	
 	//看到燈號時按一下, 再按一下變更顏色,倒數, 下一點時間不同則要回復初始狀態
-	if(!countRun){
-		//停止狀態則啟動
+	if(!IntervalID){
 		IntervalID = window.setInterval(( () =>  {
 			//休眠狀態將回調函數放在隊列中,等瀏覽器再次打開的時候，一瞬間全部執行
 			if(count < 0){
 				isMarch *= -1;
 				count = timeNum[1+isMarch];
 				march.style.color = colorList[1+isMarch];
+				// march.innerText = count;
 			}
 			march.innerText = count--;
+			
 		}	) , 1000);
 		count = timeNum[1+isMarch];
-		countRun=true;
+		march.style.color = colorList[1+isMarch];
+		march.innerText = count--;
 	}else{
 		isMarch *= -1;
 		count = timeNum[1+isMarch];
 		march.style.color = colorList[1+isMarch];
-		march.innerText = count--;
+		march.innerText = count;
 	}
 }
 
+	_todo._510紅綠燈記錄 = function(){}	
+	_todo._520紅綠燈讀秒 = function(){}	
 function exportCoord(){
 //座標清單匯出檔案,再用Http_file_server傳到電腦
   var fileName = "a.csv";//匯出的檔名
