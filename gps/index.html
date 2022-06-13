@@ -23,13 +23,13 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>v:0.81</a>
+	<a>v0.82</a>
 	<input type="button" value="測試" onClick="test03();">
 	<br>
 	<canvas id="canvas"></canvas>
 	<font size="7">
 	<div style="display: flex; justify-content: flex-end;">
-		<div class="cmdButton" onclick="nearPoint(true);" >尋標</div>
+		<div class="cmdButton" onclick="nearPoint();" >尋標</div>
 		<div class="cmdButton" onclick="insertCoord('急彎');">急彎</div>  
 		<div class="cmdButton" onclick="insertCoord('測速');">測速</div>
 		<div class="cmdButton" onclick="nearPoint();	">尋標</div>
@@ -1480,9 +1480,7 @@ function skipPoint(){
 
 		return false;
 	}else{
-		 if( points[nextPoint][4] == "s"){
-			 searchPoint = true;
-		 }
+
 		edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);
 		return true;
 	}
@@ -1682,6 +1680,10 @@ function geoYes (evt){
 			//近距離內(車速的2秒),判定為通過
 			if(points[nextPoint][4-vector]){
 				playVoice("通過");
+				if( points[nextPoint][4] == "s"){
+					searchPoint = true;
+					return;
+				}
 			}
 			
 			if(skipPoint()){
@@ -1691,7 +1693,7 @@ function geoYes (evt){
 			// nextPoint -= vector;
 				// showMsg("端點");
 				searchPoint = true;
-				// return;
+				return;
 			}
 			
 			// pathAngle =  Math.atan((passPoint[0]- points[nextPoint][0])/(passPoint[1] - points[nextPoint][1]));
