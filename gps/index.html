@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>v0.824</a>
+	<a>v0.825</a>
 	<input type="button" value="測試" onClick="test03();">
 	<br>
 	<canvas id="canvas"></canvas>
@@ -145,7 +145,7 @@ var tasks = [[																	//廣東路
 		[22.659390282100908, 120.51514639840148, "瑞光路口", "路口","s"],
 
 	],[																					//瑞光路
-		[22.6975656929976, 120.49934616305569,"瑞光路_忠孝路", "號誌",,"號誌"]
+		[22.6975656929976, 120.49934616305569,"瑞光路_忠孝路", "號誌",,"號誌"],
 		[22.6925738066444, 120.50228411988692, "中正路", "路口","s","路口"],
 		[22.689404000290573, 120.50339964016158, "華新路", "號誌",,"號誌"],
 		[22.687119793082346, 120.50397282994732, "華正路口", "號誌",,"號誌"],
@@ -1674,13 +1674,13 @@ function nearPoint(){
 function geoYes (evt){
 	showMsg("geoYes(0)");
 	strGPS = strGPS.substr(1,3)+strGPS.charAt(0);
-	/*
+
 	if( evt.coords.speed <=0){
 			coords_speed = -1;
 			coords_heading = -1;
 			return;
 	}
-	*/
+
 	recentPoint[0] = evt.coords.latitude;
 	recentPoint[1] = evt.coords.longitude;
 	coords_heading = evt.coords.heading;
