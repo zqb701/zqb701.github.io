@@ -1619,7 +1619,8 @@ myCanvas.drawPoint=function (lat, lon, color, r){
 	ctx.stroke();
 }
 
-function nearPoint(mode){
+function nearPoint(){
+	showMsg("nP(0)");
 	// showMsg("nearPoint():"+recentPoint+";"+tasks[0][0]);
 	//從路徑上找到最近的下一目標點, 但可能是適當點的前一點
 
@@ -1628,7 +1629,7 @@ function nearPoint(mode){
 	var bigPoint=0;
 	var bigTask = 0;
 	var oldTask = taskID;
-						
+						showMsg("nP(1)");
 	for(var t=0; t < tasks.length; t++){
 		// console.log(tasks[t][0][2]);
 		for(var i=1; i < tasks[t].length; i++){
@@ -1647,21 +1648,24 @@ function nearPoint(mode){
 			// }
 		}
 	}
+	showMsg("nP(3)");
 	// if(mode){
 		// nextPoint =bigPoint;
 		// taskID = bigTask;
 	// }
 
-		if(taskID != oldTask){
-			initTask();
-			playVoice('新任務');
+	if(taskID != oldTask){
+		initTask();
+		playVoice('新任務');
+	}
+	showMsg("nP(5)");
+	edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);
+		
+		diff = Math.abs(coords_heading - edgeVector); 
+		if(diff > 90 && diff < 270){
+			vectorMode();
 		}
-		edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);
-			
-			diff = Math.abs(coords_heading - edgeVector); 
-			if(diff > 90 && diff < 270){
-				vectorMode();
-			}
+		showMsg("nP(8)");
 	// showMsg("最近距離:" + tasks[taskID][nextPoint][2]);
 	// showMsg("最大角度:" + tasks[bigTask][bigPoint][2]+"~"+tasks[bigTask][bigPoint-1][2]+", " + bigAng.toFixed(2));
 	//TODO 最近點不在任何路徑範圍內
