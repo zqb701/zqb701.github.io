@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>v0.823</a>
+	<a>v0.824</a>
 	<input type="button" value="測試" onClick="test03();">
 	<br>
 	<canvas id="canvas"></canvas>
@@ -1633,7 +1633,7 @@ function nearPoint(){
 	for(var t=0; t < tasks.length; t++){
 		// console.log(tasks[t][0][2]);
 		for(var i=1; i < tasks[t].length; i++){
-			// console.log(recentPoint,  tasks[t][i]);
+			 showMsg(tasks[t][i][2]);
 			dist = getDistance(recentPoint,  tasks[t][i]);
 			ang = angleOffset(recentPoint, tasks[t][i-1], tasks[t][i]);
 			if(ang > bigAng){
