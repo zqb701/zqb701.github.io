@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>v0.82b1</a>
+	<a>v0.82b2</a>
 	<input type="button" value="測試" onClick="test03();">
 	<br>
 	<canvas id="canvas"></canvas>
@@ -1729,9 +1729,12 @@ minDiff = 361;
 			}
 		}
 	}
+	
 	console.log("best:" + tasks[bestT][bestP][2]);
 	*/
-	nextPoint =bestP;
+	bestP = bigPoint[0];
+	bestT = bigTask[0];
+	nextPoint = bestP;
 	taskID = bestT;
 
 	if(taskID != oldTask){
