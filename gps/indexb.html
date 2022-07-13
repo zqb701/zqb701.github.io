@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>v0.82b6</a>
+	<a>v0.82b61</a>
 	<input type="button" value="測試" onClick="test03();">
 	<br>
 	<canvas id="canvas"></canvas>
@@ -1363,7 +1363,7 @@ function insertCoord(coordType){
 }
 
 function addLog(str){
-	// var now = new Date();
+	var now = new Date();
 	timeStr = now.getDate()+"_"+now.getHours()+":"+now.getMinutes() +":"+ now.getSeconds();
 	// timeStr = new Date().toISOString();
 	localStorage.insertCoord = timeStr+", "+ str +"<br/>"+ localStorage.insertCoord;
