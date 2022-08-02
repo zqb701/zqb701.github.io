@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>v0.82b80</a>
+	<a>v0.82b81</a>
 	<div style="display:none">
 		<input type="button" value="測試" onClick="test03();">
 		<a href="index.html">穩定版</a>、
@@ -124,6 +124,7 @@ var tasks = [[
 [22.678610736856214, 120.49196844236240, "中華路"],
 [22.678454822713874, 120.49290252166726, "長春街"],
 [22.678104404717550, 120.49473692862567, "仁愛路"],
+[22.677878365098260, 120.49559583741438, "大連路"],
 [22.677433398468075, 120.49717838974670, "自由路"],
 [22.676454250884152, 120.50072968208876, "廣東路"],
 ],[
@@ -1910,7 +1911,9 @@ showMsg("a2");
 	showMsg("a3");
 	edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);	
 	diff = Math.abs(coords_heading - edgeVector); 
-	strtmp = "gps:"+ Math.round(coords_heading) + ", edge:" + Math.round(edgeVector);
+	strtmp = ", " + Math.round(coords_heading) + 
+					", " + Math.round(edgeVector) + 
+					", " + Math.round(diff);
 	if(diff > 30 && diff < 330){
 		addLog("尋標(偏離)" + strtmp);
 		searchPoint = true;
@@ -2132,12 +2135,13 @@ function geoYes (evt){
 	recentPoint[1] = evt.coords.longitude;
 	coords_heading = evt.coords.heading;
 	coords_speed = evt.coords.speed;
-	
+	showMsg("c1.5");
 	// showMsg("geoYes(3)");
 	if(searchPoint ){
 		nearPoint();
 		searchPoint = false;
 	}
+	
 	// showMsg("geoYes(5)");
 	if(viewMode == 1){		//全圖：只畫點
 		myCanvas.drawPoint(recentPoint[0], recentPoint[1], "white", 2);
