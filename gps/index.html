@@ -2075,7 +2075,7 @@ minDiff = 361;
 
 	edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);	
 	diff = Math.abs(coords_heading - edgeVector); 
-	strtmp = "gps:"+ coords_heading + ", edge:" + edgeVector;
+	strtmp = "gps:"+ Math.round(coords_heading) + ", edge:" + Math.round(edgeVector);
 	if(diff > 90 && diff < 270){
 		strtmp += ",轉向";
 		vectorMode();
