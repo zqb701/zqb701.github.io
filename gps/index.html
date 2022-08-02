@@ -18,12 +18,12 @@
 		text-align:center;	//水平置中
 		top:0px;
 		line-height:200px;//文字垂直置中(行高等於容器高度),單行適用
-	}  
+	}
 </style>  
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>v0.82b78</a>
+	<a>v0.82b79</a>
 	<div style="display:none">
 		<input type="button" value="測試" onClick="test03();">
 		<a href="index.html">穩定版</a>、
@@ -33,7 +33,7 @@
 	<canvas id="canvas"></canvas>
 	<font size="7">
 	<div style="display: flex; justify-content: flex-end;">
-		<div class="cmdButton" onclick="nearPoint();" >尋標</div>
+		<div class="cmdButton" onclick="addLog(尋標(手動)');nearPoint();" >尋標</div>
 		<div class="cmdButton" onclick="insertCoord('急彎');">急彎</div>  
 		<div class="cmdButton" onclick="insertCoord('測速');">測速</div>
 		<div class="cmdButton" onclick="">o</div>
@@ -1880,13 +1880,15 @@ showMsg("a2");
 	showMsg("a3");
 	edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);	
 	diff = Math.abs(coords_heading - edgeVector); 
-	if(diff > 90 && diff < 270){
-		addLog("尋標(偏離)");
+	strtmp = "gps:"+ Math.round(coords_heading) + ", edge:" + Math.round(edgeVector);
+	if(diff > 30 && diff < 330){
+		addLog("尋標(偏離)" + strtmp);
 		searchPoint = true;
 		return false;
 	}
+	
 	showMsg("a4");
-	addLog("下一點:" + points[nextPoint][2]);
+	addLog("下一點:" + points[nextPoint][2]+ strtmp);
 	myCanvas.drawPoint(points[nextPoint][0], points[nextPoint][1], "white", 2);
 	preDist = getDistance(recentPoint,  points[nextPoint]);
 	return true;
