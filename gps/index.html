@@ -23,11 +23,13 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>v0.82b74</a>
-	<input type="button" value="測試" onClick="test03();">
-	<a href="index.html">穩定版</a>、
-	<a href="indexb.html">測試版</a>
+	<a>v0.82b75</a>
+	<div style="display:none">
+		<input type="button" value="測試" onClick="test03();">
+		<a href="index.html">穩定版</a>、
+		<a href="indexb.html">測試版</a>
 	<br>
+	</div>
 	<canvas id="canvas"></canvas>
 	<font size="7">
 	<div style="display: flex; justify-content: flex-end;">
@@ -200,7 +202,7 @@ var tasks = [[
 ],[
 
 [22.640458409110163, 120.48558243388611, "台27屏市_中柳路"],
-[22.638548839801203, 120.48552391553939, "瑞光南路"],//萬丹炸菜
+[22.638548839801203, 120.48552391553939, "瑞光南路"],
 [22.637290288656953, 120.48548643556340, "41巷"],
 [22.634564819716747, 120.48522488341776, "大湖路"],
 [22.620744245553347, 120.48246845126806, "屏48"],
@@ -209,13 +211,13 @@ var tasks = [[
 [22.612146053133856, 120.48515490832058, "大昌路(社皮)"],
 [22.609809438086018, 120.48645616068083, "西勢尾街"],
 [22.606215071002932, 120.48742775321385, "廣維路"],
-[22.602767076674350, 120.48827422944480, "丹榮路(外環左2綠燈後段)"],
+[22.602767076674350, 120.48827422944480, "丹榮路(外環左2,綠燈後段)"],
 [22.599417478349690, 120.49108799566446, "31巷"],
-[22.597246432443807, 120.49279619173203, "彎台電"],
+[22.597246432443807, 120.49279619173203, "彎3(台電)"],
 [22.595274999880196, 120.49298735940094, "四維東路"],
 [22.591925550761868, 120.49269825799061, "萬榮街"],
 [22.589722065447027, 120.49233954121459, "測速70北路中",,,"測速"],
-[22.588828516216864, 120.49221868440955, "大學路(內埔往東)",,"s"],//炸
+[22.588828516216864, 120.49221868440955, "大學路(內埔往東)",,"s"],//炸菜
 [22.586012918750356, 120.49346585629661, "彎3"],
 [22.585650529393310, 120.49344009428454, "萬壽路(189往潮州)"],
 ],[
@@ -1854,25 +1856,39 @@ function initTask(){
 }	
 
 function skipPoint(){
-	if(nextPoint == -1 || nextPoint == points.length){
-		return false;
+	if(points[nextPoint][4-vector]){
+		playVoice("通過");
 	}
-		// try{
-	enAlarm = true;
-	enAlarmHigh = true;
-
 	passPoint[0] = points[nextPoint][0];
 	passPoint[1] = points[nextPoint][1];
-		
+	
+	enAlarm = true;
+	enAlarmHigh = true;		
 	nextPoint += vector;
 	
 	if(nextPoint == -1 || nextPoint == points.length){
-
+		addLog("尋標(端點)");
+		searchPoint = true;
 		return false;
-	}else{
-		edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);
-		return true;
 	}
+	
+	// if( points[nextPoint][4] && points[nextPoint][4].indexOf("s") >= 0){
+	// addLog("尋標(s)");
+	// searchPoint = true;
+	// }
+	
+	edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);	
+	diff = Math.abs(coords_heading - edgeVector); 
+	if(diff > 90 && diff < 270){
+		addLog("尋標(偏離)");
+		searchPoint = true;
+		return false;
+	}
+	
+	addLog("下一點:" + points[nextPoint][2]);
+	myCanvas.drawPoint(points[nextPoint][0], points[nextPoint][1], "white", 2);
+	preDist = getDistance(recentPoint,  points[nextPoint]);
+	return true;
 }	
 
 myCanvas.drawClearMap = function (){
@@ -2061,6 +2077,7 @@ minDiff = 361;
 	diff = Math.abs(coords_heading - edgeVector); 
 	strtmp = "gps:"+ coords_heading + ", edge:" + edgeVector;
 	if(diff > 90 && diff < 270){
+		strtmp += ",轉向";
 		vectorMode();
 	}
 	strtmp = "新目標:" + points[nextPoint][2] + strtmp;
@@ -2098,14 +2115,7 @@ function geoYes (evt){
 		myCanvas.drawMiddleCross();
 		myCanvas.drawBaseMap();
 	}
-	
-	//showMsg(",23");
-	nextDist = getDistance(recentPoint,  points[nextPoint]);
-	
-	// angle1 = Math.atan((recentPoint[0]- points[nextPoint][0])/(recentPoint[1] - points[nextPoint][1]));
-	// shadowDist = Math.cos(angle1- pathAngle) * nextDist;
-	//投影距離無法適用較大的轉角, 還是要用分角線y=ax+b
-	//cos為距節點的投影距離, 用sin則為與路徑中線的距離
+
 
 
 // showMsg("geoYes(7)");
@@ -2118,40 +2128,34 @@ function geoYes (evt){
 	//3.路線切換 ???
 	//4.沒在路線上不可亂報, (夾角不到170)
 	fcolor = "";
+	nextDist = getDistance(recentPoint,  points[nextPoint]);
 	if (nextDist > preDist ){	//遠離中
 		if(nextDist < evt.coords.speed/1000 * 2 + 0.015 ){
 			//近距離內(車速的2秒),判定為通過。車速較高時會抓不到。
-			if(points[nextPoint][4-vector]){
-				playVoice("通過");
-			}
-			
-			if( points[nextPoint][4] && points[nextPoint][4].indexOf("s") >= 0){
-				addLog("尋標(s)");
-				searchPoint = true;
-			}
-			
-			if(skipPoint()){
-				// addLog(points[nextPoint][2]);
-				myCanvas.drawPoint(points[nextPoint][0], points[nextPoint][1], "white", 2);
-				preDist = getDistance(recentPoint,  points[nextPoint]);
-			}else{
-				addLog("尋標(端點)");
-				searchPoint = true;
-			}
-			
-			// pathAngle =  Math.atan((passPoint[0]- points[nextPoint][0])/(passPoint[1] - points[nextPoint][1]));
+			//分角線判定法
+			skipPoint();
 		}else{
 			fcolor = "color='red'";
 		}
 	}else{		//接近中
 		
-		// if(enAlarmHigh && nextDist < 2 && evt.coords.speed*3.6 >70){
+		playAlarm();
+	}
+	
+	showData();
+	preDist = nextDist;
+	// showMsg("init(e)");
+}
+
+function playAlarm(){
+	// if(enAlarmHigh && nextDist < 2 && evt.coords.speed*3.6 >70){
 						//時速70以上, 2公里前提醒一次
-		vocStr = points[nextPoint][4-vector];
-		if( vocStr == "交流道" && enAlarmHigh && nextDist < 2){
-			playVoice(vocStr);
-			enAlarmHigh = false;
-		}
+	vocStr = points[nextPoint][4-vector];
+	
+	if( vocStr == "交流道" && enAlarmHigh && nextDist < 2){
+		playVoice(vocStr);
+		enAlarmHigh = false;
+	}
 		/** 事前提醒*/
 		//時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒(步行4公里/小時)
 		//車速每10公里提前2秒通知：
@@ -2160,18 +2164,13 @@ function geoYes (evt){
 		//		10公里,3秒,約4.1*3公尺,。
 		//最後加12公尺給單車時,路中與路邊的距離補償用
 		
-		if(enAlarm ){
-			minDist = evt.coords.speed/1000 * evt.coords.speed*3.6/10*2 + 0.015;
-			if(nextDist < 0.05 || nextDist < minDist){
-				playVoice(points[nextPoint][4-vector]);
-				enAlarm = false;
-			}
-		}		
-	}
-	
-	showData();
-	preDist = nextDist;
-	// showMsg("init(e)");
+	if(enAlarm ){
+		minDist = evt.coords.speed/1000 * evt.coords.speed*3.6/10*2 + 0.015;
+		if(nextDist < 0.05 || nextDist < minDist){
+			playVoice(vocStr);
+			enAlarm = false;
+		}
+	}		
 }
 
 function _geoNo(evt){
