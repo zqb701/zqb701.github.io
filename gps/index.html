@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>v0.82b75</a>
+	<a>v0.82b76</a>
 	<div style="display:none">
 		<input type="button" value="測試" onClick="test03();">
 		<a href="index.html">穩定版</a>、
@@ -52,8 +52,8 @@
 	<input type="button" value="GPS停止" onClick="stopGPS();">
 	<input type="button" value="更新快取" onClick="newCache();">
 	<input type="button" value="通知測試" onClick="displayNotification();">
-	<input type="button" value="清除軌跡數據" onClick="ins.innerHTML='';localStorage.insertCoord='';">
 	
+	<input type="button" value="清除" onClick="ins.innerHTML='';localStorage.insertCoord='';">
 	<input type="button" value="匯出" onClick="exportCoord();">
 	<input type="file" multiple id="input" style___='display:none;'>
 	
@@ -1856,6 +1856,7 @@ function initTask(){
 }	
 
 function skipPoint(){
+showMsg("a1");
 	if(points[nextPoint][4-vector]){
 		playVoice("通過");
 	}
@@ -1865,7 +1866,7 @@ function skipPoint(){
 	enAlarm = true;
 	enAlarmHigh = true;		
 	nextPoint += vector;
-	
+showMsg("a2");	
 	if(nextPoint == -1 || nextPoint == points.length){
 		addLog("尋標(端點)");
 		searchPoint = true;
@@ -1876,7 +1877,7 @@ function skipPoint(){
 	// addLog("尋標(s)");
 	// searchPoint = true;
 	// }
-	
+	showMsg("a3");
 	edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);	
 	diff = Math.abs(coords_heading - edgeVector); 
 	if(diff > 90 && diff < 270){
@@ -1884,7 +1885,7 @@ function skipPoint(){
 		searchPoint = true;
 		return false;
 	}
-	
+	showMsg("a4");
 	addLog("下一點:" + points[nextPoint][2]);
 	myCanvas.drawPoint(points[nextPoint][0], points[nextPoint][1], "white", 2);
 	preDist = getDistance(recentPoint,  points[nextPoint]);
@@ -2107,7 +2108,7 @@ function geoYes (evt){
 	}
 	// showMsg("geoYes(5)");
 	if(viewMode == 1){		//全圖：只畫點
-		myCanvas.drawPoint(recentPoint[0], recentPoint[1], "white", 1);
+		myCanvas.drawPoint(recentPoint[0], recentPoint[1], "white", 2);
 	}else{		//置中：全重畫, 不畫點
 		centerCoords[0] = recentPoint[0];
 		centerCoords[1] = recentPoint[1];
@@ -2138,7 +2139,6 @@ function geoYes (evt){
 			fcolor = "color='red'";
 		}
 	}else{		//接近中
-		
 		playAlarm();
 	}
 	
@@ -2148,6 +2148,7 @@ function geoYes (evt){
 }
 
 function playAlarm(){
+	showMsg("b1");
 	// if(enAlarmHigh && nextDist < 2 && evt.coords.speed*3.6 >70){
 						//時速70以上, 2公里前提醒一次
 	vocStr = points[nextPoint][4-vector];
