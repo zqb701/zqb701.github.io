@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>v0.82b77</a>
+	<a>v0.82b78</a>
 	<div style="display:none">
 		<input type="button" value="測試" onClick="test03();">
 		<a href="index.html">穩定版</a>、
@@ -2143,6 +2143,7 @@ function geoYes (evt){
 	}else{		//接近中
 		playAlarm();
 	}
+	
 	showMsg("c3");
 	showData();
 	preDist = nextDist;
@@ -2156,6 +2157,7 @@ function playAlarm(){
 	vocStr = points[nextPoint][4-vector];
 	
 	if( vocStr == "交流道" && enAlarmHigh && nextDist < 2){
+		showMsg("b2");
 		playVoice(vocStr);
 		enAlarmHigh = false;
 	}
@@ -2168,12 +2170,14 @@ function playAlarm(){
 		//最後加12公尺給單車時,路中與路邊的距離補償用
 		
 	if(enAlarm ){
-		minDist = evt.coords.speed/1000 * evt.coords.speed*3.6/10*2 + 0.015;
+		minDist = coords_speed/1000 * coords_speed*3.6/10*2 + 0.015;
 		if(nextDist < 0.05 || nextDist < minDist){
+			showMsg("b3");
 			playVoice(vocStr);
 			enAlarm = false;
 		}
-	}		
+	}
+	showMsg("b4");
 }
 
 function _geoNo(evt){
