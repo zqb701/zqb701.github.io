@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>v0.82b83</a>
+	<a>v0.82b84</a>
 	<div style="display:none">
 		<input type="button" value="測試" onClick="test03();">
 		<a href="index.html">穩定版</a>、
@@ -1942,9 +1942,7 @@ showMsg("a1");
 	passPoint[0] = points[nextPoint][0];
 	passPoint[1] = points[nextPoint][1];
 	
-	enAlarm = true;
-	enAlarmHigh = true;		
-	nextPoint += vector;
+
 	
 showMsg("a2");	
 	if(nextPoint == -1 || nextPoint == points.length){
@@ -1954,22 +1952,24 @@ showMsg("a2");
 	}
 	
 	showMsg("a3");
-
-	
-	if( points[nextPoint][4] && points[nextPoint][4].indexOf("s") >= 0){
-		addLog("尋標(s)"+ strtmp);
-		
-		edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);	
+		edgeVector = getAzimuth(points[nextPoint],  points[nextPoint+vector]);	
 		diff = Math.abs(coords_heading - edgeVector); 
 		strtmp = ", " + Math.round(coords_heading) + 
 						", " + Math.round(edgeVector) + 
 						", " + Math.round(diff);
+	
+	if( points[nextPoint][4] && points[nextPoint][4].indexOf("s") >= 0){
+		// addLog("尋標(s)"+ strtmp);
 		if(diff > 30 && diff < 330){
 			addLog("尋標(偏離)" + strtmp);
 			searchPoint = true;
 			return false;
 		}
 	}
+	
+	enAlarm = true;
+	enAlarmHigh = true;		
+	nextPoint += vector;
 	
 	showMsg("a4");
 	addLog(points[nextPoint][2]+ strtmp);
@@ -2370,8 +2370,9 @@ function showData(){
 			index = points[0][2].length;
 		}
 		str += "<br/>" + points[nextPoint][2] + "(" + points[0][2].substr(0,index)+")";
-		
-		str += "<br/>時速："+ (coords_speed*3.6).toFixed(1) + "公里，";	//原單位：米/秒
+		if(coords_speed > 1){
+			str += "<br/>時速："+ (coords_speed*3.6).toFixed(1) + "公里，";	//原單位：米/秒
+		}
 		// str += Math.round(coords_heading) +"度";	//12點鐘方向為0, 順時針~360
 		// str += "(路段：" + edgeVector.toFixed() + "度)";
 		
@@ -2383,15 +2384,16 @@ function showData(){
 			// tmp1 = 0;
 		// }
 		
+		/*
 		dA = angleOffset(recentPoint,passPoint,points[nextPoint]);
-		// str += "<br>夾角：<font color='";
+		str += "<br>夾角：<font color='";
 		if(dA.toFixed() < 160){
 			str += "red";
 		}else{
 			str += "lime";
 		}
-		// str +="'>" + dA.toFixed() + "</font>";
-		
+		str +="'>" + dA.toFixed() + "</font>";
+		*/
 		document.getElementById("posStr").innerHTML=str;
 
 // console.log("showData(e)");
