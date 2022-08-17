@@ -21,9 +21,10 @@
 	}
 </style>  
 
-<body onload="init();" bgcolor="black" text="white" margin="0">
+<body onload="init();" bgcolor="black" text="white" margin="0" 
+	onkeydown="addLog(event.keyCode);">
 	<f function HTML_body(){}/>
-	<a>v0.82b95</a>
+	<a>v0.82b96</a>
 	<div style="display:none">
 		<input type="button" value="測試" onClick="test03();">
 		<a href="index.html">穩定版</a>、
@@ -266,10 +267,22 @@ var tasks = [[
 ],[
 
 [22.670483274048518, 120.50084255634866, "民教路_林森路"],
-[22.669211748044440, 120.50044456097162, "師校巷"],
+[22.669795369182290, 120.50062805869727, "汕頭街"],
+[22.669211748044440, 120.50044456097162, "師校巷","s"],
 [22.668059103916850, 120.50009556723575, "民安路","s"],
 [22.667301540604136, 120.49977252481412, "民利路","s"],
 [22.666653749459940, 120.49936458305902, "民生路"],
+],[
+
+[22.672187986348312, 120.50020937774477, "廣州街_精忠巷"],
+[22.671668286618885, 120.50001611172050, "公園路","s"],
+[22.670788438536917, 120.49974856137158, "林森路","s"],
+[22.669517741990180, 120.49935416556693, "師校巷"],
+],[
+
+[22.669751298591752, 120.49855028996072, "師校巷_廣東路"],
+[22.669516793460810, 120.49935629376898, "廣州街","s"],
+[22.669211583143834, 120.50044787946233, "師校巷"],
 ],[
 
 [22.668060748920380, 120.50009669099295, "民安路_民教路"],
@@ -1801,6 +1814,7 @@ console.log(a1, d1);
 	}
 	
 function init(){
+
 	// alert("abc".indexOf("a"));
 // showMsg("init(s)");
 	// nextDist = 3.234;
@@ -1889,7 +1903,7 @@ function addLog(str){
 		+addZero(now.getSeconds());
 
 	// timeStr = new Date().toISOString();
-	localStorage.insertCoord = timeStr+", "+ str +"<br/>"+ localStorage.insertCoord;
+	localStorage.insertCoord = timeStr+" "+ str +"<br/>"+ localStorage.insertCoord;
 	ins.innerHTML = localStorage.insertCoord;
 }
 
@@ -2068,7 +2082,8 @@ function gridCmd(x,y){
 			//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
 
 			if(skipPoint()){	//手動跳一點, 差太多點則切換方向重找最近點
-				playVoice("跳過");
+				// playVoice("跳過");
+				playVoice2(["去程","回程","跳過","當"]);
 				// edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);
 				showData();
 			}else{
@@ -2140,21 +2155,47 @@ function viewSW(){
 	myCanvas.drawBaseMap();	
 }
 
+
+function playVoice2(arr){//20220817改為多檔接續播放(例如:「速限」+「30」)
+
+	var indexV = 0;
+	voice.src = "../voice/"+ arr[indexV]+".wav";
+	voice.play();
+	indexV++;
+
+	voice.addEventListener('ended', function() {
+		if(indexV < arr.length){
+			voice.src = "../voice/"+ arr[indexV]+".wav";
+			voice.play();
+			indexV++;
+		}
+	});
+//google 的SpeechSynthesisUtterance語音
+//https://ithelp.ithome.com.tw/articles/10196799
+//https://www.letswrite.tw/speech-synthesis-utterance/
+// var voices = window.speechSynthesis.getVoices();
+// var msg = new SpeechSynthesisUtterance('歡迎光臨速限50');//如何停頓
+// window.speechSynthesis.speak(msg);
+}
+
+
 function playVoice(str){
 	//語音來源：22/1/30雅婷文字轉語音下載wav檔, https://tts.yating.tw/
 	//其它：google翻譯,可透過SoundOfText網站下載, 或自己用DevTools下載mp3
+	_todo._752新增語音檔 = function(){}	
+			//車道縮減, 2檔, 3檔, 靠左/右, 速限,40,50,60,70, 80,90, 左/右側來車, 
+			
 	if(str == undefined) return ;
 	
 	var fileName = "../voice/"+ str+".wav";
 		voice.src = fileName;
-		_todo._750找不到語音檔要報錯_並播放其它 = function(){}	//AAAAAAAA
-		_todo._752新增語音檔 = function(){}	
-		//車道縮減, 2檔, 3檔, 靠左/右, 速限,40,50,60,70, 80,90, 左/右側來車, 
+		
 		try {
 			voice.load();
 			voice.play();
 		}catch (e) {	//完全抓不到error
-			showMsg(e);
+			_todo._750找不到語音檔要報錯_並播放其它 = function(){}	//AAAAAAAA
+			addLog(fileName + ":" + e);
 		}
 }
 
@@ -2487,14 +2528,14 @@ function geoYes (evt){
 			// window.setTimeout(skipPoint, 1000);//等轉彎完成??
 		}else{
 			fcolor = "color='red'";
-			if(nextDist - preDist >0.01){//
-				incCount ++;
-				addLog("遠離"+incCount);
+			// if(nextDist - preDist >0.01){//
+				incCount ++;				
 				if(incCount == 3){
+					addLog("遠離"+incCount);
 					incCount = 0;
 					searchPoint = true;
 				}
-			}
+			// }
 		}
 		
 
