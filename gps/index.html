@@ -23,7 +23,7 @@
 
 <body onload="init();" bgcolor="black" text="white" margin="0">
 	<f function HTML_body(){}/>
-	<a>v0.82b94</a>
+	<a>v0.82b95</a>
 	<div style="display:none">
 		<input type="button" value="測試" onClick="test03();">
 		<a href="index.html">穩定版</a>、
@@ -265,13 +265,31 @@ var tasks = [[
 [22.666271633515134, 120.48878021818832, "復興路"],
 ],[
 
+[22.670483274048518, 120.50084255634866, "民教路_林森路"],
+[22.669211748044440, 120.50044456097162, "師校巷"],
+[22.668059103916850, 120.50009556723575, "民安路","s"],
+[22.667301540604136, 120.49977252481412, "民利路","s"],
+[22.666653749459940, 120.49936458305902, "民生路"],
+],[
+
+[22.668060748920380, 120.50009669099295, "民安路_民教路"],
+[22.667688872755320, 120.50139242952726, "民信街"],
+],[
+
+[22.667688872755320, 120.50139242952726, "民信街_民安路"],
+[22.667454393576005, 120.50129639239321, "彎1"],
+[22.667043886744345, 120.50117655678218, "彎2"],
+[22.666697960193932, 120.50093986824928, "民利路"],
+],[
+
 [22.669548127208113, 120.49517059657157, "民利路_自立路"],
 [22.669194806925113, 120.49647864955793, "民和路"],
 [22.668897382929160, 120.49693271085337, "205巷"],
 [22.668284679096782, 120.49808161964651, "廣東路",,"s"],
 [22.667674181799505, 120.49910357745787, "旭東巷"],
-[22.667302235543630, 120.49977366595182, "民教路"],
-[22.666550917520382, 120.50114175872159, "35巷"],
+[22.667302235543630, 120.49977366595182, "民教路","s"],
+[22.666697960193932, 120.50093986824928, "民信街","s"],
+[22.666550917520382, 120.50114175872159, "35巷","s"],
 [22.666241158925700, 120.50147007299985, "25巷"],
 ],[
 
@@ -846,7 +864,7 @@ var tasks = [[
 [22.587764544473860, 120.64637982864548, "彎r5"],
 [22.588052532192496, 120.64697919856708, "112基地"], 
 [22.590076597989340, 120.64766077466638, "橋","急彎",,"急彎"],
-[22.584851943211078, 120.64867308077056, "彎35"],
+[22.584851943211078, 120.64867308077056, "彎35(待修正)"],
 [22.584799896698450, 120.64800683736249, "彎36"],
 [22.582703739665064, 120.64590316103639, "急彎01下3","急彎",,"急彎"],
 [22.582013920160640, 120.64631005909258, "彎rr4"],
@@ -1637,7 +1655,7 @@ var tasks = [[
 	var enAlarm = true;
 	/** 高速提醒*/
 	var enAlarmHigh = true;
-	
+	var incCount = -1;
 	var canvas = document.getElementById("canvas");
 	//canvas.addEventListener("click", click, false);
 
@@ -2148,6 +2166,7 @@ function initTask(){
 	incDistCnt = 0
 	vector = 1;
 	viewMode = 1;
+	incCount = 0;
 
 	localStorage.taskID = taskID;
 	// taskID = localStorage.taskID ? localStorage.taskID-1 : taskID;
@@ -2399,6 +2418,12 @@ minDiff = 361;
 		// strtmp += ",轉向";
 		vectorMode();
 	}
+	
+	index = points[0][2].indexOf("_");
+	if(index < 0){
+		index = points[0][2].length;
+	}
+		
 	strtmp = "新目標:" + points[nextPoint][2] + "(" + points[0][2].substr(0,index)+")";// + strtmp;
 	addLog(strtmp);
 	// showMsg("nP(8)");
@@ -2423,6 +2448,7 @@ function geoYes (evt){
 	if(searchPoint ){
 		nearPoint();
 		searchPoint = false;
+		incCount = 0;
 	}
 	
 	// showMsg("geoYes(5)");
@@ -2461,20 +2487,20 @@ function geoYes (evt){
 			// window.setTimeout(skipPoint, 1000);//等轉彎完成??
 		}else{
 			fcolor = "color='red'";
+			if(nextDist - preDist >0.01){//
+				incCount ++;
+				addLog("遠離"+incCount);
+				if(incCount == 3){
+					incCount = 0;
+					searchPoint = true;
+				}
+			}
 		}
 		
-		if(nextDist - preDist >0.01){//
-			incCount ++;
-			if(incCount =3){
-				incCount = 0;
-				addLog("距離增加連續3次");
-				searchPoint = true;
-			}
-		}else{
-			incCount = 0;
-		}
+
 	}else{		//接近中
 		playAlarm();
+		incCount = 0;
 	}
 	
 	showMsg("c3");
@@ -2617,7 +2643,7 @@ function showData(){
 		if(index < 0){
 			index = points[0][2].length;
 		}
-		str += "<br/>" + points[nextPoint][2] + "(" + points[0][2].substr(0,index)+")";
+		str += "<br/>" + points[nextPoint][2];// + "(" + points[0][2].substr(0,index)+")";
 		if(coords_speed > 1){
 			str += "<br/>時速："+ (coords_speed*3.6).toFixed(1) + "公里，";	//原單位：米/秒
 		}
