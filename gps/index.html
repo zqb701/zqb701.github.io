@@ -53,6 +53,7 @@
 	<input type="button" value="GPS停止" onClick="stopGPS();">
 	<input type="button" value="更新快取" onClick="newCache();">
 	<input type="button" value="通知測試" onClick="displayNotification();">
+	<input type="button" value="語音" onClick="testVoc();">
 	
 	<input type="button" value="清除" onClick="ins.innerHTML='';localStorage.insertCoord='';">
 	<input type="button" value="匯出" onClick="exportCoord();">
@@ -2173,9 +2174,12 @@ function playVoice2(arr){//20220817改為多檔接續播放(例如:「速限」+
 //google 的SpeechSynthesisUtterance語音
 //https://ithelp.ithome.com.tw/articles/10196799
 //https://www.letswrite.tw/speech-synthesis-utterance/
-// var voices = window.speechSynthesis.getVoices();
-// var msg = new SpeechSynthesisUtterance('歡迎光臨速限50');//如何停頓
-// window.speechSynthesis.speak(msg);
+}
+
+function testVoc(){
+	var voices = window.speechSynthesis.getVoices();
+	var msg = new SpeechSynthesisUtterance('歡迎光臨速限50');//如何停頓
+	window.speechSynthesis.speak(msg);
 }
 
 
@@ -2226,10 +2230,12 @@ function skipPoint(){
 showMsg("a1");
 	if(points[nextPoint][4-vector]){
 		playVoice("通過");
+	}
 		strtmp = "通過" + 	
 			",速" + Math.round(coords_speed * 3.6) + 
 			",距" + Math.round(nextDist * 1000) ;
-	}
+	addLog(strtmp);
+	
 	passPoint[0] = points[nextPoint][0];
 	passPoint[1] = points[nextPoint][1];
 		enAlarm = true;
