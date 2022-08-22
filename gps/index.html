@@ -24,7 +24,7 @@
 <body onload="init();" bgcolor="black" text="white" margin="0" 
 	onkeydown="addLog(event.keyCode);">
 	<f function HTML_body(){}/>
-	<a>v0.82b01</a>
+	<a>v0.82b02</a>
 	<div style="display:none">
 		<input type="button" value="測試" onClick="test03();">
 		<a href="index.html">穩定版</a>、
@@ -34,7 +34,7 @@
 	<canvas id="canvas"></canvas>
 	<font size="7">
 	<div style="display: flex; justify-content: flex-end;">
-		<div class="cmdButton" onclick="addLog('_尋標(手動)');nearPoint();" >尋標</div>
+		<div class="cmdButton" onclick="documentElement.scrollTop=0;" >頁頂</div>
 		<div class="cmdButton" onclick="insertCoord('急彎');">急彎</div>  
 		<div class="cmdButton" onclick="insertCoord('測速');">測速</div>
 		<div class="cmdButton" onclick="addLog('_尋標(手動)');nearPoint();">尋標</div>
@@ -309,14 +309,14 @@ var tasks = [[
 [22.663719203830020, 120.50462628362303, "巷口"],
 ],[
 
-[22.665225882700298, 120.50189235928322, "民榮_民勇路"],
+[22.665225882700298, 120.50189235928322, "屏市民榮街_民勇路"],
 [22.665731097554830, 120.50229112338884, "彎"],
 [22.666191989796737, 120.50291461414565, "民榮街"],
 [22.666816588834680, 120.50190881684125, "彎橋北"],
 [22.665324847089770, 120.50173120584337, "民生路"],
 ],[
 
-[22.671873449909487, 120.48977441130931, "廈門街_中華路"],
+[22.671873449909487, 120.48977441130931, "屏市廈門街_中華路"],
 [22.671650704426654, 120.49037924944649, "圓環北"],
 [22.671483026340134, 120.49084058936386, "圓環東"],
 [22.671221785686313, 120.49151241909287, "民權路"],
@@ -364,12 +364,13 @@ var tasks = [[
 ],[
 
 [22.668060748920380, 120.50009669099295, "民安路_民教路"],
-[22.667688872755320, 120.50139242952726, "民信街"],
+[22.667688872755320, 120.50139242952726, "民信街",,"s"],
+[22.667490041558437, 120.50207467426749, "巷尾"],
 ],[
 
 [22.667688872755320, 120.50139242952726, "民信街_民安路"],
 [22.667454393576005, 120.50129639239321, "彎1"],
-[22.667043886744345, 120.50117655678218, "彎2"],
+[22.667207142419503, 120.50125866990228, "民榮街"],
 [22.666697960193932, 120.50093986824928, "民利路"],
 ],[
 
@@ -385,6 +386,7 @@ var tasks = [[
 ],[
 
 [22.666550917520382, 120.50114175872159, "35巷_民利路"],
+[22.666209733553423, 120.50091225739330, "5號"],
 [22.665898151284400, 120.50069522733452, "民生路"],
 ],[
 
@@ -1361,6 +1363,14 @@ var tasks = [[
 [22.989870575964147, 120.22848952309317, "東興路"],
 [22.989200589200298, 120.23071524656828, "東光路"],
 [22.988538217033458, 120.23280722942438, "裕農路"],
+],[
+
+[22.998439161794604, 120.22731547508596, "安東路_東和路"],
+[22.996542878684540, 120.22734304226516, "251巷"],
+[22.995586700407370, 120.22711906813628, "東平路"],
+[22.993533217182964, 120.22668028741269, "凱旋路"],
+[22.992011670674540, 120.22627237549152, "48巷"],
+[22.990675533985392, 120.22596574756093, "東寧路"],
 ],[
 
 [22.988526613749110, 120.23280653034506, "南市裕農路_東寧路"],
@@ -2453,7 +2463,7 @@ showMsg("a3");
 			
 		if(diff > 5 && diff < 355){
 			addLog();
-			addLog("_尋標:" + strtmp);
+			addLog("尋標:"+points[nextPoint+vector][2]+ strtmp);
 			searchPoint = true;
 			return false;
 		}
@@ -2677,9 +2687,9 @@ function geoYes (evt){
 			// coords_heading = -1;
 			// return;
 	// }
-	if(evt.coords.speed *3.6 < 1){
+	if(evt.coords.speed *3.6 < 2){
 		showMsg("c1.1");
-		return;	//速度小於1公里則不處理, 以避開過誤差
+		return;	//慢速不處理, 以避開誤差
 	}
 	recentPoint[0] = evt.coords.latitude;
 	recentPoint[1] = evt.coords.longitude;
@@ -2690,7 +2700,7 @@ function geoYes (evt){
 	if(searchPoint ){
 		nearPoint();
 		searchPoint = false;
-		// incCount = 0;
+		incCount = 0;
 	}
 	
 	// showMsg("geoYes(5)");
@@ -2718,29 +2728,24 @@ function geoYes (evt){
 	fcolor = "";
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
 	if (nextDist > preDist ){	//遠離中
-
-		if(nextDist < evt.coords.speed/1000 * 2 + 0.015 ){
+		if(nextDist < (evt.coords.speed/1000 * 2 + 0.020) ){
 			//近距離內(車速的2秒),判定為通過。車速較高時會抓不到。
 			//分角線判定法
-//角度變化量判定轉彎中
+			//角度變化量判定轉彎中
 			skipPoint();
 			incCount = 0;
 			showMsg("c3");
 			// window.setTimeout(skipPoint, 1000);//等轉彎完成??
 		}else{
 			fcolor = "color='red'";
-			// if(nextDist - preDist >0.01){//
-				incCount ++;
-				if(incCount == 3){
-					addLog();
-					addLog("遠離"+incCount);
-					incCount = 0;
-					searchPoint = true;
-				}
-			// }
+			incCount ++;
+			if(incCount == 3){
+				addLog();
+				addLog("遠離:" + points[nextPoint][2]);
+				//incCount = 0;
+				searchPoint = true;
+			}
 		}
-		
-
 	}else{		//接近中
 		playAlarm();
 		incCount = 0;
@@ -2887,7 +2892,7 @@ function showData(){
 			index = points[0][2].length;
 		}
 		str += "<br/>" + points[nextPoint][2];// + "(" + points[0][2].substr(0,index)+")";
-		if(coords_speed > 1){
+		if(coords_speed*3.6 > 2){
 			str += "<br/>時速："+ (coords_speed*3.6).toFixed(1) + "公里，";	//原單位：米/秒
 		}
 		// str += Math.round(coords_heading) +"度";	//12點鐘方向為0, 順時針~360
