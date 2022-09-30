@@ -24,7 +24,7 @@
 <body onload="init();" bgcolor="black" text="white" margin="0" 
 	onkeydown="addLog(event.keyCode);">
 	<f function HTML_body(){}/>
-	<a>v0.82b09</a>
+	<a>v0.82b10</a>
 	<div style="display:none">
 		<input type="button" value="測試" onClick="test03();">
 		<a href="index.html">穩定版</a>、
@@ -2728,8 +2728,8 @@ function skipPoint(){
 	}
 		
 // showMsg("a3");	
-	
-	if( points[nextPoint][4] && points[nextPoint][4].indexOf("s") >= 0){
+	//220930 取消指定路口檢查偏角
+	if( false && points[nextPoint][4] && points[nextPoint][4].indexOf("s") >= 0){
 		edgeVector = getAzimuth(points[nextPoint],  points[nextPoint+vector]);	
 		diff = Math.abs(coords_heading - edgeVector); 
 		strtmp =
