@@ -4084,7 +4084,7 @@ function geoYes (evt){
 	// }
 	if(evt.coords.speed *3.6 < 2){//2km/h
 		// showMsg("c1.1");
-		if(!isSlow)
+		if(!isSlow){
 			isSlow = true;
 			addLog("慢速, 開始");
 		}
