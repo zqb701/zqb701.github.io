@@ -80,7 +80,7 @@
 </script>
 
 <script>
-var version = "v0.833";
+var version = "v0.834";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -3743,10 +3743,8 @@ function viewSW(){
 		centerCoords[1] = recentPoint[1];
 		myCanvas.drawMiddleCross();
 	}
-
 	myCanvas.drawBaseMap();	
 }
-
 
 function playVoice2(arr){
 	//20220817改為多檔接續播放(例如:「速限」+「30」)
@@ -3803,7 +3801,7 @@ function initTask(){
 	preDist = 0;
 	incDistCnt = 0
 	vector = 1;
-	viewMode = 1;
+	// viewMode = 1;
 	incCount = 0;
 
 	localStorage.taskID = taskID;
@@ -4082,7 +4080,7 @@ function geoYes (evt){
 			// coords_heading = -1;
 			// return;
 	// }
-	if(evt.coords.speed *3.6 < 2){//2km/h
+	if(evt.coords.speed *3.6 < 5){//5km/h
 		// showMsg("c1.1");
 		if(!isSlow){
 			isSlow = true;
@@ -4150,14 +4148,14 @@ function geoYes (evt){
 			// showMsg("c3");
 			// window.setTimeout(skipPoint, 1000);//等轉彎完成??
 		}else{
-			//fcolor = "color='red'";//fixDate:20230123, 暫時取消
-			// incCount ++;
-			// if(incCount == 3){//fixDate:20230123, 暫時取消(只要遠離乙次就成立)
+			fcolor = "color='red'";
+			incCount ++;
+			if(incCount == 2){
 				addLog("遠離:" + points[nextPoint][2]);
 				addLog();
 				incCount = 0;	//fixDate:20230116, 增加此列
 				searchPoint = true;
-			// }
+			}
 		}
 	}else{		//接近中
 		playAlarm();
@@ -4171,13 +4169,13 @@ function geoYes (evt){
 }
 
 function playAlarm(){
-	showMsg("b1");
+	// showMsg("b1");
 	// if(enAlarmHigh && nextDist < 2 && evt.coords.speed*3.6 >70){
 						//時速70以上, 2公里前提醒一次
 	vocStr = points[nextPoint][4-vector];
 	
 	if( vocStr == "交流道" && enAlarmHigh && nextDist < 2){
-		showMsg("b2");
+		// showMsg("b2");
 		playVoice(vocStr);
 		enAlarmHigh = false;
 	}
@@ -4192,12 +4190,12 @@ function playAlarm(){
 	if(enAlarm ){
 		minDist = coords_speed/1000 * coords_speed*3.6/10*2 + 0.015;
 		if(nextDist < 0.05 || nextDist < minDist){
-			showMsg("b3");
+			// showMsg("b3");
 			playVoice(vocStr);
 			enAlarm = false;
 		}
 	}
-	showMsg("b4");
+	// showMsg("b4");
 }
 
 function _geoNo(evt){
