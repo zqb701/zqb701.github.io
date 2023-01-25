@@ -80,7 +80,7 @@
 </script>
 
 <script>
-var version = "v0.835";
+var version = "v0.836";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -3687,6 +3687,8 @@ function gridCmd(x,y){
 			//&& x < canvas.width-50 用來避免note 9 的圓邊誤觸
 
 			if(skipPoint()){	//手動跳一點
+						myCanvas.drawPoint(points[nextPoint][0], points[nextPoint][1], "white", 2);
+			preDist = getDistance(recentPoint,  points[nextPoint]);
 				// playVoice("跳過");
 				playVoice2(["跳過"]);
 				// edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);
@@ -3874,12 +3876,12 @@ function skipPoint(){
 			return false;
 		}
 	}
-		nextPoint += vector;//****************************
+	
+	nextPoint += vector;//****************************
 	
 	// showMsg("a4");
 	//addLog(points[nextPoint][2]+ strtmp);
-	myCanvas.drawPoint(points[nextPoint][0], points[nextPoint][1], "white", 2);
-	preDist = getDistance(recentPoint,  points[nextPoint]);
+
 	// preDist = -1;
 	return true;
 }	
@@ -4094,18 +4096,21 @@ function geoYes (evt){
 			// coords_heading = -1;
 			// return;
 	// }
-	if(evt.coords.speed *3.6 < 5){//5km/h
-		// showMsg("c1.1");
-		if(!isSlow){
-			isSlow = true;
-			addLog("慢速, 開始");
-		}
-		return;	//慢速不處理, 以避開誤差
-	}
+
 	
 	if(isSlow){
+		if(evt.coords.speed *3.6 > 5){// 改為常數=5/3.6
 			addLog("慢速, 結束");
 			isSlow = false;
+		}else{
+			return;
+		}
+	}else{
+		if(evt.coords.speed *3.6 < 3){//3km/h
+			isSlow = true;
+			addLog("慢速, 開始");
+			return;	//慢速不處理, 以避開誤差
+		}
 	}
 	
 	recentPoint[0] = evt.coords.latitude;
@@ -4160,6 +4165,8 @@ function geoYes (evt){
 				skipPoint();
 			}
 			incCount = 0;
+			myCanvas.drawPoint(points[nextPoint][0], points[nextPoint][1], "white", 2);
+			preDist = getDistance(recentPoint,  points[nextPoint]);
 			// showMsg("c3");
 			// window.setTimeout(skipPoint, 1000);//等轉彎完成??
 		}else{
@@ -4171,15 +4178,17 @@ function geoYes (evt){
 				incCount = 0;	//fixDate:20230116, 增加此列
 				searchPoint = true;
 			}
+			preDist = nextDist;
 		}
 	}else{		//接近中
 		playAlarm();
 		incCount = 0;
+		preDist = nextDist;
 	}
 	
 	// showMsg("c3");
 	showData();
-	preDist = nextDist;
+	
 	// showMsg("init(e)");
 }
 
