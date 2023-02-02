@@ -80,7 +80,7 @@
 </script>
 
 <script>
-var version = "v0.834b";
+var version = "v0.834b2";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -3801,7 +3801,7 @@ function viewSW(){
 		centerCoords[0] = points[nextPoint][0]
 		centerCoords[1] = points[nextPoint][1];
 		myCanvas.drawMiddleCross();
-		myCanvas.drawPoint(points[nextPoint][0], points[nextPoint][1], "white", 200);//畫大圓
+
 		//todo 只畫前後3點, 取代drawbasemap()
 	}
 	myCanvas.drawBaseMap();	
@@ -3946,7 +3946,7 @@ function skipPoint(){
 		myCanvas.drawMiddleCross();
 		myCanvas.drawBaseMap();
 		//todo 只畫前後3點, 取代drawbasemap()
-		myCanvas.drawPoint(points[nextPoint][0], points[nextPoint][1], "white", 200);//畫大圓
+
 	}
 	preDist = getDistance(recentPoint,  points[nextPoint]);
 	// preDist = -1;
@@ -3974,7 +3974,7 @@ myCanvas.drawMiddleCross = function(){
 		// start = Math.PI*(evt.coords.heading/180 - 0.5);
 		// ctx.arc( centerX, centerY,10,start,start-Math.PI*2,true);
 		ctx.stroke();
-	
+			myCanvas.drawPoint(points[nextPoint][0], points[nextPoint][1], "white", 30);//畫大圓
 }
 
 myCanvas.drawBaseMap = function(){
