@@ -80,7 +80,7 @@
 </script>
 
 <script>
-var version = "v0.835";
+var version = "v0.836";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -189,22 +189,26 @@ var tasks = [[
 // [22.668728107871300, 120.47402551070016, "光復路"],
 
 ],[
-[22.665922880947410, 120.46385507542180, "屏市/光復路_泓翔"],
+[22.665307178966003, 120.46152658949056, "屏市/光復路_彎3"],
+[22.665922880947410, 120.46385507542180, "410-1號(泓翔)"],
 [22.667165685446225, 120.46815141555437, "機場北路"],
 [22.667931331977480, 120.47124316874347, "民族路"],
 [22.668722429816420, 120.47404783259003, "大豐路"],
+[22.66881956647351, 120.47441631530043, "輔40米東","ign"],//大豐路
 [22.669137744889620, 120.47569157630369, "大同路"],
 [22.669682068537192, 120.47845626047338, "和平路"],
 
 ],[
 [22.672133491495140, 120.47544347897734, "屏市/大同路_機場北路"],
 [22.671323784983910, 120.47551994279648, "民族路"],
+[22.669492624085272, 120.47567041889740, "輔40米北","ign"],//光復路
 [22.669128882967033, 120.47568195456665, "光復路"],
 [22.666984035390120, 120.47585781281776, "大興路"],
 [22.665195205827850, 120.47599324856473, "建國路"],
 
 ],[
 [22.666825373402850, 120.47302021376048, "屏市/大興路_大豐路"],
+[22.666955094987530, 120.47551794644299, "輔35米西","ign"],//大同路
 [22.666975160728670, 120.47585913458741, "大同路"],
 [22.667106937756838, 120.47865365026702, "和平路"],
 [22.666782016024488, 120.48114824069947, "建民路"],//自由路西段
@@ -220,6 +224,7 @@ var tasks = [[
 [22.661342067805930, 120.48173470538063, "永大路"],
 [22.664835913813217, 120.48302966568532, "建國路"],//自由路
 [22.665256831860140, 120.48351722083740, "彎景觀橋"],
+[22.665981061695320, 120.48508864052660, "輔50米西","ign"],//班馬線,自由西段
 [22.666242590336320, 120.48564809520727, "自由西段"],
 [22.666925702267207, 120.48723395133844, "建華一路"],
 [22.666830142624974, 120.48842839823055, "輔50米西","ign"],
@@ -3297,13 +3302,15 @@ var tasks = [[
 	var Point04 = [22.64271533068867, 120.53940675958226, "種苗中心"];
 	
 	var recentPoint = Point04;
-	var edgeVector = -1;
-	var coords_heading = -1;	//最近一次的GPS方向
-	var coords_speed = -1;
-	//上一個通過的點
+	var prevPoint = [0,0];
+		//剛才通過的點
 	var passPoint = [0,0];
 		passPoint[0] = recentPoint[0];
 		passPoint[1] = recentPoint[1];
+	var edgeVector = -1;
+	var coords_heading = -1;	//最近一次的GPS方向
+	var coords_speed = -1;
+
 		
 	var zoom0 = -1;
 	var zoom1 = -1;
@@ -3329,6 +3336,7 @@ var tasks = [[
 	/** 高速提醒*/
 	var enAlarmHigh = true;
 	var enAlarmSpeedLimit = true;//測速提醒
+	var voiceOK = true;
 	
 	var incCount = 0;	//遠離下一點的連續次數(未進入範圍)
 	var incDistMsg = "";
@@ -3898,19 +3906,20 @@ function playVoice(str){
 	_todo._752新增語音檔 = function(){}	
 			//車/右/左道縮減, 2檔, 3檔,高點,低點 靠左/右, 速限,40,50,60,70, 80,90, 左/右側來車, 
 			//道路端點
-			
-	if(str == undefined) return ;
 	
+	if(str == undefined) return ;
+	voiceOK = false;
 	var fileName = "../voice/"+ str+".wav";
-		voice.src = fileName;
-		
-		try {
-			voice.load();
-			voice.play();
-		}catch (e) {	//完全抓不到error
-			_todo._750找不到語音檔要報錯_並播放其它 = function(){}	//AAAAAAAA
-			addLog(fileName + ":" + e);
-		}
+	voice.src = fileName;
+	
+	try {
+		voice.load();
+		voice.play();
+		voiceOK = true;
+	}catch (e) {	//完全抓不到error
+		_todo._750找不到語音檔要報錯_並播放其它 = function(){}	//AAAAAAAA
+		addLog(fileName + ":" + e);
+	}
 }
 
 function initTask(){
@@ -3937,12 +3946,15 @@ function initTask(){
 
 function skipPoint(){
 // showMsg("a1");
+if(voiceOK){
 	if(points[nextPoint][4-vector]){
 		playVoice("通過");
 	}
+}
 	strtmp =  points[nextPoint][2]+
 		",速" + Math.round(coords_speed * 3.6) + 
-		",距" + Math.round(preDist * 1000);	//todo 通過時的距離, 應與nextDist相比較近者
+		",距(" + Math.round(preDist * 1000)+","
+		+Math.round(nextDist * 1000)+")";
 	// addLog(strtmp);
 	
 	passPoint[0] = points[nextPoint][0];
@@ -4113,6 +4125,20 @@ myCanvas.drawPoint=function (lat, lon, color, r){
 	ctx.stroke();
 }
 
+myCanvas.drawLine=function (lat0, lon0, lat1, lon1, c, w){
+	let drawX0 = (lon0 - centerCoords[1] )* zoom + centerX;
+	let drawY0 = -(lat0 - centerCoords[0] )*zoom + centerY;
+	let drawX1 = (lon1 - centerCoords[1] )* zoom + centerX;
+	let drawY1 = -(lat1 - centerCoords[0] )*zoom + centerY;
+	//console.log(drawX + "," + drawY);
+	ctx.strokeStyle = c;	//線條色
+	ctx.lineWidth = w;	//線條粗度
+	ctx.beginPath();
+	ctx.moveTo(drawX0, drawY0);
+	ctx.lineTo(drawX1, drawY1);
+	ctx.stroke();
+}
+
 
 function nearPoint(){
 	// console.log("nearPoint(start)");
@@ -4267,7 +4293,10 @@ function geoYes (evt){
 		incDistMsg = "";
 	}
 	
-	myCanvas.drawPoint(recentPoint[0], recentPoint[1], "white", 2);		//TODO 改為畫「線」。
+	myCanvas.drawLine(recentPoint[0], recentPoint[1], prevPoint[0], prevPoint[1],"white", 2);
+	prevPoint[0]= recentPoint[0];
+	prevPoint[1]= recentPoint[1];
+	
 // showMsg("geoYes(7)");
 	_todo._250判定脫離路線 = function(){}	//1.通過時判定一次 2.中途每點判一次待辦(調頭)
 	_todo._220搜尋新路線 = function(){}	//1.夾角最接近180度 2.加上距離待辦
@@ -4300,7 +4329,7 @@ function geoYes (evt){
 			// incCount ++;
 			incDistMsg += "," + (preDist*1000).toFixed(0);
 			if(++incCount > 3){
-				addLog("遠離:" + 	(((+new Date())-passTime)/1000).toFixed(1)+"秒,"
+				addLog("遠離:" + 	(((+new Date())-passTime)/1000).toFixed(0)+"秒,"
 							+points[nextPoint][2] + incDistMsg);
 				addLog();
 				incCount = 0;	//fixDate:20230116, 增加此列
