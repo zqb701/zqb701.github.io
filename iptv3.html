@@ -75,7 +75,6 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 </div>
 </body>
 
-
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
 //https://developers.google.com/youtube/iframe_api_reference
@@ -179,7 +178,7 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
  
 	document.onvisibilitychange = function () {
 		if (document.visibilityState == "visible") { 	//hidden, prerender, unloaded
-			if(isUserStop){
+			if(isUserStop){	//休眠前由用戶執行「停止」命令
 				
 			}else{
 				player.playVideo();
@@ -217,7 +216,7 @@ function onYouTubeIframeAPIReady() {
 }
   
 function onPlayerReady(e) {
-	ch(8);
+	ch(5);
 	e.target.unMute().playVideo();
 	e.target.setVolume(23);	//初始音量
 }
