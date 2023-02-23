@@ -79,7 +79,7 @@
 </script>
 
 <script>
-var version = "v0.846";
+var version = "v0.847";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -4368,8 +4368,8 @@ function geoYes (evt){
 	showMsg("c1");
 	strGPS = strGPS.substr(1,3)+strGPS.charAt(0);
 
-	isSlow(evt.coords.speed);
-		showMsg("c2");
+	// isSlow(evt.coords.speed);
+		// showMsg("c2");
 		
 	recentPoint[0] = evt.coords.latitude;
 	recentPoint[1] = evt.coords.longitude;
