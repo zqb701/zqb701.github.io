@@ -79,7 +79,7 @@
 </script>
 
 <script>
-var version = "v0.851";
+var version = "v0.852";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -4365,23 +4365,23 @@ minDiff = 361;
 }
 
 function geoYes (evt){
-	addLog("c1");
+	// addLog("c1");
 	strGPS = strGPS.substr(1,3)+strGPS.charAt(0);
 
 	// isSlow(evt.coords.speed);
 	if(slowTime == 0){
-		addLog("c11");
-		if(speed*3.6 < 2){
-			addLog("c111");
+		// addLog("c11");
+		if(evt.coords.speed*3.6 < 2){
+			addLog("c1");
 			slowTime = (+new Date());
 			// return true;
 		}else{
-			addLog("c112");
+			addLog("c2");
 		}
 	}else{
-		addLog("c12");
-		if(speed*3.6 > 3){
-			addLog("c121");
+		// addLog("c12");
+		if(evt.coords.speed*3.6 > 3){
+			addLog("c3");
 			let secTmp = ((+new Date())-slowTime)/1000;
 			let strtmp = "慢速, 共"+ secTmp.toFixed(0) +"秒(";
 			if(secTmp > 60){
@@ -4391,7 +4391,7 @@ function geoYes (evt){
 			addLog(strtmp);
 			slowTime = 0;
 		}else{
-			addLog("c122");
+			addLog("c4");
 			// return true;
 		}
 	}	
