@@ -79,7 +79,7 @@
 </script>
 
 <script>
-var version = "v0.848";
+var version = "v0.849";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -4368,7 +4368,26 @@ function geoYes (evt){
 	showMsg("c1");
 	strGPS = strGPS.substr(1,3)+strGPS.charAt(0);
 
-	isSlow(evt.coords.speed);
+	// isSlow(evt.coords.speed);
+	if(slowTime == 0){
+		if(speed < 2){
+			slowTime = (+new Date());
+			return true;
+		}
+	}else{
+		if(speed > 3){
+			let secTmp = ((+new Date())-slowTime)/1000;
+			let strtmp = "慢速, 共"+ secTmp.toFixed(0) +"秒(";
+			if(secTmp > 60){
+				strtmp += Math.floor(secTmp/60) +"分";
+			}
+			strtmp += (secTmp%60).toFixed(0)+"秒)"
+			addLog(strtmp);
+			slowTime = 0;
+		}else{
+			return true;
+		}
+	}	
 	showMsg("c2");
 		
 	recentPoint[0] = evt.coords.latitude;
@@ -4447,29 +4466,8 @@ function isSlow(speed){
 	return;
 	
 	speed *=3.6;//換算成km/h
-	addLog("isSlow:"+speed);
-	if(slowTime == 0){
-		if(speed < 2){
-			slowTime = (+new Date());
-			return true;
-		}else{
-			return false;
-		}
-	}else{
-		if(speed > 3){
-			let secTmp = ((+new Date())-slowTime)/1000;
-			let strtmp = "慢速, 共"+ secTmp.toFixed(0) +"秒(";
-			if(secTmp > 60){
-				strtmp += Math.floor(secTmp/60) +"分";
-			}
-			strtmp += (secTmp%60).toFixed(0)+"秒)"
-			addLog(strtmp);
-			slowTime = 0;
-			return false;
-		}else{
-			return true;
-		}
-	}	
+
+
 }
 
 function playAlarm(){
