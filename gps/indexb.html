@@ -47,7 +47,7 @@
 	</div>
 		
 	<p id="posStr" style_="display:none">111222</p>
-	<p id="watchStr" style_="display:none">監控狀態</p>
+	<p id="watchStr" style="display:none">監控狀態</p>
 	</font>
 	
 	<input type="checkbox" id="touchSW" checked>觸控
@@ -79,7 +79,7 @@
 </script>
 
 <script>
-var version = "v0.853";
+var version = "v0.854";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -4359,6 +4359,7 @@ minDiff = 361;
 					 "_"+points[nextPoint][2] +
 					 ",距:"+(preDist*1000).toFixed(0) +
 					 ",向:"+ vector;
+	passTime = new Date();//todo:沒實際作用,只能避免數字過大
 	// strtmp = "備:" +
 	addLog(strtmp);
 	// showMsg("nP(8)");
@@ -4395,7 +4396,7 @@ function geoYes (evt){
 			return;
 		}
 	}	
-	showMsg("c2");
+	// showMsg("c2");
 		
 	recentPoint[0] = evt.coords.latitude;
 	recentPoint[1] = evt.coords.longitude;
