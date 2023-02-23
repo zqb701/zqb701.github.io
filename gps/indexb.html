@@ -46,11 +46,10 @@
 		</div>
 	</div>
 		
-	<p id="posStr">111222</p>
+	<p id="posStr" style="display:none">111222</p>
+	<p id="watchStr" style="display:none">監控狀態</p>
 	</font>
-	<font size="6">
-	<p id="watchStr">監控狀態</p>
-	</font>
+	
 	<input type="checkbox" id="touchSW" checked>觸控
 	<input type="button" value="GPS啟動" onClick="startGPS();">
 	<input type="button" value="GPS停止" onClick="stopGPS();">
@@ -80,7 +79,7 @@
 </script>
 
 <script>
-var version = "v0.840";
+var version = "v0.841";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -3486,7 +3485,7 @@ var tasks = [[
 	var slowTime = 0;
 	var passTime = 0;
 	var oldClickTimes = -1;
-	var viewMode = 1;//1為全圖, -1為目標點置中
+	var viewMode = -1;//1為全圖, -1為目標點置中
 	
 	var ins = document.getElementById("insertCoord");
 
@@ -4266,8 +4265,8 @@ function nearPoint(){
     let bestP = 0;
 	let bestT =0;
 	
-	for(var t=0; t < tasks.length; t++){
-		for(var i=1; i < tasks[t].length; i++){
+	for(let t=0; t < tasks.length; t++){
+		for(let i=1; i < tasks[t].length; i++){
 			 // showMsg(tasks[t][i-1][2]);
 			//dist = getDistance(recentPoint,  tasks[t][i]);
 			ang = angleOffset(recentPoint, tasks[t][i-1], tasks[t][i]);
@@ -4375,27 +4374,8 @@ function geoYes (evt){
 	// }
 
 	
-	// if(isSlow){
-	if(slowTime != 0){
-		if(evt.coords.speed *3.6 > 3){// TODO,改為常數
-			let secTmp = ((+new Date())-slowTime)/1000;
-			let minTmp = Math.round(secTmp/60);
-			let strtmp = "慢速, 共"+ secTmp.toFixed(0) +"秒";
-			if(minTmp > 1){
-				strtmp += "("+minTmp +"分"+(secTmp%60).toFixed(0)+"秒)";
-			}
-			addLog(strtmp);
-			slowTime = 0;
-			isSlow = false;	//用slowTime也可以判別是否慢速狀態
-		}else{
-			return;
-		}
-	}else{
-		if(evt.coords.speed *3.6 < 2){//km/h
-			isSlow = true;
-			slowTime = (+new Date());
-			return;	//慢速不處理, 以避開誤差
-		}
+	if(isSlow(evt.coords.speed)){
+		return;
 	}
 	
 	recentPoint[0] = evt.coords.latitude;
@@ -4411,7 +4391,7 @@ function geoYes (evt){
 		incDistMsg = "";
 	}
 	
-	myCanvas.drawLine(recentPoint[0], recentPoint[1], prevPoint[0], prevPoint[1],"white", 2);
+	myCanvas.drawLine(recentPoint[0], recentPoint[1], prevPoint[0], prevPoint[1],"white", 3);
 	prevPoint[0]= recentPoint[0];
 	prevPoint[1]= recentPoint[1];
 	
@@ -4469,6 +4449,29 @@ function geoYes (evt){
 	// showMsg("init(e)");
 }
 
+function isSlow(speed){
+	if(slowTime == 0){
+		if(evt.coords.speed *3.6 < 2){//km/h
+			slowTime = (+new Date());
+			return true;
+		}
+		return false;
+	}else{
+		if(speed *3.6 > 3){// TODO,改為常數
+			let secTmp = ((+new Date())-slowTime)/1000;
+			let strtmp = "慢速, 共"+ secTmp.toFixed(0) +"秒(";
+			if(secTmp > 60){
+				strtmp += Math.floor(secTmp/60) +"分";
+			}
+			strtmp += (secTmp%60).toFixed(0)+"秒)"
+			addLog(strtmp);
+			slowTime = 0;
+			return false;
+		}
+		return true;
+	}	
+}
+
 function playAlarm(){
 	// showMsg("b1");
 	// if(enAlarmHigh && nextDist < 2 && evt.coords.speed*3.6 >70){
@@ -4485,6 +4488,7 @@ function playAlarm(){
 		// showMsg("b2");
 		playVoice(vocStr);
 		enAlarmSpeedLimit = false;
+		//todo 高速時兩次提醒間隔太近, 測速應獨立提示間隔
 	}
 		/** 事前提醒*/
 		//時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒(步行4公里/小時)
@@ -4523,7 +4527,7 @@ var watchID;
 function startGPS(){
 	//showMsg("startGPS()");
 	if (!navigator.geolocation) {
-		showMsg("GPS不支援。");
+		showMsg("瀏攬器不支援GPS。");
 		return;
 	}
 
@@ -4564,10 +4568,10 @@ function stopGPS(){
 function getDistance(coord1, coord2) {
 	//兩座標間的距離, 傳回：單位公里, 小數點後三位
     //本函式來源 https://www.geodatasource.com/developers/javascript
-	lat1	= coord1[0].toFixed(5);	//用小數5位算距離
-	lon1= coord1[1].toFixed(5);
-	lat2	= coord2[0].toFixed(5);
-	lon2= coord2[1].toFixed(5);
+	let lat1	= coord1[0];//.toFixed(5);	//用小數5位算距離
+	let lon1= coord1[1];//.toFixed(5);
+	let lat2	= coord2[0];//.toFixed(5);
+	let lon2= coord2[1];//.toFixed(5);
 	
     var radlat1 = Math.PI * lat1/180;
     var radlat2 = Math.PI * lat2/180;
