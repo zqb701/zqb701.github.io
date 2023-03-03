@@ -102,16 +102,16 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	b.獨立網址,直播
 */			
 	var channelList = [
-		//{channel:13, title:"台視",	ytID:"xL0ch83RAK8"},//永久, 限youTube
-		{channel:13, title:"中視",	ytID:"TCnaIE_SAtM"},//永久
-		{channel:13, title:"華視",	ytID:"wM0g8EoUZ_E"},//230210
-		{channel:13, title:"公視",	ytID:"4Uc00FPs27M"},//230210
+		//{channel:13, title:"台視",	ytID:"xL0ch83RAK8"},//永久ID, 限youTube
+		{channel:13, title:"中視",	ytID:"TCnaIE_SAtM"},//本機可, 永久ID
+		{channel:13, title:"華視",	ytID:"wM0g8EoUZ_E"},//本機可, 230210
+		{channel:13, title:"公視",	ytID:"4Uc00FPs27M"},//本機可, 230210
 
 		//{channel:49, title:"壹電視",ytID:"x"},
 		//{channel:50, title:"年代",	ytID:"x"},
-		{channel:51, title:"東森",	ytID:"DilMbJla5OI"},//230210
-		{channel:52, title:"中天",	ytID:"_QbRXRnHMVY"},//230210
-		{channel:53, title:"民視",	ytID:"ylYJSBUgaMA"},//220918
+		//{channel:51, title:"東森",	ytID:"DilMbJla5OI"},//230210, 限youTube???
+		{channel:52, title:"中天",	ytID:"_QbRXRnHMVY"},//本機可, 230210
+		{channel:53, title:"民視",	ytID:"ylYJSBUgaMA"},//本機可, 220918
 		{channel:54, title:"三立",	ytID:"jlldIiGA5bU"},//230210
 		
 		//{channel:55, title:"TVBS",	ytID:"efIKlHcEB20"},//230210, 限youTube
@@ -121,9 +121,9 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 		
 		{channel:99, title:"寰宇",	ytID:"B7Zp3d6xXWw"},//230210
 		
-		{channel:99, title:"飯思思",ytID:"rzBp10kx5Lw"},
+		{channel:99, title:"飯思思",ytID:"rzBp10kx5Lw"},//本機可,
 		{channel:99, title:"黃霄雲",ytID:"3A4cxRJyEBo"},
-		{channel:99, title:"小施",	ytID:"6wNZyZEziL0"},
+		{channel:99, title:"小施",	ytID:"6wNZyZEziL0"},//本機可,
 		{channel:99, title:"蜜雪薇琪_獨立", ytID:"pSKK7JYeFoQ"},
 		{channel:99, title:"殷悅_揮之不去", ytID:"WK19HOgLjg8"}
 		];
@@ -175,7 +175,8 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 		// idelCount = 0;
 		oTimerId = undefined;
 	});
- 
+	
+	//document.addEventListener('visibilitychange', startStopVideo);//另一個寫法
 	document.onvisibilitychange = function () {
 		if (document.visibilityState == "visible") { 	//hidden, prerender, unloaded
 			if(isUserStop){	//休眠前由用戶執行「停止」命令

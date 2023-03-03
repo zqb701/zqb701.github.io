@@ -102,13 +102,16 @@
 	function 展開(){
         if(autoZoon){
             window.resizeTo(
-                window.screen.availWidth/4, 
+             window.screen.availWidth/4, 
                 window.screen.availHeight/4);
+					document.title = "*" + playindex+ "_" + playTitle;
         }
 	}
+	
 	function 收合(){
         if(autoZoon){
 	        window.resizeTo( window.screen.availWidth/4, 28);
+			document.title = playindex+ "_" + playTitle;
             //window.innerHeight = 0;//沒反應,也沒錯誤
             //window.outerHeight = 30;//沒反應,也沒錯誤
             //TODO 高度零時「完全」沒作用???200正常!
