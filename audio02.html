@@ -15,8 +15,10 @@
     <a id="volmsg">a</a>
     <button title="+3" onclick="vol(+.03);">▴</button>
     <input type="checkbox" checked="checked" id="a"/>🔃
-    <input type="checkbox" checked="checked" id="b"/>🔀
+    <input type="checkbox" checked id="b"/>🔀
     <br>
+	<input type="checkbox" id="c"/>失焦時暫停
+	<br>
     <input id="root" type="text" value="file:///C:/">
     <label>...
         <input id="file-uploader" type="file" webkitdirectory style="display: none">
@@ -63,6 +65,7 @@
     var playVolume = .02;
     var filename = "";
     const audio = new Audio();
+	var charFocus = "*";
 
 
     function init(){
@@ -71,23 +74,24 @@
         window.addEventListener('blur', 收合);
         window.addEventListener('focus', 展開);
 
-	//找歌曲清單
+	
     if (typeof (Storage) != "undefined"){
+		//找音量記錄
         if (localStorage.playVolume != "undefined"){
             //msg.innerText = localStorage.playVolume;
             playVolume = localStorage.playVolume;
         }
-    //}else{
-    if (localStorage.playlist != "undefined"){
-    //}else{
-        //msg.innerText = localStorage.playlist;
-        playlist = localStorage.playlist.split(",");
-        if (localStorage.playindex != "undefined"){
-        //}else{
-        playindex = localStorage.playindex;
-        //有清單才使用記錄的索引, 但索引若與歌名不符, 則索引調回零。
-        }
-    }
+		//找歌曲清單
+		if (localStorage.playlist != "undefined"){
+		//}else{
+			//msg.innerText = localStorage.playlist;
+			playlist = localStorage.playlist.split(",");
+			if (localStorage.playindex != "undefined"){
+			//}else{
+			playindex = localStorage.playindex;
+			//有清單才使用記錄的索引, 但索引若與歌名不符, 則索引調回零。
+			}
+		}
     }
 
     filename = mediaPath + playlist[playindex];
@@ -100,18 +104,26 @@
     }//end of init()
 
 	function 展開(){
+	charFocus = "*";
+	//alert(window.screen.availHeight/4);
         if(autoZoon){
-            window.resizeTo(
-             window.screen.availWidth/4, 
-                window.screen.availHeight/4);
-					document.title = "*" + playindex+ "_" + playTitle;
+            window.resizeTo(window.screen.availWidth/4, 200);
+			//document.title = "*" + playindex+ "_" + playTitle;
+			document.title = charFocus + playTitle;
+			if(document.getElementById("c").checked){
+				   audio.play();
+			}
         }
 	}
 	
 	function 收合(){
+		charFocus = "";
         if(autoZoon){
 	        window.resizeTo( window.screen.availWidth/4, 28);
-			document.title = playindex+ "_" + playTitle;
+			document.title = charFocus + playTitle;
+			if(document.getElementById("c").checked){
+				   audio.pause();
+			}
             //window.innerHeight = 0;//沒反應,也沒錯誤
             //window.outerHeight = 30;//沒反應,也沒錯誤
             //TODO 高度零時「完全」沒作用???200正常!
@@ -173,7 +185,8 @@
         var i2 = playlist[playindex].lastIndexOf("/")+1;
         playTitle = playlist[playindex].substr(i2,i1-i2);
         //msg.innerText = playindex+ "_" + playTitle;
-	document.title = playindex+ "_" + playTitle;
+	//document.title = playindex+ "_" + playTitle;
+	document.title = charFocus + playTitle;
     }
 
     audio.addEventListener("ended", function() {
