@@ -79,7 +79,7 @@
 </script>
 
 <script>
-var version = "v0.865";
+var version = "v0.866";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -3686,6 +3686,7 @@ var tasks = [[
 	var edgeVector = -1;
 	var coords_heading = -1;	//最近一次的GPS方向
 	var coords_speed = -1;
+	var speedKH = -1;
 	
 	var rctSpeedLevel=0;
 	var preSpeedLevel=0;
@@ -4676,10 +4677,11 @@ function geoYes (evt){
 	recentPoint[1] = evt.coords.longitude;
 	coords_heading = evt.coords.heading;
 	coords_speed = evt.coords.speed;
+	speedKH = evt.coords.speed * 3.6;
 	
-	rctSpeedLevel = Math.round(coords_speed / 10);
+	rctSpeedLevel = Math.round(speedKH / 10);
 	if(rctSpeedLevel != preSpeedLevel){
-		addLog("時速" + Math.round(coords_speed));
+		addLog("時速" + Math.round(speedKH));
 		preSpeedLevel = rctSpeedLevel;
 	}
 	
