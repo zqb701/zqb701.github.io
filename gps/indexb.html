@@ -79,7 +79,7 @@
 </script>
 
 <script>
-var version = "v0.867";
+var version = "v0.868";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -4009,28 +4009,29 @@ function newSpace(){
  }
  */
  	//找出四邊的點以算出放大值zoom
-var maxN = points[0][0];
-var maxS = points[0][0];
-var maxE = points[0][1];
-var maxW = points[0][1];
+	var maxN = points[0][0];
+	var maxS = points[0][0];
+	var maxE = points[0][1];
+	var maxW = points[0][1];
 
-for(p in points){
-	if(points[p][0] > maxN) maxN = points[p][0];
-	if(points[p][0] < maxS) maxS = points[p][0];
-	if(points[p][1] > maxE) maxE = points[p][1];
-	if(points[p][1] < maxW) maxW = points[p][1];
-}
-
-	if((maxN - maxS) >(maxE - maxW)){	//比較長與寛,較大者的拿來算比例
-		zoom = canvas.height * 0.9/(maxN - maxS);
-	}else{
-		zoom = canvas.width * 0.9/(maxE - maxW);
+	for(p in points){
+		if(points[p][0] > maxN) maxN = points[p][0];
+		if(points[p][0] < maxS) maxS = points[p][0];
+		if(points[p][1] > maxE) maxE = points[p][1];
+		if(points[p][1] < maxW) maxW = points[p][1];
 	}
-	if(zoom > 100000){
-		// addLog("zoom="+ Math.round(zoom)+"(上限10萬)");//放大倍數要有上限。
-		zoom = 100000;
+	if(zoom == -1){//and viewmode = "置中"
+		if((maxN - maxS) >(maxE - maxW)){	//比較長與寛,較大者的拿來算比例
+			zoom = canvas.height * 0.9/(maxN - maxS);
+		}else{
+			zoom = canvas.width * 0.9/(maxE - maxW);
+		}
+		if(zoom > 100000){
+			// addLog("zoom="+ Math.round(zoom)+"(上限10萬)");//放大倍數要有上限。
+			zoom = 100000;
+		}
+		zoom0 = zoom;
 	}
-	zoom0 = zoom;
 	centerCoords0[0] = (maxN + maxS)/2;
 	centerCoords0[1] = (maxE + maxW)/2;
 
@@ -4679,7 +4680,7 @@ function geoYes (evt){
 	coords_speed = evt.coords.speed;
 	speedKH = evt.coords.speed * 3.6;
 	
-	rctSpeedLevel = (speedKH / 10).toFixed(0);
+	rctSpeedLevel = Math.floor(speedKH / 10);
 	if(rctSpeedLevel != preSpeedLevel){
 		addLog("時速：" + speedKH.toFixed(1) + "(" + rctSpeedLevel + ")");
 		preSpeedLevel = rctSpeedLevel;
