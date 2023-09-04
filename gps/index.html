@@ -79,7 +79,7 @@
 </script>
 
 <script>
-var version = "v0.713";
+var version = "v0.713b";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -6308,10 +6308,11 @@ minDiff = 361;
 	}
 */
 
-	edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);	
+	// edgeVector = getAzimuth(points[nextPoint-vector],  points[nextPoint]);//220904不應該把原路徑方向引入
+	edgeVector = getAzimuth(points[nextPoint-1],  points[nextPoint]);
 	diff = Math.abs(coords_heading - edgeVector); 
 	// strtmp = "gps:"+ Math.round(coords_heading) + ", edge:" + Math.round(edgeVector);
-	strtmp = "角度:" + diff.toFixed(0));
+	strtmp = "角度:行駛" + coords_heading.toFixed(0) + ", 路段:" + diff.toFixed(0);
 	if(diff > 90 && diff < 270){
 		strtmp += ",轉向";
 		vectorMode();
@@ -6323,7 +6324,7 @@ minDiff = 361;
 		index = points[0][2].length;
 	}
 	// strtmp = "新:" + points[nextPoint][2] + "(" + points[0][2].substr(0,index)+")";// + strtmp;
-	strtmp = "新:" +  points[0][2].substr(0,index) +
+	strtmp = "新:" + points[0][2].substr(0,index) +
 					 "_"+points[nextPoint][2] +
 					 ",距:"+(preDist*1000).toFixed(0) +
 					 ",向:"+ vector;
