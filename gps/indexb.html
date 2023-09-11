@@ -79,7 +79,7 @@
 </script>
 
 <script>
-var version = "v0.718e";
+var version = "v0.718f";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -6601,24 +6601,25 @@ function initGPS(){
 			addLog("GPS禁用！");
 		}
 		addLog("c1");
-		if (GPSpremis.state == 'granted') {
-			startGPS();
-		}
+		// if (GPSpremis.state == 'granted') {
+			// startGPS();
+		// }
 		addLog("c2");
 		GPSpremis.onchange = function() {
 			addLog("gps.onchang:"+ GPSpremis.state);//進山洞沒訊號???
-			if (GPSpremis.state == 'granted') {
-				startGPS();
-			}
+			// if (GPSpremis.state == 'granted') {
+				// startGPS();
+			// }
 		}
 		addLog("c3");
 	});
 	addLog("c4");
-	startGPS();
+	// startGPS();
 	addLog("c5");
-}
+// }
 
-function startGPS(){
+// function startGPS(){
+	addLog("startGPS()");
 	/*
 	var options = {
 	  enableHighAccuracy: true,	//高精度, 實測更新間隔約1秒, 否則約20秒。
