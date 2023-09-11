@@ -79,7 +79,7 @@
 </script>
 
 <script>
-var version = "v0.716b";
+var version = "v0.717b";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -6587,7 +6587,7 @@ function _geoNo(evt){
 }
 
 var watchID;
-
+var GPSpremis;
 function startGPS(){
 	addLog("startGPS()...");
 	if (!navigator.geolocation) {
@@ -6596,13 +6596,13 @@ function startGPS(){
 	}
 
 		// navigator.geolocation.getCurrentPosition( geoYes, geoNo);
-	navigator.permissions.query({name:'geolocation'}).then(function(result) {
+	navigator.permissions.query({name:'geolocation'}).then(function(GPSpremis) {
 		//權限判斷以乎對重覆檢查GPS是否啟用沒有關聯。
-		if (result.state == 'denied') {	//denied禁用, prompt詢問, granted允許
+		if (GPSpremis.state == 'denied') {	//denied禁用, prompt詢問, granted允許
 			addLog("GPS禁用！");
 		}
-		result.onchange = function() {
-			addLog("gps.onchang:"+ reqult.state);
+		GPSpremis.onchange = function() {
+			addLog("gps.onchang:"+ GPSpremis.state);
 		}
 	});
 	/*
@@ -6619,7 +6619,7 @@ function startGPS(){
 					addLog("GPS失敗！");	//User denied Geolocation
 					//失敗後就不管了, 如何每秒檢查一次?
 				}else{
-					addLog(evt.code + ", " + evt.message);
+					addLog("GPS成功, " + evt.code + ", " + evt.message);
 					//2, Network location provider at 'https://www.googleapis.com/' : ERR_NAME_NOT_RESOLVED
 				}
 		}, {enableHighAccuracy: true});
