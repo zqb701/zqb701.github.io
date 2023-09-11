@@ -79,7 +79,7 @@
 </script>
 
 <script>
-var version = "v0.717b";
+var version = "v0.718b";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -5622,7 +5622,7 @@ testMaps();
 	// alert(tasks.length);
 	// return;
 
-	startGPS();
+	initGPS();
 	//保存最後任務編號
 	 taskID = localStorage.taskID ? localStorage.taskID : taskID;
 	if(taskID > tasks.length){
@@ -6588,8 +6588,8 @@ function _geoNo(evt){
 
 var watchID;
 var GPSpremis;
-function startGPS(){
-	addLog("startGPS()...");
+function initGPS(){
+	addLog("initGPS()...");
 	if (!navigator.geolocation) {
 		addLog("瀏攬器不支援GPS。");
 		return;
@@ -6597,14 +6597,22 @@ function startGPS(){
 
 		// navigator.geolocation.getCurrentPosition( geoYes, geoNo);
 	navigator.permissions.query({name:'geolocation'}).then(function(GPSpremis) {
-		//權限判斷以乎對重覆檢查GPS是否啟用沒有關聯。
-		if (GPSpremis.state == 'denied') {	//denied禁用, prompt詢問, granted允許
+		if (GPSpremis.state == 'denied') {	//denied 禁用, prompt 詢問, granted 允許
 			addLog("GPS禁用！");
 		}
+		if (GPSpremis.state == 'granted') {
+			startGPS();
+		}
 		GPSpremis.onchange = function() {
-			addLog("gps.onchang:"+ GPSpremis.state);
+			addLog("gps.onchang:"+ GPSpremis.state);//進山頭沒訊號???
+			if (GPSpremis.state == 'granted') {
+				startGPS();
+			}
 		}
 	});
+}
+
+function startGPS(){
 	/*
 	var options = {
 	  enableHighAccuracy: true,	//高精度, 實測更新間隔約1秒, 否則約20秒。
