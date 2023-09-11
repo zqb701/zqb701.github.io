@@ -79,7 +79,7 @@
 </script>
 
 <script>
-var version = "v0.718d";
+var version = "v0.718e";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -6600,22 +6600,22 @@ function initGPS(){
 		if (GPSpremis.state == 'denied') {	//denied 禁用, prompt 詢問, granted 允許
 			addLog("GPS禁用！");
 		}
-		addlog("c1");
+		addLog("c1");
 		if (GPSpremis.state == 'granted') {
 			startGPS();
 		}
-		addlog("c2");
+		addLog("c2");
 		GPSpremis.onchange = function() {
 			addLog("gps.onchang:"+ GPSpremis.state);//進山洞沒訊號???
 			if (GPSpremis.state == 'granted') {
 				startGPS();
 			}
 		}
-		addlog("c3");
+		addLog("c3");
 	});
-	addlog("c4");
+	addLog("c4");
 	startGPS();
-	addlog("c5");
+	addLog("c5");
 }
 
 function startGPS(){
