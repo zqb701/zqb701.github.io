@@ -79,7 +79,7 @@
 </script>
 
 <script>
-var version = "v0.719";
+var version = "v0.719b";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -6405,7 +6405,7 @@ function geoYes (evt){
 		if(evt.coords.speed*3.6 < 2){	//時速小於2公里
 			// addLog("c1");
 			slowTime = (+new Date());
-			return;
+			// return;
 		}else{
 			// addLog("c2");
 		}
@@ -6423,8 +6423,7 @@ function geoYes (evt){
 			addLog(strtmp);
 			slowTime = 0;
 		}else{
-			// addLog("c4");
-			return;
+			// return;
 		}
 	}	
 	
@@ -6624,17 +6623,16 @@ function startGPS(){
 	  maximumAge: 0						//快取的過期時間，單位是毫秒，設為0來禁用快取讀取。
 	};
 	*/
-	watchID = navigator.geolocation.watchPosition(geoYes, 
-		//就算成功, 但中途失敗不會告知?
-		(evt) =>{
-			addLog("evt.code=" + evt.code);
-				if(evt.code == 1){
-					addLog("GPS失敗！");	//User denied Geolocation
-					//失敗後就不管了, 如何每秒檢查一次?
-				}else{
-					addLog("GPS成功, " + evt.code + ", " + evt.message);
-					//2, Network location provider at 'https://www.googleapis.com/' : ERR_NAME_NOT_RESOLVED
-				}
+	watchID = navigator.geolocation.watchPosition(
+		geoYes, //成功函式, 就算成功, 但中途失敗如何告知?
+		(evt) =>{//失敗函式
+			addLog("GPS啟動失敗！");
+			if(evt.code == 1){
+				// addLog("GPS失敗！");	//User denied Geolocation
+			}else{
+				// addLog(evt.code + ", " + evt.message);
+				//2, Network location provider at 'https://www.googleapis.com/' : ERR_NAME_NOT_RESOLVED
+			}
 		}, {enableHighAccuracy: true});
 }
 
