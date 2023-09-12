@@ -79,7 +79,7 @@
 </script>
 
 <script>
-var version = "v0.719b";
+var version = "v0.719c";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -6583,7 +6583,7 @@ function _geoNo(evt){
 }
 
 var watchID;
-// var GPSpremis;
+var GPSpremis;
 function initGPS(){
 	addLog("initGPS()...");
 	if (!navigator.geolocation) {
@@ -6596,13 +6596,13 @@ function initGPS(){
 		if (GPSpremis.state == 'denied') {	//denied 禁用, prompt 詢問, granted 允許
 			addLog("GPS禁用！");
 		}
-		addLog("c1");
+		// addLog("c1");
 		if (GPSpremis.state == 'granted') {
 			startGPS();
 		}
-		addLog("c2");
+		// addLog("c2");
 		GPSpremis.onchange = function() {
-			addLog("gps.onchang:" + GPSpremis.state);//進山洞沒訊號???
+			addLog("gps.onchang:" + GPSpremis.state);
 			if (GPSpremis.state == 'granted') {
 				startGPS();
 			}
@@ -6626,7 +6626,7 @@ function startGPS(){
 	watchID = navigator.geolocation.watchPosition(
 		geoYes, //成功函式, 就算成功, 但中途失敗如何告知?
 		(evt) =>{//失敗函式
-			addLog("GPS啟動失敗！");
+			addLog(evt.message);	////進山洞沒訊號???
 			if(evt.code == 1){
 				// addLog("GPS失敗！");	//User denied Geolocation
 			}else{
