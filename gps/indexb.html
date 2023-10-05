@@ -81,7 +81,7 @@
 </script>
 
 <script>
-var version = "v0.721b";
+var version = "v0.721b1";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -5714,7 +5714,10 @@ var tasks = [[
 
 	 var startGestX = -1;
 	var startGestY = -1;
-	var slowTime = 0;
+	
+	var slowTime;//低速的起算時間
+	var highTime;//高速的起算時間
+	
 	var passTime = 0;
 	var oldClickTimes = -1;
 	var viewMode = -1;//1為全圖, -1為目標點置中
@@ -5925,6 +5928,7 @@ document.onvisibilitychange = function() {
 
 
 //playVoice('當');
+highTime = (+new Date());	//避免第一次引用時為undefined
 }
 
 function insertCoord(coordType){	//	記錄點	
@@ -6671,7 +6675,7 @@ function geoYes (evt){
 	speedKpH = evt.coords.speed * 3.6;
 	// isSlow(evt.coords.speed);
 	
-	if(slowTime == 0){//高速狀態
+	if(!slowTime){//高速狀態
 		// addLog("c11");
 		if(speedKpH < 2){	//切到低速
 			//高速結算			
@@ -6702,12 +6706,12 @@ function geoYes (evt){
 			}
 			addLog();
 			addLog(strtmp);
-			slowTime = 0;
+			slowTime = undefined;
 			
 			//高速啟用
 			highTime = (+new Date());
 			speedTime.style.color = "cyan";
-			speedTime.innerText = 0;
+			speedTime.innerText = "0";
 		}else{			
 			// return;
 		}
