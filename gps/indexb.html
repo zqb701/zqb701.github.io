@@ -25,38 +25,35 @@
 <body onload="init();" bgcolor="black" text="white" margin="0" 
 	onkeydown="addLog(event.keyCode);">
 	<f function HTML_body(){}/>
-
-	<div style="display:none">
-		<a>v0.82b37</a>
-		<input type="button" value="測試" onClick="test03();">
-		<a href="index.html">穩定版</a>、
-		<a href="indexb.html">測試版</a>
-	<br>
-	</div>
 	
-	<canvas id="canvas"></canvas>
-	<font size="7">
+	<div class="cmdButton" id="speed" style="position:fixed;font-size: 100px;">0</div>
+	<div class="cmdButton" id="dist" style="position:fixed;font-size: 100px;left:740px;">0</div>
+	
+	<canvas id="canvas" "></canvas>
+
 	<div style="display: flex; justify-content: flex-end;">
 		<div class="cmdButton" onclick="documentElement.scrollTop=0; playVoice('當');" >頁頂</div>
 		<div class="cmdButton" onclick="insertCoord('急彎');">急彎</div>  
 		<div class="cmdButton" >
-			<div id="speedTime" onclick="swSpeed();" style="font-size: 150px;">0</div>
+			<div id="speedTime" onclick="swSpeed();" style="font-size: 100px;">0</div>
 		</div>
 		<div class="cmdButton" onclick="addLog();addLog('_尋標(手動)');nearPoint();">尋標</div>
 		<div class="cmdButton" >
 			<div id="march" onclick="swColor();" style="font-size: 150px;">0</div>
 		</div>
 	</div>
+	
+	
 		
 	<p id="posStr" style_="display:none">111222</p>
 	<p id="watchStr" style="display:none">監控狀態</p>
-	</font>
 	
-	<input type="checkbox" id="touchSW" checked>觸控
+	<input type="checkbox" id="touchSW" checked>
 	<input type="button" value="GPS啟動" onClick="startGPS();">
 	<input type="button" value="GPS停止" onClick="stopGPS();">
 	<input type="button" value="更新快取" onClick="newCache();">
 	<input type="button" value="通知測試" onClick="displayNotification();">
+	<input type="button" value="測試" onClick="test03();">
 	<input type="button" value="語音" onClick="testVoc();">
 	
 	<input type="button" value="清除" onClick="ins.innerHTML='';localStorage.insertCoord='';">
@@ -81,7 +78,7 @@
 </script>
 
 <script>
-var version = "v0.721b6";
+var version = "v0.721b7";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -1808,7 +1805,8 @@ var tasks = [[
 
 [23.450394659821010, 120.48645062512809, "匝道號誌東","匝道北上"],
 [23.449944802528346, 120.48825255232322, "富裕路"],
-[23.448908391410725, 120.49014417336218, "35號(福源)"],
+[23.448908391410725, 120.49014417336218, "35號(福源肉粽)"],
+[23.447169318957148, 120.49252764327383, "號誌8(穀倉)"],
 [23.445657948349787, 120.49503354070347, "嘉135(頂六國小)"],
 [23.445010897143035, 120.49760395326680, "彎66"],
 [23.445362090474273, 120.50083437049854, "彎田寮路口站牌"],
@@ -2937,6 +2935,7 @@ var tasks = [[
 [23.051840861279210, 120.30056509157839, "外環道"],
 [23.050909204092413, 120.30087138031409, "壽香食品"],
 [23.046299113129177, 120.30316938521804, "686巷"],
+[23.044955797027864, 120.30377139510887, "輔25米北"],//大德路
 [23.044722151997128, 120.30385665404938, "大德路"],
 [23.042799436171410, 120.30494808655449, "509巷","車道減少",,"車道增加"],
 [23.042372895500126, 120.30521432670201, "正新北路"],
@@ -3249,8 +3248,8 @@ var tasks = [[
 ],[
 [23.050496900055670, 120.24018254452884, "南市/河堤道路_永安路"],//待衞星更新後修正
 [23.047863762393180, 120.23532644617681, "輔步道"],//思桂園
-[23.046062230597663, 120.23192011174997, "輔路口"],
-[23.043176004287840, 120.22821714260934, "抽水站Rxx"],
+[23.046062230597663, 120.23192011174997, "輔路口(閃黃)"],
+[23.042425909996492, 120.22768320039897, "抽水站(閃黃)"],//抽水站西南角
 [23.039658948190283, 120.22630748022972, "11弄(保寧宮)","雙號誌"],//洲尾街191巷11弄
 [23.038299933388586, 120.22558744742050, "175巷",,,"雙號誌"],//洲工街175巷
 [23.034346335733705, 120.22358497828998, "洲工街(二號水門)"],
@@ -3317,7 +3316,7 @@ var tasks = [[
 // [23.023606958141414, 120.21581814222834, "輔25米北","ign"],//中華路
 [23.023566142274944, 120.21582426635325, "中華路N(河堤道路)"],
 [23.023127355885040, 120.21595703569832, "中華路S(河堤道路)"],
-[23.022284886741016, 120.21619677243885, "中正南路N"],
+[23.022284886741016, 120.21619677243885, "中正南路N","左1直1"],
 [23.021805732782855, 120.21623660120800, "中正南路S"],
 [23.020266303146330, 120.21614156717098, "52巷"],
 [23.019919405557097, 120.21612884315421, "輔25米北","ign"],//甲頂路
@@ -3336,7 +3335,7 @@ var tasks = [[
 [23.010537995712646, 120.21073646645002, "和緯路S"],
 [23.009261129541652, 120.21031669211347, "746巷"],
 [23.007832824051484, 120.20981912971150, "小北路N","左彎"],
-[23.007231682170760, 120.20986860939341, "小北路S",,,"右彎"],
+[23.007232131115174, 120.2098693037823, "小北路S",,,"右彎"],//大茂意麵店前停止線
 
 [23.006319252252710, 120.21018651940614, "377巷"],
 [23.004520606021483, 120.21078829615375, "公園北路","右45度",,"左45度"],
@@ -3702,9 +3701,13 @@ var tasks = [[
 [22.990098989130395, 120.30928531790211, "關新路(台19甲)"],
 
 ],[
-[23.023667207219106, 120.30872087652112, "新化/外環道_中正路"],//順時針
-[23.022650211971920, 120.29981184150350, "彎34(統一花園)"],
+[23.034997526313614, 120.29038537384766, "新化/外環道_中山路(台20)"],
+[23.028697912558037, 120.29219227783706, "輔164巷(閃黃)"],
+[23.028697912558037, 120.29219227783706, "彎12"],
 [23.027922235413175, 120.29316256601240, "118甲"],
+[23.023080176747644, 120.29909370488183, "統一花園N(雙號誌)"],
+[23.022609006678064, 120.30002988243324, "統一花園S(雙號誌)","直1右1",,"左1直1"],
+[23.023667207219106, 120.30872087652112, "中正路(19甲)"],//順時針
 // [23.028035089780616, 120.29301219259185, "輔20米北"],
 
 ],[
@@ -3717,6 +3720,11 @@ var tasks = [[
 [23.027925266097235, 120.29314753960806, "外環道"],
 [23.023921322260136, 120.28976130931280, "高鐵N"],
 [23.023003130799353, 120.28893143275431, "高鐵S"],
+
+],[
+[23.043673878073246, 120.29318288607013, "新化/大德路_大新路"],
+[23.044360131603916, 120.30017202903652, "路口12(閃黃)"],
+[23.044716582150450, 120.30386178592451, "中正路"],
 
 ],[
 [23.054550908930870, 120.28822645631264, "新化/台39_永新路",,,"左2,右提前"],
@@ -5395,11 +5403,14 @@ var tasks = [[
 
 // [22.993180702120600, 120.19877678599036, "輔50米北","ign"],//中正路,5秒54米
 [22.99295643981129, 120.19869276473743,  "輔25米北","ign"],//中正路
+
 [22.992738588587297, 120.19861833612510, "中正路"],
 [22.990429445535817, 120.19780969700320, "府前路"],
-[22.987581446954223, 120.19753344375903, "輔20米北","ign"],//永華路
+[22.988507770387894, 120.19746687152004, "和意路"],
+// [22.987581446954223, 120.19753344375903, "輔20米北","ign"],//永華路
 [22.987401089922763, 120.19753782949647, "永華路"],
-[22.986333154748692, 120.19755594081165, "樹林街"],
+[22.986333154748692, 120.19755594081165, "樹林街(往伏苓糕)"],
+[22.986187464419018, 120.19750854958642, "輔20米南",,,"ign"],//樹林街
 
 [22.985287067175996, 120.19757009336442, "輔20米北","ign"],//南寧街
 [22.985096514387870, 120.19757565593272, "南寧街(往伏苓糕)"],
@@ -5820,7 +5831,7 @@ var tasks = [[
 	const voice = new Audio();
 	//voice.volume = 0.5;//預設值為何?
 
-	 var startGestX = -1;
+	var startGestX = -1;
 	var startGestY = -1;
 	
 	var slowTime;//低速的起算時間
@@ -5966,7 +5977,7 @@ console.log(a1, d1);
 		
 	}
 	
-function init(){
+function init(){	//由onload()啟動
 	
 	var now = new Date();
 	dateStr = now.getFullYear()+"/"+(now.getMonth()+1)+"/"+now.getDate();
@@ -6768,7 +6779,7 @@ minDiff = 361;
 	}
 	// strtmp = "新:" + points[nextPoint][2] + "(" + points[0][2].substr(0,index)+")";// + strtmp;
 	strtmp = "新:" + points[0][2].substr(0,index) +
-					 "_"+points[nextPoint][2];
+					 ",從"+points[nextPoint - vector][2];
 					 
 	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
 			// ",路向:" + edgeVector.toFixed(0);
@@ -6804,8 +6815,8 @@ if(IntervalID2){
 			//高速結算			
 			let secTmp = ((+new Date())-highTime)/1000;
 			let strtmp = "高速a, 共"+ secTmp.toFixed(0) +"秒";
-			strtmp += "[" + speedTime.innerText + "]";
-			strtmp += ",from" +highStart;
+			// strtmp += "[" + speedTime.innerText + "]";
+			// strtmp += ",from" +highStart;
 			addLog(strtmp);
 			speedTime.innerText = "0";
 			
@@ -6815,16 +6826,6 @@ if(IntervalID2){
 			
 			// return;
 		}else{//仍為高速
-			if(parseInt(speedTime.innerText,10) > 99){
-				//高速結算			
-				let secTmp = ((+new Date())-highTime)/1000;
-				let strtmp = "高速b, 共"+ secTmp.toFixed(0) +"秒";
-				strtmp += "[" + speedTime.innerText + "]";
-				strtmp += ",from" +highStart;
-				addLog(strtmp);
-				highTime = (+new Date());
-				speedTime.innerText = "0";
-			}
 			// addLog("c2");
 		}
 	}else{//低速狀態
@@ -6861,7 +6862,7 @@ if(IntervalID2){
 		if(rctSpeedLevel == 3){
 			let addSpd = ((speedKpH - spd10k)/((+new Date()) - time10k)*1000);
 			if(addSpd > 2){
-				addLog("加速度：" + addSpd.toFixed(1) + "km/s(10~30)");
+				// addLog("加速度：" + addSpd.toFixed(1) + "km/s(10~30)");
 			}
 		}
 		if(rctSpeedLevel == 1){
@@ -7118,6 +7119,10 @@ function showData(){
 		if(speedKpH > 2){
 			// str += "<br/>時速："+ (coords_speed*3.6).toFixed(1) + "公里，";	//原單位：米/秒
 			str += "<br/>時速："+ speedKpH.toFixed(1) + "公里，";	//原單位：米/秒
+			document.getElementById("speed").innerText = speedKpH.toFixed(0)
+			
+		}else{
+			document.getElementById("speed").innerText = 0;
 		}
 		// str += Math.round(coords_heading) +"度";	//12點鐘方向為0, 順時針~360
 		// str += "(路段：" + edgeVector.toFixed() + "度)";
