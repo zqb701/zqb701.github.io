@@ -78,7 +78,7 @@
 </script>
 
 <script>
-var version = "v0.721b7";
+var version = "v0.721b8";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -4870,7 +4870,8 @@ var tasks = [[
 [22.633360853308417, 120.53364818589786, "屏監東角路口"],
 // [22.634871078809404, 120.53533019734718, "輔150米西","ign"],//國3
 
-[22.635275449143375, 120.53580021534164, "輔25米西","ign"],//匝道號誌西
+[22.63524586825490, 120.5357679277693, "輔30米西","ign"],//匝道號誌西
+// [22.635275449143375, 120.53580021534164, "輔25米西","ign"],//匝道號誌西
 // [22.635311968074245, 120.53583865750741, "輔20米西","ign"],//匝道號誌西
 [22.635425845955975, 120.53598081458475, "匝道號誌W"],//東向南
 [22.635587997983148, 120.53621416676388, "匝道號誌E",,,"左1直1"],
@@ -4908,7 +4909,8 @@ var tasks = [[
 [22.569429521118380, 120.54057809384372, "屏83(速限60南路中)","測速"],
 [22.568919977549610, 120.54004637062756, "台88"],
 [22.567708040842806, 120.53948561593468, "彎8"],
-[22.562950900239500, 120.53977473613809, "堤防路口"],
+[22.562950900239500, 120.53977473613809, "堤防路口","車道減少"],
+[22.559224103852838, 120.54008660282705, "北門路"],
 
 ],[
 [22.569255130438595, 120.53953109619614, "匝道88潮州_西入匯入點"],
@@ -4959,8 +4961,8 @@ var tasks = [[
 [22.539552101905297, 120.54875264383196, "光華路(金弘)", "路口"],
 [22.539397819743524, 120.54829906540336, "輔50米南",,,"ign"],//光華路
 [22.536464658255557, 120.54002527701802, "光春路"],
-],[
 
+],[
 [22.434060322330048, 120.57076546281823, "枋寮/台1_東角路(屏115-1)"],
 [22.431416369731398, 120.57315761240191, "屏132"],
 [22.424647280622600, 120.57910629053940, "文化一路"],
@@ -6085,6 +6087,9 @@ function init(){	//由onload()啟動
 		case 'visible':
 			addLog();
 			addLog("休眠 " + ((Date.now() - hiddenTime)/1000).toFixed(0) + " 秒");
+			highTime = (+new Date());
+			slowTime = (+new Date());
+			speedTime.innerText = "0";
 			break;
 	  }
 	};
@@ -6494,12 +6499,12 @@ function skipPoint(){
 	
 	// showMsg("a2");
 	if(nextPoint+vector == -1 || nextPoint+vector == points.length){
-		addLog("端點:" + strtmp);
+		addLog("端:" + strtmp);
 		// addLog();
 		searchPoint = true;
 		return false;
 	}else{
-		addLog("通過:" + strtmp);
+		addLog("過:" + strtmp);
 	}
 	passTime = new Date();
 		
@@ -6703,9 +6708,9 @@ myCanvas.drawLine=function (lat0, lon0, lat1, lon1, c, w){
 function nearPoint(){
 					//高速結算
 				let secTmp = ((+new Date())-highTime)/1000;
-				let strtmp = "高速c, 共"+ secTmp.toFixed(0) +"秒";
+				let strtmp = "走b:"+ secTmp.toFixed(0) +"秒";
 				strtmp += "[" + speedTime.innerText + "]";
-				strtmp += ",from" +highStart;
+				strtmp += ",從:" +highStart;
 				addLog(strtmp);
 				addLog();
 				highTime = (+new Date());
@@ -6824,7 +6829,7 @@ minDiff = 361;
 	}
 	// strtmp = "新:" + points[nextPoint][2] + "(" + points[0][2].substr(0,index)+")";// + strtmp;
 	strtmp = "新:" + points[0][2].substr(0,index) +
-					 ",從"+points[nextPoint - vector][2];
+					 ",從:"+points[nextPoint - vector][2];
 					 
 	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
 			// ",路向:" + edgeVector.toFixed(0);
@@ -6859,9 +6864,9 @@ if(IntervalID2){
 		if(speedKpH < 2){	//切到低速
 			//高速結算			
 			let secTmp = ((+new Date())-highTime)/1000;
-			let strtmp = "高速a, 共"+ secTmp.toFixed(0) +"秒";
-			// strtmp += "[" + speedTime.innerText + "]";
-			// strtmp += ",from" +highStart;
+			let strtmp = "走a:"+ secTmp.toFixed(0) +"秒";
+			strtmp += "[" + speedTime.innerText + "]";
+			strtmp += ",from" +highStart;
 			addLog(strtmp);
 			speedTime.innerText = "0";
 			
@@ -6878,7 +6883,7 @@ if(IntervalID2){
 		if(speedKpH > 3){	//切到高速
 			//低速結算
 			let secTmp = ((+new Date())-slowTime)/1000;
-			let strtmp = "慢速, 共"+ secTmp.toFixed(0) +"秒";
+			let strtmp = "停:"+ secTmp.toFixed(0) +"秒";
 			strtmp += "[" + speedTime.innerText + "]";
 			if(secTmp > 60){
 				strtmp += "(" + Math.floor(secTmp/60) +"分";
@@ -6965,7 +6970,7 @@ if(IntervalID2){
 			incDistMsg += "," + (preDist*1000).toFixed(0);
 			if(++incCount > 2){
 				
-				addLog("遠離:" + 	(((+new Date())-passTime)/1000).toFixed(0)+"秒,"
+				addLog("離:" + 	(((+new Date())-passTime)/1000).toFixed(0)+"秒,"
 							+points[nextPoint][2] + incDistMsg);
 
 				
@@ -7292,10 +7297,12 @@ function swSpeed(){
 		IntervalID2 = window.setInterval(( () =>  {
 			speedTime.innerText = parseInt(speedTime.innerText,10)+1;			
 		}	) , 1000);
+		speedTime.style.color = "white";
 
 	}else{
 		window.clearInterval(IntervalID2);
 		speedTime.innerText = "0";
+		speedTime.style.color = "gray";
 		IntervalID2 = undefined;
 	}
 }
