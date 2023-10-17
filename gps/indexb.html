@@ -35,7 +35,7 @@
 		<div class="cmdButton" onclick="documentElement.scrollTop=0; playVoice('當');" >頁頂</div>
 		<div class="cmdButton" onclick="insertCoord('急彎');">急彎</div>  
 		<div class="cmdButton" >
-			<div id="speedTime" onclick="swSpeed();" style="font-size: 100px;">0</div>
+			<div id="speedTime" onclick="speeder.switch();" style="font-size: 100px;">0</div>
 		</div>
 		<div class="cmdButton" onclick="addLog();addLog('_尋標(手動)');nearPoint();">尋標</div>
 		<div class="cmdButton" >
@@ -78,7 +78,7 @@
 </script>
 
 <script>
-var version = "v0.721b7";
+var version = "v0.721b9";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -4819,8 +4819,8 @@ var tasks = [[
 //[22.659922332675282, 120.51081609645302, "輔45米西","ign"],//民生路,18米
 
 [22.65992230542634, 120.51084370796372, "輔17米線西(待確認)","ign"],//民生路W,
-[22.65991715433118, 120.51101036989803, "民生路W","後左直1"],
-[22.65986049229136, 120.51138037531653, "民生路E",,,"未左1直1R"],
+[22.65991715433118, 120.51101036989803, "民生路W","直1左1停30"],
+[22.65986049229136, 120.51138037531653, "民生路E",,,"直1左1停70"],
 
 [22.659473739849265, 120.51209523720857, "安心巷(速限50北路中)",,,"測速"],
 // [22.659300082190747, 120.51238397264552, "測速50北路中",,,"測速"],//太近
@@ -4870,7 +4870,8 @@ var tasks = [[
 [22.633360853308417, 120.53364818589786, "屏監東角路口"],
 // [22.634871078809404, 120.53533019734718, "輔150米西","ign"],//國3
 
-[22.635275449143375, 120.53580021534164, "輔25米西","ign"],//匝道號誌西
+[22.63524586825490, 120.5357679277693, "輔30米西","ign"],//匝道號誌西
+// [22.635275449143375, 120.53580021534164, "輔25米西","ign"],//匝道號誌西
 // [22.635311968074245, 120.53583865750741, "輔20米西","ign"],//匝道號誌西
 [22.635425845955975, 120.53598081458475, "匝道號誌W"],//東向南
 [22.635587997983148, 120.53621416676388, "匝道號誌E",,,"左1直1"],
@@ -4908,7 +4909,8 @@ var tasks = [[
 [22.569429521118380, 120.54057809384372, "屏83(速限60南路中)","測速"],
 [22.568919977549610, 120.54004637062756, "台88"],
 [22.567708040842806, 120.53948561593468, "彎8"],
-[22.562950900239500, 120.53977473613809, "堤防路口"],
+[22.562950900239500, 120.53977473613809, "堤防路口","車道減少"],
+[22.559224103852838, 120.54008660282705, "北門路"],
 
 ],[
 [22.569255130438595, 120.53953109619614, "匝道88潮州_西入匯入點"],
@@ -4959,8 +4961,8 @@ var tasks = [[
 [22.539552101905297, 120.54875264383196, "光華路(金弘)", "路口"],
 [22.539397819743524, 120.54829906540336, "輔50米南",,,"ign"],//光華路
 [22.536464658255557, 120.54002527701802, "光春路"],
-],[
 
+],[
 [22.434060322330048, 120.57076546281823, "枋寮/台1_東角路(屏115-1)"],
 [22.431416369731398, 120.57315761240191, "屏132"],
 [22.424647280622600, 120.57910629053940, "文化一路"],
@@ -5887,19 +5889,94 @@ var tasks = [[
 	var viewMode = -1;//1為全圖, -1為目標點置中
 	
 	var ins = document.getElementById("insertCoord");
-
+	// var speedTime = document.getElementById("speedTime");
+	var highStart = "";//開始計算高速時間的點
+	
+	
 	class TODO {}// function TODO(){}
 	var _todo = new TODO();
 	_todo._500資料檔案化_匯出_匯入= function(){}	//
 	
 	class canvas01{}
 	var myCanvas = new canvas01();
+	myCanvas.abc = "123";
 	
-	class map01{}
-	var myMap = new map01();
+	function speeder1(){}
+	function Speeder(meter){
+		var intervalID;
+		this.meter = meter;
+		var highTime;
+		var slowTime;
+			
+		this.switch = function(){
+			if(this.intervalID){
+				this.stop();
+			}else{
+				this.start();
+			}
+		};
+		
+		this.start = function(){
+			this.intervalID = window.setInterval(( () =>  {
+				this.meter.innerText = parseInt(this.meter.innerText,10)+1;			
+			}	) , 1000);
+			this.meter.style.color = "white";
+		};
+		
+		this.stop = function(){
+			window.clearInterval(this.intervalID);
+			this.intervalID = undefined;
+			this.meter.innerText = "0";
+			this.meter.style.color = "gray";	//深灰色		
+		};
+		
+		this.analyze = function(speed){//分析速度
+			if(this.intervalID){
+				if(!this.slowTime){//移動狀態
+					if(speed < 2){	//切到停止
+						this.subtotal();		//結算
+						addLog();									
+						this.meter.style.color = "white";////停止為白色
+					}else{
+						//仍為移動
+					}
+				}else{//停止狀態
+					if(speed > 3){	//切到移動
+						this.subtotal();
+						this.slowTime = undefined;
+						this.meter.style.color = "cyan";
+						this.highStart = points[nextPoint][2];
+					}else{			
+						// 仍為停止
+					}
+				}	
+			}
+		};
+		
+		this.subtotal = function(){//結算時間
+			if(slowTime){
+				theTime = this.slowTime;
+			}else{
+				theTime = this.highTime;
+			}
+			let secTmp = ((+new Date())-theTime)/1000;
+			let strtmp = "結:"+ secTmp.toFixed(0) +"秒";
+			// strtmp += "[" + speedTime.innerText + "]";
+			// strtmp += ",從:" +highStart;
+			addLog(strtmp);
+			this.highTime = (+new Date());
+			this.slowTime = (+new Date());
+			this.meter.innerText = "0";
+		};
+	}
 	
-	class control01{}
-	var myCtl = new control01();
+	var speeder = new Speeder(document.getElementById("speedTime"));
+	// speeder.meter = document.getElementById("speedTime");
+	// class map01{}
+	// var myMap = new map01();
+	
+	// class control01{}
+	// var myCtl = new control01();
 	
 	/**
 		
@@ -6085,6 +6162,9 @@ function init(){	//由onload()啟動
 		case 'visible':
 			addLog();
 			addLog("休眠 " + ((Date.now() - hiddenTime)/1000).toFixed(0) + " 秒");
+			// highTime = (+new Date());
+			// slowTime = (+new Date());
+			speeder.reset();//speedTime.innerText = "0";
 			break;
 	  }
 	};
@@ -6092,7 +6172,7 @@ function init(){	//由onload()啟動
 
 	//playVoice('當');
 	highTime = (+new Date());	//避免第一次引用時為undefined
-	swSpeed();
+	speeder.start();
 }
 
 function insertCoord(coordType){	//	記錄點	
@@ -6494,12 +6574,12 @@ function skipPoint(){
 	
 	// showMsg("a2");
 	if(nextPoint+vector == -1 || nextPoint+vector == points.length){
-		addLog("端點:" + strtmp);
+		addLog("端:" + strtmp);
 		// addLog();
 		searchPoint = true;
 		return false;
 	}else{
-		addLog("通過:" + strtmp);
+		addLog("過:" + strtmp);
 	}
 	passTime = new Date();
 		
@@ -6702,14 +6782,7 @@ myCanvas.drawLine=function (lat0, lon0, lat1, lon1, c, w){
 
 function nearPoint(){
 					//高速結算
-				let secTmp = ((+new Date())-highTime)/1000;
-				let strtmp = "高速c, 共"+ secTmp.toFixed(0) +"秒";
-				strtmp += "[" + speedTime.innerText + "]";
-				strtmp += ",from" +highStart;
-				addLog(strtmp);
-				addLog();
-				highTime = (+new Date());
-				speedTime.innerText = "0";
+	speeder.subtotal();
 				
 	// console.log("nearPoint(start)");
 
@@ -6824,7 +6897,7 @@ minDiff = 361;
 	}
 	// strtmp = "新:" + points[nextPoint][2] + "(" + points[0][2].substr(0,index)+")";// + strtmp;
 	strtmp = "新:" + points[0][2].substr(0,index) +
-					 ",從"+points[nextPoint - vector][2];
+					 ",從:"+points[nextPoint - vector][2];
 					 
 	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
 			// ",路向:" + edgeVector.toFixed(0);
@@ -6841,8 +6914,7 @@ minDiff = 361;
 	passTime = new Date();//todo:沒實際作用,只能避免數字過大
 }
 
-var speedTime = document.getElementById("speedTime");
-var highStart = "";//開始計算高速時間的點
+
 function geoYes (evt){		//************************************************
 	// addLog("c1");
 	strGPS = strGPS.substr(1,3)+strGPS.charAt(0);
@@ -6853,51 +6925,8 @@ function geoYes (evt){		//************************************************
 	coords_speed = evt.coords.speed;
 	speedKpH = evt.coords.speed * 3.6;
 	// isSlow(evt.coords.speed);
-if(IntervalID2){
-	if(!slowTime){//高速狀態
-		// addLog("c11");
-		if(speedKpH < 2){	//切到低速
-			//高速結算			
-			let secTmp = ((+new Date())-highTime)/1000;
-			let strtmp = "高速a, 共"+ secTmp.toFixed(0) +"秒";
-			// strtmp += "[" + speedTime.innerText + "]";
-			// strtmp += ",from" +highStart;
-			addLog(strtmp);
-			speedTime.innerText = "0";
-			
-			//低速啟用
-			slowTime = (+new Date());
-			speedTime.style.color = "white";		
-			
-			// return;
-		}else{//仍為高速
-			// addLog("c2");
-		}
-	}else{//低速狀態
-		// addLog("c12");
-		if(speedKpH > 3){	//切到高速
-			//低速結算
-			let secTmp = ((+new Date())-slowTime)/1000;
-			let strtmp = "慢速, 共"+ secTmp.toFixed(0) +"秒";
-			strtmp += "[" + speedTime.innerText + "]";
-			if(secTmp > 60){
-				strtmp += "(" + Math.floor(secTmp/60) +"分";
-				strtmp += (secTmp%60).toFixed(0)+"秒)"
-			}
-			addLog();
-			addLog(strtmp);
-			slowTime = undefined;
-			
-			//高速啟用
-			highTime = (+new Date());
-			speedTime.style.color = "cyan";
-			speedTime.innerText = "0";
-			highStart = points[nextPoint][2];
-		}else{			
-			// return;
-		}
-	}	
-}
+	speeder.analyze(speedKpH);
+
 	// showMsg("c2");
 		
 
@@ -6965,7 +6994,7 @@ if(IntervalID2){
 			incDistMsg += "," + (preDist*1000).toFixed(0);
 			if(++incCount > 2){
 				
-				addLog("遠離:" + 	(((+new Date())-passTime)/1000).toFixed(0)+"秒,"
+				addLog("離:" + 	(((+new Date())-passTime)/1000).toFixed(0)+"秒,"
 							+points[nextPoint][2] + incDistMsg);
 
 				
@@ -7286,19 +7315,8 @@ function swColor(){
 	}
 }
 
-var IntervalID2;
-function swSpeed(){
-	if(!IntervalID2){
-		IntervalID2 = window.setInterval(( () =>  {
-			speedTime.innerText = parseInt(speedTime.innerText,10)+1;			
-		}	) , 1000);
 
-	}else{
-		window.clearInterval(IntervalID2);
-		speedTime.innerText = "0";
-		IntervalID2 = undefined;
-	}
-}
+
 
 	_todo._510紅綠燈記錄 = function(){}	
 	_todo._520紅綠燈讀秒 = function(){}	
