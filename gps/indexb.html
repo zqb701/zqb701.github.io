@@ -78,7 +78,7 @@
 </script>
 
 <script>
-var version = "v0.721b10";
+var version = "v0.721b11";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -5939,19 +5939,23 @@ var tasks = [[
 		this.analyze = function(speed){//分析速度
 			if(this.intervalID){
 				if(!this.slowTime){//移動狀態
-					if(speed < 2){	//切到停止
+					if(speed < 3){	//切到停止
 						this.subtotal();		//結算
 						addLog();									
 						this.meter.style.color = "white";////停止為白色
+						document.getElementById("speed").innerText = "0";
+						
 					}else{
 						//仍為移動
 					}
 				}else{//停止狀態
-					if(speed > 3){	//切到移動
+					if(speed > 5){	//切到移動
 						this.subtotal();
 						this.slowTime = undefined;
 						this.meter.style.color = "cyan";
 						this.highStart = points[nextPoint][2];
+						
+						document.getElementById("speed").innerText = speedKpH.toFixed(0);
 					}else{			
 						// 仍為停止
 					}
@@ -7199,14 +7203,16 @@ function showData(){
 		}
 		str += "<br/>" + points[nextPoint][2];// + "(" + points[0][2].substr(0,index)+")";
 		// if(coords_speed*3.6 > 2){
-		if(speedKpH > 2){
+		/*
+		if(speedKpH > 3){
 			// str += "<br/>時速："+ (coords_speed*3.6).toFixed(1) + "公里，";	//原單位：米/秒
-			str += "<br/>時速："+ speedKpH.toFixed(1) + "公里，";	//原單位：米/秒
+			//str += "<br/>時速："+ speedKpH.toFixed(1) + "公里，";	//原單位：米/秒
 			document.getElementById("speed").innerText = speedKpH.toFixed(0)
 			
 		}else{
 			document.getElementById("speed").innerText = 0;
 		}
+		*/
 		// str += Math.round(coords_heading) +"度";	//12點鐘方向為0, 順時針~360
 		// str += "(路段：" + edgeVector.toFixed() + "度)";
 		
