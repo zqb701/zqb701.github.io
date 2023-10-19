@@ -78,7 +78,7 @@
 </script>
 
 <script>
-var version = "v0.721b12";
+var version = "v0.721b13";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -4839,8 +4839,7 @@ var tasks = [[
 [22.658536946690514, 120.51373885291224, "民生家商(尖峰)"],
 // [22.658280287874202, 120.51420858275208, "輔50米北","ign"],//瑞光路
 // [22.658201489042597, 120.51433581392608, "輔35米北","ign"],//瑞光路
-[22.658176128705207, 120.51437736684977, "輔30米北","ign"],//瑞光路,35米
-// [22.658034247616996, 120.51463021734180, "瑞光路R70"],
+// [22.658176128705207, 120.51437736684977, "輔30米北","ign"],//瑞光路,35米
 [22.658119619086467, 120.51449163568390, "瑞光路N,R70","先左1直2"],//停止線
 [22.657914796475900, 120.51480411303760, "瑞光路S,R70",,,"先左1直1右1"],//停止線
 // [22.657714840779196, 120.51519649894364, "輔殯儀館",,,"ign"],//用途???
@@ -4923,7 +4922,7 @@ var tasks = [[
 [22.562950900239500, 120.53977473613809, "堤防路口","車道減少"],//以南為延平路
 [22.559224103852838, 120.54008660282705, "北門路"],
 [22.556444288715745, 120.54030842176715, "潮昇路N"],
-[22.556099887892730, 120.54030669923314,  "潮昇路S"],
+[22.556099887892730, 120.54030669923314, "潮昇路S"],
 [22.555242807883330, 120.54029290336648, "北華路"],
 [22.554051215152995, 120.54028233510739, "中正路N"],
 [22.553611036569983, 120.54027246899736, "中正路S"],
@@ -5993,7 +5992,7 @@ var tasks = [[
 			if(this.intervalID){
 				if(!this.slowTime){//移動狀態
 					if(speed < 3){	//切到停止
-						this.subtotal();		//結算
+						addLog(this.subtotal());		//結算
 						addLog();									
 						this.meter.style.color = "white";////停止為白色					
 					}else{
@@ -6016,21 +6015,22 @@ var tasks = [[
 			if(this.slowTime){
 				theTime = this.slowTime;
 				theChar = "停:";
-				addstr = "," + nextDist*1000;
+				addstr = ",距:" + nextDist*1000 + "米";
 			}else{
 				theTime = this.highTime;
 				theChar = "走:";
-				addstr = "";
+				addstr = ",均:XX km/h";
 			}
 			let secTmp = ((+new Date())-theTime)/1000;
 			let strtmp = theChar + secTmp.toFixed(0) +"秒";
 			strtmp += addstr;
 			// strtmp += "[" + speedTime.innerText + "]";
 			// strtmp += ",從:" +highStart;
-			addLog(strtmp);
+			// addLog(strtmp);
 			this.highTime = (+new Date());
 			this.slowTime = (+new Date());
 			this.meter.innerText = "0";
+			return strtmp;
 		};
 	}
 	
@@ -6846,7 +6846,7 @@ myCanvas.drawLine=function (lat0, lon0, lat1, lon1, c, w){
 
 function nearPoint(){
 					//高速結算
-	speeder.subtotal();
+	addLog(speeder.subtotal());
 	addLog();
 				
 	// console.log("nearPoint(start)");
