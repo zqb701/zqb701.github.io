@@ -78,7 +78,7 @@
 </script>
 
 <script>
-var version = "v0.721b13";
+var version = "v0.721b14";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -5966,13 +5966,7 @@ var tasks = [[
 		var highTime = (+new Date());
 		var slowTime;
 			
-		this.switch = function(){
-			if(this.intervalID){
-				this.stop();
-			}else{
-				this.start();
-			}
-		};
+
 		
 		this.start = function(){
 			this.intervalID = window.setInterval(( () =>  {
@@ -6000,7 +5994,7 @@ var tasks = [[
 					}
 				}else{//停止狀態
 					if(speed > 5){	//切到移動
-						this.subtotal();
+						addLog(this.subtotal());
 						this.slowTime = undefined;
 						this.meter.style.color = "cyan";
 						this.highStart = points[nextPoint][2];
@@ -6035,6 +6029,13 @@ var tasks = [[
 	}
 	
 	var speeder = new Speeder(document.getElementById("speedTime"));
+		speeder.switch = function(){
+			if(this.intervalID){
+				this.stop();
+			}else{
+				this.start();
+			}
+		};
 	// speeder.meter = document.getElementById("speedTime");
 	// class map01{}
 	// var myMap = new map01();
