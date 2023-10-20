@@ -78,7 +78,7 @@
 </script>
 
 <script>
-var version = "v0.721b14";
+var version = "v0.721b15";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -5984,7 +5984,16 @@ var tasks = [[
 		
 		this.analyze = function(speed){//分析速度
 			if(this.intervalID){
-				if(!this.slowTime){//移動狀態
+				if(this.slowTime){//停止狀態
+					if(speed > 5){	//切到移動
+						addLog(this.subtotal());
+						this.slowTime = undefined;
+						this.meter.style.color = "cyan";
+						this.highStart = points[nextPoint][2];
+					}else{
+						// 仍為停止
+					}
+				}else{//移動狀態
 					if(speed < 3){	//切到停止
 						addLog(this.subtotal());		//結算
 						addLog();									
@@ -5992,16 +6001,7 @@ var tasks = [[
 					}else{
 						//仍為移動
 					}
-				}else{//停止狀態
-					if(speed > 5){	//切到移動
-						addLog(this.subtotal());
-						this.slowTime = undefined;
-						this.meter.style.color = "cyan";
-						this.highStart = points[nextPoint][2];
-					}else{			
-						// 仍為停止
-					}
-				}	
+				}
 			}
 		};
 		
@@ -6021,10 +6021,14 @@ var tasks = [[
 			// strtmp += "[" + speedTime.innerText + "]";
 			// strtmp += ",從:" +highStart;
 			// addLog(strtmp);
+			this.init();
+			return strtmp;
+		};
+		
+		this.init = function(){
 			this.highTime = (+new Date());
 			this.slowTime = (+new Date());
 			this.meter.innerText = "0";
-			return strtmp;
 		};
 	}
 	
@@ -6229,7 +6233,7 @@ function init(){	//由onload()啟動
 			addLog("休:" + ((Date.now() - hiddenTime)/1000).toFixed(0) + " 秒");
 			// highTime = (+new Date());
 			// slowTime = (+new Date());
-			speeder.subtotal();//speedTime.innerText = "0";
+			speeder.init();//speedTime.innerText = "0";
 			break;
 	  }
 	};
@@ -6846,7 +6850,7 @@ myCanvas.drawLine=function (lat0, lon0, lat1, lon1, c, w){
 
 
 function nearPoint(){
-					//高速結算
+
 	addLog(speeder.subtotal());
 	addLog();
 				
