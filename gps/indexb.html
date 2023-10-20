@@ -26,7 +26,7 @@
 	onkeydown="addLog(event.keyCode);">
 	<f function HTML_body(){}/>
 	
-	<div class="cmdButton" id="speed" style="position:fixed;font-size: 100px;">0</div>
+	<div class="cmdButton" id="speed" style="position:fixed;font-size: 100px;border-radius: 30%;">*</div>
 	<div class="cmdButton" id="dist" style="position:fixed;font-size: 100px;left:740px;">0</div>
 	
 	<canvas id="canvas" "></canvas>
@@ -78,7 +78,7 @@
 </script>
 
 <script>
-var version = "v0.721b16";
+var version = "v0.721b17";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -404,7 +404,8 @@ var tasks = [[
 // [22.665896314139818, 120.50069527139074, "民利35巷"],
 // [22.665710405430875, 120.50104072303125, "69巷(舊屏監)"],		
 [22.665363252013350, 120.50161501550360, "69巷W(三號誌)"],
-[22.664982582278096, 120.50228884502027, "民福路E(三號誌,G60R40)"],
+// [22.664982582278096, 120.50228884502027, "民福路E(三號誌,G60R40)"],
+[22.664984049555727, 120.50229042787828, "民福路E(三號誌,G60R40)"],
 // [22.664943755849396, 120.50238328795535, "輔20米南",,,"ign"],//民福路
 [22.664221944275300, 120.50369274070279, "民生校區"],
 [22.663392101851596, 120.50520911909595, "菸廠路"],
@@ -703,7 +704,7 @@ var tasks = [[
 [22.659389590906848, 120.51514906227330, "輔田中巷"],
 [22.659155915276358, 120.51509606487899, "輔25米南",,,"ign"],//田中巷
 
-[22.658633168724144, 120.51504245069331, "彎急診室"],
+[22.658633168724144, 120.51504245069331, "彎3(急診室)"],
 [22.658176131972464, 120.51472465693634, "民生東路N","R100,左1"],
 [22.657722461645974, 120.51458557033371, "民生東路S",,,"直1右1"],//機車格
 
@@ -713,7 +714,7 @@ var tasks = [[
 [22.652296396827296, 120.51072923537126, "歸禮巷N(G50R35)"],
 [22.651959088511326, 120.51035576174327, "歸禮巷S(G50R35)"],
 
-[22.651834115417017, 120.51018923352417, "輔50米南",,,"ign"],//歸禮巷
+// [22.651834115417017, 120.51018923352417, "輔50米南",,,"ign"],//歸禮巷
 
 [22.647793418681097, 120.50587508711462, "鐵路G50R35"],
 [22.641916924752300, 120.49835011659876, "頂柳路G50R35"],
@@ -5964,11 +5965,11 @@ var tasks = [[
 	// function speeder1(){}
 	function Speeder(meter){
 		var intervalID;
-		this.meter = meter;
 		var highTime = (+new Date());
 		var slowTime;
-			
-
+		
+		this.meter = meter;			
+		//TODO 指定onclick事件
 		
 		this.start = function(){
 			this.intervalID = window.setInterval(( () =>  {
@@ -5988,7 +5989,10 @@ var tasks = [[
 			if(this.intervalID){
 				if(this.slowTime){//停止狀態
 					if(speed > 5){	//切到移動
-						addLog(this.subtotal());
+						theTime = this.slowTime;
+						theChar = "停:";
+						addstr = ",距:" + nextDist*1000 + "米";
+						this.highTime = (+new Date());
 						this.slowTime = undefined;
 						this.meter.style.color = "cyan";
 						this.highStart = points[nextPoint][2];
@@ -5997,40 +6001,23 @@ var tasks = [[
 					}
 				}else{//移動狀態
 					if(speed < 3){	//切到停止
-						addLog(this.subtotal());		//結算
-						addLog();									
+						theTime = this.highTime;
+						theChar = "走:";
+						addstr = ",均:XX km/h";
+						// addLog(this.subtotal());		//結算
+						// addLog();
+						this.slowTime = (+new Date());						
 						this.meter.style.color = "white";////停止為白色					
 					}else{
 						//仍為移動
 					}
 				}
+				this.meter.innerText = "0";
+				let secTmp = ((+new Date())-theTime)/1000;
+				let strtmp = theChar + secTmp.toFixed(0) +"秒";
+				strtmp += addstr;
+				return strtmp;
 			}
-		};
-		
-		this.subtotal = function(){//結算時間,改名為reset, 並傳回文字
-			if(this.slowTime){
-				theTime = this.slowTime;
-				theChar = "停:";
-				addstr = ",距:" + nextDist*1000 + "米";
-			}else{
-				theTime = this.highTime;
-				theChar = "走:";
-				addstr = ",均:XX km/h";
-			}
-			let secTmp = ((+new Date())-theTime)/1000;
-			let strtmp = theChar + secTmp.toFixed(0) +"秒";
-			strtmp += addstr;
-			// strtmp += "[" + speedTime.innerText + "]";
-			// strtmp += ",從:" +highStart;
-			// addLog(strtmp);
-			this.init();
-			return strtmp;
-		};
-		
-		this.init = function(){
-			this.highTime = (+new Date());
-			this.slowTime = undefined;
-			this.meter.innerText = "0";
 		};
 	}
 	
@@ -6229,13 +6216,14 @@ function init(){	//由onload()啟動
 	  switch(document.visibilityState) {
 		case 'hidden':
 			hiddenTime = Date.now();
+			speeder.analyze();
 			break;
 		case 'visible':
 			addLog();
 			addLog("休:" + ((Date.now() - hiddenTime)/1000).toFixed(0) + " 秒");
 			// highTime = (+new Date());
 			// slowTime = (+new Date());
-			speeder.init();//speedTime.innerText = "0";
+			// speeder.init();//speedTime.innerText = "0";
 			break;
 	  }
 	};
@@ -6853,7 +6841,7 @@ myCanvas.drawLine=function (lat0, lon0, lat1, lon1, c, w){
 
 function nearPoint(){
 
-	addLog(speeder.subtotal());
+	addLog(speeder.analyze());
 	addLog();
 				
 	// console.log("nearPoint(start)");
