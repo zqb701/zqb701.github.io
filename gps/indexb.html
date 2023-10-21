@@ -85,7 +85,7 @@
 </script>
 
 <script>
-var version = "v0.721b21";
+var version = "v0.721b22";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -6021,7 +6021,7 @@ var tasks = [[
 		};
 		
 		this.analyze = function(speed){//分析速度
-			if(!this.intervalID)return "func off";
+			if(!this.intervalID)return;
 		// addLog("analyze:"+speed + ", "+ this.slowTime);
 			theTime = undefined;
 			if(this.slowTime){//停止狀態
