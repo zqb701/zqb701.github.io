@@ -39,7 +39,7 @@
 			<div id="speedTime" onclick="speeder.switc();" style="font-size:100px;  border-radius:50%; border-style:dashed;">0</div>
 		</div>
 		
-		<div class="cmdButton" onclick="addLog("");addLog('_尋標(手動)');nearPoint();">尋標</div>
+		<div class="cmdButton" onclick="addLog("_");addLog('_尋標(手動)');nearPoint();">尋標</div>
 		<div class="cmdButton" >
 			<div id="march" onclick="swColor();" style="font-size:150px;">0</div>
 		</div>
@@ -85,7 +85,7 @@
 </script>
 
 <script>
-var version = "v0.721b19";
+var version = "v0.721b20";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -6023,13 +6023,13 @@ var tasks = [[
 		this.analyze = function(speed){//分析速度
 			if(!this.intervalID)return "func off";
 		// addLog("analyze:"+speed + ", "+ this.slowTime);
-			theTime = undefined;
+			// theTime = undefined;
 			if(this.slowTime){//停止狀態
 				if(speed > 5){	
 						
 					//結算停止時間
 					theTime = this.slowTime;
-					theChar = "停:";
+					theChar = "<br>停:";
 					addstr = ",距:" + nextDist*1000 + "米";
 					//切到移動狀態
 					this.highTime = (+new Date());
@@ -6044,7 +6044,7 @@ var tasks = [[
 					// addLog("結算移動時間");
 					theTime = this.highTime;
 					theChar = "走:";
-					addstr = ",均:XX km/h";
+					addstr = ",均:XX km/h<br>";
 					//切到停止
 					
 					this.slowTime = (+new Date());		
@@ -6250,7 +6250,7 @@ function init(){	//由onload()啟動
 	var now = new Date();
 	dateStr = now.getFullYear()+"/"+(now.getMonth()+1)+"/"+now.getDate();
 	dateStr += "("+ "日一二三四五六".substr(now.getDay(),1) +")";
-	addLog("");
+	addLog("_");
 	addLog("程式啟動, " + version + ", " + dateStr);
 
 	// alert("abc".indexOf("a"));
@@ -6308,7 +6308,7 @@ function init(){	//由onload()啟動
 			speeder.stop();
 			break;
 		case 'visible':
-			addLog("");
+			addLog("_");
 			addLog("休:" + tools.secToHMS(((Date.now() - hiddenTime)/1000).toFixed(0)));
 			// highTime = (+new Date());
 			// slowTime = (+new Date());
@@ -6720,7 +6720,7 @@ function skipPoint(){
 	// showMsg("a2");
 	if(nextPoint+vector == -1 || nextPoint+vector == points.length){
 		addLog("端:" + strtmp);
-		// addLog("");
+		// addLog("_");
 		searchPoint = true;
 		return false;
 	}else{
@@ -6741,7 +6741,7 @@ function skipPoint(){
 		if(diff > 5 && diff < 355){
 			
 			addLog(strtmp+","+points[nextPoint+vector][2]);
-			addLog("");
+			addLog("_");
 			searchPoint = true;
 			return false;
 		}
@@ -7035,7 +7035,7 @@ minDiff = 361;
 	
 
 	speeder.totalMove();
-	addLog("");
+	addLog("_");
 		
 	index = points[0][2].indexOf("_");
 	if(index < 0){
@@ -7072,7 +7072,7 @@ function geoYes (evt){		//************************************************
 	speedKpH = evt.coords.speed * 3.6;
 	// isSlow(evt.coords.speed);
 	
-	speeder.analyze(speedKpH);
+	addLog(speeder.analyze(speedKpH));
 
 	// showMsg("c2");
 		
@@ -7145,7 +7145,7 @@ function geoYes (evt){		//************************************************
 							+points[nextPoint][2] + incDistMsg);
 
 				
-				// addLog("");
+				// addLog("_");
 				incCount = 0;	//fixDate:20230116, 增加此列
 				incDistMsg = "";
 				searchPoint = true;
@@ -7338,14 +7338,10 @@ function showData(){
 		str += "<br/>" + points[nextPoint][2];// + "(" + points[0][2].substr(0,index)+")";
 		// if(coords_speed*3.6 > 2){
 
-		if(speedKpH > 5){
 			// str += "<br/>時速："+ (coords_speed*3.6).toFixed(1) + "公里，";	//原單位：米/秒
 			//str += "<br/>時速："+ speedKpH.toFixed(1) + "公里，";	//原單位：米/秒
-			document.getElementById("speed").innerText = speedKpH.toFixed(0)
-			
-		}else{
-			document.getElementById("speed").innerText = 0;
-		}
+			document.getElementById("speed").innerText = speedKpH.toFixed(0);
+
 
 		// str += Math.round(coords_heading) +"度";	//12點鐘方向為0, 順時針~360
 		// str += "(路段：" + edgeVector.toFixed() + "度)";
