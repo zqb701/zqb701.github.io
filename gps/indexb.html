@@ -26,7 +26,7 @@
 	onkeydown="addLog(event.keyCode);">
 	<f function HTML_body(){}/>
 	
-	<div class="cmdButton" id="speed" style="position:fixed;font-size: 100px;border-radius: 30%;">*</div>
+	<div class="cmdButton" id="speed" style="position:fixed;font-size:100px; border-radius: 30%;">*</div>
 	<div class="cmdButton" id="dist" style="position:fixed;font-size: 100px;left:740px;">0</div>
 	
 	<canvas id="canvas" "></canvas>
@@ -34,12 +34,14 @@
 	<div style="display: flex; justify-content: flex-end;">
 		<div class="cmdButton" onclick="documentElement.scrollTop=0; playVoice('當');" >頁頂</div>
 		<div class="cmdButton" onclick="insertCoord('急彎');">急彎</div>  
-		<div class="cmdButton" >
-			<div id="speedTime" onclick="speeder.switch();" style="font-size: 100px;">0</div>
+		
+		<div class="cmdButton"  >
+			<div id="speedTime" onclick="speeder.switc();" style="font-size:100px;  border-radius:50%; border-style:dashed;">0</div>
 		</div>
-		<div class="cmdButton" onclick="addLog();addLog('_尋標(手動)');nearPoint();">尋標</div>
+		
+		<div class="cmdButton" onclick="addLog("");addLog('_尋標(手動)');nearPoint();">尋標</div>
 		<div class="cmdButton" >
-			<div id="march" onclick="swColor();" style="font-size: 150px;">0</div>
+			<div id="march" onclick="swColor();" style="font-size:150px;">0</div>
 		</div>
 	</div>
 	
@@ -51,17 +53,22 @@
 	<input type="checkbox" id="touchSW" checked>
 	<input type="button" value="GPS啟動" onClick="startGPS();">
 	<input type="button" value="GPS停止" onClick="stopGPS();">
+	
 	<input type="button" value="更新快取" onClick="newCache();">
 	<input type="button" value="通知測試" onClick="displayNotification();">
-	<input type="button" value="測試" onClick="test03();">
-	<input type="button" value="語音" onClick="testVoc();">
+	
+	<input type="button" value="行駛" onClick="addLog(speeder.analyze(6));">
+	<input type="button" value="停車" onClick="addLog(speeder.analyze(2));">
+	<input type="button" value="語音" onClick="addLog(tools.secToHMS(230));">
 	
 	<input type="button" value="清除" onClick="ins.innerHTML='';localStorage.insertCoord='';">
 	<input type="button" value="匯出" onClick="exportCoord();">
-	<input type="file" multiple id="input" style___='display:none;'>
+	<input type="file" multiple id="input" style='display:none;'>
 	
 	<p id="insertCoord" ></p>
 </body>
+
+
 <script defer>
 	//defer:資源載入後才執行, async同, 但不保證照順序, 空白則立即執行,
 	//等同 window.addEventListener('load', function() {...}
@@ -78,7 +85,7 @@
 </script>
 
 <script>
-var version = "v0.721b17";
+var version = "v0.721b18";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -213,9 +220,12 @@ var tasks = [[
 // [22.669492624085272, 120.47567041889740, "輔40米北","ign"],//光復路
 [22.669256314976780, 120.47567722982757, "光復路N"],
 [22.668993025245467, 120.47570033777052, "光復路S"],
+[22.667153644738768, 120.47584867951149, "輔20米北",,,"ign"],//大興路
 [22.666984035390120, 120.47585781281776, "大興路"],
 [22.665842772017750, 120.47592615456820, "17號(歐海悠)"],
-[22.665195205827850, 120.47599324856473, "建國路"],
+[22.665347179149160, 120.47599005165888, "建國路N"],
+[22.665064402620835, 120.47602290871954, "建國路S"],
+[22.663734032526985, 120.47612239634277, "華盛一街"],
 
 ],[
 [22.666825373402850, 120.47302021376048, "屏市/大興路_大豐路"],
@@ -5944,6 +5954,7 @@ var tasks = [[
 	
 	// var slowTime;//低速的起算時間
 	// var highTime;//高速的起算時間
+	
 	var hiddenTime;		//休眠的開始時間
 	var passTime = 0;
 	var oldClickTimes = -1;
@@ -5958,27 +5969,51 @@ var tasks = [[
 	var _todo = new TODO();
 	_todo._500資料檔案化_匯出_匯入= function(){}	//
 	
-	class canvas01{}
-	var myCanvas = new canvas01();
-	myCanvas.abc = "123";
+
 	
-	// function speeder1(){}
-	function Speeder(meter){
-		var intervalID;
-		var highTime = (+new Date());
-		var slowTime;
+	
+	function spder(){}
+	function Speeder(meter0){//行停計數器, 行駛中報秒, 停止時報秒
+		// 'use strict';
+		// var intervalID;
+		// var highTime;
+		// var slowTime;
+		//if(!meter0){}	//沒有GUI也可運作!!!
+		this.meter = meter0;
 		
-		this.meter = meter;			
 		//TODO 指定onclick事件
 		
+		this.switc = function(){
+			if(this.intervalID){
+				this.stop();
+			}else{
+				this.start();
+			}
+		};
+		
 		this.start = function(){
+			if(this.slowTime){
+				this.slowTime = (+new Date());
+
+			}else{
+				this.highTime = (+new Date());
+				this.slowTime = undefined;				
+			}
+			
+			//TODO if(!gui) return;
 			this.intervalID = window.setInterval(( () =>  {
 				this.meter.innerText = parseInt(this.meter.innerText,10)+1;			
 			}	) , 1000);
-			this.meter.style.color = "white";
+			if(this.slowTime){
+				this.meter.style.color = "white";
+			}else{
+				this.meter.style.color = "cyan";
+			}
 		};
 		
 		this.stop = function(){
+			addLog(this.totalMove());
+							// addLog("stop");
 			window.clearInterval(this.intervalID);
 			this.intervalID = undefined;
 			this.meter.innerText = "0";
@@ -5986,49 +6021,102 @@ var tasks = [[
 		};
 		
 		this.analyze = function(speed){//分析速度
-			if(this.intervalID){
-				if(this.slowTime){//停止狀態
-					if(speed > 5){	//切到移動
-						theTime = this.slowTime;
-						theChar = "停:";
-						addstr = ",距:" + nextDist*1000 + "米";
-						this.highTime = (+new Date());
-						this.slowTime = undefined;
-						this.meter.style.color = "cyan";
-						this.highStart = points[nextPoint][2];
-					}else{
-						// 仍為停止
-					}
-				}else{//移動狀態
-					if(speed < 3){	//切到停止
-						theTime = this.highTime;
-						theChar = "走:";
-						addstr = ",均:XX km/h";
-						// addLog(this.subtotal());		//結算
-						// addLog();
-						this.slowTime = (+new Date());						
-						this.meter.style.color = "white";////停止為白色					
-					}else{
-						//仍為移動
-					}
-				}
+			if(!this.intervalID)return "func off";
+		// addLog("analyze:"+speed + ", "+ this.slowTime);
+			theTime = undefined;
+			if(this.slowTime){//停止狀態
+				if(speed > 5){	
+						
+					//結算停止時間
+					theTime = this.slowTime;
+					theChar = "停:";
+					addstr = ",距:" + nextDist*1000 + "米";
+					//切到移動狀態
+					this.highTime = (+new Date());
+					this.slowTime = undefined;
+					
+					this.meter.style.color = "cyan";
+					this.highStart = points[nextPoint][2];
+				}else{}	// 仍為停止				
+			}else{//移動狀態
+				if(speed < 3){
+
+					// addLog("結算移動時間");
+					theTime = this.highTime;
+					theChar = "走:";
+					addstr = ",均:XX km/h";
+					//切到停止
+					
+					this.slowTime = (+new Date());		
+					this.meter.style.color = "white";////停止為白色					
+				}else{}		// 仍為移動				
+			}
+			if(theTime){		//有值, 表示有狀態切換
 				this.meter.innerText = "0";
 				let secTmp = ((+new Date())-theTime)/1000;
 				let strtmp = theChar + secTmp.toFixed(0) +"秒";
 				strtmp += addstr;
 				return strtmp;
 			}
+			return undefined;
 		};
+		
+		this.totalMove = function(){	//強迫結算
+			// addLog("totalMove");
+			if(this.slowTime){//只有關閉GUI才執行
+					theTime = this.slowTime;
+					theChar = "停b:";
+					addstr = ",距:" + nextDist*1000 + "米";
+			}else{				//關閉GUI或「移動」中切換路線
+				theTime = this.highTime;
+				theChar = "走b:";
+				addstr = ",均:XX km/h";		
+				
+				this.highTime = (+new Date());
+				// this.highStart = "" + points[nextPoint - vector][2];
+			}
+			// this.meter.innerText = "0";
+			let secTmp = ((+new Date()) - theTime)/1000;
+			let strtmp = theChar + secTmp.toFixed(0) +"秒";
+			strtmp += addstr;
+
+			// addLog(strtmp);
+			return strtmp;
+		}
+
 	}
 	
 	var speeder = new Speeder(document.getElementById("speedTime"));
-		speeder.switch = function(){
-			if(this.intervalID){
-				this.stop();
+	
+
+		class tools01{}
+		var tools = new tools01();
+		tools.secToHMS=function (time){
+			// addLog(time);
+			if(time > 60){
+				sec = time % 60;
 			}else{
-				this.start();
+				return time+"秒";
 			}
-		};
+			
+			time = (time-sec)/60;
+			if(time > 60){
+				min = time%60;
+			}else{
+				return time+"分"+sec+"秒";
+			}
+			
+			time = (time-min)/60;
+			if(time > 24){
+				hr = (time-min)/24;
+			}else{
+				return time+"時"+min+"分"+sec+"秒";
+			}
+		}
+		tools.dateToYMD=function (){
+			
+		}
+
 	// speeder.meter = document.getElementById("speedTime");
 	// class map01{}
 	// var myMap = new map01();
@@ -6162,7 +6250,7 @@ function init(){	//由onload()啟動
 	var now = new Date();
 	dateStr = now.getFullYear()+"/"+(now.getMonth()+1)+"/"+now.getDate();
 	dateStr += "("+ "日一二三四五六".substr(now.getDay(),1) +")";
-	addLog();
+	addLog("");
 	addLog("程式啟動, " + version + ", " + dateStr);
 
 	// alert("abc".indexOf("a"));
@@ -6216,11 +6304,12 @@ function init(){	//由onload()啟動
 	  switch(document.visibilityState) {
 		case 'hidden':
 			hiddenTime = Date.now();
-			speeder.analyze();
+			speeder.totalMove();
+			speeder.stop();
 			break;
 		case 'visible':
-			addLog();
-			addLog("休:" + ((Date.now() - hiddenTime)/1000).toFixed(0) + " 秒");
+			addLog("");
+			addLog("休:" + tools.secToHMS(((Date.now() - hiddenTime)/1000).toFixed(0)));
 			// highTime = (+new Date());
 			// slowTime = (+new Date());
 			// speeder.init();//speedTime.innerText = "0";
@@ -6254,11 +6343,13 @@ function addZero(num){
 var logDate=-1;
 var logHour=-1;
 function addLog(str){
+	if(!str)return;		//undefined不處理
+	
 	var now = new Date();
 	var timeStr = "";
 	// var strtmp01 = "";
 	
-	if(str){
+	
 		/*
 		if(logHour != now.getHours()){	
 			logHour = now.getHours();
@@ -6271,13 +6362,8 @@ function addLog(str){
 			addZero(now.getMinutes())+ ":" +
 			addZero(now.getSeconds());
 			// timeStr = new Date().toISOString();
-	}else{
-		str = "";
-	}
-	localStorage.insertCoord = 
-		timeStr+" "+ str +"<br/>"+ 
-		// strtmp01+
-		localStorage.insertCoord;
+	
+	localStorage.insertCoord = 	timeStr+" "+ str +"<br/>"+ localStorage.insertCoord;
 	ins.innerHTML = localStorage.insertCoord;
 }
 
@@ -6634,7 +6720,7 @@ function skipPoint(){
 	// showMsg("a2");
 	if(nextPoint+vector == -1 || nextPoint+vector == points.length){
 		addLog("端:" + strtmp);
-		// addLog();
+		// addLog("");
 		searchPoint = true;
 		return false;
 	}else{
@@ -6655,7 +6741,7 @@ function skipPoint(){
 		if(diff > 5 && diff < 355){
 			
 			addLog(strtmp+","+points[nextPoint+vector][2]);
-			addLog();
+			addLog("");
 			searchPoint = true;
 			return false;
 		}
@@ -6725,7 +6811,9 @@ function getSubZoom(){//子路徑的放大倍數
 	return z;
 	
 }
-
+	class canvas01{}
+	var myCanvas = new canvas01();
+	myCanvas.abc = "123";
 myCanvas.drawClearMap = function (){
 	ctx.fillStyle = "black";	//填滿色
 	ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -6841,9 +6929,7 @@ myCanvas.drawLine=function (lat0, lon0, lat1, lon1, c, w){
 
 function nearPoint(){
 
-	addLog(speeder.analyze());
-	addLog();
-				
+			
 	// console.log("nearPoint(start)");
 
 	// var shortstDist = getDistance(recentPoint,  tasks[0][0]);
@@ -6947,9 +7033,9 @@ minDiff = 361;
 		vector = 1;
 	}
 	
-	highStart = points[nextPoint - vector][2];
-	speedTime.innerText = "0";
 
+	speeder.totalMove();
+	addLog("");
 		
 	index = points[0][2].indexOf("_");
 	if(index < 0){
@@ -6985,7 +7071,8 @@ function geoYes (evt){		//************************************************
 	coords_speed = evt.coords.speed;
 	speedKpH = evt.coords.speed * 3.6;
 	// isSlow(evt.coords.speed);
-	speeder.analyze(speedKpH);
+	speeder.value = speedKpH;
+	speeder.analyze();
 
 	// showMsg("c2");
 		
@@ -7058,7 +7145,7 @@ function geoYes (evt){		//************************************************
 							+points[nextPoint][2] + incDistMsg);
 
 				
-				// addLog();
+				// addLog("");
 				incCount = 0;	//fixDate:20230116, 增加此列
 				incDistMsg = "";
 				searchPoint = true;
