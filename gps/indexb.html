@@ -85,7 +85,7 @@
 </script>
 
 <script>
-var version = "v0.721b18";
+var version = "v0.721b19";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -7071,8 +7071,8 @@ function geoYes (evt){		//************************************************
 	coords_speed = evt.coords.speed;
 	speedKpH = evt.coords.speed * 3.6;
 	// isSlow(evt.coords.speed);
-	speeder.value = speedKpH;
-	speeder.analyze();
+	
+	speeder.analyze(speedKpH);
 
 	// showMsg("c2");
 		
