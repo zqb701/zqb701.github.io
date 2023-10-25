@@ -39,7 +39,7 @@
 			<div id="speedTime" onclick="speeder.switc();" style="font-size:100px;  border-radius:50%; border-style:dashed;">0</div>
 		</div>
 		
-		<div class="cmdButton" onclick="addLog("_");addLog('_尋標(手動)');nearPoint();">尋標</div>
+		<div class="cmdButton" onclick="addLog('尋標(手動)');nearPoint();">尋標</div>
 		<div class="cmdButton" >
 			<div id="march" onclick="swColor();" style="font-size:150px;">0</div>
 		</div>
@@ -57,9 +57,9 @@
 	<input type="button" value="更新快取" onClick="newCache();">
 	<input type="button" value="通知測試" onClick="displayNotification();">
 	
-	<input type="button" value="行駛" onClick="addLog(speeder.analyze(6));">
-	<input type="button" value="停車" onClick="addLog(speeder.analyze(2));">
-	<input type="button" value="語音" onClick="addLog(tools.secToHMS(230));">
+	<input type="button" value="行駛" onClick="addLog(speeder.check(6));">
+	<input type="button" value="停車" onClick="addLog(speeder.check(2));">
+	<input type="button" value="測試01" onClick="test04();">
 	
 	<input type="button" value="清除" onClick="ins.innerHTML='';localStorage.insertCoord='';">
 	<input type="button" value="匯出" onClick="exportCoord();">
@@ -85,7 +85,7 @@
 </script>
 
 <script>
-var version = "v0.721b26";
+var version = "v0.721b27";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -695,28 +695,28 @@ var tasks = [[
 [22.692081513365580, 120.50266810146644, "彎02",,,"右提前"],
 
 [22.689404000290573, 120.50339964016158, "華新路"],
-[22.687119793082346, 120.50397282994732, "華正路"],
+[22.687119793082346, 120.50397282994732, "華正路","走60"],
 //[22.686598018178778, 120.50410345276488, "華富路"],//閃黃燈
 [22.684895510635690, 120.50453366820194, "17弄"],
 [22.683068529757524, 120.50498927291814, "大連路N(R70)","車道減少"],
-[22.682823529712216, 120.50509253796193, "大連路S(R70)",,,"車道增加"],
+[22.682823529712216, 120.50509253796193, "大連路S(R70)",,,"走61,車道增加"],
 // [22.682787879635640, 120.50509398593800, "輔30米南",,,"ign"],
 
 [22.681959027810770, 120.50529634656839, "32弄(屏稅新村)"],
 [22.680967230062606, 120.50559870461440, "彎60"],
 [22.679781531852086, 120.50662226896395, "146巷(民進黨部)"],
-[22.679043732453398, 120.50724134449750, "興豐路N"],
+[22.679043732453398, 120.50724134449750, "興豐路N","走60"],
 [22.678848068693814, 120.50741391770431, "興豐路S"],
 
 [22.676552758165645, 120.50944276850424, "建豐路N(G60R40)"],
-[22.676360464428280, 120.50961607295345, "建豐路S(G60R40)"],
+[22.676360464428280, 120.50961607295345, "建豐路S(G60R40)",,,"走70"],
 [22.675343791402256, 120.51041230398191, "1巷"],
-[22.673650031059577, 120.51056656006223, "田寮巷G50R40"],
+[22.673650031059577, 120.51056656006223, "田寮巷G50R40","走99"],
 [22.670996612762544, 120.51062443057785, "民學路G60"],
-[22.669040797908576, 120.51069667037709, "號誌(愛家)"],
-[22.665190350620573, 120.51312797662538, "香揚巷G60R45"],
+[22.669040797908576, 120.51069667037709, "號誌(愛家)",,,"走70"],
+[22.665190350620573, 120.51312797662538, "香揚巷G60R45","走71"],
 [22.661457518466925, 120.51546704670002, "彎20"],
-[22.660425394728480, 120.51532207450000, "單車道"],
+[22.660425394728480, 120.51532207450000, "單車道",,,"綠60紅40走120"],
 
 [22.659602457415870, 120.51517075115158, "輔25米北","ign"],//田中巷
 [22.659389590906848, 120.51514906227330, "輔田中巷"],
@@ -829,9 +829,9 @@ var tasks = [[
 
 ],[
 [22.695511971450234, 120.50541611177160, "屏市/盛豐路_海豐街",,,"R75"],
-[22.696883960767217, 120.50906180826027, "18巷G50R30",,,"有車左轉"],
+[22.696883960767217, 120.50906180826027, "18巷G50R30","走75",,"有車左轉"],
 // [22.697223595825060, 120.51001791729799, "彎23"],
-[22.697421687919710, 120.51196278840169, "11KG50R30(尖峰)"],//屏17,11k
+[22.697421687919710, 120.51196278840169, "11KG50R30(尖峰)","走75"],//屏17,11k
 // [22.697520399914552, 120.51273661749624, "彎27"],
 [22.698434438925595, 120.51448625249280, "XX巷G50R30"],
 [22.700634859974850, 120.51823386201329, "彎47"],
@@ -4844,7 +4844,6 @@ var tasks = [[
 [22.653656922272166, 120.47563281122031, "武成街R40"],
 [22.652964329384100, 120.47843662479580, "建南路G60R90(速限60東路中)","測速",],
 [22.652572634836417, 120.48001710280471, "和生市場(尖峰)"],
-
 [22.651927624844088, 120.48286631505353, "131巷G100R40"],
 [22.651827910667120, 120.48457687066117, "53巷"],
 [22.651762313125314, 120.48597167701199, "復興路G50R90"],
@@ -4865,7 +4864,7 @@ var tasks = [[
 
 [22.65992230542634, 120.51084370796372, "輔17米線西(待確認)","ign"],//民生路W,
 [22.65991715433118, 120.51101036989803, "民生路W","直1左1停30"],
-[22.65986049229136, 120.51138037531653, "民生路E",,,"直1左1停70"],
+[22.65986049229136, 120.51138037531653, "民生路E","走120",,"直1左1停70"],
 
 [22.659473739849265, 120.51209523720857, "安心巷(速限50北路中)",,,"測速"],
 // [22.659300082190747, 120.51238397264552, "測速50北路中",,,"測速"],//太近
@@ -5999,6 +5998,7 @@ var tasks = [[
 	
 	
 	function spder(){}
+	var speeder = new Speeder(document.getElementById("speedTime"));
 	function Speeder(meter0){//行停計數器, 行駛中報秒, 停止時報秒
 		// 'use strict';
 		// var intervalID;
@@ -6046,9 +6046,9 @@ var tasks = [[
 			this.meter.style.color = "gray";	//深灰色		
 		};
 		
-		this.analyze = function(speed){//分析速度
+		this.check = function(speed){//分析速度
 			if(!this.intervalID)return;
-		// addLog("analyze:"+speed + ", "+ this.slowTime);
+			
 			theTime = undefined;
 			if(this.slowTime){//停止狀態
 				if(speed > 5){	
@@ -6056,7 +6056,8 @@ var tasks = [[
 					//結算停止時間
 					theTime = this.slowTime;
 					theChar = "停:";
-					addstr = ",距:" + nextDist*1000 + "米<br>";
+					addstr = ",["+ +points[nextPoint][4-vector] + "]";
+					addstr += ",距:" + nextDist*1000 + "米<br>";
 					//切到移動狀態
 					this.highTime = (+new Date());
 					this.slowTime = undefined;
@@ -6108,10 +6109,7 @@ var tasks = [[
 			// addLog(strtmp);
 			return strtmp;
 		}
-
-	}
-	
-	var speeder = new Speeder(document.getElementById("speedTime"));
+	}//end of function Speeder
 	
 
 		class tools01{}
@@ -6221,6 +6219,12 @@ console.log(a1, d1);
 			
 			
 	}
+	function test04(){
+		alert('a');
+		addLog("<br>aaa");
+		addLog("bbb<br>");
+		addLog("<br>ccc");
+	}
 	
 	function testMaps(){
 		// alert(window.location.href.substr(0,4));
@@ -6276,7 +6280,7 @@ function init(){	//由onload()啟動
 	var now = new Date();
 	dateStr = now.getFullYear()+"/"+(now.getMonth()+1)+"/"+now.getDate();
 	dateStr += "("+ "日一二三四五六".substr(now.getDay(),1) +")";
-	addLog("_");
+	addLog("<br>");
 	addLog("程式啟動, " + version + ", " + dateStr);
 
 	// alert("abc".indexOf("a"));
@@ -6334,7 +6338,7 @@ function init(){	//由onload()啟動
 			speeder.stop();
 			break;
 		case 'visible':
-			addLog("_");
+			addLog("<br>");
 			addLog("休:" + tools.secToHMS(((Date.now() - hiddenTime)/1000).toFixed(0)));
 			// highTime = (+new Date());
 			// slowTime = (+new Date());
@@ -6371,7 +6375,7 @@ var logHour=-1;
 var lastBlank = false;//
 function addLog(str){
 	if(!str)return;		//undefined不處理
-	
+	// alert(str);
 	var now = new Date();
 	var timeStr = "";
 	// var strtmp01 = "";
@@ -6385,11 +6389,13 @@ function addLog(str){
 		}*/
 	if(lastBlank){	//避免連空兩行
 		//要找出行尾換行去掉,用regex
-		str.replace("<br>$","");	//字串尾端
+		str = str.replace(/<br>$/,"");	//字串尾端
 	}
 	
 	if(str.match("^<br>")){//若行首為換行
-			str.replace("^<br>","");
+		
+		str = str.replace(/^<br>/,"");
+		// alert(str);
 		timeStr = "<br>";
 		lastBlank = true;
 	}else{
@@ -6779,7 +6785,7 @@ function skipPoint(){
 		if(diff > 5 && diff < 355){
 			
 			addLog(strtmp+","+points[nextPoint+vector][2]);
-			addLog("_");
+			addLog("<br>");
 			searchPoint = true;
 			return false;
 		}
@@ -7079,17 +7085,18 @@ minDiff = 361;
 	if(index < 0){
 		index = points[0][2].length;
 	}
-	// strtmp = "新:" + points[nextPoint][2] + "(" + points[0][2].substr(0,index)+")";// + strtmp;
-	strtmp = "新:" + points[0][2].substr(0,index) +
-					 ",從:"+points[nextPoint - vector][2];
+
+	strtmp = "新:" + points[0][2].substr(0,index);
+		strtmp += ",從:"+points[nextPoint - vector][2];
+		strtmp += "["+ +points[nextPoint - vector][4-vector] + "]";
 					 
 	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
 			// ",路向:" + edgeVector.toFixed(0);
 	
-	addLog("\n" + strtmp);
+	addLog("<br>" + strtmp);
 	
 	// showMsg("nP(8)");
-			strVoc = points[nextPoint][4-vector];
+	strVoc = points[nextPoint][4-vector];
 	while(strVoc && strVoc == "ign"){
 		addLog("_跳過" + points[nextPoint][2]);
 		nextPoint += vector;
@@ -7111,7 +7118,7 @@ function geoYes (evt){		//************************************************
 	speedKpH = evt.coords.speed * 3.6;
 	// isSlow(evt.coords.speed);
 	
-	addLog(speeder.analyze(speedKpH));
+	addLog(speeder.check(speedKpH));
 
 	// showMsg("c2");
 		
@@ -7270,14 +7277,14 @@ function _geoNo(evt){
 var watchID;
 var GPSpremis;
 function initGPS(){
-	addLog("initGPS()...");
+	// addLog("initGPS()...");
 	if (!navigator.geolocation) {
 		addLog("瀏攬器不支援GPS。");
 		return;
 	}
 
 	navigator.permissions.query({name:'geolocation'}).then(function(GPSpremis) {
-		addLog(GPSpremis.state);
+		addLog("權限狀態:"+GPSpremis.state);
 		if (GPSpremis.state == 'denied') {	//denied 禁用, prompt 詢問, granted 允許
 			addLog("GPS禁用！");
 		}
@@ -7300,7 +7307,7 @@ function initGPS(){
 }
 
 function startGPS(){
-	addLog("startGPS()");
+	// addLog("startGPS()");
 	/*
 	var options = {
 	  enableHighAccuracy: true,	//高精度, 實測更新間隔約1秒, 否則約20秒。
@@ -7349,6 +7356,7 @@ function getDistance(coord1, coord2) {
 
     return dist.toFixed(3);		//小數點後三位(四捨「六入」)
 }
+
 	var fcolor = "";
 	var strGPS = "\|/-";	//
 function showData(){
@@ -7363,7 +7371,7 @@ function showData(){
 		}			
 		
 		str += ", <font "+ fcolor+">" ;
-		str += (nextDist < 1) ? (+ nextDist*1000+"</font>公尺") : (Math.round(nextDist)+"</font>公里");
+		str += (nextDist < 1) ? (+ nextDist*1000+"</font>米") : (Math.round(nextDist)+"</font>公里");
 
 		arriveSec =  nextDist*1000/coords_speed;
 		if(arriveSec < 99){
@@ -7374,12 +7382,12 @@ function showData(){
 		if(index < 0){
 			index = points[0][2].length;
 		}
-		str += "<br/>" + points[nextPoint][2];// + "(" + points[0][2].substr(0,index)+")";
+		str += "，" + points[nextPoint][2];// + "(" + points[0][2].substr(0,index)+")";
 		// if(coords_speed*3.6 > 2){
 
 			// str += "<br/>時速："+ (coords_speed*3.6).toFixed(1) + "公里，";	//原單位：米/秒
 			//str += "<br/>時速："+ speedKpH.toFixed(1) + "公里，";	//原單位：米/秒
-			document.getElementById("speed").innerText = speedKpH.toFixed(0);
+		document.getElementById("speed").innerText = speedKpH.toFixed(0);
 
 
 		// str += Math.round(coords_heading) +"度";	//12點鐘方向為0, 順時針~360
