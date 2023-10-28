@@ -85,7 +85,7 @@
 </script>
 
 <script>
-var version = "v0.721b27";
+var version = "v0.721b27b";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -7310,22 +7310,22 @@ function startGPS(){
 	// addLog("startGPS()");
 	/*
 	var options = {
-	  enableHighAccuracy: true,	//高精度, 實測更新間隔約1秒, 否則約20秒。
-	  timeout: 5000,						//在note9用chrome會Timeout expired。
+	  enableHighAccuracy: true,			//高精度, 實測更新間隔約1秒, 否則約20秒。
+	  timeout: 60000,					//在note9用chrome會Timeout expired。
 	  maximumAge: 0						//快取的過期時間，單位是毫秒，設為0來禁用快取讀取。
 	};
 	*/
 	watchID = navigator.geolocation.watchPosition(
-		geoYes, //成功函式, 就算成功, 但中途失敗如何告知?
-		(evt) =>{//失敗函式
-			addLog(evt.message);	////進山洞沒訊號???
+		geoYes,		//成功函式, 就算成功, 但中途失敗如何告知?
+		(evt) =>{	//失敗函式
+			addLog("evt.msg: " + evt.message);	////進山洞沒訊號???
 			if(evt.code == 1){
 				// addLog("GPS失敗！");	//User denied Geolocation
 			}else{
 				// addLog(evt.code + ", " + evt.message);
 				//2, Network location provider at 'https://www.googleapis.com/' : ERR_NAME_NOT_RESOLVED
 			}
-		}, {enableHighAccuracy: true});
+		}, {enableHighAccuracy: false});
 }
 
 function stopGPS(){
