@@ -85,7 +85,7 @@
 </script>
 
 <script>
-var version = "v0.721b27b";
+var version = "v0.721b27c";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -6274,7 +6274,7 @@ console.log(a1, d1);
 
 		
 	}
-	
+	function init001(){ }
 function init(){	//由onload()啟動
 	
 	var now = new Date();
@@ -6307,7 +6307,8 @@ function init(){	//由onload()啟動
 	// alert(tasks.length);
 	// return;
 
-	initGPS();
+	// initGPS();
+	startGPS();
 	//保存最後任務編號
 	 taskID = localStorage.taskID ? localStorage.taskID : taskID;
 	if(taskID > tasks.length){
@@ -7277,7 +7278,7 @@ function _geoNo(evt){
 var watchID;
 var GPSpremis;
 function initGPS(){
-	// addLog("initGPS()...");
+	addLog("initGPS()...");
 	if (!navigator.geolocation) {
 		addLog("瀏攬器不支援GPS。");
 		return;
@@ -7307,6 +7308,19 @@ function initGPS(){
 }
 
 function startGPS(){
+	addLog("startGPS()...");
+	navigator.geolocation.getCurrentPosition( success, fail );
+	function success(position) {
+		addLog("user_lat=" + position.coords.latitude + 
+		", user_lon=" + position.coords.longitude + 
+		", accuracy=" + position.coords.accuracy);
+	}
+
+	function fail() {
+		addLog("fail");
+		// Could not obtain location
+	}
+
 	// addLog("startGPS()");
 	/*
 	var options = {
@@ -7318,14 +7332,14 @@ function startGPS(){
 	watchID = navigator.geolocation.watchPosition(
 		geoYes,		//成功函式, 就算成功, 但中途失敗如何告知?
 		(evt) =>{	//失敗函式
-			addLog("evt.msg: " + evt.message);	////進山洞沒訊號???
+			addLog("watch err: " + evt.message);	////進山洞沒訊號???
 			if(evt.code == 1){
 				// addLog("GPS失敗！");	//User denied Geolocation
 			}else{
 				// addLog(evt.code + ", " + evt.message);
 				//2, Network location provider at 'https://www.googleapis.com/' : ERR_NAME_NOT_RESOLVED
 			}
-		}, {enableHighAccuracy: false});
+		}, {enableHighAccuracy: true});
 }
 
 function stopGPS(){
