@@ -65,7 +65,7 @@
 	<input type="button" value="匯出" onClick="exportCoord();">
 	<input type="file" multiple id="input" style='display:none;'>
 	
-	<p id="insertCoord" ></p>
+	<p id="insertCoord" style="font-size: 36px;"></p>
 </body>
 
 
@@ -85,7 +85,7 @@
 </script>
 
 <script>
-var version = "v0.721b27d";
+var version = "v0.721b27e";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -6367,10 +6367,10 @@ function init(){	//由onload()啟動
 		case 'hidden':
 			hiddenTime = Date.now();
 			speeder.totalMove();
-			speeder.stop();
+			//speeder.stop();
 			break;
 		case 'visible':
-			addLog("<br>");
+			addLog("<br>休:");
 			addLog("休:" + tools.secToHMS(((Date.now() - hiddenTime)/1000).toFixed(0)));
 			// highTime = (+new Date());
 			// slowTime = (+new Date());
@@ -6817,7 +6817,7 @@ function skipPoint(){
 		if(diff > 5 && diff < 355){
 			
 			addLog(strtmp+","+points[nextPoint+vector][2]);
-			addLog("<br>");
+			addLog("<br>347");
 			searchPoint = true;
 			return false;
 		}
@@ -7339,6 +7339,7 @@ function initGPS(){
 }
 
 function startGPS(){
+	
 	addLog("startGPS()...");
 	navigator.geolocation.getCurrentPosition( success, fail );
 	function success(position) {
@@ -7351,6 +7352,7 @@ function startGPS(){
 		addLog("fail");
 		// Could not obtain location
 	}
+	
 
 	// addLog("startGPS()");
 	/*
