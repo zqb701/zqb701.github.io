@@ -84,7 +84,7 @@
 </script>
 
 <script>
-var version = "v0.722f";
+var version = "v0.722g";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -7213,9 +7213,9 @@ minDiff = 361;
 		vector = 1;
 	}	
 
-	addLog(speeder.myFinal());
+	addLog("nearPoint():" + speeder.myFinal());
 	// addLog("_");
-	source.voiceStr = points[nextPoint - vector][4-vector];
+
 	index = points[0][2].indexOf("_");
 	if(index < 0){
 		index = points[0][2].length;
@@ -7223,7 +7223,7 @@ minDiff = 361;
 
 	strtmp = "新:" + points[0][2].substr(0,index);
 		strtmp += ",從:" + points[nextPoint - vector][2];
-		strtmp += "["+ source.voiceStr + "]";
+		strtmp += "["+ points[nextPoint - vector][4-vector] + "]";
 					 
 	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
 			// ",路向:" + edgeVector.toFixed(0);
