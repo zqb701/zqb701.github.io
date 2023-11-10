@@ -84,7 +84,7 @@
 </script>
 
 <script>
-var version = "v0.722m";
+var version = "v0.722n";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ } //本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -7378,7 +7378,10 @@ function geoYes (evt){		//************************************************
 	// showMsg("c2");
 	fcolor = "";
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
-
+	
+	strtmp = ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
+	addLog(strtmp);
+	
 	if (nextDist > preDist ){	//遠離中
 		// if(nextDist < (evt.coords.speed/1000*2 + 0.020) ){
 		// if(nextDist < 0.04 ){//40公尺
