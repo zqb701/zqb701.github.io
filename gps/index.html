@@ -84,7 +84,7 @@
 </script>
 
 <script>
-var version = "v0.722b1";
+var version = "v0.722b2";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ } //本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -6995,10 +6995,11 @@ function skipPoint(){
 	enAlarm = true;
 	enAlarmHigh = true;
 	// enAlarmSpeedLimit = true;
-	if( target.voiceStr == "測速" || target.voiceStr.match(/速限\d*/)){
-		enAlarmSpeedLimit = 2;
+	if(target.voiceStr){
+		if( target.voiceStr == "測速" || target.voiceStr.match(/速限\d*/)){
+			enAlarmSpeedLimit = 2;
+		}
 	}
-		
 	// showMsg("a4");
 	//addLog(points[nextPoint][2]+ strtmp);
 	incCount = 0;
@@ -7306,9 +7307,10 @@ minDiff = 361;
 		target.voiceStr = points[nextPoint][4-vector];//TODO:索引超出會有何反應
 	}
 	// enAlarm = true;	// enAlarmHigh = true; //初值為true, skipPoint時已指定為true, 故此不執行
-
-	if( target.voiceStr == "測速" || target.voiceStr.match(/速限\d*/)){
-		enAlarmSpeedLimit = 2;
+	if(target.voiceStr){
+		if( target.voiceStr == "測速" || target.voiceStr.match(/速限\d*/)){
+			enAlarmSpeedLimit = 2;
+		}
 	}
 	
 	preDist = getDistance(recentPoint,  points[nextPoint]);
