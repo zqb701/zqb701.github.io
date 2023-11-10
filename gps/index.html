@@ -84,7 +84,7 @@
 </script>
 
 <script>
-var version = "v0.722k";
+var version = "v0.722m";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ } //本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -426,7 +426,7 @@ var tasks = [[
 // [22.664943755849396, 120.50238328795535, "輔20米南",,,"ign"],//民福路
 [22.664221944275300, 120.50369274070279, "民生校區"],
 [22.663392101851596, 120.50520911909595, "菸廠路"],
-[22.662795198326197, 120.50622976219097, "瑞民路(速限50北路邊)",,,"速限50北路邊"],		
+[22.662795198326197, 120.50622976219097, "瑞民路",,,"速限50北路邊"],		
 [22.662224935354054, 120.50727471537175, "歸仁路","G50R40",,"G50R40"],
 [22.660830889356372, 120.50967927191667, "瑞屏街W(雙號誌)"],
 [22.660495963946264, 120.51025894060876, "66巷E(雙號誌)"],
@@ -6470,7 +6470,7 @@ function init(){
 	dateStr = now.getFullYear()+"/"+(now.getMonth()+1)+"/"+now.getDate();
 	dateStr += "("+ "日一二三四五六".substr(now.getDay(),1) +")";
 	// addLog("<br>");
-	addLog("程式啟動, " + version + ", " + dateStr + "<br>");
+	addLog("程式啟動, " + version + ", " + dateStr + "<hr>");
 
 	// alert("abc".indexOf("a"));
 // showMsg("init(s)");
@@ -6731,11 +6731,14 @@ async function noSleep(){
 			wakeLock = await navigator.wakeLock.request('screen');
 			wakeLock.addEventListener('release', () => {
 				//console.log('Screen Wake Lock was released');
+				addLog('Screen Wake Lock was released');
 			});
 		//console.log('Screen Wake Lock is active');
-		//alert("NoSleep");
+		addLog('Screen Wake Lock is active');
+		
 		} catch (err) {
-			console.error(`${err.name}, ${err.message}`);
+			// console.error(`${err.name}, ${err.message}`);
+			addLog(err.message);
 		}
 	};
 	// Request a screen wake lock…
@@ -6940,9 +6943,9 @@ function skipPoint(){
 	
 	strtmp =  points[nextPoint][2];
 	strtmp += ",速" + speedKpH.toFixed(1);
-	strtmp += "[" + target.voiceStr + "]";//單向的語音
+	// strtmp += "[" + target.voiceStr + "]";//單向的語音
 	
-	// strtmp += ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
+	strtmp += ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
 	
 	passPoint[0] = points[nextPoint][0];
 	passPoint[1] = points[nextPoint][1];
@@ -7324,12 +7327,12 @@ function geoYes (evt){		//************************************************
 	// isSlow(evt.coords.speed);
 	
 	addLog(speeder.check(speedKpH));
-
+/*
 	if(speedKpH < 1){
 		document.getElementById("speed").innerText = strGPS.charAt(0);;
 		return ;
 	}
-	
+*/	
 	// showMsg("c2");
 	
 	rctSpeedLevel = Math.floor(speedKpH / 10);
