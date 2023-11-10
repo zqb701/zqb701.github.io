@@ -84,7 +84,7 @@
 </script>
 
 <script>
-var version = "v0.722b2";
+var version = "v0.722b3";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ } //本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -7022,7 +7022,7 @@ function skipPoint(){
 
 	}
 	preDist = getDistance(recentPoint,  points[nextPoint]);
-	addLog("skipPoint():preDist=" + preDist);
+	// addLog("skipPoint():preDist=" + preDist);
 	// preDist = -1;
 	return true;
 }
@@ -7314,7 +7314,7 @@ minDiff = 361;
 	}
 	
 	preDist = getDistance(recentPoint,  points[nextPoint]);
-	addLog("nearPoint():preDist="+preDist);
+	// addLog("nearPoint():preDist="+preDist);
 	passTime = new Date();//todo:沒實際作用,只能避免數字過大
 }
 
@@ -7331,12 +7331,12 @@ function geoYes (evt){		//************************************************
 	// isSlow(evt.coords.speed);
 	
 	addLog(speeder.check(speedKpH));
-/*
+
 	if(speedKpH < 1){
 		document.getElementById("speed").innerText = strGPS.charAt(0);;
 		return ;
 	}
-*/	
+
 	// showMsg("c2");
 	
 	rctSpeedLevel = Math.floor(speedKpH / 10);
@@ -7383,8 +7383,8 @@ function geoYes (evt){		//************************************************
 	fcolor = "";
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
 	
-	strtmp = ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
-	addLog(strtmp);
+	// strtmp = ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
+	// addLog(strtmp);
 	
 	if (nextDist > preDist ){	//遠離中
 		// if(nextDist < (evt.coords.speed/1000*2 + 0.020) ){
