@@ -84,7 +84,7 @@
 </script>
 
 <script>
-var version = "v0.722n";
+var version = "v0.722b1";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ } //本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -7021,6 +7021,7 @@ function skipPoint(){
 
 	}
 	preDist = getDistance(recentPoint,  points[nextPoint]);
+	addLog("skipPoint():preDist=" + preDist);
 	// preDist = -1;
 	return true;
 }
@@ -7311,6 +7312,7 @@ minDiff = 361;
 	}
 	
 	preDist = getDistance(recentPoint,  points[nextPoint]);
+	addLog("nearPoint():preDist="+preDist);
 	passTime = new Date();//todo:沒實際作用,只能避免數字過大
 }
 
