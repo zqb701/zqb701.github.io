@@ -84,7 +84,7 @@
 </script>
 
 <script>
-var version = "v0.722j";
+var version = "v0.722k";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ } //本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -6371,10 +6371,32 @@ console.log(a1, d1);
 			// name: "Nude Super-M_長喇叭"
 		  // }]
 			acceptAllDevices: true,
-			optionalServices: ['battery_service']
+			// optionalServices: ['battery_service']
 		})
-		.then(device => { addLog("取得裝置"); })
+		.then(device => {
+			addLog("取得裝置" + device.name);
+			return device.gatt.connect();
+		})
+		.then(service => {
+		  // Getting Battery Level Characteristic…
+		  return service.getCharacteristic('battery_level');
+		})
+		.then(characteristic => {
+			characteristic.addEventListener('characteristicvaluechanged',
+                                  handleCharacteristicValueChanged);
+			console.log('Notifications have been started.');
+		})
+		.then(value => {
+		  console.log(`Battery percentage is ${value.getUint8(0)}`);
+		})
 		.catch(error => { addLog("失敗"); });
+		
+		function handleCharacteristicValueChanged(event) {
+		  const value = event.target.value;
+		  console.log('Received ' + value);
+		  // TODO: Parse Heart Rate Measurement value.
+		  // See https://github.com/WebBluetoothCG/demos/blob/gh-pages/heart-rate-sensor/heartRateSensor.js
+		}
 	}
 	
 	function t06(){
@@ -6962,7 +6984,7 @@ function skipPoint(){
 	
 	target.voiceStr = points[nextPoint][4-vector];	
 	while(target.voiceStr && target.voiceStr == "ign"){	//todo:改用迴圈, 以連續跳過多個ign
-		addLog("_跳過 " + points[nextPoint][2]);
+		addLog("略:s" + points[nextPoint][2]);
 		nextPoint += vector;
 		// strVoc = points[nextPoint][4-vector];//TODO:索引超出會有何反應
 		target.voiceStr = points[nextPoint][4-vector];
@@ -7162,6 +7184,7 @@ function nearPoint(){
 	let oldTask = taskID;
     let bestP = 0;
 	let bestT =0;
+	let funcTime = Date.now();
 	
 	//從路線資料庫中，
 	for(let t=0; t < tasks.length; t++){
@@ -7264,6 +7287,7 @@ minDiff = 361;
 	strtmp = "新:" + points[0][2].substr(0,index);
 		strtmp += ",從:" + points[nextPoint - vector][2];
 		strtmp += "["+ points[nextPoint - vector][4-vector] + "]";
+		strtmp += (Date.now()-funcTime)/1000 + "秒";
 					 
 	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
 			// ",路向:" + edgeVector.toFixed(0);
@@ -7273,7 +7297,7 @@ minDiff = 361;
 	// showMsg("nP(8)");
 	target.voiceStr = points[nextPoint][4-vector];
 	while(target.voiceStr && target.voiceStr == "ign"){
-		addLog("略:" + points[nextPoint][2]);
+		addLog("略:n" + points[nextPoint][2]);
 		nextPoint += vector;
 		target.voiceStr = points[nextPoint][4-vector];//TODO:索引超出會有何反應
 	}
@@ -7328,8 +7352,8 @@ function geoYes (evt){		//************************************************
 	// showMsg("c1.5");
 	// showMsg("geoYes(3)");
 	if(searchPoint ){
-		nearPoint();
 		searchPoint = false;
+		nearPoint();
 		incCount = 0;
 		incDistMsg = "";
 	}
@@ -7441,6 +7465,7 @@ function playAlarm(){
 			playVoice(target.voiceStr);
 			if(enAlarmSpeedLimit){
 				playVoice("測速");
+				enAlarmSpeedLimit --;
 			}
 			enAlarm = false;
 		}
