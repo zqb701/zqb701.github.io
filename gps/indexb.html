@@ -58,7 +58,7 @@
 	
 	<input type="button" value="行駛" onClick="addLog(speeder.check(6));">
 	<input type="button" value="停車" onClick="addLog(speeder.check(2));">
-	<input type="button" value="測試01" onClick="test05();">
+	<input type="button" value="測試01" onClick="t07();">
 	
 	<input type="button" value="清除" onClick="ins.innerHTML='';localStorage.insertCoord='';">
 	<input type="button" value="匯出" onClick="exportCoord();">
@@ -84,9 +84,9 @@
 </script>
 
 <script>
-var version = "v0.722i";
+var version = "v0.722b4";
 //TODO 到指定網站下載gps檔(並cache)
-function tasks_start(){ }//本行給notepad++的函式清單用(大引號不可靠在一起)
+function tasks_start(){ } //本行給notepad++的函式清單用(大引號不可靠在一起)
 
 var tasks = [[
 
@@ -103,7 +103,7 @@ var tasks = [[
 ],[
 [23.764704641912648, 120.65925908008023, "竹山/前山路_222巷"],
 [23.764683025944528, 120.66005629876909, "聯絡道",,,"路口"],
-[23.763527036683577, 120.66279602839056, "彎,派出所"],
+[23.763527036683577, 120.66279602839056, "彎12(派出所)"],
 [23.759519069374264, 120.66389012147367, "5號(悅山工坊)"],
 [23.757840441363990, 120.66488161934025, "集山路"],
 
@@ -416,21 +416,21 @@ var tasks = [[
 [22.667408391754630, 120.49797872622875, "廣東路S(G50R40)"],
 // [22.667045433248425, 120.49867116738040, "22巷(遠傳)"],
 [22.666651112033670, 120.49936391934412, "民教路G60R40"],
-[22.666087264583700, 120.50037043288955, "工業路G60R40","測A",,"測B"],
+[22.666087264583700, 120.50037043288955, "工業路","G60R40測A",,"G60R40測B"],
 // [22.665896314139818, 120.50069527139074, "民利35巷"],
 // [22.665710405430875, 120.50104072303125, "69巷北(舊屏監)"],		
-[22.665363252013350, 120.50161501550360, "69巷南W(三號誌)","測C",,"測D"],
+[22.665363252013350, 120.50161501550360, "69巷南W(三號誌)","G60R40測C",,"G60R40測D"],
 // [22.664982582278096, 120.50228884502027, "民福路E(三號誌,G60R40)"],
 
-[22.664984049555727, 120.50229042787828, "民福路E(三號誌,G60R40)","走100"],
+[22.664984049555727, 120.50229042787828, "民福路E(三號誌)","G60R40走100"],
 // [22.664943755849396, 120.50238328795535, "輔20米南",,,"ign"],//民福路
 [22.664221944275300, 120.50369274070279, "民生校區"],
 [22.663392101851596, 120.50520911909595, "菸廠路"],
-[22.662795198326197, 120.50622976219097, "瑞民路(速限50北路邊)",,,"測速"],		
-[22.662224935354054, 120.50727471537175, "歸仁路G50R40"],
+[22.662795198326197, 120.50622976219097, "瑞民路",,,"速限50北路邊"],		
+[22.662224935354054, 120.50727471537175, "歸仁路","G50R40",,"G50R40"],
 [22.660830889356372, 120.50967927191667, "瑞屏街W(雙號誌)"],
 [22.660495963946264, 120.51025894060876, "66巷E(雙號誌)"],
-[22.659908488349370, 120.51121889337335, "和生路G60R110"],
+[22.659908488349370, 120.51121889337335, "和生路","G60R110",,,"走60"],
 
 ],[
 [22.672704298914464, 120.49293309520853, "屏市/仁愛路_林森路"],
@@ -632,8 +632,8 @@ var tasks = [[
 [22.665898151284400, 120.50069522733452, "民生路"],
 
 ],[
-[22.66624455891555, 120.50146321604932, "屏市/民利路25巷_民利路"],
-[22.66570723234849, 120.50104008497674, "民生路"],
+[22.66624455891555, 120.50146321604932, "屏市/民利路25巷_民利路","25a",,"25b"],
+[22.66570723234849, 120.50104008497674, "民生路","生a",,"生b"],
 
 ],[
 [22.652359171742514, 120.50862005938717, "屏市/歸禮巷_彎顯靈宮"],
@@ -740,7 +740,7 @@ var tasks = [[
 
 [22.676552758165645, 120.50944276850424, "建豐路N","G60R40"],
 [22.676360464428280, 120.50961607295345, "建豐路S",,,"G60R40停24走70/95"],
-[22.675343791402256, 120.51041230398191, "1巷"],
+[22.675343791402256, 120.51041230398191, "1巷"],//瑞光公園南端
 [22.673650031059577, 120.51056656006223, "田寮巷","G50R40走99"],
 [22.670996612762544, 120.51062443057785, "民學路","G60",,"G60"],
 [22.669040797908576, 120.51069667037709, "號誌(愛家)",,,"走70/78"],
@@ -749,7 +749,7 @@ var tasks = [[
 [22.660425394728480, 120.51532207450000, "單車道",,,"綠60紅40走67/120"],
 
 [22.659602457415870, 120.51517075115158, "輔25米北","ign"],//田中巷
-[22.659389590906848, 120.51514906227330, "田中巷"],//常用路口,無號誌
+// [22.659389590906848, 120.51514906227330, "田中巷"],//常用路口,無號誌。
 [22.659155915276358, 120.51509606487899, "輔25米南",,,"ign"],//田中巷
 
 [22.658633168724144, 120.51504245069331, "彎3(急診室)"],
@@ -859,16 +859,16 @@ var tasks = [[
 
 ],[
 [22.695511971450234, 120.50541611177160, "屏市/盛豐路_海豐街",,,"R75"],
-[22.696883960767217, 120.50906180826027, "18巷G50R30","走75/100",,"有車左轉"],
+[22.696883960767217, 120.50906180826027, "18巷","G50R30走75/100",,"有車左轉"],
 // [22.697223595825060, 120.51001791729799, "彎23"],
-[22.697421687919710, 120.51196278840169, "11KG50R30(尖峰)","走75"],//屏17,11k
+[22.697421687919710, 120.51196278840169, "11K(尖峰)","G50R30走75"],//屏17,11k
 // [22.697520399914552, 120.51273661749624, "彎27"],
 [22.698434438925595, 120.51448625249280, "XX巷G50R30"],
 [22.700634859974850, 120.51823386201329, "彎47"],
 [22.701582376471514, 120.51924180789028, "彎57"],
 // [22.701152592239588, 120.51891439357674, "彎道"],
 // [22.702393890430030, 120.51959361288017, "測速北60路中","測速"],
-[22.702703598302563, 120.51973392246246, "屏34G50R30(限60北路中)","測速"],
+[22.702703598302563, 120.51973392246246, "屏34","G50R30,速限60北路中"],
 [22.705400301590082, 120.52084164949027, "號誌(老人院)G50R30"],
 [22.706893006935474, 120.52142952458101, "彎水溝(閃黃)"],
 [22.708802614179150, 120.52199195978083, "德和路(台27)","R80"],
@@ -6029,7 +6029,7 @@ var tasks = [[
 	var Point03 = [22.6243669, 120.7148054, "管制站"];
 	var Point04 = [22.64271533068867, 120.53940675958226, "種苗中心"];
 	
-	var recentPoint = Point04;
+	var recentPoint = Point02;
 	var prevPoint = [0,0];
 		//剛才通過的點
 	var passPoint = [0,0];
@@ -6068,7 +6068,7 @@ var tasks = [[
 	var enAlarm = true;
 	/** 高速提醒*/
 	var enAlarmHigh = true;
-	var enAlarmSpeedLimit = true;//測速提醒
+	var enAlarmSpeedLimit = 0;//測速提醒(兩次)
 	var voiceOK = true;
 	
 	var incCount = 0;	//遠離下一點的連續次數(未進入範圍)
@@ -6124,9 +6124,11 @@ var tasks = [[
 
 	
 	
-	function spder(){}
+
 	var speeder = new Speeder(document.getElementById("speedTime"));
-	function Speeder(meter0){//行停計數器, 行駛中報秒, 停止時報秒
+//行停計數器, 行駛中報秒, 停止時報秒 {***function 行尾有註解時, 會造成編輯器的函數清單找不到本函數}
+	function Speeder(meter0){
+		
 		// 'use strict';
 		// var intervalID;
 		// var highTime;
@@ -6282,7 +6284,7 @@ var tasks = [[
 	/**
 		
 	*/
-	function test02(){
+	function t02(){
 		
 	p0=	[22.665588375791046, 120.50101392899106,""];
 		// [22.66654286222146, 120.50113602621077,"民利35巷"],
@@ -6321,7 +6323,7 @@ function angleOffset(p0,p1,p2){
 	return dA;
 }
 	
-	function test03(){
+	function t03(){
 		p=[	[22.66654286222146, 120.50113602621077,"民利35巷"],
 			[22.665285944517155, 120.50179304264677,"殺蛇橋"],
 			[22.66608654077297, 120.50036725372237,"工業路"],
@@ -6348,15 +6350,61 @@ console.log(a1, d1);
 			
 			
 	}
-	function test04(){
+	function t04(){
 		alert('a');
 		addLog("<br>aaa");
 		addLog("bbb<br>");
 		addLog("<br>ccc");
 	}
-	function test05(){	//var strGPS = "1234";	//
+	
+	function t05(){
+		//var strGPS = "1234";	//
 		strGPS = strGPS.substr(1,4)+strGPS.charAt(0);
 		document.getElementById("speed").innerText = strGPS.charAt(0);
+	}
+	
+	// _test.t07 = function(){
+	function t07(){
+		alert(navigator.bluetooth);
+		navigator.bluetooth.requestDevice({
+		  // filters: [{
+			// name: "Nude Super-M_長喇叭"
+		  // }]
+			acceptAllDevices: true,
+			// optionalServices: ['battery_service']
+		})
+		.then(device => {
+			addLog("取得裝置" + device.name);
+			return device.gatt.connect();
+		})
+		.then(service => {
+		  // Getting Battery Level Characteristic…
+		  return service.getCharacteristic('battery_level');
+		})
+		.then(characteristic => {
+			characteristic.addEventListener('characteristicvaluechanged',
+                                  handleCharacteristicValueChanged);
+			console.log('Notifications have been started.');
+		})
+		.then(value => {
+		  console.log(`Battery percentage is ${value.getUint8(0)}`);
+		})
+		.catch(error => { addLog("失敗"); });
+		
+		function handleCharacteristicValueChanged(event) {
+		  const value = event.target.value;
+		  console.log('Received ' + value);
+		  // TODO: Parse Heart Rate Measurement value.
+		  // See https://github.com/WebBluetoothCG/demos/blob/gh-pages/heart-rate-sensor/heartRateSensor.js
+		}
+	}
+	
+	function t06(){
+		if(a){
+			alert("A");
+		}else{
+			alert("B");
+		}
 	}
 	
 	function testMaps(){
@@ -6366,21 +6414,28 @@ console.log(a1, d1);
 		}else{
 			// alert("testMaps");
 		}
-			try{
-		for(var t=0; t < tasks.length; t++){
-			for(var i=1; i < tasks[t].length; i++){
-				 strtmp = tasks[t][i-1][2];
-				 strtmp1= strtmp;
-				showMsg(strtmp1);
+		
+		try{
+			for(var t=0; t < tasks.length; t++){
+				for(var i=1; i < tasks[t].length; i++){
+					 strtmp = tasks[t][i-1][2];
+					 strtmp1= strtmp;
+					showMsg(strtmp1);
+				}
 			}
-		}
-	}catch{
-		alert("data err after "+strtmp1 );
-		//TODO tasks[1+][0]後面缺逗號, 執行時期才會發現
+		}catch{
+			alert("data err after "+strtmp1 );
+			//TODO tasks[1+][0]後面缺逗號, 執行時期才會發現
 
+		}
 	}
-	}
-	function test01(){
+	class myTest{}
+	var _test = new myTest();	
+	// class Test{}// function TODO(){}
+	// var _test = new Test();
+	// _text.t01 = function(){
+		
+	_test.t01 = function(){
 			p=[	[22.66654286222146, 120.50113602621077,"民利35巷"],
 			[22.665285944517155, 120.50179304264677,"殺蛇橋"],
 			[22.66608654077297, 120.50036725372237,"工業路"]];
@@ -6407,14 +6462,15 @@ console.log(a1, d1);
 
 		
 	}
-	function init001(){ }
-function init(){	//由onload()啟動
+
+function init(){
+	//由onload()啟動
 	
 	var now = new Date();
 	dateStr = now.getFullYear()+"/"+(now.getMonth()+1)+"/"+now.getDate();
 	dateStr += "("+ "日一二三四五六".substr(now.getDay(),1) +")";
 	// addLog("<br>");
-	addLog("程式啟動, " + version + ", " + dateStr + "<br>");
+	addLog("程式啟動, " + version + ", " + dateStr + "<hr>");
 
 	// alert("abc".indexOf("a"));
 // showMsg("init(s)");
@@ -6675,11 +6731,14 @@ async function noSleep(){
 			wakeLock = await navigator.wakeLock.request('screen');
 			wakeLock.addEventListener('release', () => {
 				//console.log('Screen Wake Lock was released');
+				addLog('Screen Wake Lock was released'); //視窗隱藏會觸發「取消」(因為失去控制權)
 			});
 		//console.log('Screen Wake Lock is active');
-		//alert("NoSleep");
+		addLog('Screen Wake Lock is active');	//不會休眠
+		
 		} catch (err) {
-			console.error(`${err.name}, ${err.message}`);
+			// console.error(`${err.name}, ${err.message}`);
+			addLog(err.message);
 		}
 	};
 	// Request a screen wake lock…
@@ -6884,17 +6943,14 @@ function skipPoint(){
 	
 	strtmp =  points[nextPoint][2];
 	strtmp += ",速" + speedKpH.toFixed(1);
-	strtmp += "[" + target.voiceStr + "]";//單向的語音
-	
+	strtmp += ",[" + target.voiceStr + "]";//單向的語音	
 	// strtmp += ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
 	
 	passPoint[0] = points[nextPoint][0];
 	passPoint[1] = points[nextPoint][1];
 	
 	//函式應切割為離開這一點及切換下一點
-	enAlarm = true;
-	enAlarmHigh = true;
-	enAlarmSpeedLimit = true;
+
 	
 	// showMsg("a2");
 	if(nextPoint+vector == -1 || nextPoint+vector == points.length){
@@ -6930,12 +6986,19 @@ function skipPoint(){
 	
 	target.voiceStr = points[nextPoint][4-vector];	
 	while(target.voiceStr && target.voiceStr == "ign"){	//todo:改用迴圈, 以連續跳過多個ign
-		addLog("_跳過 " + points[nextPoint][2]);
+		addLog("略:s" + points[nextPoint][2]);
 		nextPoint += vector;
 		// strVoc = points[nextPoint][4-vector];//TODO:索引超出會有何反應
 		target.voiceStr = points[nextPoint][4-vector];
 	}
-		
+	enAlarm = true;
+	enAlarmHigh = true;
+	// enAlarmSpeedLimit = true;
+	if(target.voiceStr){
+		if( target.voiceStr == "測速" || target.voiceStr.match(/速限\d*/)){
+			enAlarmSpeedLimit = 2;
+		}
+	}
 	// showMsg("a4");
 	//addLog(points[nextPoint][2]+ strtmp);
 	incCount = 0;
@@ -6958,6 +7021,7 @@ function skipPoint(){
 
 	}
 	preDist = getDistance(recentPoint,  points[nextPoint]);
+	// addLog("skipPoint():preDist=" + preDist);
 	// preDist = -1;
 	return true;
 }
@@ -6993,8 +7057,9 @@ function getSubZoom(){//子路徑的放大倍數
 	
 }
 	class canvas01{}
-	var myCanvas = new canvas01();
+	var myCanvas = new canvas01();	
 	myCanvas.abc = "123";
+	
 myCanvas.drawClearMap = function (){
 	ctx.fillStyle = "black";	//填滿色
 	ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -7123,6 +7188,7 @@ function nearPoint(){
 	let oldTask = taskID;
     let bestP = 0;
 	let bestT =0;
+	let funcTime = Date.now();
 	
 	//從路線資料庫中，
 	for(let t=0; t < tasks.length; t++){
@@ -7223,8 +7289,9 @@ minDiff = 361;
 	}
 
 	strtmp = "新:" + points[0][2].substr(0,index);
-		strtmp += ",從:" + points[nextPoint - vector][2];
-		strtmp += "["+ points[nextPoint - vector][4-vector] + "]";
+	strtmp += ",從:" + points[nextPoint - vector][2];
+	strtmp += ",["+ points[nextPoint - vector][4-vector] + "]";
+		// strtmp += (Date.now()-funcTime)/1000 + "秒";
 					 
 	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
 			// ",路向:" + edgeVector.toFixed(0);
@@ -7234,11 +7301,19 @@ minDiff = 361;
 	// showMsg("nP(8)");
 	target.voiceStr = points[nextPoint][4-vector];
 	while(target.voiceStr && target.voiceStr == "ign"){
-		addLog("略:" + points[nextPoint][2]);
+		addLog("略:n" + points[nextPoint][2]);
 		nextPoint += vector;
 		target.voiceStr = points[nextPoint][4-vector];//TODO:索引超出會有何反應
 	}
+	// enAlarm = true;	// enAlarmHigh = true; //初值為true, skipPoint時已指定為true, 故此不執行
+	if(target.voiceStr){
+		if( target.voiceStr == "測速" || target.voiceStr.match(/速限\d*/)){
+			enAlarmSpeedLimit = 2;
+		}
+	}
+	
 	preDist = getDistance(recentPoint,  points[nextPoint]);
+	// addLog("nearPoint():preDist="+preDist);
 	passTime = new Date();//todo:沒實際作用,只能避免數字過大
 }
 
@@ -7260,7 +7335,7 @@ function geoYes (evt){		//************************************************
 		document.getElementById("speed").innerText = strGPS.charAt(0);;
 		return ;
 	}
-	
+
 	// showMsg("c2");
 	
 	rctSpeedLevel = Math.floor(speedKpH / 10);
@@ -7283,8 +7358,8 @@ function geoYes (evt){		//************************************************
 	// showMsg("c1.5");
 	// showMsg("geoYes(3)");
 	if(searchPoint ){
-		nearPoint();
 		searchPoint = false;
+		nearPoint();
 		incCount = 0;
 		incDistMsg = "";
 	}
@@ -7306,7 +7381,10 @@ function geoYes (evt){		//************************************************
 	// showMsg("c2");
 	fcolor = "";
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
-
+	
+	// strtmp = ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
+	// addLog(strtmp);
+	
 	if (nextDist > preDist ){	//遠離中
 		// if(nextDist < (evt.coords.speed/1000*2 + 0.020) ){
 		// if(nextDist < 0.04 ){//40公尺
@@ -7327,9 +7405,9 @@ function geoYes (evt){		//************************************************
 			if(++incCount > 2){
 				
 				addLog("離:" + 	
-					points[nextPoint][2] +"," +
-					(((+new Date()) - passTime)/1000).toFixed(0)+"秒,"+
-					incDistMsg
+					points[nextPoint][2] +","
+					+ (((+new Date()) - passTime)/1000).toFixed(0)+"秒,"
+					// + incDistMsg
 				);
 
 				
@@ -7373,37 +7451,34 @@ function playAlarm(){
 		playVoice(target.voiceStr);
 		enAlarmHigh = false;
 	}
-	strtmp = target.voiceStr.match(/速限\d*/);
-	if(strtmp ){
-		addLog("playAlarm():" + strtmp);
-	}
 	
-	if( target.voiceStr == "測速"){
-		if(enAlarmSpeedLimit && nextDist < .3){	//300公尺前提醒
-			// showMsg("b2");
-			playVoice(target.voiceStr);
-			enAlarmSpeedLimit = false;
-		}
+	// if( target.voiceStr == "測速" || target.voiceStr.match(/速限\d*/)){
+	if(	((enAlarmSpeedLimit==2) && (nextDist < .3)) ){	//300公尺前提醒
+		playVoice("測速");
+		enAlarmSpeedLimit --;
 		return;
-		//todo 高速時兩次提醒間隔太近, 測速應獨立提示間隔
 	}
-		/** 事前提醒*/
-		//時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒(步行4公里/小時)
-		//車速每10公里提前2秒通知：
-		//		120公里提前24秒, 33*24=792
-		//		30公里時提前6秒通知,約8.1*6=48公尺。
-		//		10公里,3秒,約4.1*3公尺,。
-		//最後加12公尺給單車時,路中與路邊的距離補償用
-		
+
+
+	/** 事前提醒*/
+	//時速60公里 = 60x1000/60x60 = 60/3.6 = 16.6公尺/秒(步行4公里/小時)
+	//車速每10公里提前2秒通知：
+	//		120公里提前24秒, 33*24=792
+	//		30公里時提前6秒通知,約8.1*6=48公尺。
+	//		10公里,3秒,約4.1*3公尺,。
+	//最後加12公尺給單車時,路中與路邊的距離補償用		
 	if(enAlarm ){
 		minDist = coords_speed/1000 * speedKpH/10*2 + 0.015;
 		if(nextDist < 0.05 || nextDist < minDist){
 			// showMsg("b3");
 			playVoice(target.voiceStr);
+			if(enAlarmSpeedLimit){
+				playVoice("測速");
+				enAlarmSpeedLimit --;
+			}
 			enAlarm = false;
 		}
 	}
-	// showMsg("b4");
 }
 
 function _geoNo(evt){
