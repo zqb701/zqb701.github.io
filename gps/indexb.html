@@ -60,7 +60,7 @@
 	<input type="button" value="停車" onClick="addLog(speeder.check(2));">
 	<input type="button" value="測試01" onClick="t07();">
 	
-	<input type="button" value="清除" onClick="ins.innerHTML='';localStorage.insertCoord='';">
+	<input type="button" value="清除" onClick="ins.innerHTML='';localStorage.insertCoord='';addLog('清除。' + version +', ' +myDate() )">
 	<input type="button" value="匯出" onClick="exportCoord();">
 	<input type="file" multiple id="input" style='display:none;'>
 	
@@ -84,7 +84,7 @@
 </script>
 
 <script>
-var version = "v0.722b7";
+var version = "v0.722b8";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ } //本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -129,6 +129,7 @@ var tasks = [[
 [22.676454250884152, 120.50072968208876, "勝利路"],
 [22.676016199057848, 120.50058752501798, "高豐街"],
 [22.674161811466448, 120.49996566902554, "民學路G60R40"],
+[22.672090041908856, 120.49929649215414, "輔25米北","ign"],
 [22.671873370117144, 120.49922917511516, "公園路G60R40"],
 [22.671026831904392, 120.49895754739023, "林森路G60R40"],
 [22.670303645732268, 120.49872383267650, "民和路G60R40"],
@@ -149,8 +150,10 @@ var tasks = [[
 ],[
 [22.687402189056910, 120.49206250775707, "屏市/信義路_廣東路"],
 [22.684331447291830, 120.49099210836474, "公正四街"],
+[22.684120007043560, 120.49091507056207, "輔25米南",,,"ign"],
 [22.683254926773614, 120.49063028957730, "自由路"],
 [22.679283425604222, 120.48939080426767, "勝利路"],
+
 [22.674985859155086, 120.48800726449655, "公園路"],
 [22.674140007969516, 120.48770531987410, "林森路"],
 [22.673580000235486, 120.48697672493849, "上海路"],
@@ -170,7 +173,8 @@ var tasks = [[
 [22.678104404717550, 120.49473692862567, "仁愛路"],
 [22.677878365098260, 120.49559583741438, "大連路"],
 [22.677433398468075, 120.49717838974670, "自由路"],
-[22.676906027310018, 120.49919722474331, "自立路"],
+[22.676906027310018, 120.49919722474331, "自立路(尖峰)"],
+[22.676673115344650, 120.49996021372647, "民享路"],//無號誌
 [22.676454250884152, 120.50072968208876, "廣東路"],
 [22.676083867215812, 120.50210439528874, "巷子內"],
 
@@ -387,9 +391,11 @@ var tasks = [[
 [22.675693746407173, 120.48495257601766, "屏市/公園路_中山路GR"],
 [22.675449828024483, 120.48626019401937, "成功路GR"],
 [22.675228519351236, 120.48708564234110, "忠孝路GR"],
+[22.675051945197175, 120.48777152387247, "輔25米西","ign"],
 [22.674992073752083, 120.48800304521309, "信義路GR"],
 [22.674552591822373, 120.48960830250783, "中正路GR"],
 [22.674276915286807, 120.49062280124006, "中華路GR"],
+[22.673847012867160, 120.49217070573819, "輔25米西","ign"],
 [22.673783385894330, 120.49240515441619, "民權路"],
 [22.673546038777758, 120.49324935380842, "仁愛路GR"],
 [22.672817817462190, 120.49573910183314, "自由路GR"],
@@ -5461,12 +5467,11 @@ var tasks = [[
 [22.681083111886274, 120.48895547311128, "輔21(協和路)"],
 [22.679654757848812, 120.48850182109926, "勝利路N"],
 [22.679382771752206, 120.48842373377650, "勝利路S"],
-[22.678632261837610, 120.48817977490248, "青鳥街"],
+[22.678632261837610, 120.48817977490248, "青島街"],
 [22.676925103589628, 120.48763388212842, "開封街"],
 [22.676096571906005, 120.48737779506122, "北平路"],
 [22.675233197189687, 120.48710036740023, "公園路"],
 [22.674571272885625, 120.48689845259274, "圓環"],
-
 
 ],[
 [22.821877925533766, 120.50606550063260, "里港/屏10_輔20米西"],//台3
@@ -6210,7 +6215,7 @@ var tasks = [[
 					// addLog("結算移動時間");
 					theTime = this.highTime;
 					theChar = "<br>走:";
-					addstr = ",均:XX km/h";
+					// addstr = ",均:XX km/h";
 					//切到停止
 					
 					this.slowTime = (+new Date());		
@@ -6221,7 +6226,7 @@ var tasks = [[
 				this.meter.innerText = "0";
 				let secTmp = ((+new Date())-theTime)/1000;
 				let strtmp = theChar + tools.secToHMS(secTmp);
-				strtmp += addstr;
+				// strtmp += addstr;
 				return strtmp;
 			}
 			return undefined;
@@ -6233,12 +6238,12 @@ var tasks = [[
 			if(this.slowTime){//只有關閉GUI才執行
 				theTime = this.slowTime;
 				theChar = "停b:";
-				addstr = ",距:" + nextDist*1000 + "米";
+				// addstr = ",距:" + nextDist*1000 + "米";
 				this.slowTime = Date.now();
 			}else{				//關閉GUI或「移動」中切換路線
 				theTime = this.highTime;
 				theChar = "走b:";
-				addstr = ",均:XX km/h";		
+				// addstr = ",均:XX km/h";		
 				
 				this.highTime = (+new Date());
 				// this.highStart = "" + points[nextPoint - vector][2];
@@ -6246,7 +6251,7 @@ var tasks = [[
 			this.meter.innerText = "0";
 			let secTmp = ((+new Date()) - theTime)/1000;
 			let strtmp = theChar + tools.secToHMS(secTmp);
-			strtmp += addstr;
+			// strtmp += addstr;
 
 			// addLog(strtmp);
 			return strtmp;
@@ -6484,15 +6489,18 @@ console.log(a1, d1);
 
 		
 	}
-
+function myDate(){
+		var now = new Date();
+	dateStr = now.getFullYear()+"/"+(now.getMonth()+1)+"/"+now.getDate();
+	dateStr += "("+ "日一二三四五六".substr(now.getDay(),1) +")";
+	return dateStr;
+}
 function init(){
 	//由onload()啟動
 	
-	var now = new Date();
-	dateStr = now.getFullYear()+"/"+(now.getMonth()+1)+"/"+now.getDate();
-	dateStr += "("+ "日一二三四五六".substr(now.getDay(),1) +")";
+
 	// addLog("<br>");
-	addLog("程式啟動, " + version + ", " + dateStr + "<hr>");
+	addLog("程式啟動, " + version + ", " +myDate() + "<hr>");
 
 	// alert("abc".indexOf("a"));
 // showMsg("init(s)");
@@ -6551,11 +6559,10 @@ function init(){
 			addLog("休:" + tools.secToHMS((Date.now() - hiddenTime)/1000)+"<br>");
 			speeder.myFinal();
 			passTime = Date.now();
+			noSleep();
 			break;
 	  }
 	};
-
-
 	//playVoice('當');
 	//highTime = (+new Date());	//避免第一次引用時為undefined
 	speeder.start();
@@ -7355,7 +7362,7 @@ function geoYes (evt){		//************************************************
 	try {
 		strtmp = speeder.check(speedKpH);
 		if(strtmp){
-			strtmp += ",距:" + nextDist*1000 + "米<br>";
+			strtmp += ",距:" + nextDist*1000 + "米";
 			if(target.voiceStr){
 				strtmp += ",["+ target.voiceStr + "]";
 				strtmp += ",["+ target.voiceStr.match(/走\d*/) + "]";
