@@ -7313,7 +7313,7 @@ minDiff = 361;
 	strtmp = "新:" + points[0][2].substr(0,index);
 	strtmp += ",從:" + points[nextPoint - vector][2];
 	strtmp += ",["+ points[nextPoint - vector][4-vector] + "]";
-	strtmp += ",角:" + bigAng[0];
+	// strtmp += ",角:" + bigAng[0];
 		// strtmp += (Date.now()-funcTime)/1000 + "秒";
 					 
 	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
@@ -7440,8 +7440,8 @@ function geoYes (evt){		//************************************************
 				
 				addLog("離:" + 	
 					points[nextPoint][2]
-					 +"," + (((+new Date()) - passTime)/1000).toFixed(0)+"秒"
-					// + ","+incDistMsg
+					+"," + (((+new Date()) - passTime)/1000).toFixed(0)+"秒"
+					+ ","+incDistMsg
 				);
 
 				
