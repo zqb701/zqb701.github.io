@@ -84,7 +84,7 @@
 </script>
 
 <script>
-var version = "v0.722b6";
+var version = "v0.722b7";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ } //本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -6197,10 +6197,7 @@ var tasks = [[
 					//結算停止時間
 					theTime = this.slowTime;
 					theChar = "停:";
-					addstr = ",["+ target.voiceStr + "]";
-					addstr = ",["+ target.voiceStr.match(/走\d*/) + "]";
-					// addstr = ",["+ points[nextPoint][4-vector] + "]";
-					addstr += ",距:" + nextDist*1000 + "米<br>";
+
 					//切到移動狀態
 					this.highTime = (+new Date());
 					this.slowTime = undefined;
@@ -6258,6 +6255,17 @@ var tasks = [[
 	
 	class myPoint{}
 	var target = new myPoint();
+	/*
+	function myPoint(){
+		this.init = function(info){
+			if(info){
+				
+			}
+			
+		}
+		
+	}//end of func.. myPoint()
+	*/
 
 		class tools01{}
 		var tools = new tools01();
@@ -7345,7 +7353,15 @@ function geoYes (evt){		//************************************************
 	// isSlow(evt.coords.speed);
 	
 	try {
-		addLog(speeder.check(speedKpH));
+		strtmp = speeder.check(speedKpH);
+		if(strtmp){
+			strtmp += ",距:" + nextDist*1000 + "米<br>";
+			if(target.voiceStr){
+				strtmp += ",["+ target.voiceStr + "]";
+				strtmp += ",["+ target.voiceStr.match(/走\d*/) + "]";
+			}
+			addLog(strtmp);
+		}
 		if(speedKpH < 1){
 			document.getElementById("speed").innerText = strGPS.charAt(0);;
 			return ;
