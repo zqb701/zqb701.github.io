@@ -84,7 +84,7 @@
 </script>
 
 <script>
-var version = "v0.722b5";
+var version = "v0.722b6";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ } //本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -7344,11 +7344,14 @@ function geoYes (evt){		//************************************************
 	speedKpH = evt.coords.speed * 3.6;//MpS2KpH
 	// isSlow(evt.coords.speed);
 	
-	addLog(speeder.check(speedKpH));
-
-	if(speedKpH < 1){
-		document.getElementById("speed").innerText = strGPS.charAt(0);;
-		return ;
+	try {
+		addLog(speeder.check(speedKpH));
+		if(speedKpH < 1){
+			document.getElementById("speed").innerText = strGPS.charAt(0);;
+			return ;
+		}
+	}catch (e) {
+		addLog("error:" + e);
 	}
 
 	// showMsg("c2");
