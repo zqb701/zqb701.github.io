@@ -84,7 +84,7 @@
 </script>
 
 <script>
-var version = "v0.722b3";
+var version = "v0.722b4";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ } //本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -634,9 +634,9 @@ var tasks = [[
 ],[
 [22.666892039559908, 120.50177619510023, "屏市/民利路35巷_民榮街"],
 [22.666656184973860, 120.50129263721031, "輔20米北","ign"],//民利路
-[22.666550917520382, 120.50114175872159, "民利路",,,"左轉,走3停7"],
+[22.666550917520382, 120.50114175872159, "民利路",,,"左轉,R3G7"],
 [22.666209733553423, 120.50091225739330, "5號","起點1",,"起點3"],
-[22.665898151284400, 120.50069522733452, "民生路","走4停2"],
+[22.665898151284400, 120.50069522733452, "民生路","R4G2"],
 
 ],[
 [22.66624455891555, 120.50146321604932, "屏市/民利路25巷_民利路","25a",,"25b"],
@@ -6317,26 +6317,21 @@ var tasks = [[
 		}
 		
 		tools.setColor=function(srcStr){
-			addLog("setColor: a");
 			try{
 				if(srcStr){
-					tmpStr = srcStr.match(/走\d*/);
+					tmpStr = srcStr.match(/G\d*/);
 					if(tmpStr){
-						addLog("setColor:" + tmpStr[0]);
 						runNum = parseInt( tmpStr[0].substring(1));
 						timeNum[2] = runNum;
 						rstStr = "走:" + runNum;
 					}
-					addLog("setColor: b");
-					tmpStr = srcStr.match(/停\d*/) ;
+					tmpStr = srcStr.match(/R\d*/) ;
 					if(tmpStr){
-						addLog("setColor:" + tmpStr[0]);
 						stopNum = parseInt(tmpStr[0].substring(1));
 						timeNum[0] = stopNum;
 						rstStr +="停:" + stopNum;
 					}
-					addLog("setColor: c");
-					addLog(rstStr);
+					addLog("setColor():"+rstStr);
 				}
 			}catch (e) {
 				addLog("error:" + e);
@@ -7070,9 +7065,9 @@ function skipPoint(){
 		// strVoc = points[nextPoint][4-vector];//TODO:索引超出會有何反應
 		target.voiceStr = points[nextPoint][4-vector];
 	}
-	addLog("a");
+	
 	tools.setColor(target.voiceStr);
-	addLog("b");
+	
 	//速限語音
 	enAlarm = true;
 	enAlarmHigh = true;
@@ -7084,7 +7079,7 @@ function skipPoint(){
 			enAlarmSpeedLimit = 0;
 		}
 	}
-	addLog("c");
+	
 	// showMsg("a4");
 	//addLog(points[nextPoint][2]+ strtmp);
 	incCount = 0;
