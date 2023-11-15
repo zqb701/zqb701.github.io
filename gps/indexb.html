@@ -84,7 +84,7 @@
 </script>
 
 <script>
-var version = "v0.722b1";
+var version = "v0.722b2";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ } //本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -6317,21 +6317,25 @@ var tasks = [[
 		}
 		
 		tools.setColor=function(srcStr){
+			addLog("setColor: a");
 			try{
 				if(srcStr){
 					tmpStr = srcStr.match(/走\d*/);
 					if(tmpStr){
+						addLog("setColor:" + tmpStr[0]);
 						runNum = parseInt( tmpStr[0].substring(1));
 						timeNum[2] = runNum;
 						rstStr = "走:" + runNum;
 					}
-					
+					addLog("setColor: b");
 					tmpStr = srcStr.match(/停\d*/) ;
 					if(tmpStr){
+						addLog("setColor:" + tmpStr[0]);
 						stopNum = parseInt(tmpStr[0].substring(1));
 						timeNum[0] = stopNum;
 						rstStr +="停:" + stopNum;
 					}
+					addLog("setColor: c");
 					addLog(rstStr);
 				}
 			}catch (e) {
