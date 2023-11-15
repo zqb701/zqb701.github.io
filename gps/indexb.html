@@ -84,7 +84,7 @@
 </script>
 
 <script>
-var version = "v0.722b2";
+var version = "v0.722b3";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ } //本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -7071,7 +7071,7 @@ function skipPoint(){
 		target.voiceStr = points[nextPoint][4-vector];
 	}
 	addLog("a");
-	setColor(target.voiceStr);
+	tools.setColor(target.voiceStr);
 	addLog("b");
 	//速限語音
 	enAlarm = true;
