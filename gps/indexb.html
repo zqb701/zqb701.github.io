@@ -84,7 +84,7 @@
 </script>
 
 <script>
-var version = "v0.723b2";
+var version = "v0.723b3";
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ } //本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -3850,7 +3850,7 @@ var tasks = [[
 [22.985284404770567, 120.22308827107723, "南市/富德街_東門路"],
 [22.984688355131620, 120.22348342516322, "25巷"],
 [22.983968504099952, 120.22522427958330, "德光街"],
-[22.984146909429974, 120.22530340474931, "東門路"]
+[22.984146909429974, 120.22530340474931, "東門路"],
 [22.984880731438473, 120.22597043403590, "269巷"],
 [22.984997876301552, 120.22627817490022, "61巷"],
 [22.985568620737805, 120.22618180494749, "裕農路"],
@@ -7057,9 +7057,9 @@ function playVoice(str){
 		voice.load();
 		voice.play();
 		voiceOK = true;
-	}catch (e) {	//完全抓不到error
+	}catch (err) {	//完全抓不到error
 		_todo._750找不到語音檔要報錯_並播放其它 = function(){}	//AAAAAAAA
-		addLog(fileName + ":" + e);
+		addLog(fileName + ":" + err.message);
 	}
 }
 
@@ -7455,7 +7455,11 @@ minDiff = 361;
 	if(points[nextPoint - vector][4-vector]){
 		strtmp += ",["+ points[nextPoint - vector][4-vector] + "]";
 	}
-	strtmp += ",角:" + bigAng[0].toFixed(0);	//收集資訊, 以決定角度太小者要定時重找。
+	try{
+		strtmp += ",角:" + bigAng[0].toFixed(0);	//收集資訊, 以決定角度太小者要定時重找。
+	}catch(err){
+		addLog(err.message);
+	}	
 		// strtmp += (Date.now()-funcTime)/1000 + "秒";
 					 
 	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
