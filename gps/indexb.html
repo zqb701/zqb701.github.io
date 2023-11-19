@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.723b4"; 	</script>
+	<script> 		var version = "v0.723b5"; 	</script>
 </head>
 
 <style>  
@@ -6396,28 +6396,31 @@ var tasks = [[
 		}
 		
 		tools.setColor=function(srcStr){
+			// try{
+			if(!srcStr) return false;
 			let rstStr = null;//result String
-			try{
-				if(srcStr){
-					tmpStr = srcStr.match(/G\d*/);
-					if(tmpStr){
-						runNum = parseInt( tmpStr[0].substring(1));
-						timeNum[2] = runNum;
-						rstStr = "走:" + runNum;
-					}
-					tmpStr = srcStr.match(/R\d*/) ;
-					if(tmpStr){
-						stopNum = parseInt(tmpStr[0].substring(1));
-						timeNum[0] = stopNum;
-						rstStr +=",停:" + stopNum;
-					}
-					if(rstStr){
-						addLog("setColor():"+rstStr);
-					}
-				}
-			}catch (e) {
-				addLog("error:" + e);
+			
+			tmpStr = srcStr.match(/G\d*/);
+			if(tmpStr){
+				runNum = parseInt( tmpStr[0].substring(1));
+				timeNum[2] = runNum;
+				rstStr = "走:" + runNum;
 			}
+			tmpStr = srcStr.match(/R\d*/) ;
+			if(tmpStr){
+				stopNum = parseInt(tmpStr[0].substring(1));
+				timeNum[0] = stopNum;
+				rstStr +=",停:" + stopNum;
+			}
+			if(rstStr){
+				addLog("setColor():"+rstStr);
+				return true;
+			}
+			return false;
+				// }
+			// }catch (e) {
+				// addLog("error:" + e);
+			// }
 		}
 		
 		
@@ -7587,7 +7590,8 @@ function geoYes (evt){		//************************************************
 				addLog("離:" + 	
 					points[nextPoint][2]
 					+"," + (((+new Date()) - passTime)/1000).toFixed(0)+"秒"
-					+ ","+incDistMsg
+					+ "[" + target.voiceStr +"]"
+					+ incDistMsg
 				);
 
 				
