@@ -4,6 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
+	<script> 		var version = "v0.723b4"; 	</script>
 </head>
 
 <style>  
@@ -84,7 +85,7 @@
 </script>
 
 <script>
-var version = "v0.723b3";
+
 //TODO 到指定網站下載gps檔(並cache)
 function tasks_start(){ } //本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -6338,6 +6339,8 @@ var tasks = [[
 	
 	class myPoint{}
 	var target = new myPoint();
+	var source = new myPoint();
+	
 	/*
 	function myPoint(){
 		this.init = function(info){
@@ -7449,17 +7452,15 @@ minDiff = 361;
 	if(index < 0){
 		index = points[0][2].length;
 	}
+	source.voiceStr = points[nextPoint - vector][4-vector];
 
 	strtmp = "新:" + points[0][2].substr(0,index);
 	strtmp += ",從:" + points[nextPoint - vector][2];
-	if(points[nextPoint - vector][4-vector]){
-		strtmp += ",["+ points[nextPoint - vector][4-vector] + "]";
+	if(source.voiceStr){
+		strtmp += ",["+ source.voiceStr + "]";
 	}
-	try{
 		strtmp += ",角:" + bigAng[0].toFixed(0);	//收集資訊, 以決定角度太小者要定時重找。
-	}catch(err){
-		addLog(err.message);
-	}	
+
 		// strtmp += (Date.now()-funcTime)/1000 + "秒";
 					 
 	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
@@ -7473,10 +7474,10 @@ minDiff = 361;
 		nextPoint += vector;
 		target.voiceStr = points[nextPoint][4-vector];//TODO:索引超出會有何反應
 	}
-	if(setColor(target.voiceStr)){
+	if(tools.setColor(target.voiceStr)){
 	
 	}else{
-		setColor(points[nextPoint - vector][4-vector]);	//沒有的話要往回找...
+		tools.setColor(source.voiceStr);	//沒有的話要往回找...
 	}
 	// enAlarm = true;	// enAlarmHigh = true; //初值為true, skipPoint時已指定為true, 故此不執行
 	if(target.voiceStr){
@@ -7504,20 +7505,12 @@ function geoYes (evt){		//************************************************
 	speedKpH = evt.coords.speed * 3.6;//MpS2KpH
 	// isSlow(evt.coords.speed);
 	
-	try {
+
 		strtmp = speeder.check(speedKpH);
 		if(strtmp){
 			strtmp += ",距:" + nextDist*1000 + "米";
-			// if(target.voiceStr){
-				// strtmp += ",["+ target.voiceStr + "]";
-				// strtmp += ",["+ target.voiceStr.match(/走\d*/) + "]";
-				// strtmp += ",["+ target.voiceStr.match(/停\d*/) + "]";
-			// }
 			addLog(strtmp);
 		}
-	}catch (e) {
-		addLog("error:" + e);
-	}
 	
 	if(speedKpH < 1){
 		document.getElementById("speed").innerText = strGPS.charAt(0);;
