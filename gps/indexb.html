@@ -6,13 +6,13 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724b1"; 	</script>
+	<script> 		var version = "v0.724b2"; 	</script>
 </head>
 
 <style>  
 	.cmdButton {
-		width: 170px;
-		height: 170px;
+		width: 160px;
+		height: 160px;
 		border-width: 3px;
 		border-style: dashed;
 		border-color: #FFAC55;
@@ -20,7 +20,7 @@
 		
 		text-align: center;	//水平置中
 		top: 0px;
-		line-height: 170px;//文字垂直置中(行高等於容器高度),單行適用
+		line-height: 160px;//文字垂直置中(行高等於容器高度),單行適用
 	}
 </style>  
 
@@ -36,22 +36,29 @@
 	
 	<canvas id="canvas" "></canvas>
 
-	<div style="display: flex; justify-content: flex-end; width: 1000px;">
-		<div class="cmdButton" onclick="documentElement.scrollTop=0; playVoice('當');" >頁頂</div>
+	<div style="display: flex; justify-content: flex-end; align-items:center;">
+		<div class="cmdButton" onclick="documentElement.scrollTop=0; playVoice('當');" 
+		style="border-radius: 40% 0  0 40%;"
+		>頁頂</div>
 		
-		<div class="cmdButton" onclick="location.reload();">重載</div>		
+		<div class="cmdButton" onclick="location.reload();"
+			style="border-radius: 40% 0  0 40%;"
+		>重載</div>		
 
 		<div class="cmdButton"
 			id="march" onclick="signal.click();" 
-			style="font-size:100px;  border-radius:50%; width: 280px; height: 280px;"
+			style="font-size:100px;  border-radius:50%;
+			width: 280px; height: 280px; line-height: 280px;"
 		>0</div>
 
 		<div class="cmdButton" 
 		id="speedTime" onclick="speeder.switc();" 
-		style="font-size:100px;"
+		style="font-size:100px; border-radius: 0 40% 40% 0;"
 		>0</div>
 		
-		<div class="cmdButton" onclick="addLog('尋標');nearPoint();">尋標</div>
+		<div class="cmdButton" onclick="addLog('尋標');nearPoint();"
+		style="border-radius: 0 40% 40% 0;"
+		>尋標</div>
 	</div>
 	
 	
