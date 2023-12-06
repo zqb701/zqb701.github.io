@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724b9"; 	</script>
+	<script> 		var version = "v0.724b9b"; 	</script>
 </head>
 
 <style> 
@@ -6552,8 +6552,8 @@ var tasks = [[
 
 	target.reset=function(){	 //設定新的目標點及其資訊
 		let title = points[nextPoint][2];
-		let idx = target.title.indexOf("_");
-		if(idx <= 0){
+		let idx = title.indexOf("_");
+		if(idx >= 0){
 			// let tmpIndex2 = target.title.length - tmpIndex1;
 			title = title.substring(idx-2);//起始,結束
 		}
@@ -7693,8 +7693,9 @@ minDiff = 361;
 
 	source.voiceStr = points[nextPoint - vector][4-vector];
 
-	strtmp = "新:" + points[0][2].substr(0,index);
-	strtmp += "(" + target.title + ")";
+	strtmp = "新:";
+	// strtmp += points[0][2].substr(0,index);
+	strtmp += target.title;
 	strtmp += ",從:" + points[nextPoint - vector][2];
 	if(source.voiceStr){
 		strtmp += ",["+ source.voiceStr + "]";
