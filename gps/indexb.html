@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724b7"; 	</script>
+	<script> 		var version = "v0.724b8"; 	</script>
 </head>
 
 <style> 
@@ -449,9 +449,10 @@ var tasks = [[
 [22.670482746347982, 120.50083982523750, "民教路"],
 [22.670177600355817, 120.50195314275683, "水源街"],
 [22.669561186398080, 120.50419031059506, "福田巷"],
-[22.669460330536910, 120.50465165054617, "1巷"],
+[22.669460330536910, 120.50465165054617, "1巷(變電站)"],
+[22.669474714828986, 120.50515068744548, "2巷(萊爾富)"],
 [22.669527994104590, 120.50601986457411, "71巷"],
-[22.669598103781617, 120.50646334410705, "Y型路口"],
+[22.669598103781617, 120.50646334410705, "Y型路口(優福)"],
 
 ],[
 [22.674162379345020, 120.49997085344229, "屏市/民學路_廣東路"],
@@ -492,14 +493,14 @@ var tasks = [[
 [22.666087264583700, 120.50037043288955, "工業路","G60R40",,"G60R40"],
 // [22.665896314139818, 120.50069527139074, "民利35巷"],
 // [22.665710405430875, 120.50104072303125, "69巷北(舊屏監)"],		
-[22.665363252013350, 120.50161501550360, "殺蛇溪W(三號誌)","*G70R45",,"G70R45"],
-[22.664984049555727, 120.50229042787828, "殺蛇溪(三號誌)","G70R45"],
+[22.665363252013350, 120.50161501550360, "殺蛇溪W(連號)","G70R45",,"G70R45"],
+[22.664984049555727, 120.50229042787828, "殺蛇溪E(連號)","G70R45"],
 
 // [22.664943755849396, 120.50238328795535, "輔20米南",,,"ign"],//民福路
 [22.664221944275300, 120.50369274070279, "民生校區"],
 [22.663392101851596, 120.50520911909595, "菸廠路"],
 [22.662795198326197, 120.50622976219097, "瑞民路",,,"速限50北路邊"],		
-[22.662224935354054, 120.50727471537175, "歸仁路","*G45R70",,"G45R70"],
+[22.662224935354054, 120.50727471537175, "歸仁路","G45R70",,"G45R70"],
 [22.660830889356372, 120.50967927191667, "瑞屏街W(雙號誌)"],
 [22.660495963946264, 120.51025894060876, "66巷E(雙號誌)"],
 [22.659908488349370, 120.51121889337335, "和生路","G60R110",,"G60"],
@@ -6514,6 +6515,10 @@ var tasks = [[
 			return undefined;
 		};
 		
+		//傳回已行駛秒數
+		this.getRunPeriod = function(){
+			 return ((Date.now() - this.highTime)/1000).toFixed(0);
+		}
 			//只結算
 		this.myFinal = function(){
 			// addLog("myFinal");
@@ -6531,7 +6536,7 @@ var tasks = [[
 				// this.highStart = "" + points[nextPoint - vector][2];
 			}
 			this.meter.innerText = "0";
-			let secTmp = ((+new Date()) - theTime)/1000;
+			let secTmp = (Date.now() - theTime)/1000;
 			let strtmp = theChar + tools.secToHMS(secTmp);
 			// strtmp += addstr;
 
@@ -6542,8 +6547,21 @@ var tasks = [[
 	
 	class myPoint{}
 	var target = new myPoint();
-	var source = new myPoint();
 	
+	var source = new myPoint();
+
+	target.reset=function(){	 //設定新的目標點及其資訊
+try{//測試後移除(231206)
+	target.title = points[nextPoint][2];
+	let tmpIndex1 = target.title.indexOf("_");
+	if(tmpIndex1 <= 0){
+		// let tmpIndex2 = target.title.length - tmpIndex1;
+		target.title = target.title.substring(tmpIndex1-2);//起始,結束
+	}
+}catch(err){
+	addLog("target.reset():" + err.message);
+}
+	}
 	/*
 	function myPoint(){
 		this.init = function(info){
@@ -6559,6 +6577,7 @@ var tasks = [[
 		var signal = new signal01();
 		signal.clickTime=Date.now();
 		signal.recordStr = "";
+		
 		signal.click=function(){
 			let tmpStr = swColor();
 			tmpNow = Date.now();
@@ -7311,8 +7330,9 @@ function skipPoint(){
 // }
 try{//測試後移除(231206設置)
 	strtmp = "";
-	strtmp += ((+new Date())- speeder.highTime)/1000 + ", ";
+	strtmp += speeder.getRunPeriod() + ", ";
 	strtmp += points[nextPoint][2];
+	strtmp += "("+ target.title +")";
 }catch(err){
 	addLog("skipPoint():" + err.messang);
 }
@@ -7354,8 +7374,7 @@ try{//測試後移除(231206設置)
 			// ", 線" + Math.round(edgeVector) + 
 			"偏角" + Math.round(diff);
 			
-		if(diff > 5 && diff < 355){
-			
+		if(diff > 5 && diff < 355){			
 			addLog(strtmp+","+points[nextPoint+vector][2]);
 			addLog("<br>347");
 			searchPoint = true;
@@ -7364,7 +7383,7 @@ try{//測試後移除(231206設置)
 	}
 	
 	nextPoint += vector;//****************************	
-	
+
 	target.voiceStr = points[nextPoint][4-vector];	
 	while(target.voiceStr && target.voiceStr == "ign"){	//todo:改用迴圈, 以連續跳過多個ign
 		addLog("略:" + points[nextPoint][2]);
@@ -7374,7 +7393,7 @@ try{//測試後移除(231206設置)
 	}
 	
 	tools.setColor(target.voiceStr);
-	
+	target.reset();
 	//速限語音
 	enAlarm = true;
 	enAlarmHigh = true;
@@ -7670,14 +7689,17 @@ minDiff = 361;
 
 	addLog( speeder.myFinal());
 	// addLog("_");
+	target.reset();
 
 	index = points[0][2].indexOf("_");
 	if(index < 0){
 		index = points[0][2].length;
 	}
+
 	source.voiceStr = points[nextPoint - vector][4-vector];
 
 	strtmp = "新:" + points[0][2].substr(0,index);
+	strtmp += "(" + target.title + ")";
 	strtmp += ",從:" + points[nextPoint - vector][2];
 	if(source.voiceStr){
 		strtmp += ",["+ source.voiceStr + "]";
@@ -8069,6 +8091,7 @@ function showData(){
 			index = points[0][2].length;
 		}
 		str += "，" + points[nextPoint][2];// + "(" + points[0][2].substr(0,index)+")";
+		str += "(" + target.title +")";
 		// if(coords_speed*3.6 > 2){
 
 			// str += "<br/>時速："+ (coords_speed*3.6).toFixed(1) + "公里，";	//原單位：米/秒
