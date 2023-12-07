@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724c0"; 	</script>
+	<script> 		var version = "v0.724c0b"; 	</script>
 </head>
 
 <style> 
@@ -7397,7 +7397,7 @@ function skipPoint(){
 	}
 	
 	tools.setColor(target.voiceStr);
-	target.reset();
+	target.focus();
 	//速限語音
 	enAlarm = true;
 	enAlarmHigh = true;
@@ -7694,7 +7694,7 @@ minDiff = 361;
 
 	addLog( speeder.myFinal());
 	// addLog("_");
-	target.reset();
+	target.focus();
 
 	index = points[0][2].indexOf("_");
 	if(index < 0){
