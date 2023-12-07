@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724b9b"; 	</script>
+	<script> 		var version = "v0.724c0"; 	</script>
 </head>
 
 <style> 
@@ -6549,8 +6549,15 @@ var tasks = [[
 	var target = new myPoint();
 	
 	var source = new myPoint();
-
-	target.reset=function(){	 //設定新的目標點及其資訊
+	target.giveup = function(){
+	
+	}
+	
+	target.blur = function(){
+		
+	}
+	
+	target.focus=function(){	 //設定新的目標點及其資訊
 		let title = points[nextPoint][2];
 		let idx = title.indexOf("_");
 		if(idx >= 0){
@@ -6558,6 +6565,8 @@ var tasks = [[
 			title = title.substring(idx-2);//起始,結束
 		}
 		target.title = title;
+		// target.path
+		// target.pretitle
 	}
 	/*
 	function myPoint(){
@@ -7345,7 +7354,7 @@ function skipPoint(){
 	passPoint[0] = points[nextPoint][0];
 	passPoint[1] = points[nextPoint][1];
 	
-	//函式應切割為離開這一點及切換下一點
+	//函式應切割為離開blur這一點及前往focus下一點,target.blur().focus()
 
 	
 	// showMsg("a2");
@@ -7415,6 +7424,7 @@ function skipPoint(){
 		
 		centerCoords[0] = points[nextPoint][0];
 		centerCoords[1] = points[nextPoint][1];
+		
 		myCanvas.drawClearMap();
 		myCanvas.drawMiddleCross();
 		myCanvas.drawBaseMap();
@@ -7694,8 +7704,8 @@ minDiff = 361;
 	source.voiceStr = points[nextPoint - vector][4-vector];
 
 	strtmp = "新:";
-	// strtmp += points[0][2].substr(0,index);
-	strtmp += target.title;
+	strtmp += points[0][2].substr(0,index);
+	// strtmp += target.title;
 	strtmp += ",從:" + points[nextPoint - vector][2];
 	if(source.voiceStr){
 		strtmp += ",["+ source.voiceStr + "]";
@@ -7802,10 +7812,6 @@ function geoYes (evt){		//************************************************
 	prevPoint[0]= recentPoint[0];
 	prevPoint[1]= recentPoint[1];
 	
-// showMsg("geoYes(7)");
-	_todo._250判定脫離路線 = function(){}	//1.通過時判定一次 2.中途每點判一次待辦(調頭)
-	_todo._220搜尋新路線 = function(){}	//1.夾角最接近180度 2.加上距離待辦
-	_todo._230判定順逆向 = function(){}	//AAAAAAAA
 	_todo._270路線群組 = function(){}	//AAAAAAAA
 	//需要判定的項目
 	//1.通過點, 才能繼續導航
@@ -7837,7 +7843,8 @@ function geoYes (evt){		//************************************************
 			// incCount ++;
 			incDistMsg += "," + (preDist*1000).toFixed(0);
 			if(++incCount > 2){
-				tmpStr ="離:" + points[nextPoint][2];
+				// tmpStr ="離:" + points[nextPoint][2];
+				tmpStr ="離:" + target.title;
 				tmpStr += "," + (((+new Date()) - passTime)/1000).toFixed(0)+"秒";
 				if(target.voiceStr){
 					tmpStr += "[" + target.voiceStr +"]";
@@ -7858,11 +7865,7 @@ function geoYes (evt){		//************************************************
 		incDistMsg = "";
 		preDist = nextDist;
 	}
-	
-	// showMsg("c3");
-	showData();
-	
-	// showMsg("init(e)");
+	showData();	
 }
 
 function isSlow(speed){
