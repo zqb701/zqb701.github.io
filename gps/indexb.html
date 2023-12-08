@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724c4"; 	</script>
+	<script> 		var version = "v0.724c4b"; 	</script>
 </head>
 
 <style> 
@@ -6562,7 +6562,7 @@ var tasks = [[
 	
 	target.focus=function(){	 //設定新的目標點及其資訊
 		target.title = tools.getTitle( points[nextPoint][2] );
-		// target.path
+		target.path = tools.getPath( points[nextPoint][2] );
 		// target.pretitle
 	}
 	
@@ -6662,7 +6662,7 @@ var tasks = [[
 		if(idx >= 0){
 			// addLog("target.focus():"+ idx +"," + title);
 			// let tmpIndex2 = target.title.length - tmpIndex1;
-			title = title.substring(idx-2);//起始,結束
+			title = title.substring(idx-2);//起始,結束 為何要減2
 		}
 		return title
 	}
@@ -6670,8 +6670,6 @@ var tasks = [[
 	tools.getPath=function (path){
 		let idx = path.indexOf("_");
 		if(idx >= 0){
-			// addLog("target.focus():"+ idx +"," + title);
-			// let tmpIndex2 = target.title.length - tmpIndex1;
 			path = path.substr(0, idx);//起始,結束
 		}
 		return path;
