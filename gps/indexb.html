@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724c2"; 	</script>
+	<script> 		var version = "v0.724c3"; 	</script>
 </head>
 
 <style> 
@@ -7904,17 +7904,18 @@ try{	//測試後移除(231206設置)
 	if(enAlarmSpeedLimit){
 		if(nextDist < 0.050){
 			playVoice("測速");
-			addLog("測速50,距:"+nextDist.toFixed(0));
+			addLog("測速50,距:" + nextDist.toFixed(0));
 			enAlarmSpeedLimit = 0;
 		}
-		if( (enAlarmSpeedLimit==2) && (nextDist < 0.300) ){
+		
+		if( (enAlarmSpeedLimit == 2) && (nextDist < 0.300) ){
 			playVoice("測速");
-			addLog("測速300,距:"+nextDist.toFixed(0));
+			addLog("測速300,距:" + nextDist.toFixed(0));
 			enAlarmSpeedLimit --;
 		}	
 	}
 }catch(err){
-	addLog("playAlarm():" +err.messang);
+	addLog("err@playAlarm():" +err.message);
 }
 	/*
 try{	
