@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724c4b"; 	</script>
+	<script> 		var version = "v0.724c5"; 	</script>
 </head>
 
 <style> 
@@ -6662,7 +6662,7 @@ var tasks = [[
 		if(idx >= 0){
 			// addLog("target.focus():"+ idx +"," + title);
 			// let tmpIndex2 = target.title.length - tmpIndex1;
-			title = title.substring(idx-2);//起始,結束 為何要減2
+			title = title.substring(idx);//起始,結束 
 		}
 		return title
 	}
@@ -7916,15 +7916,15 @@ function playAlarm(){
 try{	//測試後移除(231206設置)
 	if(enAlarmSpeedLimit){
 		if(nextDist < 0.050){
-			playVoice("測速");
-			addLog("測速50,距:" + nextDist.toFixed(0));
 			enAlarmSpeedLimit = 0;
+			playVoice("測速");
+			addLog("測速50,距:" + nextDist);
 		}
 		
 		if( (enAlarmSpeedLimit == 2) && (nextDist < 0.300) ){
-			playVoice("測速");
-			addLog("測速300,距:" + nextDist.toFixed(0));
 			enAlarmSpeedLimit --;
+			playVoice("測速");
+			addLog("測速300,距:" + nextDist);
 		}	
 	}
 }catch(err){
