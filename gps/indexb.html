@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724c6b"; 	</script>
+	<script> 		var version = "v0.724c6c"; 	</script>
 </head>
 
 <style> 
@@ -7769,13 +7769,13 @@ minDiff = 361;
 
 	strtmp = "新:";
 	strtmp += points[0][2].substr(0,index);
-	strtmp += "(" + path.title +")";
+	// strtmp += "(" + path.title +")";
 	
 	strtmp += ",從:" +  points[nextPoint - vector][2];
 	if(source.voiceStr){
 		strtmp += ",["+ source.voiceStr + "]";
 	}
-		strtmp += ",角:" + bigAng[0].toFixed(0);	//收集資訊, 以決定角度太小者要定時重找。
+	// strtmp += ",角:" + bigAng[0].toFixed(0);	//收集資訊, 以決定角度太小者要定時重找。
 
 		// strtmp += (Date.now()-funcTime)/1000 + "秒";
 					 
@@ -7910,11 +7910,12 @@ function geoYes (evt){		//************************************************
 			if(++incCount > 2){
 				// tmpStr ="離:" + points[nextPoint][2];
 				tmpStr ="離:" + target.title;
+				// if(target.voiceStr){
+					// tmpStr += "[" + target.voiceStr +"]";
+				// }
+				
 				tmpStr += "," + (((+new Date()) - passTime)/1000).toFixed(0)+"秒";
-				if(target.voiceStr){
-					tmpStr += "[" + target.voiceStr +"]";
-				}
-				tmpStr += incDistMsg;
+				tmpStr += "(" + incDistMsg + ")";
 				addLog(tmpStr);
 				
 				// addLog("_");
