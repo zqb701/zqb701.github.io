@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724c6"; 	</script>
+	<script> 		var version = "v0.724c6b"; 	</script>
 </head>
 
 <style> 
@@ -7731,7 +7731,7 @@ minDiff = 361;
 
 	if(taskID != oldTask){
 		initTask();
-		playVoice('新任務');
+		playVoice("新任務");
 	}
 	
 
@@ -7756,11 +7756,10 @@ minDiff = 361;
 	}	
 
 	addLog( speeder.myFinal());
-	// addLog("_");
+
 	target.focus();
-		// target.title = tools.getTitle();
 	path.focus();
-		
+
 	index = points[0][2].indexOf("_");
 	if(index < 0){
 		index = points[0][2].length;
@@ -7770,9 +7769,9 @@ minDiff = 361;
 
 	strtmp = "新:";
 	strtmp += points[0][2].substr(0,index);
-	strtmp += path.title;
+	strtmp += "(" + path.title +")";
 	
-	strtmp += ",從:" + tools.getTitle( points[nextPoint - vector][2] );
+	strtmp += ",從:" +  points[nextPoint - vector][2];
 	if(source.voiceStr){
 		strtmp += ",["+ source.voiceStr + "]";
 	}
@@ -7783,7 +7782,7 @@ minDiff = 361;
 	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
 			// ",路向:" + edgeVector.toFixed(0);
 	addLog(strtmp + "<br>");
-	
+
 	// showMsg("nP(8)");
 	target.voiceStr = points[nextPoint][4-vector];
 	while(target.voiceStr && target.voiceStr == "ign"){
