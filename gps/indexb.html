@@ -6936,9 +6936,13 @@ var tasks = [[
 		var signal = new signal01();
 		signal.clickTime=Date.now();
 		signal.recordStr = "";
+		signal.clicked = false;//避免手機的touchstart觸發後又觸發click
 		
-		signal.click=function(event){
-
+		signal.click=function(e){
+			if(signal.clicked){
+				return;
+			}
+			signal.clicked = true;
 			
 			let tmpStr = swColor();
 			tmpNow = Date.now();
@@ -6950,8 +6954,13 @@ var tasks = [[
 			// if(tmpStr){
 				// addLog(tmpStr);
 			// }			
-			event.preventDefault();	//停止事件的默認動作(放函式結尾)
-			event.stopPropagation();//阻止事件冒泡(放函式結尾)
+			signal.clicked = false;
+			// try{
+				// e.preventDefault();	//停止事件的默認動作(放函式結尾)
+				// e.stopPropagation();//阻止事件冒泡(放函式結尾)
+			// }catch(err){
+				// addLog(err.message);
+			// }
 		}
 		
 		class tools01{}
