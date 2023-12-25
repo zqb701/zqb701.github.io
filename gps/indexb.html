@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724d1"; 	</script>
+	<script> 		var version = "v0.724d2"; 	</script>
 </head>
 
 <style> 
@@ -6892,8 +6892,8 @@ var tasks = [[
 		signal.clickTime=Date.now();
 		signal.recordStr = "";
 		
-		signal.click=function(){
-			
+		signal.click=function(event){
+
 			let tmpStr = swColor();
 			tmpNow = Date.now();
 			tmpStr = ((tmpNow - signal.clickTime)/1000).toFixed(0);
@@ -6904,6 +6904,8 @@ var tasks = [[
 			// if(tmpStr){
 				// addLog(tmpStr);
 			// }			
+								event.preventDefault();	//停止事件的默認動作
+		event.stopPropagation();//阻止事件冒泡
 		}
 		
 		class tools01{}
