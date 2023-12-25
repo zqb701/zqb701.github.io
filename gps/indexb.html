@@ -29,6 +29,10 @@
 		text-align: center;	//水平置中
 		top: 0px;
 		line-height: var(--size1);//文字垂直置中(行高等於容器高度),單行適用
+		
+		//禁止選取/反白
+		//-webkit-user-select:none;
+		user-select:none;
 	}
 </style>  
 
@@ -54,7 +58,7 @@
 		>↻</div>		
 
 		<div class="cmdButton"
-			id="march" onclick="signal.click();" ontouchstart="e.preventDefault(); signal.click();"
+			id="march" onmousedown="signal.click();" ontouchstart="signal.click();"
 			style="font-size:150px;  border-radius:50%;
 			width: var(--size2); height: var(--size2); line-height: var(--size2);"
 		>0</div>
@@ -8499,6 +8503,15 @@ function displayNotification(){
 var IntervalID;
 var isMarch = -1;
 var march = document.getElementById("march");
+	// march.addEventListener("click", "signalclick");
+	// march.addEventListener("mousedown", "signalclick");
+	// march.addEventListener("touchstart", "signalclick");
+	function signalclick(event){
+		alert("a");
+		// event.preventDefault();	//停止事件的默認動作
+		// event.stopPropagation();//阻止事件冒泡
+		signal.click();
+	}
 var timeNum = [33,,55];	//TODO 連續號誌使用同一時序。轉向時兩個值互換。
 var colorList = ["red",,"lime"];	//萊姆色
 var charList = ["R",,"G"];
