@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724d61"; 	</script>
+	<script> 		var version = "v0.724d7"; 	</script>
 </head>
 
 <style> 
@@ -62,7 +62,7 @@
 		>↻</div>		
 
 		<div class="cmdButton" id="march"
-			onmousedown="signal.click();" _ontouchstart="signal.click();"
+			_onmousedown="signal.click();" ontouchstart="signal.click();"
 			style="font-size:150px;  border-radius:50%;
 			width: var(--size2); height: var(--size2); line-height: var(--size2);"
 		>0</div>
@@ -6958,6 +6958,7 @@ var tasks = [[
 			// try{
 				// e.preventDefault();	//停止事件的默認動作(放函式結尾)
 				// e.stopPropagation();//阻止事件冒泡(放函式結尾)
+				//e.stopImmediatePropagation();//其他同一層級的 listener 也不要被執行
 			// }catch(err){
 				// addLog(err.message);
 			// }
