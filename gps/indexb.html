@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724d91"; 	</script>
+	<script> 		var version = "v0.724d92"; 	</script>
 </head>
 
 <style> 
@@ -8222,11 +8222,12 @@ function geoYes (evt){		//************************************************
 			strtmp += ",距:" + nextDist*1000 + "米";
 			addLog(strtmp);
 		}
-	
+	/*
 	if(speedKpH < 1){
 		document.getElementById("speed").innerText = strGPS.charAt(0);;
 		return ;
 	}
+	*/
 	// showMsg("c2");
 	
 	rctSpeedLevel = Math.floor(speedKpH / 10);
@@ -8245,7 +8246,7 @@ function geoYes (evt){		//************************************************
 	}
 	preSpeedLevel = rctSpeedLevel;
 
-	
+	addLog("geoYes (evt):debug01");
 	// showMsg("c1.5");
 	// showMsg("geoYes(3)");
 	if(searchPoint ){
@@ -8254,7 +8255,7 @@ function geoYes (evt){		//************************************************
 		incCount = 0;
 		incDistMsg = "";
 	}
-	
+	addLog("geoYes (evt):debug02");
 	myCanvas.drawLine(recentPoint[0], recentPoint[1], prevPoint[0], prevPoint[1],"white", 3);
 	prevPoint[0]= recentPoint[0];
 	prevPoint[1]= recentPoint[1];
@@ -8271,7 +8272,7 @@ function geoYes (evt){		//************************************************
 	
 	// strtmp = ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
 	// addLog(strtmp);
-	
+	addLog("geoYes (evt):debug03");
 	if (nextDist > preDist ){	//遠離中
 		// if(nextDist < (evt.coords.speed/1000*2 + 0.020) ){
 		// if(nextDist < 0.04 ){//40公尺
@@ -8286,6 +8287,7 @@ function geoYes (evt){		//************************************************
 			// showMsg("c3");
 			// window.setTimeout(skipPoint, 1000);//等轉彎完成??
 		}else{
+			addLog("geoYes (evt):debug04");
 			fcolor = "color='red'";
 			// incCount ++;
 			incDistMsg += "," + (preDist*1000).toFixed(0);
@@ -8309,12 +8311,14 @@ function geoYes (evt){		//************************************************
 			preDist = nextDist;
 		}
 	}else{		//接近中
+	addLog("geoYes (evt):debug05");
 		playAlarm();
 		incCount = 0;
 		incDistMsg = "";
 		preDist = nextDist;
 	}
 	showData();	
+	addLog("geoYes (evt):debug06");
 }
 
 function isSlow(speed){
