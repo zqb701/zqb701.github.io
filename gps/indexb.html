@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724d9"; 	</script>
+	<script> 		var version = "v0.724d91"; 	</script>
 </head>
 
 <style> 
@@ -7000,8 +7000,7 @@ var tasks = [[
 			swColor();
 			playVoice("當");
 			//取得切換後的顏色
-			let presentColorChar = charList[1+isMarch];
-			
+			let presentColorChar = charList[1+isMarch];			
 			//為了取得兩次手動的間距時間
 			let tmpNow = Date.now();
 			let tmpStr = ((tmpNow - signal.clickTime)/1000).toFixed(0);
@@ -7776,7 +7775,12 @@ function skipPoint(){
 		strtmp += ",燈:" + signal.recordStr;	//手動時的記錄
 		signal.recordStr = "";
 	}
-	strtmp += "["+charList[1+isMarch] + count +"]";		//通過當下的燈號
+	
+try{
+	strtmp += "["+ charList[1+isMarch] + count + "]";		//通過當下的燈號
+}catch(error){
+	addLog("skipPoint():" + error.message);
+}	
 	// strtmp += ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
 	
 	passPoint[0] = points[nextPoint][0];
