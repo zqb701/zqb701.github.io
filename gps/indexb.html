@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724d92"; 	</script>
+	<script> 		var version = "v0.724d93"; 	</script>
 </head>
 
 <style> 
@@ -7754,7 +7754,7 @@ function initTask(){
 }	
 
 function skipPoint(){
-
+	addLog("skipPoint():start");
 // if(voiceOK){//231006,通過後預設為無語音
 	// if(points[nextPoint][4-vector]){
 		// playVoice("通過");
@@ -7788,7 +7788,7 @@ try{
 	
 	//函式應切割為離開blur這一點及前往focus下一點,target.blur().focus()
 
-	
+	addLog("skipPoint():01");
 	// showMsg("a2");
 	if(nextPoint+vector == -1 || nextPoint+vector == points.length){
 		// strtmp += "(" + target.title + ")";
@@ -7818,7 +7818,7 @@ try{
 			return false;
 		}
 	}
-	
+	addLog("skipPoint():02");
 	nextPoint += vector;//****************************	
 
 	target.voiceStr = points[nextPoint][4-vector];	
@@ -7832,7 +7832,7 @@ try{
 	tools.setColor(target.voiceStr);//併到focus
 	target.focus();
 
-		
+		addLog("skipPoint():03");
 	//速限語音
 	enAlarm = true;
 	enAlarmHigh = true;
@@ -7870,6 +7870,7 @@ try{
 	preDist = getDistance(recentPoint,  points[nextPoint]);
 	// addLog("skipPoint():preDist=" + preDist);
 	// preDist = -1;
+	addLog("skipPoint():04");
 	return true;
 }
 
@@ -8222,12 +8223,12 @@ function geoYes (evt){		//************************************************
 			strtmp += ",距:" + nextDist*1000 + "米";
 			addLog(strtmp);
 		}
-	/*
+	
 	if(speedKpH < 1){
 		document.getElementById("speed").innerText = strGPS.charAt(0);;
 		return ;
 	}
-	*/
+	
 	// showMsg("c2");
 	
 	rctSpeedLevel = Math.floor(speedKpH / 10);
@@ -8246,7 +8247,7 @@ function geoYes (evt){		//************************************************
 	}
 	preSpeedLevel = rctSpeedLevel;
 
-	addLog("geoYes (evt):debug01");
+	// addLog("geoYes (evt):debug01");
 	// showMsg("c1.5");
 	// showMsg("geoYes(3)");
 	if(searchPoint ){
@@ -8255,7 +8256,7 @@ function geoYes (evt){		//************************************************
 		incCount = 0;
 		incDistMsg = "";
 	}
-	addLog("geoYes (evt):debug02");
+	// addLog("geoYes (evt):debug02");
 	myCanvas.drawLine(recentPoint[0], recentPoint[1], prevPoint[0], prevPoint[1],"white", 3);
 	prevPoint[0]= recentPoint[0];
 	prevPoint[1]= recentPoint[1];
@@ -8272,8 +8273,8 @@ function geoYes (evt){		//************************************************
 	
 	// strtmp = ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
 	// addLog(strtmp);
-	addLog("geoYes (evt):debug03");
 	if (nextDist > preDist ){	//遠離中
+	addLog("geoYes (evt):debug03");
 		// if(nextDist < (evt.coords.speed/1000*2 + 0.020) ){
 		// if(nextDist < 0.04 ){//40公尺
 		if(preDist < 0.019 ){//40公尺, fixDate:20230123, 以preDist取代nextDist
