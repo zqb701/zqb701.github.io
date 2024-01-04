@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724d96"; 	</script>
+	<script> 		var version = "v0.724d97"; 	</script>
 </head>
 
 <style> 
@@ -6913,6 +6913,7 @@ var tasks = [[
 			//只結算
 		this.myFinal = function(){
 			// addLog("myFinal");
+			let theTime;
 			if(this.slowTime){//只有關閉GUI才執行
 				theTime = this.slowTime;
 				theChar = "停b:";
@@ -8103,12 +8104,7 @@ minDiff = 361;
 	if(taskID != oldTask){
 		initTask();
 		playVoice("新任務");
-	
-		try{
-			speeder.myFinal();
-		}catch(error){
-			addLog("error_nearPoint()_speeder.myFinal():" + error.message); 
-		}
+		speeder.myFinal();
 	}
 	
 
