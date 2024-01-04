@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724d93"; 	</script>
+	<script> 		var version = "v0.724d94"; 	</script>
 </head>
 
 <style> 
@@ -8223,12 +8223,12 @@ function geoYes (evt){		//************************************************
 			strtmp += ",距:" + nextDist*1000 + "米";
 			addLog(strtmp);
 		}
-	
+	/*
 	if(speedKpH < 1){
 		document.getElementById("speed").innerText = strGPS.charAt(0);;
 		return ;
 	}
-	
+	*/
 	// showMsg("c2");
 	
 	rctSpeedLevel = Math.floor(speedKpH / 10);
