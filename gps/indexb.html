@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724d94"; 	</script>
+	<script> 		var version = "v0.724d95"; 	</script>
 </head>
 
 <style> 
@@ -8024,7 +8024,7 @@ myCanvas.drawLine=function (lat0, lon0, lat1, lon1, c, w){
 function nearPoint(){
 
 			
-	// console.log("nearPoint(start)");
+	console.log("nearPoint(start)");
 
 	// var shortstDist = getDistance(recentPoint,  tasks[0][0]);
 	var bigAng = [0,0];
@@ -8206,7 +8206,7 @@ minDiff = 361;
 }
 
 
-function geoYes (evt){		//************************************************
+function geoYes (evt){
 	// addLog("c1");
 	strGPS = strGPS.substr(1,4)+strGPS.charAt(0);
 	
@@ -8313,10 +8313,14 @@ function geoYes (evt){		//************************************************
 		}
 	}else{		//接近中
 	addLog("geoYes (evt):debug05");
+try{
 		playAlarm();
 		incCount = 0;
 		incDistMsg = "";
 		preDist = nextDist;
+}catch(error){
+	addLog("geoYes (evt):" + error.message);
+}
 	}
 	showData();	
 	addLog("geoYes (evt):debug06");
