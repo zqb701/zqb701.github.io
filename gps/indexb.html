@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724d95"; 	</script>
+	<script> 		var version = "v0.724d96"; 	</script>
 </head>
 
 <style> 
@@ -118,7 +118,7 @@
 </script>
 
 <script>
-"use strict";
+// "use strict";
 //TODO 到指定網站下載gps檔(並cache)
 function _tasks_start(){ } //本行給notepad++的函式清單用(大引號不可靠在一起)
 
@@ -7754,7 +7754,7 @@ function initTask(){
 }	
 
 function skipPoint(){
-	addLog("skipPoint():start");
+	// addLog("skipPoint():start");
 // if(voiceOK){//231006,通過後預設為無語音
 	// if(points[nextPoint][4-vector]){
 		// playVoice("通過");
@@ -7776,11 +7776,9 @@ function skipPoint(){
 		signal.recordStr = "";
 	}
 	
-try{
+
 	strtmp += "["+ charList[1+isMarch] + count + "]";		//通過當下的燈號
-}catch(error){
-	addLog("skipPoint():" + error.message);
-}	
+
 	// strtmp += ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
 	
 	passPoint[0] = points[nextPoint][0];
@@ -7788,7 +7786,7 @@ try{
 	
 	//函式應切割為離開blur這一點及前往focus下一點,target.blur().focus()
 
-	addLog("skipPoint():01");
+	// addLog("skipPoint():01");
 	// showMsg("a2");
 	if(nextPoint+vector == -1 || nextPoint+vector == points.length){
 		// strtmp += "(" + target.title + ")";
@@ -7818,7 +7816,7 @@ try{
 			return false;
 		}
 	}
-	addLog("skipPoint():02");
+	// addLog("skipPoint():02");
 	nextPoint += vector;//****************************	
 
 	target.voiceStr = points[nextPoint][4-vector];	
@@ -7832,7 +7830,7 @@ try{
 	tools.setColor(target.voiceStr);//併到focus
 	target.focus();
 
-		addLog("skipPoint():03");
+		// addLog("skipPoint():03");
 	//速限語音
 	enAlarm = true;
 	enAlarmHigh = true;
@@ -7870,7 +7868,7 @@ try{
 	preDist = getDistance(recentPoint,  points[nextPoint]);
 	// addLog("skipPoint():preDist=" + preDist);
 	// preDist = -1;
-	addLog("skipPoint():04");
+	// addLog("skipPoint():04");
 	return true;
 }
 
@@ -8024,7 +8022,7 @@ myCanvas.drawLine=function (lat0, lon0, lat1, lon1, c, w){
 function nearPoint(){
 
 			
-	console.log("nearPoint(start)");
+	// console.log("nearPoint(start)");
 
 	// var shortstDist = getDistance(recentPoint,  tasks[0][0]);
 	var bigAng = [0,0];
@@ -8223,12 +8221,12 @@ function geoYes (evt){
 			strtmp += ",距:" + nextDist*1000 + "米";
 			addLog(strtmp);
 		}
-	/*
+	
 	if(speedKpH < 1){
 		document.getElementById("speed").innerText = strGPS.charAt(0);;
 		return ;
 	}
-	*/
+	
 	// showMsg("c2");
 	
 	rctSpeedLevel = Math.floor(speedKpH / 10);
@@ -8274,7 +8272,7 @@ function geoYes (evt){
 	// strtmp = ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
 	// addLog(strtmp);
 	if (nextDist > preDist ){	//遠離中
-	addLog("geoYes (evt):debug03");
+	// addLog("geoYes (evt):debug03");
 		// if(nextDist < (evt.coords.speed/1000*2 + 0.020) ){
 		// if(nextDist < 0.04 ){//40公尺
 		if(preDist < 0.019 ){//40公尺, fixDate:20230123, 以preDist取代nextDist
@@ -8288,7 +8286,7 @@ function geoYes (evt){
 			// showMsg("c3");
 			// window.setTimeout(skipPoint, 1000);//等轉彎完成??
 		}else{
-			addLog("geoYes (evt):debug04");
+			// addLog("geoYes (evt):debug04");
 			fcolor = "color='red'";
 			// incCount ++;
 			incDistMsg += "," + (preDist*1000).toFixed(0);
@@ -8312,18 +8310,16 @@ function geoYes (evt){
 			preDist = nextDist;
 		}
 	}else{		//接近中
-	addLog("geoYes (evt):debug05");
-try{
+	// addLog("geoYes (evt):debug05");
+
 		playAlarm();
 		incCount = 0;
 		incDistMsg = "";
 		preDist = nextDist;
-}catch(error){
-	addLog("geoYes (evt):" + error.message);
-}
+
 	}
 	showData();	
-	addLog("geoYes (evt):debug06");
+	// addLog("geoYes (evt):debug06");
 }
 
 function isSlow(speed){
@@ -8396,7 +8392,7 @@ try{
 	//		10公里,3秒,約4.1*3公尺,。
 	//最後加12公尺給單車時,路中與路邊的距離補償用		
 	if(enAlarm ){
-		minDist = coords_speed/1000 * speedKpH/10*2 + 0.015;
+		let minDist = coords_speed/1000 * speedKpH/10*2 + 0.015;
 		if(nextDist < 0.05 || nextDist < minDist){
 			// showMsg("b3");
 			playVoice(target.voiceStr);
