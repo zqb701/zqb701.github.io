@@ -1,0 +1,117 @@
+﻿javascript
+ "use strict";	//嚴格模式, 可以只用在函數中,前後用單引號亦可。
+ 
+保留字
+
+運算子
+	小刮號(), 中刮號[], 大刮號{}, 雙引號(單引號)
+	+, -, *, /, %	加減乘除餘
+	-轉負值
+	i++, i--, ++i, --i 
+	** 次方	(有//嗎?)
+	=, +=, -=, *=, /=, %=
+	!, &&, ||, >,<, >=, <=, ==,!=, ===, !==
+	+	字串連接
+	+new Date()	轉型為數字
+	~~取整數
+
+變數
+const, let, ver,
+	數字
+		n = parseInt(str[,n進位]); //轉數字,從開頭取用數字字元
+		Nunber	//自動去掉前後空白, 空字串含全部空格轉為零,則 true 為 1、false 為 0,  null，則回傳 0
+	字串
+		idx=a.indexOf("_"[,起始]);	//第一個字元傳回「0」
+		b=a.substring(開始[, 結束]);	//後參數較小時會自動對換
+		b=a.substr(開始[, 長度]);	//可從字尾算起,-1為最後一個字元
+		L=a.length;	//不加刮號
+		d=toStiring([n進位]);	//
+		
+		replace();	//取代(支援正規式)
+		match;//傳回所有符合字串的陣列(支援正規式)
+		search(支援正規式)
+		split(支援正規式)
+				
+	正規式
+		https://www.knowledgefree.idv.tw/2019/11/jsregex-regular-expressionjavascript.html
+		const regex = /\d{5}/;		//規則(範圍為連續5個數字)
+		regex.test(str);					//是否找到相符字串,傳回true或false, 
+		regex.exec(str);					//傳回詳細資訊???
+		
+	
+	
+	日期
+		t=Date.now();
+	陣列Array
+const aArray = [];
+aArray[0] = 1;
+aArray[6] = 3;
+
+const bArray = [1, , 3];
+
+const aArray = [1, 2, 3]
+const copyArray = [...aArray]
+
+const aArray = [1, 2, 3]
+const bArray = [5, 6, ...aArray, 8, 9]
+
+sArray.length = 2
+
+流程
+if(){	//false, null, undefined, 0, 空字串, ...
+}else{
+}
+alert((1 == 1 ? 'Y' : 'N'))	//條件運算子/三元運算子
+
+while (condition) {
+  // code block to be executed
+}
+
+do {
+  // code block to be executed
+}while (condition);
+
+for (;cars[i];) {
+  text += cars[i];
+  i++;
+}
+以上三者可用continue;跳下一循環。或用break;跳出
+try{
+    throw new Error('Whoops!');
+}catch(err){
+    console.log(err.name + ': ' + err.message);
+} finally {
+    //不管錯誤與否都會被執行的區塊
+}
+計時器
+事件
+
+內建函式
+alert(字串);
+a.toFixed(0);	(a*3).toFixed(0);
+
+內建物件
+Math
+Date日期與時間
+JSON
+Array.isArray(v);
+
+BOM
+Browser Object Model，window 最頂層，下有 document（DOM）、history、location、navigator、screen
+
+DOM
+Document Object Model，元素(節點))與選擇器。屬性,事件,方法。
+
+API
+
+
+	Fetch	抓網頁
+自定函式
+自定物件
+
+其它保留字
+
+特殊符號:https://ytliu0.pixnet.net/blog/post/230307977
+色彩:
+
+CSS Flexbox元件排列:https://www.oxxostudio.tw/articles/201501/css-flexbox.html
