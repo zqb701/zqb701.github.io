@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724e03"; 	</script>
+	<script> 		var version = "v0.724e04"; 	</script>
 </head>
 
 <style> 
@@ -7822,7 +7822,7 @@ function skipPoint(){
 	
 	if(signal.recordStr){
 try{
-		if("輔彎".indexOf(target.title.substr(0,1)) ){ 	//標題開頭為特定字元
+		if("輔彎".indexOf(target.title.substr(0,1)) > -1){ 	//標題開頭為特定字元
 			strtmp += "x";
 		}
 		if(signal.recordStr.match(/,/g) == "," ){			//或, 記錄只有一個逗號 (自動轉型,省略toString())
