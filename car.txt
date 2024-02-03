@@ -4,8 +4,8 @@ AlfaRomeo Giulia
 AstonMartin
 AUDI tt, A1/3/4/5/7, R8, Q2/3/8,S4
 Bentley Bentayga
-Benz smart45(600CC,無動力方向盤), A/CLA /GLA, GLC, B,C, GLC43, GLE, EQS, Sxx, CLA45, SL 63, CLS
-BMW	118, 2AT, 318, 4xx, 5, 6, 7, 8, X1/3/5, X2/4/6, E30/60/90, GP?, i5, G21/60/61/70, M60, Alpina B3
+Benz smart45(600CC,無動力方向盤), A/CLA /GLA, GLC, GLB,  B,C, GLC43, GLE, EQS, Sxx, CLA45, SL 63, CLS
+BMW	118, 2AT, 318, 4xx, 5, 6, 7, 8, X1/3/5, X2/4/6, E30/60/90, GP?, i5, G21/60/61/70, M60, Alpina B3, Z1
 Buick
 BYD
 Chevrolet Camaro
@@ -19,8 +19,8 @@ ford fiesta, tierra/focus, mondeo, puma, escape/kuga, escort, mustang, Ranger, A
 Ferrari法拉利
 Genesis G70
 GM通用
-Honda Brio, Fit, city, civic(七代稱Freio, Si版), accord, HR-v, HR-v, cr-z(CR-X), Odyssey.., Element, perlude, STREAM
-hyundai verna, picanto, elantra, sonata,  venue,  kano, tuvson, Santa Fe, velaster, i10, i30, i35, i40, veloster, Grandeur
+Honda Brio, Fit, city, civic(七代稱Freio, Si版), accord, HR-v, HR-v, cr-z(CR-X), Odyssey.., Element, perlude, STREAM, type R, S2000, 
+hyundai verna, picanto, elantra, sonata,  venue,  kano, tuvson, Santa Fe, velaster, i10, i20, i30, i35, i40, veloster, Grandeur
 
 infiniti QX55, G35/37, M25/37, 
 JAGUAR F-PACE , R75
@@ -34,7 +34,7 @@ Mahindra kuv100,
 Maserati Ghibli, GranTurismo, 
 mazda 2,3(四代),premacy, 5(停產),6,cx-3/4/5,CX-30/60/70/90, MPV, MX-3
 McLaren
-MG zs, hs, MG7
+MG zs, hs, MG3, MG4, MG5, MG7, Cyberster
 Mini 
 mitsubishi galant, sportback, eclipse, coltplus, outland, savrin, ASX
 
