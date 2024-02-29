@@ -1,69 +1,73 @@
 ﻿車款
 Acura Legend, Integra, NSX, RDX, 
-AlfaRomeo Giulia
+AlfaRomeo Giulia, 156, 
 AstonMartin
-AUDI tt, A1/3/4/5/7, R8, Q2/3/8,S4
+AUDI A1/3/4/5/7, R8, TT, Q2/3/8,S4/5,
 Bentley Bentayga
 Benz smart45(600CC,無動力方向盤), A/CLA /GLA, GLC, GLB,  B,C, GLC43, GLE, EQS, Sxx, CLA45, SL 63, CLS
-BMW	118, 2AT, 318, 4xx, 5, 6, 7, 8, X1/3/5, X2/4/6, E30/60/90, GP?, i5, G21/60/61/70, M60, Alpina B3, Z1
+BMW	118, 2AT, 318, 4xx, 5, 6, 7, 8, X1/3/5, X2/4/6, E30/60/90, GP?, i5, G21/60/61/70, M60, Alpina B3, Z1/Z4, 
+Bugatti Veyron, Chiron
 Buick
 BYD
-Chevrolet Camaro
+Chery(奇瑞) FRESH(全台349輛), Apola
+Chevrolet Camaro, bolt, Equinox, 
 Chrysler
 citroen C1, C2, C3, C4, C5, Traction Avant, Berlingo, 
-daihatsu terios, sirion
+daihatsu terios, sirion,coo,
 
 E
-FIAT 500, idea, rapid
-ford fiesta, tierra/focus, mondeo, puma, escape/kuga, escort, mustang, Ranger, Aztec, 千里馬,天王星,金美滿,全壘打
-Ferrari法拉利 F430,
+FIAT punto, 500, idea, rapid,
+ford fiesta, tierra/focus, mondeo, puma, escape/kuga, escort, mustang, Ranger, Aztec, 千里馬, 天王星, 金美滿, Laser全壘打TX3, Tourneo, FLEX, evos, liata
+Ferrari法拉利 F430/F355, Purosangue, 
 Genesis G70
 GM通用
 Honda Brio, Fit, city, civic(七代稱Freio, Si版), accord(k7 coupe EX) , HR-v, HR-v, cr-z(CR-X), Odyssey.., Element, perlude, STREAM, type R, S2000, 
-hyundai verna, picanto, elantra, sonata,  venue,  kano, tuvson, Santa Fe, velaster, i10, i20, i30, i35, i40, veloster, Grandeur
+hyundai verna, picanto, elantra, sonata,  venue,  kano, tuvson, Santa Fe, velaster, i10, i20, i30, i35, i40, veloster, Grandeur, casper,
 
-infiniti QX55, G35/37, M25/37, 
-JAGUAR F-PACE , R75
+infiniti QX55, G35/37, M25/37, EX35, 
+JAGUAR F-PACE , R75, XKR
 kia eurostar/atos, morning, stonic, soul, carens, sportage, optima, ceed系列, Sorento, Ray, stinger,EV9, Carnival
 Lamborghini Lanzador, urus
-Land Rover RangeRover, defender, discovery, Velar
-LEXUS LBX, UX, NX, RX, GX550, LX, TX, ct, iS, es, gs, , RZ, ML, LX、GX及TX
+Land Rover RangeRover, defender, discovery, Velar, EVOQUE
+LEXUS LBX, UX, NX, RX, GX550, LX, TX, ct, iS, es, gs, , RZ, ML, LX、GX及TX, LFA
 Lotus
-Luxgen	s3, s5, u5, u6, u7, m7, urx
-Mahindra kuv100,
-Maserati Ghibli, GranTurismo, 
+Luxgen	s3, s5, u5, u6, u7, v7, m7, urx
+Mahindra kuv100, 卡車
+Maserati Ghibli, GranTurismo, Quattroporte
 mazda 2,3(四代),premacy, 5(停產),6,cx-3/4/5,CX-30/60/70/90, MPV, MX-3
 McLaren
 MG zs, hs, MG3, MG4, MG5, MG7, Cyberster
-Mini 
-mitsubishi galant, sportback, eclipse, coltplus, outland, savrin, ASX
+Mini Cooper
+mitsubishi galant, sportback, eclipse, colt/coltplus, outland, savrin, ASX, zinger
 
-Nissan juke, tiida, kicks, march, sentra, livina, X-trail, altima, 240Z/350Z/370Z, gtr, bluebird, cerfiro,teana, QRV, Skyline, SE-R, Primera, silvia, 
+Nissan juke, tiida, kicks, march, sentra, livina, X-trail, altima, 240Z/350Z/370Z, gtr, bluebird, cerfiro,teana, QRV, Skyline, SE-R, Primera, silvia, ad, Quest, Rogue, 
 Opel Astra, Mokka, Grandland, tigar, Zafira, kadett
 peugeot 2008, 3008, 408, 308, 108, 5008
-Pontiac Grand AM
+Pontiac Grand AM, 龐蒂克火鳥共, 
 Porsche Macan, taycan, cayenne
+Proton persona, gen2(賤免), Iriz, perdana, Saga, Savvy, X70, Jumbuck, Jumbuck
 
-RENAULT 雷諾9號、紅龍、R19, ZOE, Clio, megane, Scenic
+Range Rover Evoque
+RENAULT 雷諾9號, 11、紅龍、R19, ZOE, Clio, megane, Scenic, 
 RollsRoyce
 saab 9-3, 9000, 95, 93, 
 skoda citigo, superb, fabis, Fabia 1.2TSi/1.6NA, Octavia, Kamiq, kodiaq, yeti, Rapid
 smart two four ROADSTER
 SsangYong
 Subaru impreza, WRX, outbark, Forest, XV, BRZ, legacy, Levorg
-Suzuki Swift、Swift、Baleno、Vitara、SX4, jimmy, ignis, solio, alto,liana, Kizashi, cappuccino
+Suzuki Swift、Swift、Baleno、Vitara、SX4, jimmy, ignis, solio, alto,liana, Kizashi, cappuccino, Ertiga, Cultus福星, 
 雪佛蘭 大黃蜂
 Tesla
-TOYOTA tercel/VIOS, yaris, rav4, cc, c-hr, auris, AE86, premio, exsior, wish/sienta, crown, camry, Alphard, Venza, veloz, mr2,  Century, ???range, 4runner,Land Cruiser
-
+TOYOTA tercel/VIOS, yaris, rav4, cc, c-hr, auris, AE86, premio, exsior, wish/sienta, crown, camry, Alphard, Venza, veloz, mr2,  Century, ???range, 4runner,Land Cruiser, CELICA, innava?, 
+TOBE M'car, M'way, 
 U
 vinfast vf8, vf9
-Volkswagen UP!, Vento/Polo, golf/plus, scirocco, passat, octavia, Arteon, Caddy, T cross,
+Volkswagen UP!, Vento/Polo, golf/plus, scirocco, passat, octavia, Arteon, Caddy, T cross, Transporter, SHARAN, pointer, 
 volvo c30,  v40/60, S40/60/90, XC40/60, EX90
 
-台塑一號二號
+台塑 一號, 二號
 FCA 與PSA 兩大汽車集團合併而成Stellantis 正式成立，成為全球第四大汽車集團
-Proton gen2(賤免), 阿波羅
+
 Xiaomi(小米)  SU7
 
 
