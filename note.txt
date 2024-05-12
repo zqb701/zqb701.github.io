@@ -601,6 +601,7 @@ https://www.askapache.com/online-tools/base64-image-converter/
 (音效檔可以編碼存放嗎???)
 插入程式??? javascript:(function () { var script = document.createElement('script'); script.src="//cdn.jsdelivr.net/npm/eruda"; document.body.appendChild(script); script.onload = function () { eruda.init() } })();
 用eval執行upload的內容
+Bookmarklet封裝成Extension，擴充功能/開發人員模式/載入未封裝項目...[https://realdennis.medium.com/51f5c5e21610]
 
 PDF view內建, adobe也有擴充。
 擴充：雙點右鍵關閉分頁, 網址非html無反應, close tab by dbl right click 
