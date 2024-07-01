@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724g5"; 	</script>
+	<script> 		var version = "v0.724g6"; 	</script>
 </head>
 
 <style> 
@@ -45,10 +45,11 @@
 	<f function HTML_body(){}/>
 
 	<div class="cmdButton" id="speed" style="position:fixed; font-size:100px; border-radius: 30%;">速</div>
+	<div class="cmdButton" id="title" style="position:fixed; font-size:60px; left: 170px;width:560px;">標題</div>
 	
 	<div class="cmdButton" id="timeUp" _onclick="signal.click();" 
 	style="position: fixed; font-size: 100px; left: 740px;border-radius:50%;"
-	>0</div>
+	>時距</div>
 	
 	<canvas id="canvas" "></canvas>
 
@@ -79,8 +80,8 @@
 		>🔍</div>
 	</div>	
 		
+	<div id="watchStr" style="font-size: 48px;">監控狀態</div>
 	<div id="posStr" style="font-size: 48px;">111222</div>
-	<div id="watchStr" style="display:none;font-size: 36px;">監控狀態</div>
 	
 	<input type="checkbox" id="touchSW" checked>
 	<input type="button" value="GPS啟動" onClick="startGPS();">
@@ -7579,7 +7580,7 @@ var tasks = [[
 					this.highTime = (+new Date());
 					this.slowTime = undefined;
 					
-					this.meter.style.color = "cyan";
+					this.meter.style.color = "cyan";//移動中計時器為粉藍色
 					this.highStart = points[nextPoint][2];
 				}else{}	// 仍為停止				
 			}else{//移動狀態
@@ -7588,11 +7589,22 @@ var tasks = [[
 					theTime = this.highTime;
 					theChar = "<br>走:";
 					signal.isReporting = true;
+					
+					try{
+						if(target.voiceStr){
+							str34 = target.voiceStr;
+						}else{
+							str34 = "x";
+						}
+						document.getElementById("watchStr").innerText = str34;
+					}catch(err){
+						addLog("str34 : " + err.message);
+					}
 					// addstr = ",均:XX km/h";
 					//切到停止
 					
 					this.slowTime = (+new Date());		
-					this.meter.style.color = "white";////停止為白色					
+					this.meter.style.color = "white";//靜止時計時器為白色					
 				}else{}		// 仍為移動				
 			}
 			
@@ -9250,7 +9262,8 @@ function showData(){
 			str += "[" + target.voiceStr + "]";
 		}else{
 			str += "[x]";
-		}			
+		}
+		
 		
 		str += ", <font "+ fcolor+">" ;
 		str += (nextDist < 1) ? (+ nextDist*1000+"</font>米") : (Math.round(nextDist)+"</font>公里");
@@ -9274,8 +9287,10 @@ function showData(){
 
 			// str += "<br/>時速："+ (coords_speed*3.6).toFixed(1) + "公里，";	//原單位：米/秒
 			//str += "<br/>時速："+ speedKpH.toFixed(1) + "公里，";	//原單位：米/秒
+		
+		document.getElementById("title").innerText =  target.title;
 		document.getElementById("speed").innerText = speedKpH.toFixed(0);
-
+		document.getElementById("posStr").innerHTML=str;
 
 		// str += Math.round(coords_heading) +"度";	//12點鐘方向為0, 順時針~360
 		// str += "(路段：" + edgeVector.toFixed() + "度)";
@@ -9298,7 +9313,7 @@ function showData(){
 		}
 		str +="'>" + dA.toFixed() + "</font>";
 		*/
-		document.getElementById("posStr").innerHTML=str;
+		
 
 // console.log("showData(e)");
 }
