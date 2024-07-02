@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724g6"; 	</script>
+	<script> 		var version = "v0.724g61"; 	</script>
 </head>
 
 <style> 
@@ -7585,16 +7585,16 @@ var tasks = [[
 				}else{}	// 仍為停止				
 			}else{//移動狀態
 				if(speed < 3){
+					//TODO 併為函式onStop及onMove
 					// addLog("結算移動時間");
 					theTime = this.highTime;
 					theChar = "<br>走:";
 					signal.isReporting = true;
 					
 					try{
+						let str34 = "x";
 						if(target.voiceStr){
 							str34 = target.voiceStr;
-						}else{
-							str34 = "x";
 						}
 						document.getElementById("watchStr").innerText = str34;
 					}catch(err){
