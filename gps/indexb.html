@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724g8"; 	</script>
+	<script> 		var version = "v0.724g81"; 	</script>
 </head>
 
 <style> 
@@ -7860,7 +7860,7 @@ var tasks = [[
 		
 		tools.myDate=function(){
 			var now = new Date();
-			var dateStr = now.getFullYear()+"/"+(now.getMonth()+1)+"/"+now.getDate();
+			var dateStr = now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate();
 			
 			dateStr += "("+ "日一二三四五六".substr(now.getDay(),1) +")";
 			return dateStr;
