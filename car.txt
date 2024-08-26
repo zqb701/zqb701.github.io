@@ -21,7 +21,7 @@ ford fiesta, tierra/focus, mondeo, puma, escape/kuga, escort, mustang, Ranger, A
 Ferrari法拉利 F430/F355, Purosangue, 
 Genesis G70
 GM通用
-Honda Brio, Fit, city, civic(七代稱Freio, Si版), accord(k7 coupe EX) , HR-v, HR-v, cr-z(CR-X), Odyssey.., Element, perlude, STREAM, type R, S2000, 
+Honda Brio, Fit, city, civic(七代稱Freio, Si版), accord(k7 coupe EX) , HR-v, HR-v, cr-z(CR-X), Odyssey.., Element, perlude, STREAM, type R, S2000, Amaze, 
 hyundai verna, picanto, elantra, sonata,  venue,  kano, tuvson, Santa Fe, velaster, i10, i20, i30, i35, i40, veloster, Grandeur, casper,
 
 infiniti QX55, G35/37, M25/37, EX35, 
@@ -40,7 +40,7 @@ MG zs, hs, MG3, MG4, MG5, MG7, Cyberster
 Mini Cooper
 mitsubishi galant, sportback, eclipse, colt/coltplus, outland, savrin, ASX, zinger
 
-Nissan juke, tiida, kicks, march, sentra, livina, X-trail, altima, 240Z/350Z/370Z, gtr, bluebird, cerfiro,teana, QRV, Skyline, SE-R, Primera, silvia, ad, Quest, Rogue, 
+Nissan juke, tiida, kicks, march, sentra, livina, X-trail, altima, 240Z/350Z/370Z, gtr, bluebird, cerfiro, teana, QRV, Skyline, SE-R, Primera, silvia, ad, Quest, Rogue, Murano, Armada(Infiniti QX80),
 Opel Astra, Mokka, Grandland, tigar, Zafira, kadett
 peugeot 2008, 3008, 408, 308, 108, 5008
 Pontiac Grand AM, 龐蒂克火鳥共, 
