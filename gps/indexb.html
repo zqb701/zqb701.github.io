@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h9c"; 	</script>
+	<script> 		var version = "v0.724h9d"; 	</script>
 </head>
 
 <style> 
@@ -7972,7 +7972,7 @@ var tasks = [[
 		
 		//signal.setColor(target.voiceStr);		//抓出紅綠燈秒數。本函式應併入target
 		try{
-				if(points[nextPoint][3].index("RG_OFF")<0){
+				if(points[nextPoint][3].indexOf("RG_OFF")<0){
 					addLog("RG_OFF");
 					signal.off();
 				}
