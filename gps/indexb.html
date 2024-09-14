@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h9b"; 	</script>
+	<script> 		var version = "v0.724h9c"; 	</script>
 </head>
 
 <style> 
@@ -65,11 +65,11 @@
 		>⇧</div>	
 
 		<div class="cmdButton" id="march"
-			_onclick="signal.click();" 
-			ontouchstart="signal.click();"
+			onclick="signal.click();" 
+			ontouchstart="e.preventDefault();signal.click();"
 			style="font-size:150px;  border-radius:50%;
 			width: var(--size2); height: var(--size2); line-height: var(--size2);"
-		>0</div>
+		>_</div>
 
 		<div class="cmdButton" 
 		id="speedTime" onclick="addLog(speeder.myFinal());" 
@@ -7974,7 +7974,7 @@ var tasks = [[
 		try{
 			//240914, 從下一點起開始找到紅綠燈資訊
 			if(signal.enable){
-				signal.enable = fasle;
+				signal.enable = false;
 				for(p = nextPoint; p>=0 && p<points.length; p += vector){				
 					if(signal.setColor(points[p][4-vector])){
 						signal.enable = true;
@@ -8045,18 +8045,19 @@ var tasks = [[
 		signal.isReporting = false;
 		signal.presentColorChar = "";
 		signal.enable = true;
+		signal.IntervalID;
 		//避免手機的touchstart觸發後又觸發click, 但無效
 		//可能要等300ms
 		
 		
 		signal.off=function(){
-			window.clearInterval(intervalID);
+			window.clearInterval(signal.IntervalID);
 			march.style.color = "gray";
-			march.innerText = "0";
+			march.innerText = "";
 		}
 		
 		signal.on=function(){
-			IntervalID = window.setInterval(( () =>  {
+			signal.IntervalID = window.setInterval(( () =>  {
 			//休眠狀態將回調函數放在隊列中,等瀏覽器再次打開的時候，一瞬間全部執行
 				if(count < 0){
 					isMarch *= -1;
@@ -8097,6 +8098,7 @@ var tasks = [[
 		}
 		
 		signal.click=function(){
+			
 			//手動燈號切換
 			signal.swColor();			//換色含時間
 			
@@ -9761,7 +9763,7 @@ function displayNotification(){
      
 }
 
-var IntervalID;
+// var IntervalID;
 var isMarch = -1;	//行進中,motion, move, 靜止still
 var march = document.getElementById("march");
 	// march.addEventListener("click", "signalclick");
@@ -9783,6 +9785,7 @@ var count=0;
 // 手動點選, 並記錄
 //跳點時記錄
 signal.swColor=function(){
+	addLog("b");
 // function swColor(){
 
 	//初始綠色靜止秒數零, 按一下開始增加, 
@@ -9790,7 +9793,7 @@ signal.swColor=function(){
 	//再按一下(記錄G3R40)變綠且從零增加
 	//跳點後,存檔G3R40G24,畫面回復初始狀態
 	//看到燈號時按一下, 再按一下變更顏色,倒數, 下一點時間不同則要回復初始狀態
-	if(!intervalID){
+	if(!signal.IntervalID){
 		signal.start();
 		return;
 	}
