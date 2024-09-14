@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h9a"; 	</script>
+	<script> 		var version = "v0.724h9b"; 	</script>
 </head>
 
 <style> 
@@ -7959,9 +7959,9 @@ var tasks = [[
 	
 	target.focus=function(){	 //設定新的目標點及其資訊
 		let str = points[nextPoint][2];
-		if( nextPoint ){
+		if( nextPoint ){	//等同nextPoing ==0, 表示陣列索引值為零,if()傳回false
 			target.title = str ;
-		}else{//第一個點的索引值nextPoint為0,用if()則傳回false
+		}else{
 			let idx = str.indexOf("_");		
 			if(idx < 0){
 				addLog("err:路徑格式錯誤(沒有底線)" + str);
@@ -7972,15 +7972,28 @@ var tasks = [[
 		
 		//signal.setColor(target.voiceStr);		//抓出紅綠燈秒數。本函式應併入target
 		try{
-			for(p = nextPoint; p>=0 && p<points.length; p += vector){
-				addLog(points[p][2]);
-				if(signal.setColor(points[p][4-vector])){
-					break;
-				}				
+			//240914, 從下一點起開始找到紅綠燈資訊
+			if(signal.enable){
+				signal.enable = fasle;
+				for(p = nextPoint; p>=0 && p<points.length; p += vector){				
+					if(signal.setColor(points[p][4-vector])){
+						signal.enable = true;
+						break;
+					}else{
+						//addLog(points[p][2]+",無號誌");
+					}	
+				}
+				if(!signal.enable){
+					signal.off();
+				}
+			}else{
+				signal.setColor(points[p][4-vector]);
+				signal.enable = true;
+				signal.on();
 			}
 		}catch(err){
 			addLog("target.focus:" + err.message);
-		}
+		}		
 		return;
 		
 		try{//240724, 依addNum調整號誌間的時間差
@@ -8031,9 +8044,30 @@ var tasks = [[
 		signal.recordStr = "";
 		signal.isReporting = false;
 		signal.presentColorChar = "";
+		signal.enable = true;
 		//避免手機的touchstart觸發後又觸發click, 但無效
 		//可能要等300ms
 		
+		
+		signal.off=function(){
+			window.clearInterval(intervalID);
+			march.style.color = "gray";
+			march.innerText = "0";
+		}
+		
+		signal.on=function(){
+			IntervalID = window.setInterval(( () =>  {
+			//休眠狀態將回調函數放在隊列中,等瀏覽器再次打開的時候，一瞬間全部執行
+				if(count < 0){
+					isMarch *= -1;
+					count = timeNum[1+isMarch];
+					march.style.color = colorList[1+isMarch];
+					signal.presentColorChar = charList[1+isMarch];	
+					// march.innerText = count;
+				}
+				march.innerText = count--;
+			}	) , 1000);
+		}
 		
 		signal.setTime=function(num){
 			march.innerText = num;
@@ -8447,6 +8481,7 @@ function init(){
 	//playVoice('當');
 	//highTime = (+new Date());	//避免第一次引用時為undefined
 	speeder.start();
+	signal.on();
 }
 
 function insertCoord(coordType){	//	記錄點	
@@ -9755,23 +9790,11 @@ signal.swColor=function(){
 	//再按一下(記錄G3R40)變綠且從零增加
 	//跳點後,存檔G3R40G24,畫面回復初始狀態
 	//看到燈號時按一下, 再按一下變更顏色,倒數, 下一點時間不同則要回復初始狀態
-	if(!IntervalID){
-		IntervalID = window.setInterval(( () =>  {
-			//休眠狀態將回調函數放在隊列中,等瀏覽器再次打開的時候，一瞬間全部執行
-			if(count < 0){
-				isMarch *= -1;
-				count = timeNum[1+isMarch];
-				march.style.color = colorList[1+isMarch];
-				// march.innerText = count;
-			}
-			march.innerText = count--;			
-		}	) , 1000);
-		
-		count = timeNum[1+isMarch];
-		march.style.color = colorList[1+isMarch];
-		signal.presentColorChar = charList[1+isMarch];		
-		march.innerText = count--;
-	}else{
+	if(!intervalID){
+		signal.start();
+		return;
+	}
+
 		let msgStr = null;
 		msgStr = charList[1+isMarch]+(count+1);//舊的count
 		
@@ -9782,7 +9805,7 @@ signal.swColor=function(){
 		march.style.color = colorList[1+isMarch];
 		march.innerText = count;
 		return msgStr;		
-	}
+	
 }
 
 	_todo._510可行駛時間資訊_靠右_前加_路名 = function(){}	
