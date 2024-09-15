@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h9f"; 	</script>
+	<script> 		var version = "v0.724h9g"; 	</script>
 </head>
 
 <style> 
@@ -661,7 +661,7 @@ var tasks = [[
 [22.685538861066068, 120.48638001623060, "太源一路"],
 
 ],[
-[22.665066241181687, 120.50217027304704, "屏市/民福路_民生路",,,"R60G40右轉後38~40綠/右轉後40綠/R70左轉後45綠@17:50,"],
+[22.665066241181687, 120.50217027304704, "屏市/民福路_民生路","RG_OFF",,"R60G40右轉後38~40綠/右轉後40綠/R70左轉後45綠@17:50,"],
 [22.664566563760406, 120.50196515662627, "彎4"],
 [22.663798921132560, 120.50183305180342, "民興路"],
 [22.663620050085473, 120.50180932565730, "輔20米南",,,"ign"],//民興路
@@ -7943,6 +7943,8 @@ var tasks = [[
 	
 	class myPoint{}
 	var source = new myPoint();
+		source.runNum = -1;
+		
 	var target = new myPoint();
 		target.runNum = -1;	//號誌綠燈秒數
 		target.stopNum = -2;	//號誌紅燈秒數
@@ -7966,14 +7968,18 @@ var tasks = [[
 		target.voiceStr = points[nextPoint][4-vector];//TODO:索引超出會有何反應
 	}
 	
-		target.title = points[nextPoint][2];
+	target.title = points[nextPoint][2];
+		if(nextPoint ==0){	//第一點包含路徑名稱,要切割
+			let idx = target.title.indexOf("_");
+			target.title = target.title.substring(idx+1);		//起始,結束 
+		}
 		
-		//signal.setColor(target.voiceStr);		//抓出紅綠燈秒數。本函式應併入target
+		//抓出最近的紅綠燈秒數
 		try{
 			//240914, 從下一點起開始找到紅綠燈資訊
-			if(signal.enable){
+			if(signal.enable){		//TODO找過的點, 若還沒到達, 不要重覆找
 				signal.enable = false;
-				for(p = nextPoint; p>=0 && p<points.length; p += vector){				
+				for(let p = nextPoint; p>=0 && p<points.length; p += vector){				
 					if(signal.setColor(points[p][4-vector])){
 						signal.enable = true;
 						break;
@@ -7984,11 +7990,14 @@ var tasks = [[
 				if(!signal.enable){
 					signal.off();
 				}
-			}else{
+			}else{		//號誌關閉時, 只檢查目標點
 				if(signal.setColor(points[nextPoint][4-vector])){
 					signal.on();
 				}
 			}
+			//if(source.group == target.group){//連動群組尚用不到
+				signal.addTime(target.runNum - source.runNum);
+			
 		}catch(err){
 			addLog("target.focus:" + err.message);
 		}
@@ -8030,7 +8039,7 @@ var tasks = [[
 			path.title = str;
 		}else{
 			path.title = str.substr(0, idx);					//起始,長度
-			points[0][2] = str.substring(idx+1);		//起始,結束 
+			//points[0][2] = str.substring(idx+1);		//起始,結束 
 		}
 		
 		try{
@@ -8137,13 +8146,17 @@ var tasks = [[
 			addLog("signal.addTime\march.innerText =" + march.innerText);
 			march.innerText = num2;
 		}
+		
 		signal.getElapsed=function(){
 			//本次燈號經過的時間,及燈色
 			
 		}
 		
 		signal.click=function(){
-			
+			if(signal.enable){
+				signal.on();
+				return;
+			}
 			//手動燈號切換
 			signal.swColor();			//換色含時間
 			
@@ -8460,7 +8473,7 @@ function init(){
 	//由onload()啟動
 	
 
-	// addLog("<br>");
+	addLog("<br>");
 	addLog("程式啟動, " + version + ", " +tools.myDate() );
 	document.title = tools.myDate();
 
@@ -8965,6 +8978,7 @@ function skipPoint(){
 	
 	passPoint[0] = points[nextPoint][0];
 	passPoint[1] = points[nextPoint][1];
+	source.runNum =  target.runNum;
 	
 	//函式應切割為離開blur這一點及前往focus下一點,target.blur().focus()
 
