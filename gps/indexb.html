@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h9e"; 	</script>
+	<script> 		var version = "v0.724h9f"; 	</script>
 </head>
 
 <style> 
@@ -3560,9 +3560,9 @@ var tasks = [[
 [22.6234435703599,	120.706021193544,	"F07"],
 [22.623103262991766,120.70580460932997,"F08"],
 [22.6227022495096,	120.705538375205,	"F09"],
-[22.6225244518828,	120.705338047518,	"F10","b"],
+[22.6225244518828,	120.705338047518,	"F10"],
 [22.6224301712491,	120.705067590307,	"F11"],
-[22.6222412927974,	120.704252010956,	"F12","a"],
+[22.6222412927974,	120.704252010956,	"F12"],
 [22.6220403987036,	120.703897194391,	"F13"],
 [22.621937370512125,120.70367581710855,"休息站01重覆"],
 [22.6163691735652,	120.700999845211,	"水泥底重覆"],
@@ -7958,25 +7958,18 @@ var tasks = [[
 	}
 	
 	target.focus=function(){	 //設定新的目標點及其資訊
-		let str = points[nextPoint][2];
-		if( nextPoint ){	//等同nextPoing ==0, 表示陣列索引值為零,if()傳回false
-			target.title = str ;
-		}else{
-			let idx = str.indexOf("_");		
-			if(idx < 0){
-				addLog("err:路徑格式錯誤(沒有底線)" + str);
-			}else{
-				target.title = str.substring(idx+1);		//起始,結束 
-			}
-		}
+	/**忽略不要的點*/
+		target.voiceStr = points[nextPoint][4-vector];
+	while(target.voiceStr && target.voiceStr == "ign"){
+		addLog("<small>略:n" + points[nextPoint][2] + "</small>");
+		nextPoint += vector;
+		target.voiceStr = points[nextPoint][4-vector];//TODO:索引超出會有何反應
+	}
+	
+		target.title = points[nextPoint][2];
 		
 		//signal.setColor(target.voiceStr);		//抓出紅綠燈秒數。本函式應併入target
 		try{
-			let strtmp = points[nextPoint][3];
-			if(strtmp && strtmp.indexOf("RG_OFF")<0){
-				addLog("RG_OFF");
-				signal.off();
-			}
 			//240914, 從下一點起開始找到紅綠燈資訊
 			if(signal.enable){
 				signal.enable = false;
@@ -7998,8 +7991,17 @@ var tasks = [[
 			}
 		}catch(err){
 			addLog("target.focus:" + err.message);
-		}		
-		return;
+		}
+		/** 照相語音*/
+			if(target.voiceStr){
+		if( target.voiceStr == "測速" || target.voiceStr.match(/速限\d*/)){
+			enAlarmSpeedLimit = 2;
+		}else{
+			enAlarmSpeedLimit = 0;
+		}
+	}
+	
+	return;
 		
 		try{//240724, 依addNum調整號誌間的時間差
 			if(signal.presentColorChar == "G"){
@@ -8023,12 +8025,45 @@ var tasks = [[
 	path.focus=function (){
 		let str = points[0][2];
 		let idx = str.indexOf("_");
-		if(idx < 0){
+		if(idx < 1){		//找不到或底線在字首都不行
 			addLog("err!格式錯誤(沒有底線):" +str);
 			path.title = str;
 		}else{
-			path.title = str.substr(0, idx);//起始,結束
+			path.title = str.substr(0, idx);					//起始,長度
+			points[0][2] = str.substring(idx+1);		//起始,結束 
 		}
+		
+		try{
+			let strtmp = points[0][3];
+			if(strtmp && strtmp.indexOf("RG_OFF") >-1){//字串存在, 內含RG_OFF
+				addLog("RG_OFF");
+				signal.off();
+			}
+		}catch(err){
+			addLog("path.focus:" + err.message);
+		}
+		/** 產生報告字串*/
+			strtmp = "";
+	strtmp += "從:" +  points[nextPoint - vector][2];
+	source.voiceStr = points[nextPoint - vector][4-vector];
+	if(source.voiceStr){
+		strtmp += ",["+ source.voiceStr + "]";
+	}
+	
+	if(taskID != oldTask){
+		strtmp  += "<br>";
+		strtmp  += "新:";
+		//strtmp += points[0][2].substr(0,index);
+		strtmp += path.title;
+	}
+	
+	// strtmp += ",角:" + bigAng[0].toFixed(0);	//收集資訊, 以決定角度太小者要定時重找。
+
+		// strtmp += (Date.now()-funcTime)/1000 + "秒";
+					 
+	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
+			// ",路向:" + edgeVector.toFixed(0);
+	addLog(strtmp + "<br>");
 	}
 
 	/*
@@ -9278,58 +9313,10 @@ minDiff = 361;
 	}else{
 		vector = 1;
 	}	
-
-	//addLog( speeder.myFinal());
-
 	path.focus();
-
-	index = points[0][2].indexOf("_");
-	if(index < 0){
-		index = points[0][2].length;
-	}
-
-	strtmp = "";
-	strtmp += "從:" +  points[nextPoint - vector][2];
-	source.voiceStr = points[nextPoint - vector][4-vector];
-	if(source.voiceStr){
-		strtmp += ",["+ source.voiceStr + "]";
-	}
-	
-	if(taskID != oldTask){
-		strtmp  += "<br>";
-		strtmp  += "新:";
-		//strtmp += points[0][2].substr(0,index);
-		strtmp += path.title;
-	}
-	
-	// strtmp += ",角:" + bigAng[0].toFixed(0);	//收集資訊, 以決定角度太小者要定時重找。
-
-		// strtmp += (Date.now()-funcTime)/1000 + "秒";
-					 
-	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
-			// ",路向:" + edgeVector.toFixed(0);
-	addLog(strtmp + "<br>");
-
-	// showMsg("nP(8)");
-	target.voiceStr = points[nextPoint][4-vector];
-	while(target.voiceStr && target.voiceStr == "ign"){
-		addLog("<small>略:n" + points[nextPoint][2] + "</small>");
-		nextPoint += vector;
-		target.voiceStr = points[nextPoint][4-vector];//TODO:索引超出會有何反應
-	}
 	target.focus();
-	// enAlarm = true;	// enAlarmHigh = true; //初值為true, skipPoint時已指定為true, 故此不執行
-	if(target.voiceStr){
-		if( target.voiceStr == "測速" || target.voiceStr.match(/速限\d*/)){
-			enAlarmSpeedLimit = 2;
-		}else{
-			enAlarmSpeedLimit = 0;
-		}
-	}
-		
 		
 	preDist = getDistance(recentPoint,  points[nextPoint]);
-	// addLog("nearPoint():preDist="+preDist);
 	passTime = new Date();//todo:沒實際作用,只能避免數字過大
 }
 
@@ -9795,7 +9782,7 @@ var count=0;
 // 手動點選, 並記錄
 //跳點時記錄
 signal.swColor=function(){
-	addLog("b");
+	
 // function swColor(){
 
 	//初始綠色靜止秒數零, 按一下開始增加, 
