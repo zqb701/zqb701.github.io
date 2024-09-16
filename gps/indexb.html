@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h9l"; 	</script>
+	<script> 		var version = "v0.724h9m"; 	</script>
 </head>
 
 <style> 
@@ -803,7 +803,7 @@ var tasks = [[
 [22.666112587369927, 120.50162982348483, "巷尾(近殺蛇浽)"],
 
 ],[
-[22.666892039559908, 120.50177619510023, "屏市/民利路35巷_民榮街","RG_OFF"],
+[22.666892039559908, 120.50177619510023, "屏市/民利路35巷_民榮街",""],
 [22.666656184973860, 120.50129263721031, "輔20米北","ign"],//民利路
 [22.666550917520382, 120.50114175872159, "民利路",,,"左轉,R3G7"],
 [22.666209733553423, 120.50091225739330, "5號","起點1",,"起點3"],
@@ -8127,8 +8127,8 @@ var tasks = [[
 		
 		
 		signal.off=function(){
-			addLog("略過signal.off()");
-			return;
+			// addLog("略過signal.off()");
+			// return;
 			
 			signal.enable = false;
 			window.clearInterval(signal.IntervalID);
@@ -8151,6 +8151,7 @@ var tasks = [[
 					signal.presentColorChar = charList[1+isMarch];	
 					// march.innerText = count;
 				}
+				addLog("signal.on(): signal.count=" + signal.count);
 				march.innerText = signal.count--;
 			}	) , 1000);
 			
@@ -8186,6 +8187,7 @@ var tasks = [[
 		}
 		
 		signal.click=function(){
+			playVoice("當");	//音效
 			if(!signal.enable){
 				signal.on();
 				return;
@@ -8193,7 +8195,7 @@ var tasks = [[
 			//手動燈號切換
 			signal.swColor();			//換色含時間
 			
-			playVoice("當");	//音效
+			
 			
 			//取得切換後的顏色	
 			//為了取得兩次手動的間距時間
