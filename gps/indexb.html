@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h9n"; 	</script>
+	<script> 		var version = "v0.724h9o"; 	</script>
 </head>
 
 <style> 
@@ -8136,10 +8136,13 @@ var tasks = [[
 			addLog("signal.off()");
 		}
 		
+		
 		signal.on=function(){
+			addLog("signal.on(0)");
 			if(signal.enable){
 				return;
 			}
+			addLog("signal.on(1)");
 			signal.enable = true;
 			signal.IntervalID = window.setInterval(( () =>  {
 			//休眠狀態將回調函數放在隊列中,等瀏覽器再次打開的時候，一瞬間全部執行
@@ -8154,7 +8157,7 @@ var tasks = [[
 				march.innerText = signal.count--;
 			}	) , 1000);
 			
-			addLog("signal.on()");
+			addLog("signal.on(9)");
 		}
 		
 		signal.setTime=function(num){
@@ -9830,7 +9833,7 @@ var charList = ["R",,"G"];
 // 手動點選, 並記錄
 //跳點時記錄
 signal.swColor=function(){
-	
+	addLog("signal.swColor(0)");
 // function swColor(){
 
 	//初始綠色靜止秒數零, 按一下開始增加, 
@@ -9842,7 +9845,7 @@ signal.swColor=function(){
 		signal.start();
 		return;
 	}
-
+addLog("signal.swColor(1)");
 		let msgStr = null;
 		msgStr = charList[1+isMarch]+(signal.count+1);//舊的count
 		
@@ -9852,6 +9855,7 @@ signal.swColor=function(){
 		
 		march.style.color = colorList[1+isMarch];
 		march.innerText = signal.count;
+		addLog("signal.swColor(9)");
 		return msgStr;		
 	
 }
