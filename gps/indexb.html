@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h9"; 	</script>
+	<script> 		var version = "v0.724ha"; 	</script>
 </head>
 
 <style> 
@@ -8052,7 +8052,7 @@ var tasks = [[
 				path.place = str.substr(0,idx);
 				//TODO if(placed.indexOf(path.place)){ //不處理}else{d.t += ; placed.push(path.place)}
 				//清除catch 才會重置
-				document.title += path.place;
+				//document.title += path.place;
 			}
 		}
 		
@@ -8061,10 +8061,10 @@ var tasks = [[
 		try{
 			let strtmp = points[0][3];
 			if(strtmp && (strtmp.indexOf("RG_OFF") >-1)){//內含RG_OFF
-					addLog("path.focus():號誌停用");
+					// addLog("path.focus():號誌停用");
 					signal.off();
 				}else{
-					addLog("path.focus():號誌啟用");
+					// addLog("path.focus():號誌啟用");
 					signal.on();
 				}
 			
