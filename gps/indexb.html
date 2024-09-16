@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h9k"; 	</script>
+	<script> 		var version = "v0.724h9l"; 	</script>
 </head>
 
 <style> 
@@ -8127,6 +8127,9 @@ var tasks = [[
 		
 		
 		signal.off=function(){
+			addLog("略過signal.off()");
+			return;
+			
 			signal.enable = false;
 			window.clearInterval(signal.IntervalID);
 			march.style.color = "gray";
