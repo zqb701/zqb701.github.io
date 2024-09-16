@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h9j"; 	</script>
+	<script> 		var version = "v0.724h9k"; 	</script>
 </head>
 
 <style> 
@@ -7978,6 +7978,7 @@ var tasks = [[
 		//抓出最近的紅綠燈秒數
 		try{
 			//240914, 從下一點起開始找到紅綠燈資訊
+			addLog("target.focus(): signal.enable="+signal.enable);
 			if(signal.enable){
 				let find = false;
 				for(let p = nextPoint; p>=0 && p<points.length; p += vector){				
@@ -7991,7 +7992,9 @@ var tasks = [[
 					signal.off();
 				}
 			}else{		//號誌關閉時, 只檢查目標點
+			addLog("target.focus(): 號誌檢查");
 				if(signal.setColor(points[nextPoint][4-vector])){
+					addLog("target.focus(): 號誌啟用");
 					signal.on();
 				}
 			}
@@ -8047,6 +8050,8 @@ var tasks = [[
 				path.place = str;
 			}else{
 				path.place = str.substr(0,idx);
+				//TODO if(placed.indexOf(path.place)){ //不處理}else{d.t += ; placed.push(path.place)}
+				//清除catch 才會重置
 				document.title += path.place;
 			}
 		}
@@ -8055,12 +8060,14 @@ var tasks = [[
 		
 		try{
 			let strtmp = points[0][3];
-			if(strtmp && strtmp.indexOf("RG_OFF") >-1){//字串存在, 內含RG_OFF
-				addLog("path.focus():號誌停用");
-				signal.off();
-			}else{
-				addLog("path.focus():號誌啟用");
-				signal.on();
+			if(strtmp){
+				if(strtmp.indexOf("RG_OFF") >-1){//字串存在, 內含RG_OFF
+					addLog("path.focus():號誌停用");
+					signal.off();
+				}else{
+					addLog("path.focus():號誌啟用");
+					signal.on();
+				}
 			}
 		}catch(err){
 			addLog("err498, path.focus():" + err.message);
