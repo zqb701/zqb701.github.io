@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h1"; 	</script>
+	<script> 		var version = "v0.724h2"; 	</script>
 </head>
 
 <style> 
@@ -803,7 +803,7 @@ var tasks = [[
 [22.666112587369927, 120.50162982348483, "巷尾(近殺蛇浽)"],
 
 ],[
-[22.666892039559908, 120.50177619510023, "屏市/民利路35巷_民榮街",""],
+[22.666892039559908, 120.50177619510023, "屏市/民利路35巷_民榮街","RG_OFF"],
 [22.666656184973860, 120.50129263721031, "輔20米北","ign"],//民利路
 [22.666550917520382, 120.50114175872159, "民利路",,,"左轉,R3G7"],
 [22.666209733553423, 120.50091225739330, "5號","起點1",,"起點3"],
@@ -8037,7 +8037,7 @@ var tasks = [[
 	path.place = "地點";
 	
 	path.focus=function (){
-		addLog("path.focus(0)");
+		// addLog("path.focus(0)");
 		let str = points[0][2];
 		let idx = str.indexOf("_");
 		if(idx < 1){		//找不到或底線在字首都不行
@@ -8057,7 +8057,7 @@ var tasks = [[
 				//document.title += path.place;
 			}
 		}
-		addLog("path.focus(1)");
+		// addLog("path.focus(1)");
 		/**是否將號誌啟用 */
 		
 		try{
@@ -8068,12 +8068,13 @@ var tasks = [[
 				}else{
 					// addLog("path.focus():號誌啟用");
 					signal.on();
+					signal.count = timeNum[1+isMarch];
 				}
 			
 		}catch(err){
 			addLog("err498, path.focus():" + err.message);
 		}
-		addLog("path.focus(2)");
+		// addLog("path.focus(2)");
 		
 		/** 產生報告字串*/
 		strtmp = "";
@@ -8090,9 +8091,9 @@ var tasks = [[
 			addLog("err776, path.focus():" + err.message+","+points[tmpP][2]);
 		}
 		
-		addLog("path.focus(3)");
+		// addLog("path.focus(3)");
 
-	addLog("path.focus(4)");
+	// addLog("path.focus(4)");
 	if(taskID != oldTask){
 		strtmp  += "<br>";
 		strtmp  += "新:";
@@ -8107,7 +8108,7 @@ var tasks = [[
 	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
 			// ",路向:" + edgeVector.toFixed(0);
 	addLog(strtmp + "<br>");
-	addLog("path.focus(9)");
+	// addLog("path.focus(9)");
 	}
 
 	/*
