@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724ha"; 	</script>
+	<script> 		var version = "v0.724h1"; 	</script>
 </head>
 
 <style> 
@@ -7687,6 +7687,7 @@ var tasks = [[
 	function _tasks_end(){ }
 	
 	var taskID = 2;
+	var oldTask = taskID;
 	// var DEBUG = true;
 		var DEBUG = false;
 	var points = [];
@@ -7978,7 +7979,7 @@ var tasks = [[
 		//抓出最近的紅綠燈秒數
 		try{
 			//240914, 從下一點起開始找到紅綠燈資訊
-			addLog("target.focus(): signal.enable="+signal.enable);
+			//addLog("target.focus(): signal.enable="+signal.enable);
 			if(signal.enable){
 				let find = false;
 				for(let p = nextPoint; p>=0 && p<points.length; p += vector){				
@@ -7992,7 +7993,7 @@ var tasks = [[
 					signal.off();
 				}
 			}else{		//號誌關閉時, 只檢查目標點
-			addLog("target.focus(): 號誌檢查");
+				addLog("target.focus(): 號誌檢查," + points[nextPoint][4-vector]);
 				if(signal.setColor(points[nextPoint][4-vector])){
 					addLog("target.focus(): 號誌啟用");
 					signal.on();
@@ -8036,6 +8037,7 @@ var tasks = [[
 	path.place = "地點";
 	
 	path.focus=function (){
+		addLog("path.focus(0)");
 		let str = points[0][2];
 		let idx = str.indexOf("_");
 		if(idx < 1){		//找不到或底線在字首都不行
@@ -8055,7 +8057,7 @@ var tasks = [[
 				//document.title += path.place;
 			}
 		}
-		
+		addLog("path.focus(1)");
 		/**是否將號誌啟用 */
 		
 		try{
@@ -8071,19 +8073,26 @@ var tasks = [[
 		}catch(err){
 			addLog("err498, path.focus():" + err.message);
 		}
+		addLog("path.focus(2)");
 		
 		/** 產生報告字串*/
-			strtmp = "";
-					try{
-	strtmp += "從:" +  points[nextPoint - vector][2];
-			}catch(err){
-			addLog("err776, path.focus():" + err.message);
-		}
-	source.voiceStr = points[nextPoint - vector][4-vector];
+		strtmp = "";
+		try{
+			let tmpP = nextPoint - vector;
+			if(tmpP>=0 && tmpP <points.length){
+				strtmp += "從:" +  points[tmpP][2];
+					source.voiceStr = points[nextPoint - vector][4-vector];
 	if(source.voiceStr){
 		strtmp += ",["+ source.voiceStr + "]";
 	}
-	
+			}
+		}catch(err){
+			addLog("err776, path.focus():" + err.message+","+points[tmpP][2]);
+		}
+		
+		addLog("path.focus(3)");
+
+	addLog("path.focus(4)");
 	if(taskID != oldTask){
 		strtmp  += "<br>";
 		strtmp  += "新:";
@@ -8098,6 +8107,7 @@ var tasks = [[
 	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
 			// ",路向:" + edgeVector.toFixed(0);
 	addLog(strtmp + "<br>");
+	addLog("path.focus(9)");
 	}
 
 	/*
@@ -8133,7 +8143,7 @@ var tasks = [[
 			window.clearInterval(signal.IntervalID);
 			march.style.color = "gray";
 			march.innerText = "_";
-			addLog("signal.off()");
+			//addLog("signal.off()");
 		}
 		
 		
@@ -9264,7 +9274,7 @@ function nearPoint(){
 	
 	let minDiff=0;
 	let bestV = 0;
-	let oldTask = taskID;
+	
     let bestP = 0;
 	let bestT =0;
 	let funcTime = Date.now();
