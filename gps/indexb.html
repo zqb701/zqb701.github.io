@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h5"; 	</script>
+	<script> 		var version = "v0.724h6"; 	</script>
 </head>
 
 <style> 
@@ -8170,7 +8170,7 @@ var tasks = [[
 					signal.presentColorChar = charList[1+isMarch];	
 					// march.innerText = count;
 				}
-				//addLog("signal.on(): signal.count=" + signal.count);
+				addLog("signal.on(): signal.count=" + signal.count);
 				march.innerText = signal.count--;
 			}	) , 1000);
 			
