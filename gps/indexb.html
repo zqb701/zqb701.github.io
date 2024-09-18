@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h4"; 	</script>
+	<script> 		var version = "v0.724h5"; 	</script>
 </head>
 
 <style> 
@@ -7991,6 +7991,7 @@ var tasks = [[
 				}
 				if(!find){
 					signal.off();
+					addLog("往前無號誌");
 				}
 			}else{		//號誌關閉時, 只檢查目標點
 				//addLog("target.focus(): 號誌檢查," + points[nextPoint][4-vector]);
@@ -8149,16 +8150,16 @@ var tasks = [[
 			window.clearInterval(signal.IntervalID);
 			march.style.color = "gray";
 			march.innerText = "_";
-			//addLog("signal.off()");
+			addLog("signal.off(9)");
 		}
 		
 		
 		signal.on=function(){
-			// addLog("signal.on(0)");
+			addLog("signal.on(0)");
 			if(signal.enable){
 				return;
 			}
-			// addLog("signal.on(1)");
+			addLog("signal.on(1)");
 			signal.enable = true;
 			signal.IntervalID = window.setInterval(( () =>  {
 			//休眠狀態將回調函數放在隊列中,等瀏覽器再次打開的時候，一瞬間全部執行
@@ -8211,7 +8212,7 @@ var tasks = [[
 				return;
 			}
 			//手動燈號切換
-			//signal.swColor();			//換色含時間
+			signal.swColor();			//換色含時間
 			
 			
 			
@@ -8592,7 +8593,7 @@ function init(){
 	//playVoice('當');
 	//highTime = (+new Date());	//避免第一次引用時為undefined
 	speeder.start();
-	signal.on();
+	//signal.on();
 }
 
 function insertCoord(coordType){	//	記錄點	
@@ -9858,7 +9859,7 @@ signal.swColor=function(){
 	//跳點後,存檔G3R40G24,畫面回復初始狀態
 	//看到燈號時按一下, 再按一下變更顏色,倒數, 下一點時間不同則要回復初始狀態
 	if(!signal.IntervalID){
-		signal.start();
+		signal.on();
 		return;
 	}
 // addLog("signal.swColor(1)");
