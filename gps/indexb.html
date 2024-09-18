@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h3"; 	</script>
+	<script> 		var version = "v0.724h4"; 	</script>
 </head>
 
 <style> 
@@ -7997,7 +7997,11 @@ var tasks = [[
 				if(signal.setColor(points[nextPoint][4-vector])){
 					addLog("target.focus(): 號誌啟用");
 					signal.on();
-					signal.swColor();
+					let str78 = signal.count;
+					signal.count = timeNum[1+isMarch];
+					addLog("target.focus():signal.count=" + str78 +", " + signal.count);
+					
+					//signal.swColor();
 				}
 			}
 			//if(source.group == target.group){//連動群組尚用不到
@@ -8069,7 +8073,7 @@ var tasks = [[
 				}else{
 					addLog("path.focus():號誌啟用");
 					signal.on();
-					signal.swColor();
+					//signal.swColor();
 				}
 			
 		}catch(err){
@@ -8169,7 +8173,7 @@ var tasks = [[
 				march.innerText = signal.count--;
 			}	) , 1000);
 			
-			// addLog("signal.on(9)");
+			addLog("signal.on(9)");
 		}
 		
 		signal.setTime=function(num){
