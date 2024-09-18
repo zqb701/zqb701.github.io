@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h7"; 	</script>
+	<script> 		var version = "v0.724h8"; 	</script>
 </head>
 
 <style> 
@@ -7998,11 +7998,7 @@ var tasks = [[
 				if(signal.setColor(points[nextPoint][4-vector])){
 					addLog("target.focus(): 號誌啟用");
 					signal.on();
-					let str78 = signal.count;
-					signal.count = timeNum[1+isMarch];
-					addLog("target.focus():signal.count=" + str78 +", " + signal.count);
-					
-					//signal.swColor();
+					signal.swColor();
 				}
 			}
 			//if(source.group == target.group){//連動群組尚用不到
@@ -8155,11 +8151,11 @@ var tasks = [[
 		
 		
 		signal.on=function(){
-			addLog("signal.on(0)");
+			//addLog("signal.on(0)");
 			if(signal.enable){
 				return;
 			}
-			addLog("signal.on(1)");
+			//addLog("signal.on(1)");
 			signal.enable = true;
 			signal.IntervalID = window.setInterval(( () =>  {
 			//休眠狀態將回調函數放在隊列中,等瀏覽器再次打開的時候，一瞬間全部執行
@@ -8170,12 +8166,12 @@ var tasks = [[
 					signal.presentColorChar = charList[1+isMarch];	
 					// march.innerText = count;
 				}
-				addLog("signal.on(): signal.count=" + signal.count);
+				//addLog("signal.on(): signal.count=" + signal.count);
 				march.innerText = signal.count--;
 			}	) , 1000);
 			
 			signal.swColor();			//換色含時間
-			addLog("signal.on(9)");
+			//addLog("signal.on(9)");
 		}
 		
 		signal.setTime=function(num){
