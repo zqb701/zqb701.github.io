@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h2"; 	</script>
+	<script> 		var version = "v0.724h3"; 	</script>
 </head>
 
 <style> 
@@ -7993,10 +7993,11 @@ var tasks = [[
 					signal.off();
 				}
 			}else{		//號誌關閉時, 只檢查目標點
-				addLog("target.focus(): 號誌檢查," + points[nextPoint][4-vector]);
+				//addLog("target.focus(): 號誌檢查," + points[nextPoint][4-vector]);
 				if(signal.setColor(points[nextPoint][4-vector])){
 					addLog("target.focus(): 號誌啟用");
 					signal.on();
+					signal.swColor();
 				}
 			}
 			//if(source.group == target.group){//連動群組尚用不到
@@ -8066,9 +8067,9 @@ var tasks = [[
 					// addLog("path.focus():號誌停用");
 					signal.off();
 				}else{
-					// addLog("path.focus():號誌啟用");
+					addLog("path.focus():號誌啟用");
 					signal.on();
-					signal.count = timeNum[1+isMarch];
+					signal.swColor();
 				}
 			
 		}catch(err){
@@ -8206,7 +8207,7 @@ var tasks = [[
 				return;
 			}
 			//手動燈號切換
-			signal.swColor();			//換色含時間
+			//signal.swColor();			//換色含時間
 			
 			
 			
