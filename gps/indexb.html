@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h6"; 	</script>
+	<script> 		var version = "v0.724h7"; 	</script>
 </head>
 
 <style> 
@@ -8174,6 +8174,7 @@ var tasks = [[
 				march.innerText = signal.count--;
 			}	) , 1000);
 			
+			signal.swColor();			//換色含時間
 			addLog("signal.on(9)");
 		}
 		
