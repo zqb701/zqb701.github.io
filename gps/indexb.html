@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h8"; 	</script>
+	<script> 		var version = "v0.724h9"; 	</script>
 </head>
 
 <style> 
@@ -662,7 +662,7 @@ var tasks = [[
 [22.685538861066068, 120.48638001623060, "太源一路"],
 
 ],[
-[22.665066241181687, 120.50217027304704, "屏市/民福路_民生路","RGOFF",,"R60G40右轉後38~40綠/右轉後40綠/R70左轉後45綠@17:50,"],
+[22.665066241181687, 120.50217027304704, "屏市/民福路_民生路","RG_OFF",,"R60G40右轉後38~40綠/右轉後40綠/R70左轉後45綠@17:50,"],
 [22.664566563760406, 120.50196515662627, "彎4"],
 [22.663798921132560, 120.50183305180342, "民興路"],
 [22.663620050085473, 120.50180932565730, "輔20米南",,,"ign"],//民興路
@@ -3452,7 +3452,7 @@ var tasks = [[
 [22.614208600187823, 120.70207520964102, "停車場內02"],
 
 ],[
-[22.615015128032790, 120.70223332448214,"日湯真_入口"],
+[22.615015128032790, 120.70223332448214,"泰武/日湯真_入口"],
 [22.614909280440436, 120.70194080706936,"E08"],
 [22.615160672882556, 120.70174126247534,"救難繩"],
 [22.615409157437080, 120.70172476794434,"E07"],
@@ -7996,7 +7996,7 @@ var tasks = [[
 			}else{		//號誌關閉時, 只檢查目標點
 				//addLog("target.focus(): 號誌檢查," + points[nextPoint][4-vector]);
 				if(signal.setColor(points[nextPoint][4-vector])){
-					addLog("target.focus(): 號誌啟用");
+					//addLog("target.focus(): 號誌啟用" + target.title);
 					signal.on();
 					signal.swColor();
 				}
@@ -8056,7 +8056,9 @@ var tasks = [[
 				path.place = str.substr(0,idx);
 				//TODO if(placed.indexOf(path.place)){ //不處理}else{d.t += ; placed.push(path.place)}
 				//清除catch 才會重置
-				//document.title += path.place;
+				if(document.title.indexOf(path.place) < 0){
+					document.title += path.place;
+				}
 			}
 		}
 		// addLog("path.focus(1)");
@@ -8065,12 +8067,12 @@ var tasks = [[
 		try{
 			let strtmp = points[0][3];
 			if(strtmp && (strtmp.indexOf("RG_OFF") >-1)){//內含RG_OFF
-					// addLog("path.focus():號誌停用");
+					//addLog("path.focus():號誌停用(RG_OFF)" + path.title);
 					signal.off();
 				}else{
-					addLog("path.focus():號誌啟用");
+					//addLog("path.focus():號誌啟用"+ path.title);
 					signal.on();
-					//signal.swColor();
+					signal.swColor();
 				}
 			
 		}catch(err){
