@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.724h9b"; 	</script>
+	<script> 		var version = "v0.724h9b1"; 	</script>
 </head>
 
 <style> 
@@ -8136,7 +8136,7 @@ var tasks = [[
 			addLog("target.focus:" + err.message);
 		}
 		/** 照相語音*/
-			if(target.voiceStr){
+	if(target.voiceStr){
 		if( target.voiceStr == "測速" || target.voiceStr.match(/速限\d*/)){
 			enAlarmSpeedLimit = 2;
 		}else{
@@ -8199,7 +8199,7 @@ var tasks = [[
 					signal.off();
 				}else{
 					//addLog("path.focus():號誌啟用"+ path.title);
-					signal.on();
+					//signal.on();//本行「可能」造成新路線時紅綠燈重置
 					//signal.swColor();//241028signal.on()已內含
 				}			
 		}catch(err){
@@ -8260,6 +8260,7 @@ var tasks = [[
 		signal.count=0;
 		signal.startTitle = "";	//停紅燈的路口名稱
 		signal.preLight = "";		//停紅燈的秒數
+		
 		var colSymb = { R: "red",	G: "lime"}
 		//避免手機的touchstart觸發後又觸發click, 但無效
 		//可能要等300ms
@@ -8376,7 +8377,7 @@ signal.swColor=function(){
 				return;
 			}
 			//手動燈號切換
-			addLog("run swColor at signal.click()");
+			//addLog("run swColor at signal.click()");
 			signal.swColor();			//換色含時間
 			
 			
@@ -8403,6 +8404,9 @@ signal.swColor=function(){
 					}
 					if(signal.clickChar == "G"){
 						tmp447 += "for " + signal.startTitle;
+						if(signal.startTitle !== target.title){
+							tmp447 += "走" + target.title;
+						}
 						tmp447 = signal.preLight + tmp447;
 					}
 					addLog("燈:" + tmp447);
@@ -9937,7 +9941,7 @@ function showData(){
 		// }
 		
 		// str += "，" + points[nextPoint][2];// + "(" + points[0][2].substr(0,index)+")";
-		str += ", " + target.title;
+		//str += ", " + target.title;
 		// if(coords_speed*3.6 > 2){
 
 			// str += "<br/>時速："+ (coords_speed*3.6).toFixed(1) + "公里，";	//原單位：米/秒
@@ -10024,17 +10028,12 @@ function displayNotification(){
     }else{
 		
 	}
-     
 }
-
-// var IntervalID;
-
-
-	_todo._510可行駛時間資訊_靠右_前加_路名 = function(){}	
-	_todo._520記錄接續路線_以為優先使用_減少全庫搜尋 = function(){}	
 	
-	_todo._204新路線不要燈號歸零 = function(){}	
-	_todo._205標題加上鄉鎮名 = function(){}	
+	_todo._204新路線不要燈號歸零 = function(){}
+	_todo._205用_走_表示可行駛時間 = function(){}
+	_todo._206增燈號變數= function(){}	//target.signalStr
+	
 	_todo._210連鎖但非同步的號誌修正 = function(){}	
 	_todo._215轉彎後的號誌修正 = function(){}	
 	
@@ -10042,6 +10041,8 @@ function displayNotification(){
 	
 	_todo._260時段燈號含尖峰 = function(){}	
 	
+	_todo._510可行駛時間資訊_靠右_前加_路名 = function(){}	
+	_todo._520記錄接續路線_以為優先使用_減少全庫搜尋 = function(){}	
 function exportCoord(){
 //座標清單匯出檔案,再用Http_file_server傳到電腦
 var now = new Date();
