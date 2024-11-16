@@ -26,9 +26,11 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	}
 	
 	#player {					
-		pointer-events_: none;	/*設定對滑鼠不反應。
-								結果游標不會消失,也不能點畫面的連結不能關廣告(播放結束時)
-								因為用滑鼠點過畫面後,按鍵全失效, 包含youtube的。
+		pointer-events_: none;	//禁止元件與滑鼠互動
+		/*用滑鼠點過畫面後,按鍵全失效,  (因焦點跑到yt畫面, 只要點一下選單範圍即可回復)。
+		故,設定對滑鼠不反應。
+		結果游標不會消失,也不能點畫面的連結, 不能關廣告(播放結束時)
+								
 								*/
 	}
 </style>
@@ -55,6 +57,8 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	 <button onclick="window.resizeTo(scrWs,scrHs);" title="key -">z-</button>
 	<button onclick="window.resizeTo(scrWm,scrHm);" title="按鍵 +">z+</button>
 	 尺寸:加/減/F
+	 <br>
+	 失焦時靜音(或降比或指定)
 	 <br>
 	 播放/暫停: space key 或滑鼠點畫面
 	 <br>
