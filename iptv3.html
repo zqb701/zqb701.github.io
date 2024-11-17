@@ -345,11 +345,35 @@ function doKeyDown(event){
 		break;
 
 	case 27:	//<ESC>
-		document.getElementById("btnGrp").style.display = 'none';
+		document.getElementById("btnGrp").style.display = 'none';	//隱藏選單
 		break;
+		
+	case 46:	//<DEL>	//略過廣告, Javascript Code to skip youtube ad
+	//iframe有一個固定的div,其 class="video-ads ytp-ad-module" data-layer="4"
+	//廣告出現時會有下層物件, 直接按ctrl+c, 即可全數複製
+	//從中可找到一個Button,其class="ytp-ad-skip-button-modern ytp-button"
+	try{
+		document.getElementsByClassName("ytp-ad-skip-button-modern")[0].click();
+	}catch(err){
+		console.log(err.message);
+	}
+	/**
+		let skipDiv = document.querySelector('.video-ads');
+		if(skipDiv !=undefined){
+			skipDiv.click();
+		}
+			let skipBtn= document.querySelector('.ytp-ad-skip-button');
+		if(skipBtn !=undefined){
+			skipBtn.click();
+		}
+		//querySelectorAll
+	**/
+	break;
+		
 	case 72:	//<H> forHelp
+	//break;
 	case 112:	//<H> forHelp
-		document.getElementById("btnGrp").style.display = 'block';
+		document.getElementById("btnGrp").style.display = 'block';//顯示選單
 		break;
 	case 187:	//<+>
 		window.resizeTo(scrWm,scrHm);
