@@ -353,7 +353,10 @@ function doKeyDown(event){
 	//廣告出現時會有下層物件, 直接按ctrl+c, 即可全數複製
 	//從中可找到一個Button,其class="ytp-ad-skip-button-modern ytp-button"
 	try{
-		document.getElementsByClassName("ytp-ad-skip-button-modern")[0].click();
+		if(document.querySelector(".video-ads") !=undefined){
+			console.log(".video-ads ok");
+		}
+		document.querySelector(".ytp-ad-skip-button-modern").click();
 	}catch(err){
 		console.log(err.message);
 	}
@@ -366,7 +369,8 @@ function doKeyDown(event){
 		if(skipBtn !=undefined){
 			skipBtn.click();
 		}
-		//querySelectorAll
+		//querySelectorAll 多選,傳回陣列
+		//querySelectorAll 多選,傳回陣列
 	**/
 	break;
 		
