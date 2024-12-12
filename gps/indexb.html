@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.729b"; 	</script>
+	<script> 		var version = "v0.729b1"; 	</script>
 </head>
 
 <style> 
@@ -8423,7 +8423,7 @@ signal.swColor=function(){
 			try{
 					let tmp6y = ((Date.now() - signal.clickTime)/1000).toFixed(0);
 					if(tmp6y < 200){
-						tmpStr += "<a style='color:"+colSymb[signal.clickChar]+";'>";
+						let tmpStr = "<a style='color:"+colSymb[signal.clickChar]+";'>";
 						tmpStr += signal.clickChar + tmp6y;
 						tmpStr += "</a>";
 					}
@@ -8534,7 +8534,7 @@ signal.swColor=function(){
 			signal.clickTime = tmpNow;
 			signal.clickChar = signal.presentColorChar;
 			
-		}
+		}//end of click()
 		
 		march.addEventListener("touchstart", signal.click);
 		
@@ -8597,7 +8597,7 @@ signal.swColor=function(){
 			if(!srcStr) return false;
 			let rstStr = null;//result String
 			
-			tmpStr = srcStr.match(/A\d+/);	//抓出偏移秒數(TODO含負值)
+			let tmpStr = srcStr.match(/A\d+/);	//抓出偏移秒數(TODO含負值)
 			target.addNum = 0;
 			if(tmpStr){
 				target.addNum = parseInt( tmpStr[0].substring(1));
@@ -8619,7 +8619,7 @@ signal.swColor=function(){
 			}
 			
 			if(rstStr){
-				addLog("setColor():"+rstStr);
+				addLog("setColor():"+target.title +":" + rstStr);
 				return true;
 			}
 			return false;
@@ -9358,8 +9358,8 @@ function skipPoint(){
 	// showMsg("a2");
 	if(nextPoint+vector == -1 || nextPoint+vector == points.length){
 		// strtmp += "(" + target.title + ")";
-		logTitle = "端:"
-		addLog( logTitle+ strtmp);
+		//logTitle = "端:";
+		addLog( "端:"+ strtmp);
 		signal.exitCause = "端";
 		// addLog("_");
 		searchPoint = true;
@@ -9791,7 +9791,7 @@ function geoYes (evt){
 			incDistMsg += "," + (preDist*1000).toFixed(0);
 			if(++incCount > 2){
 				// tmpStr ="離:" + points[nextPoint][2];
-				tmpStr ="離:";
+				let tmpStr ="離:";
 				//tmpStr += speeder.getRunPeriod() + "," ;
 				tmpStr +=  target.title;
 				//tmpStr += ",速" + speedKpH.toFixed(1);
