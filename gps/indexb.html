@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.729b1"; 	</script>
+	<script> 		var version = "v0.729b2"; 	</script>
 </head>
 
 <style> 
@@ -8593,6 +8593,7 @@ signal.swColor=function(){
 
 
 		signal.setColor=function(srcStr){
+			addLog("setColor(debug0)");
 			//從target的參數中,抓出各燈號之秒數, 並存到signal陣列
 			if(!srcStr) return false;
 			let rstStr = null;//result String
@@ -8617,7 +8618,7 @@ signal.swColor=function(){
 				timeNum[0] = target.stopNum;
 				rstStr +=",停:" + target.stopNum;
 			}
-			
+			addLog("setColor(debug8)");
 			if(rstStr){
 				addLog("setColor():"+target.title +":" + rstStr);
 				return true;
@@ -9308,7 +9309,7 @@ function initTask(){
 }	
 
 function skipPoint(){
-	// addLog("skipPoint():start");
+	 addLog("skipPoint(debug1)");
 // if(voiceOK){//231006,通過後預設為無語音
 	// if(points[nextPoint][4-vector]){
 		// playVoice("通過");
@@ -9363,6 +9364,7 @@ function skipPoint(){
 		signal.exitCause = "端";
 		// addLog("_");
 		searchPoint = true;
+		addLog("skipPoint(debug5):");
 		return false;
 	}else{
 		addLog( logTitle+ strtmp);
@@ -9438,7 +9440,7 @@ function skipPoint(){
 	preDist = getDistance(recentPoint,  points[nextPoint]);
 	// addLog("skipPoint():preDist=" + preDist);
 	// preDist = -1;
-	// addLog("skipPoint():04");
+	addLog("skipPoint(debug9)");
 	return true;
 }//end of skipPoint()
 
