@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.729b3"; 	</script>
+	<script> 		var version = "v0.729b4"; 	</script>
 </head>
 
 <style> 
@@ -9325,7 +9325,7 @@ function skipPoint(){
 	if(target.voiceStr){
 		////strtmp += ",[" + target.voiceStr + "]";//單向的語音
 	}
-	
+	addLog("skipPoint(debug2)");
 	if(signal.isReporting && signal.recordStr ){
 		try{
 				if("輔彎".indexOf(target.title.substr(0,1)) > -1){ 	//標題開頭為特定字元
@@ -9342,7 +9342,7 @@ function skipPoint(){
 		signal.recordStr = "";
 		signal.isReporting = false;
 	}
-	
+	addLog("skipPoint(debug3)");
 	if(signal.enable){
 		//strtmp += "["+ charList[1+isMarch] + signal.count + "]";		//通過當下的燈號
 		strtmp += ",燈:" + signal.getLightStr() +"+";		//加的符號表示綠燈未結束
@@ -9354,7 +9354,7 @@ function skipPoint(){
 	source.runNum =  target.runNum;
 	
 	//函式應切割為離開blur這一點及前往focus下一點,target.blur().focus()
-
+addLog("skipPoint(debug4)");
 	// addLog("skipPoint():01");
 	// showMsg("a2");
 	if(nextPoint+vector == -1 || nextPoint+vector == points.length){
@@ -9388,9 +9388,10 @@ function skipPoint(){
 			return false;
 		}
 	}
+	
 	// addLog("skipPoint():02");
 	nextPoint += vector;//****************************	
-
+addLog("skipPoint(debug6)");
 	target.voiceStr = points[nextPoint][4-vector];	
 	while(target.voiceStr && target.voiceStr == "ign"){	//todo:改用迴圈, 以連續跳過多個ign
 		addLog("<small>略:" + points[nextPoint][2] + "</small>");
@@ -9414,7 +9415,7 @@ function skipPoint(){
 			enAlarmSpeedLimit = 0;
 		}
 	}
-	
+	addLog("skipPoint(debug7)");
 	// showMsg("a4");
 	//addLog(points[nextPoint][2]+ strtmp);
 	incCount = 0;
