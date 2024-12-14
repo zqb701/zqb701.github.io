@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.729b2"; 	</script>
+	<script> 		var version = "v0.729b3"; 	</script>
 </head>
 
 <style> 
@@ -8597,21 +8597,21 @@ signal.swColor=function(){
 			//從target的參數中,抓出各燈號之秒數, 並存到signal陣列
 			if(!srcStr) return false;
 			let rstStr = null;//result String
-			
+			addLog("setColor(debug1)");
 			let tmpStr = srcStr.match(/A\d+/);	//抓出偏移秒數(TODO含負值)
 			target.addNum = 0;
 			if(tmpStr){
 				target.addNum = parseInt( tmpStr[0].substring(1));
 				//addLog("<u>" + target.title+": add="+ target.addNum + "</u>");
 			}
-			
+			addLog("setColor(debug2)");
 			tmpStr = srcStr.match(/F\d+/);	//抓出綠燈秒數
 			if(tmpStr){
 				target.runNum = parseInt( tmpStr[0].substring(1));
 				timeNum[2] = target.runNum;
 				rstStr = "走:" + target.runNum;
 			}
-			
+			addLog("setColor(debug3");
 			tmpStr = srcStr.match(/R\d+/) ;//抓出紅燈秒數
 			if(tmpStr){
 				target.stopNum = parseInt(tmpStr[0].substring(1));
