@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.729b6"; 	</script>
+	<script> 		var version = "v0.729b7"; 	</script>
 </head>
 
 <style> 
@@ -8420,6 +8420,7 @@ signal.swColor=function(){
 		}
 		
 		signal.getLightStr=function(){
+			addLog("signal.getLightStr(debug1)");
 			let tmpStr ="";
 			try{
 					let tmp6y = ((Date.now() - signal.clickTime)/1000).toFixed(0);
@@ -8431,6 +8432,7 @@ signal.swColor=function(){
 				}catch(err){
 					addLog("signal.getLightStr(8tf):" + err.message);
 				}
+				addLog("signal.getLightStr(debug9)");
 				return tmpStr;
 		}
 		
@@ -8594,32 +8596,32 @@ signal.swColor=function(){
 
 
 		signal.setColor=function(srcStr){
-			addLog("setColor(debug0)");
+			//addLog("setColor(debug0)");
 			//從target的參數中,抓出各燈號之秒數, 並存到signal陣列
 			if(!srcStr) return false;
 			let rstStr = null;//result String
-			addLog("setColor(debug1)");
+			//addLog("setColor(debug1)");
 			let tmpStr = srcStr.match(/A\d+/);	//抓出偏移秒數(TODO含負值)
 			target.addNum = 0;
 			if(tmpStr){
 				target.addNum = parseInt( tmpStr[0].substring(1));
 				//addLog("<u>" + target.title+": add="+ target.addNum + "</u>");
 			}
-			addLog("setColor(debug2)");
+			//addLog("setColor(debug2)");
 			tmpStr = srcStr.match(/F\d+/);	//抓出綠燈秒數
 			if(tmpStr){
 				target.runNum = parseInt( tmpStr[0].substring(1));
 				timeNum[2] = target.runNum;
 				rstStr = "走:" + target.runNum;
 			}
-			addLog("setColor(debug3");
+			//addLog("setColor(debug3");
 			tmpStr = srcStr.match(/R\d+/) ;//抓出紅燈秒數
 			if(tmpStr){
 				target.stopNum = parseInt(tmpStr[0].substring(1));
 				timeNum[0] = target.stopNum;
 				rstStr +=",停:" + target.stopNum;
 			}
-			addLog("setColor(debug8)");
+			//addLog("setColor(debug8)");
 			if(rstStr){
 				addLog("setColor():"+target.title +":" + rstStr);
 				return true;
@@ -9310,7 +9312,7 @@ function initTask(){
 }	
 
 function skipPoint(){
-	 addLog("skipPoint(debug1)");
+	 //addLog("skipPoint(debug1)");
 // if(voiceOK){//231006,通過後預設為無語音
 	// if(points[nextPoint][4-vector]){
 		// playVoice("通過");
@@ -9326,7 +9328,7 @@ function skipPoint(){
 	if(target.voiceStr){
 		////strtmp += ",[" + target.voiceStr + "]";//單向的語音
 	}
-	addLog("skipPoint(debug2)");
+	//addLog("skipPoint(debug2)");
 	if(signal.isReporting && signal.recordStr ){
 		try{
 				if("輔彎".indexOf(target.title.substr(0,1)) > -1){ 	//標題開頭為特定字元
@@ -9343,7 +9345,7 @@ function skipPoint(){
 		signal.recordStr = "";
 		signal.isReporting = false;
 	}
-	addLog("skipPoint(debug3)");
+	//addLog("skipPoint(debug3)");
 	try{
 		if(signal.enable){
 			//strtmp += "["+ charList[1+isMarch] + signal.count + "]";		//通過當下的燈號
@@ -9359,7 +9361,7 @@ function skipPoint(){
 	source.runNum =  target.runNum;
 	
 	//函式應切割為離開blur這一點及前往focus下一點,target.blur().focus()
-addLog("skipPoint(debug4)");
+//addLog("skipPoint(debug4)");
 	// addLog("skipPoint():01");
 	// showMsg("a2");
 	if(nextPoint+vector == -1 || nextPoint+vector == points.length){
@@ -9369,7 +9371,7 @@ addLog("skipPoint(debug4)");
 		signal.exitCause = "端";
 		// addLog("_");
 		searchPoint = true;
-		addLog("skipPoint(debug5):");
+		//addLog("skipPoint(debug5):");
 		return false;
 	}else{
 		addLog( logTitle+ strtmp);
@@ -9396,7 +9398,7 @@ addLog("skipPoint(debug4)");
 	
 	// addLog("skipPoint():02");
 	nextPoint += vector;//****************************	
-addLog("skipPoint(debug6)");
+//addLog("skipPoint(debug6)");
 	target.voiceStr = points[nextPoint][4-vector];	
 	while(target.voiceStr && target.voiceStr == "ign"){	//todo:改用迴圈, 以連續跳過多個ign
 		addLog("<small>略:" + points[nextPoint][2] + "</small>");
@@ -9420,7 +9422,7 @@ addLog("skipPoint(debug6)");
 			enAlarmSpeedLimit = 0;
 		}
 	}
-	addLog("skipPoint(debug7)");
+	//addLog("skipPoint(debug7)");
 	// showMsg("a4");
 	//addLog(points[nextPoint][2]+ strtmp);
 	incCount = 0;
@@ -9446,7 +9448,7 @@ addLog("skipPoint(debug6)");
 	preDist = getDistance(recentPoint,  points[nextPoint]);
 	// addLog("skipPoint():preDist=" + preDist);
 	// preDist = -1;
-	addLog("skipPoint(debug9)");
+	//addLog("skipPoint(debug9)");
 	return true;
 }//end of skipPoint()
 
