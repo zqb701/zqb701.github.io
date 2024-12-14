@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.729b4"; 	</script>
+	<script> 		var version = "v0.729b5"; 	</script>
 </head>
 
 <style> 
@@ -9705,7 +9705,7 @@ minDiff = 361;
 
 
 function geoYes (evt){
-	// addLog("c1");
+	addLog("geoYes(debug1)");
 	strGPS = strGPS.substr(1,4)+strGPS.charAt(0);
 	
 	recentPoint[0] = evt.coords.latitude;
@@ -9827,7 +9827,7 @@ function geoYes (evt){
 
 	}
 	showData();	
-	// addLog("geoYes (evt):debug06");
+	addLog("geoYes(debug9)");
 }
 
 function isSlow(speed){
