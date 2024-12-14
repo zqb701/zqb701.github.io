@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.729b5"; 	</script>
+	<script> 		var version = "v0.729b6"; 	</script>
 </head>
 
 <style> 
@@ -8420,10 +8420,11 @@ signal.swColor=function(){
 		}
 		
 		signal.getLightStr=function(){
+			let tmpStr ="";
 			try{
 					let tmp6y = ((Date.now() - signal.clickTime)/1000).toFixed(0);
 					if(tmp6y < 200){
-						let tmpStr = "<a style='color:"+colSymb[signal.clickChar]+";'>";
+						tmpStr = "<a style='color:"+colSymb[signal.clickChar]+";'>";
 						tmpStr += signal.clickChar + tmp6y;
 						tmpStr += "</a>";
 					}
@@ -9343,9 +9344,13 @@ function skipPoint(){
 		signal.isReporting = false;
 	}
 	addLog("skipPoint(debug3)");
-	if(signal.enable){
-		//strtmp += "["+ charList[1+isMarch] + signal.count + "]";		//通過當下的燈號
-		strtmp += ",燈:" + signal.getLightStr() +"+";		//加的符號表示綠燈未結束
+	try{
+		if(signal.enable){
+			//strtmp += "["+ charList[1+isMarch] + signal.count + "]";		//通過當下的燈號
+			strtmp += ",燈:" + signal.getLightStr() +"+";		//加的符號表示綠燈未結束
+		}
+	}catch(error){
+		addLog("skipPoint(7nw):" + error.message);
 	}
 	// strtmp += ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
 	
@@ -9705,7 +9710,7 @@ minDiff = 361;
 
 
 function geoYes (evt){
-	addLog("geoYes(debug1)");
+	// addLog("geoYes(debug1)");
 	strGPS = strGPS.substr(1,4)+strGPS.charAt(0);
 	
 	recentPoint[0] = evt.coords.latitude;
@@ -9827,7 +9832,7 @@ function geoYes (evt){
 
 	}
 	showData();	
-	addLog("geoYes(debug9)");
+	// addLog("geoYes(debug9)");
 }
 
 function isSlow(speed){
