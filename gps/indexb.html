@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.729b7"; 	</script>
+	<script> 		var version = "v0.729b8"; 	</script>
 </head>
 
 <style> 
@@ -70,11 +70,12 @@
 			style="font-size:150px;  border-radius:50%;
 			width: var(--size2); height: var(--size2); line-height: var(--size2);"
 		>_</div>		
-		
+<!--
 		<div class="cmdButton" id="march2" rem="紅燈"
 			style="font-size:150px;  border-radius:50%;
 			width: var(--size2); height: var(--size2); line-height: var(--size2);"
 		>_</div>
+-->
 </div>
 
 		<div class="cmdButton" id="speedTime" 
@@ -1470,10 +1471,15 @@ var tasks = [[
 [22.715142111757505, 120.52903480114699, "輔鹽埔396k","平面右2",,"ign"],//無北向出口
 [22.715055867773167, 120.52922308627791, "輔20米南",,,"ign"],//鹽埔
 
-[22.700523009732700, 120.54812675998531, "長治400k(台24)",,,"ign"],
-[22.696598940387820, 120.55503669896504, "輔40米北","ign"],//長治
-[22.696340598015862, 120.55538995866570, "輔台24"],
-[22.689943113238030, 120.56098163452579, "長治400k(台24)","ign",,"交流道"],
+[22.710885875859052, 120.53311725085729, "輔神農西路"],
+[22.707021377820613, 120.53768253564040, "輔神農路"],
+[22.704050928612556, 120.54193279329853, "輔神農東路"],
+
+[22.700523009732700, 120.54812675998531, "長治400k(台24)",,,"ign"],//南出
+[22.700106115004140, 120.54902599917656, "輔德新路"],
+[22.696598940387820, 120.55503669896504, "輔40米北","ign"],//台24
+[22.696340598015862, 120.55538995866570, "輔台24"],//平面有號誌
+[22.689943113238030, 120.56098163452579, "長治400k(台24)","ign"],//北出
 
 [22.649500586764972, 120.54452911051592, "麟洛(台1)","交流道",,"ign"],//結束點路「邊」
 [22.647784633227910, 120.54335127836355, "輔小路","ign",,"ign"],//尋標時與附近路線區別
@@ -3077,7 +3083,7 @@ var tasks = [[
 [22.757934956355093, 120.37452810427432, "燕巢13k","ign"],
 
 [22.760400721227070, 120.38708611008398, "測速14.7k","測速",,"ign"],//桶寮巷陸橋西160米
-[22.769922588457074, 120.40414182005550, "測速16.8k","ign",,"測速"],//大占巷西側伸縮縫西邊
+[22.769922588457074, 120.40414182005550, "測速16.8k","ign",,"速限100西路中"],//大占巷西側伸縮縫西邊
 [22.778939634487300, 120.42233067282574, "燕巢系統19k(國3)","直2右2",,"ign"],//東出
 [22.780333339987646, 120.42342307395693, "輔190米東",,,"ign"],//槽化線東端分隔島
 [22.784706434128047, 120.42613003787960, "輔國3"],
@@ -3404,7 +3410,11 @@ var tasks = [[
 [22.600274942941560, 120.52945168108900, "屏50"],
 
 ],[
-[22.545036412039575, 120.54381079717584, "潮州/光華路_福星路"],
+[22.547634248743197, 120.54286813908871, "潮州/光華路_光華國小"],
+[22.546686177082710, 120.54293537328361, "華興路"],
+[22.546119982407394, 120.54300428842049, "盧山路"],
+[22.545642101620570, 120.54337613952100, "永康街"],
+[22.545036412039575, 120.54381079717584, "福星路"],
 [22.543683419059130, 120.54482655853849, "輔25米北","ign"],//中洲路
 [22.543479244913740, 120.54496502965941, "中洲路"],
 [22.543119979167326, 120.54527826467556, "44巷(金弘)"],
@@ -6735,6 +6745,9 @@ var tasks = [[
 [22.546938578574120, 120.53529136537081, "榮田二巷"],
 [22.546810391674830, 120.53630370810363, "信義路"],
 [22.546692210100530, 120.53743062449452, "新生路"],
+[22.546701290777854, 120.53958660442959, "興隆路"],
+[22.546687555974000, 120.54188401401758, "南京路"],
+[22.546680942644958, 120.54292588698294, "光華路"],
 
 ],[
 [22.548204582974600, 120.53644126789796, "潮州/和平路_信義路"],
@@ -8055,7 +8068,7 @@ var tasks = [[
 					theTime = this.highTime;
 					theChar = "<br>走:";
 					signal.isReporting = true;
-					
+				/*	
 					try{
 						let str34 = "x";
 						if(target.signStr){
@@ -8066,6 +8079,7 @@ var tasks = [[
 					}catch(err){
 						addLog("str34 : " + err.message);
 					}
+				*/
 					// addstr = ",均:XX km/h";
 					//切到停止
 					
@@ -8176,6 +8190,7 @@ var tasks = [[
 				for(let p = nextPoint; p>=0 && p<points.length; p += vector){				
 					if(signal.setColor(points[p][4-vector])){
 						find = true;
+						
 						//findPoint = p;		//TODO 下次從這點開始找,以免重覆
 						break;
 					}
@@ -8199,7 +8214,8 @@ var tasks = [[
 		}catch(err){
 			addLog("target.focus6:" + err.message);
 		}
-		/** 照相語音*/
+		
+		/** 測速照相語音*/
 	if(target.voiceStr){
 		if( target.voiceStr == "測速" || target.voiceStr.match(/速限\d*/)){
 			enAlarmSpeedLimit = 2;
@@ -8420,7 +8436,8 @@ signal.swColor=function(){
 		}
 		
 		signal.getLightStr=function(){
-			addLog("signal.getLightStr(debug1)");
+			//傳回離上次切換燈號的秒數(通常是綠燈)
+			// addLog("signal.getLightStr(debug1)");
 			let tmpStr ="";
 			try{
 					let tmp6y = ((Date.now() - signal.clickTime)/1000).toFixed(0);
@@ -8432,7 +8449,7 @@ signal.swColor=function(){
 				}catch(err){
 					addLog("signal.getLightStr(8tf):" + err.message);
 				}
-				addLog("signal.getLightStr(debug9)");
+				// addLog("signal.getLightStr(debug9)");
 				return tmpStr;
 		}
 		
@@ -8608,22 +8625,31 @@ signal.swColor=function(){
 				//addLog("<u>" + target.title+": add="+ target.addNum + "</u>");
 			}
 			//addLog("setColor(debug2)");
-			tmpStr = srcStr.match(/F\d+/);	//抓出綠燈秒數
+			tmpStr = srcStr.match(/R\d+/);	//抓出紅燈秒數
+			if(tmpStr){
+				target.runNum = parseInt( tmpStr[0].substring(1));
+				timeNum[0] = target.runNum;
+				rstStr = "R" + target.runNum;
+			}
+			
+			//addLog("setColor(debug3");
+			tmpStr = srcStr.match(/G\d+/) ;//抓出綠燈秒數
+			if(tmpStr){
+				target.stopNum = parseInt(tmpStr[0].substring(1));
+				timeNum[1] = target.stopNum;
+				rstStr +="G" + target.stopNum;
+			}
+			
+			tmpStr = srcStr.match(/F\d+/);	//抓出行走秒數
 			if(tmpStr){
 				target.runNum = parseInt( tmpStr[0].substring(1));
 				timeNum[2] = target.runNum;
-				rstStr = "走:" + target.runNum;
-			}
-			//addLog("setColor(debug3");
-			tmpStr = srcStr.match(/R\d+/) ;//抓出紅燈秒數
-			if(tmpStr){
-				target.stopNum = parseInt(tmpStr[0].substring(1));
-				timeNum[0] = target.stopNum;
-				rstStr +=",停:" + target.stopNum;
+				rstStr = "F" + target.runNum;
 			}
 			//addLog("setColor(debug8)");
 			if(rstStr){
-				addLog("setColor():"+target.title +":" + rstStr);
+				// addLog("setColor():"+target.title +":" + rstStr);
+				document.getElementById("watchStr").innerText = rstStr;
 				return true;
 			}
 			return false;
