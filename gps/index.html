@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.729b1"; 	</script>
+	<script> 		var version = "v0.729b2"; 	</script>
 </head>
 
 <style> 
@@ -6610,7 +6610,7 @@ var tasks = [[
 // [22.652427270814417, 120.52446484023852, "永昌巷"],
 [22.651955098169168, 120.52522991741225, "中華路","R49F106和平巷S@06:09日/F100@08:11/R43F106長安巷N@08:14五/F107@08:42/R44*,近速限60",,"R47@10:14六/F84瑞光路@10:58/R44F83巷11@12:26五/R44G150@14:42三/R44G92瑞光路@15:09,"],
 [22.651859227399765, 120.52538946334401, "輔20米東",,,"ign"],//中華路
-[22.651515374460395, 120.52598179763177, "民權路","R43G103走@08:44,速限60南路中",,"R53@19:37六/R45@14:32/R47F100+@16:29/R53F80巷11@20:34二/,"],
+[22.651515374460395, 120.52598179763177, "民權路","R43G103走@08:44,速限60南路中",,"R45@14:32/R47F100+@16:29/R53@19:37六/R53F80巷11@20:34二/,"],
 [22.650677214478804, 120.52685860645906, "民族路","R40,",,"R54F83瑞光路@14:17/R53F84巷11@14:44一/R54F85巷11@15:19日/R72F174瑞光路@16:36四/R40/R51F80@19:50六,南向先行"],
 [22.649322449799737, 120.52806492385191, "大同街(琉璃瓦)",,,"R35G120/R38F92永豐路N@13:36五/F107永達@16:06二/F112@16:09/G101走@16:41/R37F136棕櫚泉@16:41三/F127@16:54/F120@18:40,"],
 
@@ -8738,7 +8738,7 @@ signal.swColor=function(){		/*切換燈號顏色及秒數(已另有倒數函式)
 		if(!strTimes){
 			let sgn = src.match(/F\d+/g);
 			if(sgn){
-				return sgn[0];	//找不到時間字串, 則直接找燈號字串
+				return sgn[0];	//「完全」找不到時間字串, 則直接找燈號字串
 			}
 			return;
 		}
@@ -8746,15 +8746,22 @@ signal.swColor=function(){		/*切換燈號顏色及秒數(已另有倒數函式)
 // strNow = "07:45";
 		let theTime;
 		// console.log(strTimes.length);
-		
-		for(let i = 0;i<strTimes.length;i++){
+		let i=0;
+		for(;i<strTimes.length;i++){
 			if(strTimes[i] > strNow){
+				maxTime = strTimes[i];
 				break;
 			}
 			theTime = strTimes[i];
 		}
-		addLog("慣例:" + theTime);
-		if(!theTime)return;
+		if(!theTime){
+			theTime = maxTime;	//找不到較早的時間,就用超過的
+		}
+		if(!theTime){
+			return;
+		}else{
+			addLog("慣例:" + theTime);
+		}
 		
 		let idxResult = src.indexOf(theTime);
 		src = src.substr(0,idxResult);
