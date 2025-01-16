@@ -29,20 +29,31 @@ const, let, ver,
 		toUpperCase / toLowerCase		//大小寫轉換
 		
 		replace();	//取代(支援正規式)
-		match;//傳回所有符合字串的陣列(支援正規式)
+		match;//傳回陣列(支援正規式),加上「g」才會列出所有符合字串
+
 		search(支援正規式)
-		split(支援正規式)
+		split(支援正規式),傳回陣列,以符合規則的字串去分割其它字串
 				
 	正規式
 		https://www.knowledgefree.idv.tw/2019/11/jsregex-regular-expressionjavascript.html
+		測試網站：https://regex101.com/
 		const regex = /\d{5}/;		//規則(範圍為連續5個數字)
 		regex.test(str);					//是否找到相符字串,傳回true或false, 
 		regex.exec(str);					//傳回詳細資訊???
-		
+
+		以下為字串的math;
+		result = XXX.match	//傳回陣列, 元素1為第一個符合的字串,result.index為位置
+		用前後括號代表變數,如$1,回存,以將Gnn換成Fnn。
 	
 	
 	日期
-		t=Date.now();
+		t=Date.now();	//單位：千分之一秒
+		let now = new Date();
+		let strM =now.getHours();
+		if(strM.length == 1){
+			strM = "0"+ strM;
+		}
+		getMinutes();
 	陣列Array
 const aArray = [];
 aArray[0] = 1;
@@ -76,7 +87,10 @@ for (;cars[i];) {
   text += cars[i];
   i++;
 }
-以上三者可用continue;跳下一循環。或用break;跳出
+for ...in ...
+arr.forEach
+
+以上可用continue;跳下一循環。或用break;跳出
 try{
     throw new Error('Whoops!');
 }catch(err){

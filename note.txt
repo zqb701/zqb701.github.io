@@ -661,11 +661,11 @@ IT.npp=function  (){
 	8.1.9版 2021-10-22(npp), x64, Mini-portable(7z), 1.75MB,解開後 6.5MB(執行檔 5.898MB),沒有地區可選(可能因為是最小版)。
 	portable.7z, 3.25/18.8MB, 有台灣繁體可選, plugins有三項,localization有 6.15MB, 把taiwaneseMandarin.xml複製到Mini版即可。
 	
-	設定/偏好設定:3暗黑模式, 4邊距\行號關閉(看狀態列即可),1一般\工具列「穩藏」,???將連結視為可點擊,
+	設定/偏好設定:2文字游標寬度3(滑鼠游標無法設定?)。3暗黑模式, 4邊距\行號關閉(看狀態列即可),1一般\工具列「穩藏」,???將連結視為可點擊,
 	設定/語法樣式配置器
-		選取Global style下的Default Style, consolas換成「微軟正黑體 Light」(不等距), 12號。
-		javascript(embeded)/keyword及commonXXX(字型不要斜體：)
-		??? 如何指定「then」及「console」變色???
+		Global Style : Default Style，顏色換成純白，字型換成「微軟正黑體」， 16號。( 字型Light太細)
+		JavaScript：COMMENT變色並取消預設的斜向。INSTRUCTION WORD指令的顏色，如IF、ELSE、FOR。TYPE WORD如Array Date等(自訂清單：toFixed substr substring getFullYear getDay getMonth getHours getMinutes getSeconds match console log charAt length )。	WINDOW INSTRUCTION如alert button等。
+		
 	語法顏色﹐會依副檔名判斷, 但可由使用者指定, 例如.html或.txt指定為javascript
 	
 	到指定行Ctrl+G, 設定/邊距... 可把左側「標記」區空間全關
@@ -673,15 +673,16 @@ IT.npp=function  (){
 	工作階段會保存之前開啟之檔案, 但有時不明原因遺失。透過儲存/載入可取回, 但要去開檔案, 不能載入最近者。
 	滑鼠 雙點:選詞，Ctrl+雙點:選取括號內全部
 	切換註解Ctrl+Q, 對空行無效。想改為"/", 但與scintilla的XXX衝突。
-	行刪除 Ctrl+L。	行合併 , 先選取,再Ctrl+J。行複製 ctrl + D。行亙換C+S+上或下。
+	行刪除 Ctrl+L。	行合併 , 先選取,再Ctrl+J。行複製 ctrl + D。行對換C+S+上或下。
 	
-	收折功能, 收折狀態不會保存, 有function list功能就不需要收折了
+	有區塊收折功能(#4摺疊), 但收折狀態不會保存,(有function list功能就不需要收折了)
 	標記行 Ctrl+F2, F2找下一標記行
+	
 	同步異位編輯：
 		按住alt及左鍵往下拉, 每行都會出現游標可同時編輯, 或複製多行的文字
 		用ctrl可選擇多個任意位置同時編輯(要先開啟設定)
 		
-	14 自動完成???, 
+	14 自動完成???, ctrl+enter
 		預設開啟為函式與字詞, 會把長串文字也列入??? 
 		到完整版把autoC..., 
 		仍有自動記錄問題。

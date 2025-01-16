@@ -28,8 +28,9 @@ infiniti QX55, G35/37, M25/37, EX35,
 JAGUAR F-PACE , R75, XKR
 kia eurostar/atos, morning, stonic, soul, carens, sportage, optima, ceed系列, Sorento, Ray, stinger,EV9, Carnival
 Lamborghini Lanzador, urus
+lancia蘭吉雅/義大利 Ypsilon(信義路)
 Land Rover RangeRover, defender, discovery, Velar, EVOQUE
-LEXUS LBX, UX, NX, RX, GX550, LX, TX, ct, iS, es, gs, , RZ, ML, LX、GX及TX, LFA
+LEXUS LBX, UX, NX, RX, GX550, LX, TX, ct, iS, es, gs, , RZ, ML, LX、GX及TX, LFA, sc430,
 Lotus
 Luxgen	s3, s5, u5, u6, u7, v7, m7, urx
 Mahindra kuv100, 卡車
@@ -58,7 +59,7 @@ Subaru impreza, WRX, outbark, Forest, XV, BRZ, legacy, Levorg
 Suzuki Swift、Swift、Baleno、Vitara、SX4, jimmy, ignis, solio, alto,liana, Kizashi, cappuccino, Ertiga, Cultus福星, 
 雪佛蘭 大黃蜂
 Tesla
-TOYOTA tercel/VIOS, yaris, rav4, cc, c-hr, auris, AE86, premio, exsior, wish/sienta, crown, camry, Alphard, Venza, veloz, mr2,  Century, ???range, 4runner,Land Cruiser, CELICA, innava?, 
+TOYOTA tercel/VIOS, yaris, rav4, cc, c-hr, auris, AE86, premio, exsior, wish/sienta, crown, camry, Alphard, Venza, veloz, mr2,  Century, ???range, 4runner,Land Cruiser, CELICA, innova, SIENNA, Celica
 TOBE M'car, M'way, 
 U
 vinfast vf8, vf9
