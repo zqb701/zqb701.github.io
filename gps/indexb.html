@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.729b81"; 	</script>
+	<script> 		var version = "v0.729b8"; 	</script>
 </head>
 
 <style> 
@@ -8434,32 +8434,35 @@ var tasks = [[
 	
 		class signal01{}
 		var signal = new signal01();
+		signal.IntervalID;					//signal有一個計數器,以「秒」為「倒數」間隔。
+		signal.enable =false;			//TODO 改以IntervalID取代?
 		signal.clickTime=Date.now();
 		signal.recentFlag = "";			//當前的燈色
 		signal.previousFlag="*";		//前一個燈色
 		signal.recordStr = "";
 		signal.isReporting = false;
-		signal.enable =false;
-		signal.IntervalID;
 		signal.count=0;
 		signal.startTitle = "";			//開始計算可行時秒數的路口名稱, 含停紅燈的時間
 		signal.isWaitNext = true;
 		signal.preLight = "";				//停紅燈的旗標與秒數
-		signal.exitCause = "";			//離、端... 等代表路徑變換的字元
+		signal.exitCause = "";			//離、端... 等代表路徑變換的字元,脫離原因escape
 		signal.expTime = "";			//所引用號誌數據的時間值
 		signal.properties  = "";		//當前號誌的燈號時間, 由當前路口號誌資料庫依時間歸納
 														//如R40G60左15F120xx路F150zz路轉左n轉右m
 		
 		//避免手機的touchstart觸發後又觸發click, 但無效
 		//可能要等300ms
-		var isMarch = -1;	//行進中,motion, move, 靜止still
+	var isMarch = -1;	//行進中,motion, move, 靜止still
 	var march = document.getElementById("march");
 
 	var timeNum = [33,,55];	//TODO 連續號誌使用同一時序。轉向時兩個值互換。
 	var colSymb = { R: "red",	F: "lime"};	//燈號對應的顏色。	變數名稱不可用中文
 	var colorList = ["red",,"lime"];	//萊姆色(亮綠)
 	var charList = ["R",,"F"];
-		
+	
+	signal.init=function(){
+		signal.defPrep =  "R30G40F100";
+	}
 	signal.addTime=function(num){
 		let num2 = parseInt(march.innerText);
 		num2 += num;
@@ -8478,69 +8481,75 @@ var tasks = [[
 		//找下一點的資料
 // 手動點選, 並記錄
 //跳點時記錄
-signal.swColor=function(){		/*切換燈號顏色及秒數(已另有倒數函式)*/
-	// addLog("signal.swColor(0)");
-// function swColor(){
+	signal.swColor=function(){		/*切換燈號顏色及秒數(已另有倒數函式)*/
+		// addLog("signal.swColor(0)");
+		// function swColor(){
 
-	//初始綠色靜止秒數零, 按一下開始增加, 
-	//按一下(記錄綠色秒數G3)變紅且從零增加,
-	//再按一下(記錄G3R40)變綠且從零增加
-	//跳點後,存檔G3R40G24,畫面回復初始狀態
-	//看到燈號時按一下, 再按一下變更顏色,倒數, 下一點時間不同則要回復初始狀態
-	if(!signal.IntervalID){
-		signal.on();
-		return;
-	}
-// addLog("signal.swColor(1)");
+		//初始綠色靜止秒數零, 按一下開始增加, 
+		//按一下(記錄綠色秒數G3)變紅且從零增加,
+		//再按一下(記錄G3R40)變綠且從零增加
+		//跳點後,存檔G3R40G24,畫面回復初始狀態
+		//看到燈號時按一下, 再按一下變更顏色,倒數, 下一點時間不同則要回復初始狀態
+		if(!signal.IntervalID){
+			signal.on();
+			return;
+		}
+			// addLog("signal.swColor(1)");
 		let msgStr = null;
 		msgStr = charList[1+isMarch]+(signal.count+1);//舊的count
 		
 		isMarch *= -1;
 		signal.count = timeNum[1+isMarch];
-		signal.recentFlag = charList[1+isMarch];		
-		
+		signal.recentFlag = charList[1+isMarch];			
 		march.style.color = colorList[1+isMarch];
 		march.innerText = signal.count;
 		// addLog("signal.swColor(9)");
-		return msgStr;		
+		return msgStr;	
+	}
+
+		
+	signal.off=function(){
+		signal.enable = false;
+		window.clearInterval(signal.IntervalID);
+		addLog("signal.off(9):signal.IntervalID=" +signal.IntervalID);
+		march.style.color = "gray";//灰色
+		march.innerText = "_";
+	}
+		
+		
+	signal.on=function(){
+		//addLog("signal.on(0)");
+		if(signal.enable){
+			return;
+		}
+		//addLog("signal.on(1)");
+		signal.enable = true;
+		signal.IntervalID = window.setInterval(( () =>  {
+		//休眠狀態將回調函數放在隊列中,等瀏覽器再次打開的時候，一瞬間全部執行
+			signal.testing();
+		}	) , 1000);
+		//addLog("run swColor at signal.on()");
+		signal.swColor();			//換色含時間
+		//addLog("signal.on(9)");
+	}
 	
-}
 		
-		signal.off=function(){
-			// addLog("略過signal.off()");
-			// return;
-			
-			signal.enable = false;
-			window.clearInterval(signal.IntervalID);
-			march.style.color = "gray";
-			march.innerText = "_";
-			// addLog("signal.off(9)");
+	signal.testing=function(num){
+		if(signal.count < 17 && march.style.color==colSymb.F){
+			march.style.color = "yellow";//黃色, 可行駛時間剩17秒(為何是17 ???)
 		}
 		
-		
-		signal.on=function(){
-			//addLog("signal.on(0)");
-			if(signal.enable){
-				return;
-			}
-			//addLog("signal.on(1)");
-			signal.enable = true;
-			signal.IntervalID = window.setInterval(( () =>  {
-			//休眠狀態將回調函數放在隊列中,等瀏覽器再次打開的時候，一瞬間全部執行
-				if(signal.count < 0){
-					isMarch *= -1;
-					signal.count = timeNum[1+isMarch];
-					march.style.color = colorList[1+isMarch];
-					signal.recentFlag = charList[1+isMarch];	
-					// march.innerText = count;
-				}
-				//addLog("signal.on(): signal.count=" + signal.count);
-				march.innerText = signal.count--;
-			}	) , 1000);
-			//addLog("run swColor at signal.on()");
-			signal.swColor();			//換色含時間
-			//addLog("signal.on(9)");
+		if(signal.count < 0){
+			//TODO 換色, 為何不是用swColor???
+			isMarch *= -1;
+			signal.count = timeNum[1+isMarch];
+			march.style.color = colorList[1+isMarch];
+			signal.recentFlag = charList[1+isMarch];	
+			// march.innerText = count;
 		}
+		//addLog("signal.on(): signal.count=" + signal.count);
+		march.innerText = signal.count--;
+	}
 		
 		signal.setTime=function(num){
 			march.innerText = num;
