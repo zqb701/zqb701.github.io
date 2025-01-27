@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.729b7"; 	</script>
+	<script> 		var version = "v0.729b8"; 	</script>
 </head>
 
 <style> 
@@ -8228,12 +8228,20 @@ var tasks = [[
 		target.runNum = -1;	//號誌綠燈秒數
 		target.stopNum = -2;	//號誌紅燈秒數
 		target.addNum = -3;	//號誌偏移秒數
+		/*TODO 以上三行應移給signal*/
+		
 		target.signStr = "";
 		target.title;	
+		target.isShowProp = true;		//同一個target,不管按幾次signal.click，只有一次顯示號誌參數
 	
-	target.giveup = function(){ 	 	}
-	
-	target.blur = function(){ 	}
+	target.giveup = function(){
+		//放棄，跳到下一個點
+ 	 }
+
+	target.blur = function(){ 
+		//失焦，完成本目標，成為「prevTarget」正常轉移到下一點，
+	}
+
 	target.setColor = function(){
 		//抓出最近的紅綠燈秒數
 		try{
@@ -8266,13 +8274,14 @@ var tasks = [[
 				//signal.addTime(target.runNum - source.runNum);
 			
 		}catch(err){
-			addLog("target.focus6:" + err.message);
+			addLog("target.focus6d:" + err.message);
 		}
 	}
 	
 	target.focus=function(){	 //設定新的目標點及其資訊
 	/**忽略不要的點*/
 		target.voiceStr = points[nextPoint][4-vector];
+		target.isShowProp = true;
 		try{
 			if(target.voiceStr){
 				let idx = target.voiceStr.indexOf(",");
@@ -8285,16 +8294,17 @@ var tasks = [[
 			addLog("target.focus3:" + err.message);
 		}
 		
-	while(target.voiceStr && target.voiceStr == "ign"){
-		addLog("<small>略:n" + points[nextPoint][2] + "</small>");
-		nextPoint += vector;
-		target.voiceStr = points[nextPoint][4-vector];//TODO:索引超出會有何反應, 改用for
-	}
-	
-	target.title = points[nextPoint][2];
-	if(!target.title){
-		target.title = "未取得";
-	}
+		while(target.voiceStr && target.voiceStr == "ign"){
+			addLog("<small>略:n" + points[nextPoint][2] + "</small>");
+			nextPoint += vector;
+			target.voiceStr = points[nextPoint][4-vector];//TODO:索引超出會有何反應, 改用for
+		}
+		
+		target.title = points[nextPoint][2];
+		if(!target.title){
+			target.title = "未取得";
+		}
+		
 		if(nextPoint ==0){	//第一點包含路徑名稱,要切割
 			let idx = target.title.indexOf("_");
 			target.title = target.title.substring(idx+1);		//起始,結束 
@@ -8885,17 +8895,22 @@ signal.swColor=function(){		/*切換燈號顏色及秒數(已另有倒數函式)
 				rstStr += "F" + target.runNum;
 			}
 			}catch(error){
-				addLog("947:" + error.message);
+				addLog("signal.setColor947:" + error.message);
 			}
+			
 			//addLog("setColor(debug8)");
+			try{
 			if(rstStr !== ""){
 				// addLog("setColor():"+target.title +":" + rstStr);
 				signal.properties = rstStr;
-				if(rptTarget != target.title){		//避免末通過路口時, 多次顯示本訊息
+				if(target.isShowProp){		//避免末通過路口時, 多次Click,而重覆顯示本訊息
 					addLog("源:"+signal.properties+"to"+signal.towarder+"@"+signal.expTime);
-					rptTarget = target.title;
+					target.isShowProp = fasle;
 				}
 				return true;
+			}
+			}catch(error){
+				addLog("signal.setColor33d:" + error.message);
 			}
 			signal.properties = "";
 			return false;
