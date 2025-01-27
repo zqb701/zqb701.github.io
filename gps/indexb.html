@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.729b8"; 	</script>
+	<script> 		var version = "v0.729b81"; 	</script>
 </head>
 
 <style> 
@@ -8905,7 +8905,7 @@ signal.swColor=function(){		/*切換燈號顏色及秒數(已另有倒數函式)
 				signal.properties = rstStr;
 				if(target.isShowProp){		//避免末通過路口時, 多次Click,而重覆顯示本訊息
 					addLog("源:"+signal.properties+"to"+signal.towarder+"@"+signal.expTime);
-					target.isShowProp = fasle;
+					target.isShowProp = false;
 				}
 				return true;
 			}

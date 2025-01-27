@@ -21,29 +21,31 @@ const, let, ver,
 		Nunber	//自動去掉前後空白, 空字串含全部空格轉為零,則 true 為 1、false 為 0,  null，則回傳 0
 	字串
 		idx=a.indexOf("_"[,起始]);	//找到在第一個字元傳回「0」, 找不到傳回-1
-			lastIndexOf()字串沒有,陣列才有
+			lastIndexOf()		//從尾端找
 		b=a.substring(開始[, 結束]);	//後參數較小時會自動對換
 		b=a.substr(開始[, 長度]);	//可從字尾算起,-1為最後一個字元
 		L=a.length;	//不加刮號
 		d=toStiring([n進位]);	//
 		toUpperCase / toLowerCase		//大小寫轉換
 		
-		replace();	//取代(支援正規式)
-		match;//傳回陣列(支援正規式),加上「g」才會列出所有符合字串
+		replace();	//取代(正規式另詳)
+		match;//傳回陣列(正規式另詳)
 
 		search(支援正規式)
 		split(支援正規式),傳回陣列,以符合規則的字串去分割其它字串
 				
 	正規式
+		測試網站 https://regex101.com/
 		https://www.knowledgefree.idv.tw/2019/11/jsregex-regular-expressionjavascript.html
 		測試網站：https://regex101.com/
-		const regex = /\d{5}/;		//規則(範圍為連續5個數字)
+		const regex = /\d{5}/;		//連續5個數字
 		regex.test(str);					//是否找到相符字串,傳回true或false, 
 		regex.exec(str);					//傳回詳細資訊???
 
 		以下為字串的math;
 		result = XXX.match	//傳回陣列, 元素1為第一個符合的字串,result.index為位置
-		用前後括號代表變數,如$1,回存,以將Gnn換成Fnn。
+		//加上「g」才會列出所有符合字串
+		//用前後括號代表變數,如$1,回存,以將Gnn換成Fnn。
 	
 	
 	日期
