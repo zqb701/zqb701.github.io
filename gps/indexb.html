@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.729b9"; 	</script>
+	<script> 		var version = "v0.72c1"; 	</script>
 </head>
 
 <style> 
@@ -8112,7 +8112,7 @@ var tasks = [[
 			if(this.slowTime){
 				this.meter.style.color = "white";
 			}else{
-				this.meter.style.color = "cyan";
+				this.meter.style.color = "cyan";//青色(藍綠色)
 			}
 			signal.clickTime = Date.now();
 		};
@@ -8435,22 +8435,50 @@ var tasks = [[
 	}
 	
 		class signal01{}
-		var signal = new signal01();
-		signal.IntervalID;					//signal有一個計數器,以「秒」為「倒數」間隔。
-		signal.enable =false;			//TODO 改以IntervalID取代?
-		signal.clickTime=Date.now();
-		signal.recentFlag = "";			//當前的燈色
-		signal.previousFlag="*";		//前一個燈色
-		signal.recordStr = "";
-		signal.isReporting = false;
-		signal.count=0;
-		signal.startTitle = "";			//開始計算可行時秒數的路口名稱, 含停紅燈的時間
-		signal.isWaitNext = true;
-		signal.preLight = "";				//停紅燈的旗標與秒數
-		signal.exitCause = "";			//離、端... 等代表路徑變換的字元,脫離原因escape
-		signal.expTime = "";			//所引用號誌數據的時間值
-		signal.properties  = "";		//當前號誌的燈號時間, 由當前路口號誌資料庫依時間歸納
+		// var signal = new signal01();
+		function signal2( name, age, gender ){
+  // 用function自訂物件時,比較像class, 要用new以新名稱建構實體
+			this.name = name;
+			this.age = age;
+			this.gender = gender;
+
+			this.greeting = function(){
+				console.log('Hello! My name is ' + this.name + '.');
+			};
+		}
+		var kuro = new signal2( 'Kuro', 32, 'male');
+
+		var signal = {
+			IntervalID : undefined,		//signal有一個計數器,以「秒」為「倒數」間隔。
+			enable : false,			//TODO 改以IntervalID取代?
+			recentFlag : "",			//當前的燈色
+			previousFlag : "*",		//前一個燈色
+			recordStr : "",
+			isReporting : false,
+			count : 0,
+			startTitle : "",			//開始計算可行時秒數的路口名稱, 含停紅燈的時間
+			isWaitNext : true,
+			preLight : "",				//停紅燈的旗標與秒數
+			exitCause : "",			//離、端... 等代表路徑變換的字元,脫離原因escape
+			expTime : "",			//所引用號誌數據的時間值
+			properties  : "",		//當前號誌的燈號時間, 由當前路口號誌資料庫依時間歸納
 														//如R40G60左15F120xx路F150zz路轉左n轉右m
+			initt(){
+				addLog("signal.initt()" + this.previousFlag);
+			},
+		};
+		
+		signal.initt();
+		
+		signal.init=function(){
+				addLog("signal.init()"+ this.previousFlag);
+				// signal.defPrep =  "R30G40F100";//初值可併到colSymb
+			}
+		signal.init();
+		
+		signal.clickTime=Date.now();
+		
+
 		
 		//避免手機的touchstart觸發後又觸發click, 但無效
 		//可能要等300ms
@@ -8458,13 +8486,12 @@ var tasks = [[
 	var march = document.getElementById("march");
 
 	var timeNum = [33,,55];	//TODO 連續號誌使用同一時序。轉向時兩個值互換。
-	var colSymb = { R: "red",	F: "lime"};	//燈號對應的顏色。	變數名稱不可用中文
-	var colorList = ["red",,"lime"];	//萊姆色(亮綠)
+	var colSymb = { R: "red",	F: "cyan", G: "lime", };	//燈號對應的顏色。	變數名稱不可用中文
+	var colorList = ["red",,"cyan"];	//萊姆色(亮綠)
 	var charList = ["R",,"F"];
 	
-	signal.init=function(){
-		signal.defPrep =  "R30G40F100";
-	}
+
+	
 	signal.addTime=function(num){
 		let num2 = parseInt(march.innerText);
 		num2 += num;
@@ -8538,7 +8565,15 @@ var tasks = [[
 	
 		
 	signal.testing=function(num){
-		if(signal.count < 17 && march.style.color==colSymb.F){
+		
+		if(signal.startTitle !== target.title){
+			//通過起始點後，燈號從亮綠轉亮藍
+			march.style.color = colSymb.G;	//暫時以亮綠為行駛顏色
+			//且秒數以Fxx扣掉剛才經過的秒數clicktime
+			
+		}
+		
+		if(signal.count <= 17 && march.style.color !== colSymb.R){
 			march.style.color = "yellow";//黃色, 可行駛時間剩17秒(為何是17 ???)
 		}
 		
@@ -8663,8 +8698,8 @@ var tasks = [[
 				}
 				/*下一節點的資訊*/
 				if(target.isShowProp){		//isShowProp為避免末通過路口時, 多次Click,而重覆顯示本訊息
-					let str22 = signal.properties+"to"+signal.towarder+"@"+signal.expTime + "from" +target.title;
-					addLog("源:"+str22);
+					let str22 = signal.properties+"to"+signal.towarder+"@"+signal.expTime + "fr" +target.title;
+					addLog("預:"+str22);
 					document.getElementById("watchStr").innerText = str22;
 					target.isShowProp = false;
 				}
