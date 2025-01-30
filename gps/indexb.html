@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c1"; 	</script>
+	<script> 		var version = "v0.72c11"; 	</script>
 </head>
 
 <style> 
@@ -62,11 +62,11 @@
 		>↻</div>
 		
 		<div class="cmdButton" 
-		onclick_="documentElement.scrollTop=0; playVoice('當');⇧" 
-		onclick="ignoreNode();" 
+		ontouchstart="target.giveup();" 
 		style="width:180px;height:180px;border-radius: 40% 0  0 40%;font-size: 100px;"
 		>⏭️</div>	
 <div>
+
 		<div class="cmdButton" id="march" rem="綠燈"
 			style="font-size:150px;  border-radius:40%;
 			width: var(--size2); height: var(--size2); line-height: var(--size2);"
@@ -8237,9 +8237,7 @@ var tasks = [[
 		target.title;	
 		target.isShowProp = true;		//同一個target,不管按幾次signal.click，只有一次顯示號誌參數
 	
-	target.giveup = function(){
-		//放棄，跳到下一個點
- 	 }
+
 
 	target.blur = function(){ 
 		//失焦，完成本目標，成為「prevTarget」正常轉移到下一點，
@@ -8456,15 +8454,15 @@ var tasks = [[
 			recordStr : "",
 			isReporting : false,
 			count : 0,
-			startTitle : "",			//開始計算可行時秒數的路口名稱, 含停紅燈的時間
+			startTitle : "",				//開始計算可行時秒數的路口名稱, 含停紅燈的時間
 			isWaitNext : true,
 			preLight : "",				//停紅燈的旗標與秒數
 			exitCause : "",			//離、端... 等代表路徑變換的字元,脫離原因escape
-			expTime : "",			//所引用號誌數據的時間值
-			properties  : "",		//當前號誌的燈號時間, 由當前路口號誌資料庫依時間歸納
+			expTime : "",				//所引用號誌數據的時間值
+			properties  : "",			//當前號誌的燈號時間, 由當前路口號誌資料庫依時間歸納
 														//如R40G60左15F120xx路F150zz路轉左n轉右m
 			initt(){
-				addLog("signal.initt()" + this.previousFlag);
+				addLog("signal.initt()" + this);
 			},
 		};
 		
@@ -8483,7 +8481,7 @@ var tasks = [[
 		//避免手機的touchstart觸發後又觸發click, 但無效
 		//可能要等300ms
 	var isMarch = -1;	//行進中,motion, move, 靜止still
-	var march = document.getElementById("march");
+	
 
 	var timeNum = [33,,55];	//TODO 連續號誌使用同一時序。轉向時兩個值互換。
 	var colSymb = { R: "red",	F: "cyan", G: "lime", };	//燈號對應的顏色。	變數名稱不可用中文
@@ -8573,20 +8571,20 @@ var tasks = [[
 			
 		}
 		
-		if(signal.count <= 17 && march.style.color !== colSymb.R){
+		if(this.count <= 17 && march.style.color !== colSymb.R){
 			march.style.color = "yellow";//黃色, 可行駛時間剩17秒(為何是17 ???)
 		}
 		
-		if(signal.count < 0){
+		if(this.count < 0){
 			//TODO 換色, 為何不是用swColor???
 			isMarch *= -1;
-			signal.count = timeNum[1+isMarch];
+			this.count = timeNum[1+isMarch];
 			march.style.color = colorList[1+isMarch];
 			signal.recentFlag = charList[1+isMarch];	
 			// march.innerText = count;
 		}
 		//addLog("signal.on(): signal.count=" + signal.count);
-		march.innerText = signal.count--;
+		march.innerText = this.count--;
 	}
 		
 		signal.setTime=function(num){
@@ -8631,6 +8629,7 @@ var tasks = [[
 			4.報告字串
 			
 			*/
+			// console.log(this);
 			e.preventDefault();
 			playVoice("當");
 			if(!signal.enable){
@@ -8731,7 +8730,7 @@ var tasks = [[
 			signal.previousFlag = signal.recentFlag;
 			
 		}//end of Function click()
-		
+		var march = document.getElementById("march");
 		march.addEventListener("touchstart", signal.click);
 		
 		
@@ -9511,7 +9510,10 @@ function gridCmd(x,y){
 			return;
 		}
 	}
-function ignoreNode(){
+		target.giveup = function(){
+		//放棄，跳到下一個點
+ 	 // }
+// function ignoreNode(){
 	logTitle = "跳:";
 			if(skipPoint()){	//手動跳一點
 				myCanvas.drawPoint(points[nextPoint][0], points[nextPoint][1], "white", 2);
