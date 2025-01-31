@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c11"; 	</script>
+	<script> 		var version = "v0.72c12"; 	</script>
 </head>
 
 <style> 
@@ -8248,7 +8248,7 @@ var tasks = [[
 		try{
 			//240914, 從下一點起開始找到紅綠燈資訊
 			//addLog("target.focus(): signal.enable="+signal.enable);
-			if(signal.enable){
+			if(signal.IntervalID){
 				let find = false;
 				for(let p = nextPoint; p>=0 && p<points.length; p += vector){				
 					if(signal.setColor(points[p][4-vector])){
@@ -8265,9 +8265,7 @@ var tasks = [[
 			}else{		//號誌關閉時, 只檢查目標點
 				//addLog("target.focus(): 號誌檢查," + points[nextPoint][4-vector]);
 				if(signal.setColor(points[nextPoint][4-vector])){
-					//addLog("target.focus(): 號誌啟用" + target.title);
 					signal.on();
-					//signal.swColor();//241028: signal.on()已內含
 				}
 			}
 			//if(source.group == target.group){//連動群組尚用不到
@@ -8384,7 +8382,6 @@ var tasks = [[
 				}else{
 					//addLog("path.focus():號誌啟用"+ path.title);
 					signal.on();//本行「可能」造成新路線時紅綠燈重置
-					//signal.swColor();//241028signal.on()已內含
 				}			
 		}catch(err){
 			addLog("err498, path.focus():" + err.message);
@@ -8448,7 +8445,7 @@ var tasks = [[
 
 		var signal = {
 			IntervalID : undefined,		//signal有一個計數器,以「秒」為「倒數」間隔。
-			enable : false,			//TODO 改以IntervalID取代?
+			// enable : false,			//TODO 改以IntervalID取代?
 			recentFlag : "",			//當前的燈色
 			previousFlag : "*",		//前一個燈色
 			recordStr : "",
@@ -8461,6 +8458,7 @@ var tasks = [[
 			expTime : "",				//所引用號誌數據的時間值
 			properties  : "",			//當前號誌的燈號時間, 由當前路口號誌資料庫依時間歸納
 														//如R40G60左15F120xx路F150zz路轉左n轉右m
+			clickTime : undefined,
 			initt(){
 				addLog("signal.initt()" + this);
 			},
@@ -8474,7 +8472,7 @@ var tasks = [[
 			}
 		signal.init();
 		
-		signal.clickTime=Date.now();
+		// signal.clickTime=Date.now();
 		
 
 		
@@ -8508,22 +8506,9 @@ var tasks = [[
 		//找下一點的資料
 // 手動點選, 並記錄
 //跳點時記錄
-	signal.swColor=function(){		/*切換燈號顏色及秒數(已另有倒數函式)*/
-		// addLog("signal.swColor(0)");
-		// function swColor(){
-
-		//初始綠色靜止秒數零, 按一下開始增加, 
-		//按一下(記錄綠色秒數G3)變紅且從零增加,
-		//再按一下(記錄G3R40)變綠且從零增加
-		//跳點後,存檔G3R40G24,畫面回復初始狀態
-		//看到燈號時按一下, 再按一下變更顏色,倒數, 下一點時間不同則要回復初始狀態
-		if(!signal.IntervalID){
-			signal.on();
-			return;
-		}
-			// addLog("signal.swColor(1)");
-		let msgStr = null;
-		msgStr = charList[1+isMarch]+(signal.count+1);//舊的count
+	signal.swColor=function(){		/*切換燈號顏色及起始秒數*/
+		// let msgStr = null;
+		// msgStr = charList[1+isMarch]+(signal.count+1);//舊的count
 		
 		isMarch *= -1;
 		signal.count = timeNum[1+isMarch];
@@ -8531,12 +8516,12 @@ var tasks = [[
 		march.style.color = colorList[1+isMarch];
 		march.innerText = signal.count;
 		// addLog("signal.swColor(9)");
-		return msgStr;	
+		// return msgStr;	
 	}
 
 		
 	signal.off=function(){
-		signal.enable = false;
+		// signal.enable = false;
 		window.clearInterval(signal.IntervalID);
 		signal.IntervalID = undefined;
 		//addLog("signal.off(9):signal.IntervalID=" +signal.IntervalID);
@@ -8546,28 +8531,22 @@ var tasks = [[
 		
 		
 	signal.on=function(){
-		//addLog("signal.on(0)");
-		if(signal.enable){
+		if(this.IntervalID){
 			return;
 		}
-		//addLog("signal.on(1)");
-		signal.enable = true;
-		signal.IntervalID = window.setInterval(( () =>  {
-		//休眠狀態將回調函數放在隊列中,等瀏覽器再次打開的時候，一瞬間全部執行
+		this.IntervalID = window.setInterval(( () =>  {
 			signal.testing();
 		}	) , 1000);
-		//addLog("run swColor at signal.on()");
-		signal.swColor();			//換色含時間
-		//addLog("signal.on(9)");
 	}
 	
 		
-	signal.testing=function(num){
-		
-		if(signal.startTitle !== target.title){
+	signal.testing=function(num){		
+		if(march.style.color == colSymb.F && signal.startTitle !== target.title){
 			//通過起始點後，燈號從亮綠轉亮藍
 			march.style.color = colSymb.G;	//暫時以亮綠為行駛顏色
-			//且秒數以Fxx扣掉剛才經過的秒數clicktime
+			//且秒數以Fxx扣掉剛才經過的秒數clicktime, 前提是要先使用G的秒數
+			//this.count = fcount - this.count;
+			//march.innerText = this.count;
 			
 		}
 		
@@ -8576,25 +8555,20 @@ var tasks = [[
 		}
 		
 		if(this.count < 0){
-			//TODO 換色, 為何不是用swColor???
-			isMarch *= -1;
-			this.count = timeNum[1+isMarch];
-			march.style.color = colorList[1+isMarch];
-			signal.recentFlag = charList[1+isMarch];	
-			// march.innerText = count;
+			signal.swColor();
 		}
-		//addLog("signal.on(): signal.count=" + signal.count);
 		march.innerText = this.count--;
 	}
 		
-		signal.setTime=function(num){
-			march.innerText = num;
-			addLog("signal.setTime\march.innerText =" + march.innerText);
-		}
+	signal.setTime=function(num){
+		this.count = num;
+		march.innerText = num;
+		addLog("signal.setTime\march.innerText =" + march.innerText);
+	}
 		
-		signal.getTime=function(){
-			return parseInt(march.innerText);
-		}
+	signal.getTime=function(){
+		return parseInt(signal.setTime);
+	}
 		
 		signal.getLightStr=function(){
 			
@@ -8614,124 +8588,118 @@ var tasks = [[
 				return resultStr;		//為何會傳回空白字串? 24/12/17泰武
 		}
 		
-
 		
 		signal.getElapsed=function(){
-			//本次燈號經過的時間,及燈色
-			
+			//本次燈號經過的時間,及燈色		
 		}
 		
-		signal.click=function(e){
-			/*
-			1.按鈕音效
-			2.更新參數
-			3.按鈕影像
-			4.報告字串
-			
-			*/
-			// console.log(this);
-			e.preventDefault();
-			playVoice("當");
-			if(!signal.enable){
-				signal.on();
-				return;
+	signal.click=function(e){
+		/*
+		1.按鈕音效
+		2.更新參數
+		3.按鈕影像
+		4.報告字串
+		
+		*/
+		// console.log(this);
+		e.preventDefault();
+		playVoice("當");
+		// addLog("IntervalID=" +signal.IntervalID);
+		// if(signal.IntervalID)console.log("true");
+		// if(!signal.enable){
+		if(!this.IntervalID){
+			signal.on();
+		}
+		//手動燈號切換
+		//addLog("run swColor at signal.click()");
+		target.setColor();
+		signal.swColor();	
+		
+		//取得切換後的顏色	
+		//為了取得兩次手動的間距時間
+		let tmpNow = Date.now();
+		let tmpStr = ((tmpNow - signal.clickTime)/1000).toFixed(0);
+		//addLog( tmpStr +"秒");
+		signal.recordStr += tmpStr +"," + signal.recentFlag;
+
+		let now = new Date();
+		let tmp447 = "<a style='color:"+colSymb[signal.previousFlag]+";'>";
+		tmp447 += signal.previousFlag + tmpStr;
+		tmp447 += "</a>";					
+
+		if(signal.exitCause != ""){
+			tmp447 = signal.exitCause + tmp447;
+			signal.exitCause = "";
+		}
+		let newline = "";		//綠燈結算時換行用。
+		
+		if(tmpStr >2 && tmpStr <200){	//合理範圍,秒數小代表切換過程, 秒數大代表久沒切換
+			if(signal.previousFlag == "R"){		//紅燈結算
+	
+				if(signal.preLight == ""){		//有紅燈要保留,如小紅燈(左轉燈)
+					signal.preLight = tmp447;
+				}else{
+					signal.preLight = signal.preLight.replace("R", "左");
+					signal.preLight = tmp447 + "Gn" + signal.preLight;		
+				}
 			}
-			//手動燈號切換
-			//addLog("run swColor at signal.click()");
-			target.setColor();
-			signal.swColor();			//換色含時間			
 			
-			//取得切換後的顏色	
-			//為了取得兩次手動的間距時間
-			let tmpNow = Date.now();
-			let tmpStr = ((tmpNow - signal.clickTime)/1000).toFixed(0);
-			//addLog( tmpStr +"秒");
-			signal.recordStr += tmpStr +"," + signal.recentFlag;
-
-
-				// console.log("1");
-				// console.log( signal.previousFlag);
-				// console.log("2");
-					let now = new Date();
-					let tmp447 = "<a style='color:"+colSymb[signal.previousFlag]+";'>";
-					tmp447 += signal.previousFlag + tmpStr;
-					tmp447 += "</a>";					
-
-				if(signal.exitCause != ""){
-					tmp447 = signal.exitCause + tmp447;
-					signal.exitCause = "";
-				}
-				let newline = "";		//綠燈結算時換行用。
-				
-				if(tmpStr >2 && tmpStr <200){	//合理範圍,秒數小代表切換過程, 秒數大代表久沒切換
-					if(signal.previousFlag == "R"){		//紅燈結算
-			
-						if(signal.preLight == ""){		//有紅燈要保留,如小紅燈(左轉燈)
-							signal.preLight = tmp447;
-						}else{
-							signal.preLight = signal.preLight.replace("R", "左");
-							signal.preLight = tmp447 + "Gn" + signal.preLight;		
-						}
+			if(signal.previousFlag == "F"){		//綠燈結算
+				if(signal.startTitle == target.title){	
+					//tmp447 = tmp447.replace("/F(\d+)/", "G$1");	//若沒通過下個點, 就算是綠燈時間
+					tmp447 = tmp447.replace("F", "G");		//241210：上一行沒作用, 暫時先用楊春版
+				}else{
+					if(target.title){
+						tmp447 += target.title.replace(/[(].*/,"");	//前刮號起清除
 					}
-					
-					if(signal.previousFlag == "F"){		//綠燈結算
-
-						if(signal.startTitle == target.title){	
-							//tmp447 = tmp447.replace("/F(\d+)/", "G$1");	//若沒通過下個點, 就算是綠燈時間
-							tmp447 = tmp447.replace("F", "G");		//241210：上一行沒作用, 暫時先用楊春版
-						}else{
-							if(target.title){
-								tmp447 += target.title.replace(/[(].*/,"");	//前刮號起清除
-							}
-						}
-						tmp447 = signal.preLight + tmp447;	//把紅燈加在前面
-						
-						tmp447 += "@" + addZero(now.getHours())+ ":" +	addZero(now.getMinutes()) + tools.myWeek();
-						
-						tmp447 += "/for" + signal.startTitle;
-						newline = "<br>";
-						signal.preLight = "";		//用過清除
-					}
-				addLog(newline + "燈:" + tmp447);
-
 				}
-				/*下一節點的資訊*/
-				if(target.isShowProp){		//isShowProp為避免末通過路口時, 多次Click,而重覆顯示本訊息
-					let str22 = signal.properties+"to"+signal.towarder+"@"+signal.expTime + "fr" +target.title;
-					addLog("預:"+str22);
-					document.getElementById("watchStr").innerText = str22;
-					target.isShowProp = false;
-				}
+				tmp447 = signal.preLight + tmp447;	//把紅燈加在前面
 				
-				if(signal.recentFlag == "R"){
-					signal.isWaitNext = true;	//紅燈時(先以變數啟動), 待靜止時才設定起始點,
-					//既然切綠燈會設定起始點, 紅燈就不需要了???
-				}
-				if(signal.recentFlag == "F"){				
-					signal.startTitle = target.title;		//綠燈時直接以當前目標(有號誌)為階段起點
-					//(有無號誌「暫時」的區別方式)
-						while(!signal.startTitle  || "彎輔".indexOf(signal.startTitle.substr(1,1)) > -1){	//略過,句首特定字元
-							if(!points[recentPoint + vector]){
-								break;
-							}
-							signal.startTitle = points[recentPoint + vector][2];		//TODO id會超出邊界值
-						}
-				}
+				tmp447 += "@" + addZero(now.getHours())+ ":" +	addZero(now.getMinutes()) + tools.myWeek();
 				
-				if( signal.recentFlag == "R"){
-					signal.isReporting = true;
+				tmp447 += "/for" + signal.startTitle;
+				newline = "<br>";
+				signal.preLight = "";		//用過清除
+			}
+			addLog(newline + "燈:" + tmp447);
+		}
+		
+		/*下一節點的資訊*/
+		if(target.isShowProp){		//isShowProp為避免末通過路口時, 多次Click,而重覆顯示本訊息
+			let str22 = signal.properties+"to"+signal.towarder+"@"+signal.expTime + "fr" +target.title;
+			addLog("預:"+str22);
+			document.getElementById("watchStr").innerText = str22;
+			target.isShowProp = false;
+		}
+		
+		if(signal.recentFlag == "R"){
+			signal.isWaitNext = true;	//紅燈時(先以變數啟動), 待靜止時才設定起始點,
+			//既然切綠燈會設定起始點, 紅燈就不需要了???
+			signal.isReporting = true;
+		}
+		
+		if(signal.recentFlag == "F"){				
+			signal.startTitle = target.title;		//綠燈時直接以當前目標(有號誌)為階段起點
+			//(有無號誌「暫時」的區別方式)
+			while(!signal.startTitle  || "彎輔".indexOf(signal.startTitle.substr(1,1)) > -1){	//略過,句首特定字元
+				if(!points[recentPoint + vector]){
+					break;
 				}
-				// e.preventDefault();	//停止事件的默認動作(放函式結尾)
-				// e.stopPropagation();//阻止事件冒泡(放函式結尾)
-				//e.stopImmediatePropagation();//其他同一層級的 listener 也不要被執行
+				signal.startTitle = points[recentPoint + vector][2];		//TODO id會超出邊界值
+			}
+		}
 
-			
-			signal.clickTime = tmpNow;
-			signal.previousFlag = signal.recentFlag;
-			
-		}//end of Function click()
-		var march = document.getElementById("march");
-		march.addEventListener("touchstart", signal.click);
+		// e.preventDefault();	//停止事件的默認動作(放函式結尾)
+		// e.stopPropagation();//阻止事件冒泡(放函式結尾)
+		//e.stopImmediatePropagation();//其他同一層級的 listener 也不要被執行
+		signal.clickTime = tmpNow;
+		signal.previousFlag = signal.recentFlag;
+		
+	}//end of Function click()
+	
+	
+	var march = document.getElementById("march");
+	march.addEventListener("touchstart", signal.click);
 		
 		
 		class tools01{}
@@ -9689,7 +9657,7 @@ function skipPoint(){
 	}
 	//addLog("skipPoint(debug3)");
 	try{
-		if(signal.enable){
+		if(signal.IntervalID){
 			strtmp += ",燈:" + ((Date.now() - signal.clickTime)/1000).toFixed(0);//離上次切換燈號的秒數;
 		}
 	}catch(error){
