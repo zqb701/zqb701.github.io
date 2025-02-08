@@ -132,3 +132,7 @@ API
 色彩:
 
 CSS Flexbox元件排列:https://www.oxxostudio.tw/articles/201501/css-flexbox.html
+
+const a = [0, 1, 2].map(item => item + 1)
+Object.freeze(a) // JS特性，必須在用freeze讓array真的被const(固定)住
+(duck:可能數列有規則, 以算式預先產生後, 不再改變)
