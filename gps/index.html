@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c131"; 	</script>
+	<script> 		var version = "v0.72c132"; 	</script>
 </head>
 
 <style> 
@@ -8557,11 +8557,11 @@ var tasks = [[
 			//通過起始點後，燈號從亮綠轉亮藍
 			march.style.color = colSymb.G;	//「暫時」以G為切換顏色
 			//且秒數以Fxx扣掉剛才經過的秒數clicktime, 前提是要先使用G的秒數
-			// try{
-				addlog("signal.seconds.F = " +this.F.secs);
-			// }catch(error){
-				// addlog("signal.testing_4ri" + error.message);
-			// }
+			try{
+				addLog("signal.seconds.F = " +this.F.secs);
+			}catch(error){
+				addLog("signal.testing_4ri" + error.message);
+			}
 			//this.count = this.seconds.F - this.count;
 			//march.innerText = this.count;			
 		}
