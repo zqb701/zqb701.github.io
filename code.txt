@@ -9,7 +9,8 @@
 	-轉負值
 	i++, i--, ++i, --i , i=j**k 次方	(有//嗎?)
 	=, +=, -=, *=, /=, %=
-	!否, &&且, ||或, >,<, >=, <=, ==,!=, ===, !==
+	&&且, ||或,(短路求值[https://realnewbie.com/coding/javascript/javascript-operators/])
+	!否, , >,<, >=, <=, ==,!=, ===, !==
 	+	字串連接
 	+new Date()	轉型為數字
 	~~取整數
@@ -56,6 +57,8 @@ const, let, ver,
 			strM = "0"+ strM;
 		}
 		getMinutes();
+		
+		
 	陣列Array
 const aArray = [];
 aArray[0] = 1;
@@ -70,6 +73,13 @@ const aArray = [1, 2, 3]
 const bArray = [5, 6, ...aArray, 8, 9]
 
 sArray.length = 2
+
+const a = [0, 1, 2].map(item => item + 1)
+Object.freeze(a) // JS特性，必須在用freeze讓array真的被const(固定)住
+(duck:可能數列有規則, 以算式預先產生後, 不再改變)
+
+
+
 
 流程
 if(){	//false, null, undefined, 0, 空字串, ...
@@ -120,19 +130,37 @@ DOM
 Document Object Model，元素(節點))與選擇器。屬性,事件,方法。
 
 API
-
-
 	Fetch	抓網頁
-自定函式
-自定物件
 
+自定函式
+	function 關鍵字定義傳統函數，
+	箭頭函數 (Arrow Functions) 
+	
+	
+自定物件
+這種建立物件的方式稱為「物件實字 (Object literal)」，同時也是 JSON 格式的核心語法。
+i = 2;
+var person = {
+  name : 'Kuro',
+  ["name2"] : "abc",
+  ["name" + (2*i)] : "abc",
+  job: 'Front-end developer',
+  sayName: function() {
+    alert( this.name );
+  }
+};
+
+	signal.ford可以用signal["ford"]表示(不可是數字或有空白)
+	for(name in list)count[name]++	//可用來累加變數name出現的次數
+	obj.001;			//  SyntaxError: Unexpected number
+	obj["001"];		//合法,可用
+	
 其它保留字
+
+不合法的 JavaScript 的識別字：數字或含空白者不可當變數
 
 特殊符號:https://ytliu0.pixnet.net/blog/post/230307977
 色彩:
 
 CSS Flexbox元件排列:https://www.oxxostudio.tw/articles/201501/css-flexbox.html
 
-const a = [0, 1, 2].map(item => item + 1)
-Object.freeze(a) // JS特性，必須在用freeze讓array真的被const(固定)住
-(duck:可能數列有規則, 以算式預先產生後, 不再改變)
