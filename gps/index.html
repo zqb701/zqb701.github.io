@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c133"; 	</script>
+	<script> 		var version = "v0.72c134"; 	</script>
 </head>
 
 <style> 
@@ -8560,10 +8560,11 @@ var tasks = [[
 			march.style.color = colSymb.F;
 			try{
 				let fixSec = ((Date.now() - signal.clickTime)/1000).toFixed(0);
+				let tmpCnt = this.downCount;
 				this.downCount = this.F.secs - fixSec;		//已前進秒數要扣掉
 				this.recentFlag ="F";
 				march.innerText = this.downCount;
-				addLog("F=" +this.F.secs + ",fixSec=" +fixSec );
+				addLog("F=" +this.F.secs + ",新秒數" +this.downCount +"=" +tmpCnt+"-"+fixSec );
 			}catch(error){
 				addLog("signal.testing_4ri" + error.message);
 			}	
@@ -8936,7 +8937,7 @@ var tasks = [[
 			tmpStr = srcStr.match(/G\d+/) ;//抓出綠燈秒數
 			if(tmpStr){
 				target.stopNum = parseInt(tmpStr[0].substring(1));
-				timeNum[1] = target.stopNum;
+				timeNum[2] = target.stopNum;
 				rstStr +="G" + target.stopNum;
 			}
 
@@ -8946,7 +8947,7 @@ var tasks = [[
 				
 				if(tmpStr){
 					target.runNum = parseInt( tmpStr.substring(1));
-					timeNum[2] = target.runNum;
+					timeNum[1] = target.runNum;
 					this.F.secs = target.runNum;
 					rstStr += "F" + target.runNum;
 				}
