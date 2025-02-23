@@ -19,7 +19,11 @@
 const, let, ver,
 	數字
 		n = parseInt(str[,n進位]); //轉數字,從開頭取用數字字元
+		a.toFixed(0);	(a*3).toFixed(0);
 		Nunber	//自動去掉前後空白, 空字串含全部空格轉為零,則 true 為 1、false 為 0,  null，則回傳 0
+		Math物件
+
+	
 	字串
 		idx=a.indexOf("_"[,起始]);	//找到在第一個字元傳回「0」, 找不到傳回-1
 			lastIndexOf()		//從尾端找
@@ -57,7 +61,7 @@ const, let, ver,
 			strM = "0"+ strM;
 		}
 		getMinutes();
-		
+		計時器
 		
 	陣列Array
 const aArray = [];
@@ -77,7 +81,7 @@ sArray.length = 2
 const a = [0, 1, 2].map(item => item + 1)
 Object.freeze(a) // JS特性，必須在用freeze讓array真的被const(固定)住
 (duck:可能數列有規則, 以算式預先產生後, 不再改變)
-
+Array.isArray(v);
 
 
 
@@ -110,18 +114,17 @@ try{
 } finally {
     //不管錯誤與否都會被執行的區塊
 }
-計時器
-事件
 
-內建函式
-alert(字串);
-a.toFixed(0);	(a*3).toFixed(0);
 
-內建物件
-Math
-Date日期與時間
+
+對話框Popup Alert
+	window.alert("成功!");
+	if(window.confirm("刪除?") == true){...}
+	result = window.prompt("姓名?", "許功蓋(預設值)");	//取消時傳回null
+	進階自訂[https://bbcc-learncode.com.tw/javascript-popup-alert-教學：使用提示框的最佳實踐/]
+
+
 JSON
-Array.isArray(v);
 
 BOM
 Browser Object Model，window 最頂層，下有 document（DOM）、history、location、navigator、screen

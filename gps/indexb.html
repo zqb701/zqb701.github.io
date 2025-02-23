@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c137"; 	</script>
+	<script> 		var version = "v0.72c138"; 	</script>
 </head>
 
 <style> 
@@ -104,7 +104,7 @@
 	<input type="button" value="停車" 			onClick="addLog(speeder.check(2));">
 	<input type="button" value="測試01" 	onClick="tools.setColor('停384F23');">
 	
-	<input type="button" value="清除" onClick="ins.innerHTML='';localStorage.insertCoord='';localStorage.placeRcd='';document.title = tools.myDate();addLog('清除。' + version +', ' +tools.myDate() )">
+	<input type="button" value="清除" onClick="tools.cleanLog();">
 	<input type="button" value="匯出" onClick="exportCoord();">
 	<input type="file" multiple id="input" style='display:none;'>
 	
@@ -6617,7 +6617,7 @@ var tasks = [[
 [22.651859227399765, 120.52538946334401, "輔20米東",,,"ign"],//中華路
 [22.651515374460395, 120.52598179763177, "民權路","R43F103@08:44,速限60南路中/,",,"R45@14:32/R47F100@16:29/R53@19:37六/R53F80巷11@20:34二/,"],
 [22.650677214478804, 120.52685860645906, "民族路","R40,",,"R54F83瑞光路@14:17/R53F84巷11@14:44一/R54F85巷11@15:19日/R72F174瑞光路@16:36四/R40/R51F80@19:50六,南向先行"],
-[22.649322449799737, 120.52806492385191, "大同街(琉璃瓦)","R38F92永豐路N@13:36五/,",,"R35G120/R45F110棕櫚泉@09:26一/F105永達@09:51一/R43F110果菜市場@15:54二/F107永達@16:06二/F112@16:09/R43F103永達@16:25三/F101@16:41/R37F136棕櫚泉@16:41三/R39F136棕櫚泉@16:41四/F136果菜市場@16:50四/R39F135果菜市場@16:53二/F127@16:54/R39F136果菜市場@17:08二/F120@18:40/,"],
+[22.649322449799737, 120.52806492385191, "大同街(琉璃瓦)","R38F92永豐路N@13:36五/,",,"R35G120/R45F110棕櫚泉@09:26一/F105永達@09:51一/R43F110果菜市場@15:54二/F107永達@16:06二/F112@16:09/R37F136棕櫚泉@16:41三/R39F136棕櫚泉@16:41四/F136果菜市場@16:50四/R39F135果菜市場@16:53二/F127@16:54/R39F136果菜市場@17:08二/F120@18:40/刪:R43F103永達@16:25三/F101@16:41/,民族路先紅"],
 
 [22.642909551879335, 120.53378806110504, "長安巷N(連號)","R45F135/R45G83+永豐路N@06:07日/R42@06:45六/R42F131延平路@07:26二/R44F131新中路N@07:27/R43F119新東路@07:28/R44F131新東路S@07:32二/R44F130新東路@07:32三/R46F107永豐路N@07:34三/F94永豐路S@07:40三/R46G135信義路N@07:54一/R45F134@07:56/R44@07:44/R41@07:44/R36F110永豐路N@07:46一/R36@07:51二/R42@07:56/G115永豐路@07:59/R40F134建國路@08:05二/R38F126人和路@08:02二/F100@08:12/R43F103建興路@08:14二/R44@08:15五/R44F103@08:16四/R43F86建國路@08:21五/R34F91永豐路N@08:21四/R44F102人和路@08:29一/R42F102人和路@08:37/R43@08:37三/R38F101建興路@08:54四/R44F104人和路@08:54一/R44F99永豐路N@16:37日/,信義路綠前30左"],
 
@@ -8693,7 +8693,12 @@ var tasks = [[
 		/*下一節點的資訊*/
 		if(target.isShowProp){		//isShowProp為避免末通過路口時, 多次Click,而重覆顯示本訊息
 			let str22 = signal.properties+"to"+signal.towarder+"@"+signal.expTime + "fr" +target.title;
+			str22=str22.replace("toundefined","toUDF");
+			str22=str22.replace("@undefined","@UDF");
 			addLog("預:"+str22);
+
+			str22=str22.replace("toUDF","");
+			str22=str22.replace("@UDF","");
 			document.getElementById("watchStr").innerText = str22;
 			target.isShowProp = false;
 		}
@@ -8761,6 +8766,8 @@ var tasks = [[
 				return time+"時"+min+"分"+sec+"秒";
 			}
 		}
+		
+		
 		tools.nowByHHMM=function(colon){
 			let now = new Date();
 			let strH = "" + now.getHours();
@@ -8776,6 +8783,7 @@ var tasks = [[
 			}
 			return strH + strM;
 		}
+		
 		
 		tools.nowByMMDD=function(slash){
 			let now = new Date();
@@ -8796,6 +8804,18 @@ var tasks = [[
 		tools.setColor=function (){
 			//把文字加上<a> 標籤並用style屬性設定前景顏色
 		}
+		
+		
+		 tools.cleanLog=function(){
+			 if(window.confirm("清除?")){
+				 ins.innerHTML='';
+				 localStorage.insertCoord='';
+				 localStorage.placeRcd='';
+				 document.title = tools.myDate();
+				 addLog('清除。' + version +', ' +tools.myDate() )
+			 }
+		 }
+		
 		
 		tools.myDate=function(){
 			let today = new Date();
