@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c139b"; 	</script>
+	<script> 		var version = "v0.72c139c"; 	</script>
 </head>
 
 <style> 
@@ -8249,24 +8249,24 @@ var tasks = [[
 	target.setColor = function(){
 		//抓出最近的紅綠燈秒數
 		try{
-			//240914, 從下一點起開始找到紅綠燈資訊
+			//240914, 從這一點開始, 丟字串給signal分析, 
 			//addLog("target.focus(): signal.enable="+signal.enable);
 			if(signal.IntervalID){
 				let find = false;
-				for(let p = nextPoint; p>=0 && p<points.length; p += vector){				
+				for(let p = nextPoint; p>=0 && p<points.length; p += vector){
 					if(signal.setColor(points[p][4-vector])){
 						find = true;						
+						addLog("號誌路口:" + points[p][2]);
 						//findPoint = p;		//TODO 下次從這點開始找,以免重覆
 						break;
 					}
 				}
-				/*
+				/* 找不到號誌路口就關閉?
 				if(!find){		//241209: 配套不足, 暫時停用
 					signal.off();
 				}
 				*/
 			}else{		//號誌關閉時, 只檢查目標點
-				//addLog("target.focus(): 號誌檢查," + points[nextPoint][4-vector]);
 				if(signal.setColor(points[nextPoint][4-vector])){
 					signal.on();
 				}
@@ -8905,13 +8905,14 @@ var tasks = [[
 		return result;
 	}
 	
-		signal.setColor=function(srcStr){
+	
+		signal.setColor=function(srcStr){ 		/*分析參數以設定各燈號與秒數*/
 			//addLog("setColor(debug0)");
-			//從target的參數中,抓出各燈號之秒數, 並存到signal陣列
+
 			if(!srcStr) return false;
 			//TODO 分析字串內的時間與燈號
 			//1.原始字串, 切割到現在時間之前, 抓最後一個相符字串
-			let rstStr = "";//result String
+			let rstStr;	//result String
 			//addLog("setColor(debug1)");
 			let tmpStr = srcStr.match(/A\d+/);	//抓出偏移秒數(TODO含負值)
 			target.addNum = 0;
@@ -8920,54 +8921,33 @@ var tasks = [[
 				//addLog("<u>" + target.title+": add="+ target.addNum + "</u>");
 			}
 			//addLog("setColor(debug2)");
-			tmpStr = srcStr.match(/R\d+/);	//抓出紅燈秒數
+			tmpStr = srcStr.match(/R\d+/);	//「直接」抓出紅燈秒數
 			if(tmpStr){
-				target.runNum = parseInt( tmpStr[0].substring(1));
-				
+				target.runNum = parseInt( tmpStr[0].substring(1));				
 				timeNum[0] = target.runNum;
 				rstStr += "R" + target.runNum;
-			}
+			}//沒抓到就用舊的
 			
 			//addLog("setColor(debug3");
-			tmpStr = srcStr.match(/G\d+/) ;//抓出綠燈秒數
+			tmpStr = srcStr.match(/G\d+/) ;//「直接」抓綠燈秒數
 			if(tmpStr){
 				target.stopNum = parseInt(tmpStr[0].substring(1));
 				timeNum[2] = target.stopNum;
 				rstStr +="G" + target.stopNum;
-			}
+			}//沒抓到就用舊的
 
-			// tmpStr = srcStr.match(/F\d+/);	//抓出行走秒數
-			try{
-				tmpStr = signal.getNearforward(srcStr);
-				
+			// tmpStr = srcStr.match(/F\d+/);	//直接...
+				tmpStr = signal.getNearforward(srcStr);//依「時間」抓出可行走秒數
 				if(tmpStr){
 					target.runNum = parseInt( tmpStr.substring(1));
 					timeNum[1] = target.runNum;
 					this.F.secs = target.runNum;
 					rstStr += "F" + target.runNum;
 				}
-			}catch(error){
-				addLog("signal.setColor947:" + error.message);
-			}
-			
-			//addLog("setColor(debug8)");
-			try{
-			if(rstStr !== ""){
-				// addLog("setColor():"+target.title +":" + rstStr);
-				signal.properties = rstStr;
-
-				return true;
-			}
-			}catch(error){
-				addLog("signal.setColor33d:" + error.message);
-			}
-			signal.properties = "";
-			return false;
-				// }
-			// }catch (e) {
-				// addLog("error:" + e);
-			// }
+			this.properties = rstStr;
+			return this.properties;		//只要找到任一燈號就算號誌路口
 		}
+
 
 function getAzimuth(p0, p1){
 	d1y = getDistance([p1[0],p0[1]],p0);
@@ -9604,6 +9584,14 @@ function playVoice(str){
 			//道路端點,車道增加,車道減少,左彎,右彎
 	
 	if(str == undefined) return ;
+	try{
+		if("新任務,交流道".indexOf(str) < 0){		//停用的語音清單
+				return;
+		}
+	}catch(error){
+		addLog("playVoice():" + error.message);
+	}
+	
 	voiceOK = false;
 	var fileName = "../voice/"+ str+".wav";
 	voice.src = fileName;
@@ -9641,7 +9629,7 @@ path.initTask=function(){
 }	
 
 path.toNextNode=function(){
-			addLog("path.toNextNode(0)");
+			// addLog("path.toNextNode(0)");
 		/* 功能：綠燈G在通過號誌後轉換為藍燈F */
 		/* TODO F秒數可能有兩組,例：慢一點會停歸仁路 */
 		/* 需旗標, 以限制綠燈後只能運作乙次 */
@@ -9699,7 +9687,7 @@ path.toNextNode=function(){
 	}
 	
 	// strtmp += ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
-	addLog("path.toNextNode(3)/訊息ok");
+	// addLog("path.toNextNode(3)/訊息ok");
 	
 	/* 保存舊資料*/
 	passPoint[0] = points[nextPoint][0];
@@ -9754,7 +9742,7 @@ path.toNextNode=function(){
 	}
 	
 	target.focus();
-addLog("path.toNextNode(5)/target.focus(ok)");
+// addLog("path.toNextNode(5)/target.focus(ok)");
 
 		// addLog("skipPoint():03");
 	//速限語音
@@ -9789,7 +9777,7 @@ addLog("path.toNextNode(5)/target.focus(ok)");
 	preDist = getDistance(recentPoint,  points[nextPoint]);
 	// addLog("skipPoint():preDist=" + preDist);
 	// preDist = -1;
-	addLog("path.toNextNode(9)");
+	// addLog("path.toNextNode(9)");
 	return true;
 }//end of skipPoint()
 
@@ -10191,9 +10179,7 @@ function playAlarm(){
 	// if(enAlarmHigh && nextDist < 2 && evt.coords.speed*3.6 >70){
 						//時速70以上, 2公里前提醒一次
 	// vocStr = points[nextPoint][4-vector];
-				if("新任務,交流道".indexOf(target.voiceStr) < 0){		//停用的語音清單
-				return;
-			}
+
 	if( target.voiceStr == "交流道" && enAlarmHigh && nextDist < 2){	//2公里前提醒
 		// showMsg("b2");
 		playVoice(target.voiceStr);
@@ -10377,7 +10363,7 @@ function getDistance(coord1, coord2) {
 	var fcolor = "";
 	var strGPS = "＼｜／-";	//
 function showData(){
-	addLog("showData(0)");
+	// addLog("showData(0)");
 		let str="";	
 		
 		// voiceStr = points[nextPoint][4-vector];
@@ -10438,7 +10424,7 @@ function showData(){
 		*/
 		
 
-addLog("showData(9)");
+// addLog("showData(9)");
 }
 
 var msgList = ["","","","","","","","","",""];
