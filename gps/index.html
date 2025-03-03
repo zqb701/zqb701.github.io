@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c139c"; 	</script>
+	<script> 		var version = "v0.72c139d"; 	</script>
 </head>
 
 <style> 
@@ -9584,8 +9584,9 @@ function playVoice(str){
 			//道路端點,車道增加,車道減少,左彎,右彎
 	
 	if(str == undefined) return ;
+	
 	try{
-		if("新任務,交流道".indexOf(str) < 0){		//停用的語音清單
+		if("新任務,交流道".indexOf(str) > -1){		//停用的語音清單
 				return;
 		}
 	}catch(error){
