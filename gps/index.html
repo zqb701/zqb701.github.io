@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c139a"; 	</script>
+	<script> 		var version = "v0.72c139b"; 	</script>
 </head>
 
 <style> 
@@ -35,7 +35,7 @@
 	}
 	
 	body {
-		overflow: hidden;		//禁止捲動
+		//overflow: hidden;		//禁止捲動
     }
 </style>  
 
@@ -10191,7 +10191,7 @@ function playAlarm(){
 	// if(enAlarmHigh && nextDist < 2 && evt.coords.speed*3.6 >70){
 						//時速70以上, 2公里前提醒一次
 	// vocStr = points[nextPoint][4-vector];
-				if("新任務,交流道".indexOf(vStr) < 0){		//停用的語音清單
+				if("新任務,交流道".indexOf(target.voiceStr) < 0){		//停用的語音清單
 				return;
 			}
 	if( target.voiceStr == "交流道" && enAlarmHigh && nextDist < 2){	//2公里前提醒
@@ -10377,7 +10377,7 @@ function getDistance(coord1, coord2) {
 	var fcolor = "";
 	var strGPS = "＼｜／-";	//
 function showData(){
-	// showMsg("showData:nextPoint=" + nextPoint);
+	addLog("showData(0)");
 		let str="";	
 		
 		// voiceStr = points[nextPoint][4-vector];
@@ -10438,7 +10438,7 @@ function showData(){
 		*/
 		
 
-// console.log("showData(e)");
+addLog("showData(9)");
 }
 
 var msgList = ["","","","","","","","","",""];
