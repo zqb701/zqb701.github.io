@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c139"; 	</script>
+	<script> 		var version = "v0.72c139a"; 	</script>
 </head>
 
 <style> 
@@ -8475,14 +8475,16 @@ var tasks = [[
 			F : {secs:78, color:"cyan"},	//LightBlue, cyan青色,BlueViolet藍紫
 			Y : {secs:9, color:"yellow"},					//黃燈秒數少, 可能要電腦判讀時代才用到
 			
-			initt(){				addLog("signal.initt()" + this);			},	//方法寫法
+			initt(){				
+			// addLog("signal.initt()" + this);
+			},	//方法寫法
 			f: function() {alert(this.R);},	//方法寫法
 		};
 		
 		signal.initt();
 		
 		signal.init=function(){
-				addLog("signal.init()"+ this.previousFlag);
+				// addLog("signal.init()"+ this.previousFlag);
 				// signal.defPrep =  "R30G40F100";//初值可併到colSymb
 			}
 		signal.init();
@@ -9639,7 +9641,7 @@ path.initTask=function(){
 }	
 
 path.toNextNode=function(){
-			
+			addLog("path.toNextNode(0)");
 		/* 功能：綠燈G在通過號誌後轉換為藍燈F */
 		/* TODO F秒數可能有兩組,例：慢一點會停歸仁路 */
 		/* 需旗標, 以限制綠燈後只能運作乙次 */
@@ -9695,7 +9697,9 @@ path.toNextNode=function(){
 	}catch(error){
 		addLog("path.toNextNode(7nw):" + error.message);
 	}
+	
 	// strtmp += ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
+	addLog("path.toNextNode(3)/訊息ok");
 	
 	/* 保存舊資料*/
 	passPoint[0] = points[nextPoint][0];
@@ -9750,6 +9754,7 @@ path.toNextNode=function(){
 	}
 	
 	target.focus();
+addLog("path.toNextNode(5)/target.focus(ok)");
 
 		// addLog("skipPoint():03");
 	//速限語音
@@ -9767,12 +9772,10 @@ path.toNextNode=function(){
 	incCount = 0;
 	incDistMsg = "";
 	
-	zoom = getSubZoom().toFixed(0);
-	
+	zoom = getSubZoom().toFixed(0);	
 	if(viewMode == 1){		//全圖：只畫點
 		// myCanvas.drawPoint(recentPoint[0], recentPoint[1], "white", 2);
-	}else{		//置中：全重畫, 不畫點
-		
+	}else{		//置中：全重畫, 不畫點		
 		centerCoords[0] = points[nextPoint][0];
 		centerCoords[1] = points[nextPoint][1];
 		
@@ -9781,12 +9784,12 @@ path.toNextNode=function(){
 		myCanvas.drawBaseMap();
 
 		//todo 只畫前後3點, 取代drawbasemap()
-
 	}
+
 	preDist = getDistance(recentPoint,  points[nextPoint]);
 	// addLog("skipPoint():preDist=" + preDist);
 	// preDist = -1;
-	//addLog("skipPoint(debug9)");
+	addLog("path.toNextNode(9)");
 	return true;
 }//end of skipPoint()
 
