@@ -9,11 +9,14 @@
 	-轉負值
 	i++, i--, ++i, --i , i=j**k 次方	(有//嗎?)
 	=, +=, -=, *=, /=, %=
-	&&且, ||或,(短路求值[https://realnewbie.com/coding/javascript/javascript-operators/])
-	!否, , >,<, >=, <=, ==,!=, ===, !==
+	邏輯運算子：!否 &&且 ||或, (短路求值[https://realnewbie.com/coding/javascript/javascript-operators/])
+	, , >,<, >=, <=, ==, !=, ===, !==
 	+	字串連接
 	+new Date()	轉型為數字
 	~~取整數
+	x <<= y, x >>= y, x >>>= y, x &= y, x ^= y, x |= y
+	位元運算子
+	條件（三元）運算子：var status = age >= 18 ? "成人" : "小孩";
 
 變數
 const, let, ver,
@@ -99,6 +102,7 @@ do {
   // code block to be executed
 }while (condition);
 
+for (var i = 0, j = 9; i <= j; i++, j--){...}
 for (;cars[i];) {
   text += cars[i];
   i++;

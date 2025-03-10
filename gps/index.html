@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c139h"; 	</script>
+	<script> 		var version = "v0.72c139i"; 	</script>
 </head>
 
 <style> 
@@ -35,7 +35,7 @@
 	}
 	
 	body {
-		//overflow: hidden;		//禁止捲動
+		//overflow: hidden;		//隱藏捲軸(禁止捲動?)
     }
 </style>  
 
@@ -8637,8 +8637,7 @@ var tasks = [[
 		
 		*/
 		// console.log(this);
-		event.preventDefault();	//可避免誤動作造成頁面滑動(停止事件的默認動作, 三星及chrome有作用,)
-													//Mint有效(但沒有儲存能力)
+		event.preventDefault();	//避免touchstart以外的偏移,造成頁面滑動
 		//event.stopPropagation();//阻止事件繼續冒泡
 		playVoice("當");
 		if(!this.IntervalID){
@@ -8648,22 +8647,20 @@ var tasks = [[
 		//addLog("run swColor at signal.click()");
 		if(signal.nextSignal !== target.title){
 			target.setColor();
-			if(signal.recentFlag == "R"){	//用戶手動切到「紅」燈
-				signal.endNode = signal.nextSignal;
-				addLog("終點:" +signal.endNode);
-			}else{
-				signal.startNode = signal.nextSignal;			
-				addLog("起點:" +signal.startNode);
-				
-			}
-		}else{
-			// addLog("號誌路口沒變!");
 		}
 
 		signal.swColor();	
 		march.innerText = signal.downCount;	//因為是手動切換,所以顏色要一併變換, 不能等到下一秒
 																				//TODO 若計數器重啟更好(才有完整的第一秒)
-	
+
+		if(signal.recentFlag == "R"){	//用戶手動切到「紅」燈
+			signal.endNode = signal.nextSignal;
+			addLog("終點:" +signal.endNode);
+		}else{
+			signal.startNode = signal.nextSignal;			
+			addLog("起點:" +signal.startNode);				
+		}
+
 		//兩次手動的間距,代表該燈號運行時間
 		let tmpNow = Date.now();
 		let tmpStr = ((tmpNow - signal.clickTime)/1000).toFixed(0);
@@ -9697,7 +9694,7 @@ path.toNextNode=function(){
 		/* 需旗標, 以限制綠燈後只能運作乙次 */
 		//addLog(this.correctF +", " +signal.startTitle+", "+target.title);
 		try{
-			if( signal.NOW.color == signal.G.color){
+			if( signal.NOW.color == signal.G.color && target.title == signal.startNode){
 				signal.correctF = false;
 				let fixSec = ((Date.now() - signal.clickTime)/1000).toFixed(0);
 				signal.downCount = signal.F.secs - fixSec;		//已前進秒數要扣掉
