@@ -103,10 +103,12 @@ do {
 }while (condition);
 
 for (var i = 0, j = 9; i <= j; i++, j--){...}
-for (;cars[i];) {
+
+for (;cars[i];) {		//run when cars[i] is true
   text += cars[i];
   i++;
 }
+
 for ...in ...
 arr.forEach
 
