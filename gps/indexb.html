@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c3"; 	</script>
+	<script> 		var version = "v0.72c4"; 	</script>
 </head>
 
 <style>
@@ -8607,11 +8607,11 @@ var tasks = [[
 		
 		
 	signal.on=function(){
-		if(this.IntervalID){
+		if(signal.IntervalID){
 			return;
 		}
 		march.style.color == colSymb.F;	//避免新路線時,延用關閉號誌時的灰色
-		this.IntervalID = window.setInterval(( () =>  {
+		signal.IntervalID = window.setInterval(( () =>  {
 			signal.testing();
 		}	) , 1000);
 	}
@@ -8676,10 +8676,10 @@ var tasks = [[
 		event.preventDefault();	//避免touchstart以外的偏移,造成頁面滑動
 		//event.stopPropagation();//阻止事件繼續冒泡
 		playVoice("當");
-		if(!this.IntervalID){
+		if(!signal.IntervalID){
 			signal.switchTime = Date.now();
 			signal.on();
-			// return;
+			return;
 		}
 		
 				//兩次手動的間距,代表該燈號運行時間
@@ -8690,8 +8690,14 @@ var tasks = [[
 			if(tmpStr >2 && tmpStr <200){
 				signal.switchTime = tmpNow;
 				addLog("秒數"+tmpStr+",成立");
+
+				signal.endNode = signal.endNodetmp;
+				signal.startNode = signal.startNodetmp;			
+				addLog("起點:" +signal.startNode+",終點:" +signal.endNode);				
+
 			}else{
 				addLog("秒數略過");
+				//return;
 			}
 		}catch(error){
 			addLog("signal.click(9ij):" + error.message);
@@ -8707,11 +8713,11 @@ var tasks = [[
 																				//TODO 若計數器重啟更好(才有完整的第一秒)
 
 		if(signal.recentFlag == "R"){	//用戶手動切到「紅」燈
-			signal.endNode = signal.nextSignal;
-			addLog("終點:" +signal.endNode);
+			signal.endNodetmp = signal.nextSignal;
+			// addLog("終點:" +signal.endNode);
 		}else{
-			signal.startNode = signal.nextSignal;			
-			addLog("起點:" +signal.startNode);				
+			signal.startNodetmp = signal.nextSignal;			
+			// addLog("起點:" +signal.startNode);				
 		}
 
 
