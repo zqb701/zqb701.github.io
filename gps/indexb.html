@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c2"; 	</script>
+	<script> 		var version = "v0.72c3"; 	</script>
 </head>
 
 <style>
@@ -8679,13 +8679,13 @@ var tasks = [[
 		if(!this.IntervalID){
 			signal.switchTime = Date.now();
 			signal.on();
-			return;
+			// return;
 		}
 		
-		try{
 				//兩次手動的間距,代表該燈號運行時間
 			let tmpNow = Date.now();
 			let tmpStr = ((tmpNow - signal.switchTime)/1000).toFixed(0);
+		try{
 				
 			if(tmpStr >2 && tmpStr <200){
 				signal.switchTime = tmpNow;
