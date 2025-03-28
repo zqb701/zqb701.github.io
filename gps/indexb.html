@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c140d"; 	</script>
+	<script> 		var version = "v0.72c2"; 	</script>
 </head>
 
 <style>
@@ -8190,7 +8190,7 @@ var tasks = [[
 			}else{
 				this.meter.style.color = "cyan";//青色(藍綠色)
 			}
-			// signal.switchTime = Date.now();
+			
 		};
 		
 		this.stop = function(){
@@ -8677,7 +8677,9 @@ var tasks = [[
 		//event.stopPropagation();//阻止事件繼續冒泡
 		playVoice("當");
 		if(!this.IntervalID){
+			signal.switchTime = Date.now();
 			signal.on();
+			return;
 		}
 		
 		try{
