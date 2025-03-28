@@ -7,15 +7,15 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c140c"; 	</script>
+	<script> 		var version = "v0.72c140d"; 	</script>
 </head>
 
-<style> 
-	
+<style>
+
 	:root {
-		--size1: 120px;	
+		--size1: 120px;
 		--size2: 270px;
-		//CSS Variables, 限放在選取器, 建議最高層級的:root 
+		//CSS Variables, 限放在選取器, 建議最高層級的:root
 	  //--primary: Aquamarine;
 	  //--background-color: Teal;
 	}
@@ -26,18 +26,18 @@
 		border-style: dashed;
 		border-color: #FFAC55;
 		padding: 5px;
-		
+
 		text-align: center;	//水平置中
 		top: 0px;
 		line-height: var(--size1);//文字垂直置中(行高等於容器高度),單行適用
 
 		user-select:none;		//禁止選取(反白)
 	}
-	
+
 	body {
 		//overflow: hidden;		//隱藏捲軸(禁止捲動?)
     }
-</style>  
+</style>
 
 <body onload="init();" bgcolor="black" text="white" margin="0" 
 	onkeydown="addLog('['+ event.keyCode+']');">
@@ -8129,7 +8129,7 @@ var tasks = [[
 	
 	var hiddenTime;		//休眠的開始時間
 	var passTime = 0;
-	var oldClickTimes = -1;
+	var oldClickTimes = -1;	//繪圖區用來判斷「連點」的時間差
 	var viewMode = -1;//1為全圖, -1為目標點置中
 	
 	var ins = document.getElementById("insertCoord");
@@ -8155,7 +8155,7 @@ var tasks = [[
 		//if(!meter0){}	//沒有GUI也可運作!!!
 		this.meter = meter0;		
 		//TODO 指定onclick事件
-		this.clickTime =Date.now();
+		this.clickTime =Date.now();	//移動或靜止的計數器
 		
 		this.switc = function(){
 			let nowTime = Date.now();
@@ -8190,7 +8190,7 @@ var tasks = [[
 			}else{
 				this.meter.style.color = "cyan";//青色(藍綠色)
 			}
-			signal.clickTime = Date.now();
+			// signal.switchTime = Date.now();
 		};
 		
 		this.stop = function(){
@@ -8398,7 +8398,7 @@ var tasks = [[
 		
 		try{//240724, 依addNum調整號誌間的時間差
 			if(signal.recentFlag == "F"){
-				let passingTime = ((Date.now() - signal.clickTime)/1000).toFixed(0);
+				let passingTime = ((Date.now() - signal.switchTime)/1000).toFixed(0);
 				addLog("target.focus()\setTime: runNum = " + target.runNum+ ",passingTime=" + passingTime);
 				signal.setTime(target.runNum - passingTime); //同時變綠
 				
@@ -8532,7 +8532,7 @@ var tasks = [[
 			exitCause : "",			//離、端... 等代表路徑變換的字元,脫離原因escape
 			properties  : "",			//當前號誌的燈號時間, 由當前路口號誌資料庫依時間歸納
 														//如R40G60左15F120xx路F150zz路轉左n轉右m
-			clickTime : -1,			//新秒數的啟用時間(最近一次手動點選的時間)
+			switchTime : -1,			//新秒數的啟用時間/燈號切換/最後有效手動點選
 			correctF : false,			//每一段路只能執行乙次(通過節點後, 從綠燈秒數, 切換為行駛秒數, )
 			// seconds = { R: 34, G: 56, F: 78,},
 			
@@ -8647,7 +8647,7 @@ var tasks = [[
 	signal.getLightStr=function(){	//脫離路線時, 離上次切換的時間及燈號
 		let resultStr ="";
 		try{
-				let tmp6y = ((Date.now() - signal.clickTime)/1000).toFixed(0);//離上次切換燈號的秒數
+				let tmp6y = ((Date.now() - signal.switchTime)/1000).toFixed(0);//離上次切換燈號的秒數
 				if(tmp6y < 200){
 					resultStr = "<a style='color:"+colSymb[signal.recentFlag]+";'>";		//依旗標加上顏色
 					resultStr += signal.recentFlag + tmp6y;	//加上旗標
@@ -8679,8 +8679,21 @@ var tasks = [[
 		if(!this.IntervalID){
 			signal.on();
 		}
-
 		
+		try{
+				//兩次手動的間距,代表該燈號運行時間
+			let tmpNow = Date.now();
+			let tmpStr = ((tmpNow - signal.switchTime)/1000).toFixed(0);
+				
+			if(tmpStr >2 && tmpStr <200){
+				signal.switchTime = tmpNow;
+				addLog("秒數"+tmpStr+",成立");
+			}else{
+				addLog("秒數略過");
+			}
+		}catch(error){
+			addLog("signal.click(9ij):" + error.message);
+		}
 		//手動燈號切換
 		//addLog("run swColor at signal.click()");
 		if(signal.nextSignal !== target.title){
@@ -8699,10 +8712,7 @@ var tasks = [[
 			addLog("起點:" +signal.startNode);				
 		}
 
-		//兩次手動的間距,代表該燈號運行時間
-		let tmpNow = Date.now();
-		let tmpStr = ((tmpNow - signal.clickTime)/1000).toFixed(0);
-			signal.clickTime = tmpNow;
+
 
 		//addLog( tmpStr +"秒");
 		signal.recordStr += tmpStr +"," + signal.recentFlag;
@@ -9735,7 +9745,7 @@ path.toNextNode=function(){
 		try{
 			if( signal.NOW.color == signal.G.color && target.title == signal.startNode){
 				signal.correctF = false;
-				let fixSec = ((Date.now() - signal.clickTime)/1000).toFixed(0);
+				let fixSec = ((Date.now() - signal.switchTime)/1000).toFixed(0);
 				signal.downCount = signal.F.secs - fixSec;		//已前進秒數要扣掉
 				//this.recentFlag ="F";
 				march.innerText = signal.downCount;
@@ -9778,7 +9788,7 @@ path.toNextNode=function(){
 	//addLog("skipPoint(debug3)");
 	try{
 		if(signal.IntervalID){
-			strtmp += ",秒:" + ((Date.now() - signal.clickTime)/1000).toFixed(0);//離上次切換燈號的秒數;
+			strtmp += ",秒:" + ((Date.now() - signal.switchTime)/1000).toFixed(0);//離上次切換燈號的秒數;
 		}
 	}catch(error){
 		addLog("path.toNextNode(7nw):" + error.message);
