@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c4"; 	</script>
+	<script> 		var version = "v0.72c5"; 	</script>
 </head>
 
 <style>
@@ -8330,8 +8330,8 @@ var tasks = [[
 					if(signal.setColor(points[p][4-vector])){
 						find = true;
 						signal.nextSignal = points[p][2];
-						// addLog("號誌路口:" + signal.nextSignal);
-						//findPoint = p;		//TODO 下次從這點開始找,以免重覆
+						addLog("號誌路口:" + signal.nextSignal);
+						//findPoint = p;		//TODO 下次從這點開始找,以免浪費電
 						break;
 					}
 				}
@@ -8527,6 +8527,8 @@ var tasks = [[
 			nextSignal : undefined,		//當前號誌的路口
 			startNode : undefined,		//切紅燈時設定為終點
 			endNode : undefined,			//切綠燈時設定為起點
+			startNodetmp : undefined,
+			endNodetmp : undefined,	
 			
 			isWaitNext : true,
 			exitCause : "",			//離、端... 等代表路徑變換的字元,脫離原因escape
@@ -8587,12 +8589,14 @@ var tasks = [[
 	}
 
 
-	signal.swColor=function(){		/*切換燈號顏色(秒數由計時器控制)*/
+	signal.swColor=function(){		/*切換燈號(顏色及秒數)*/
 		isMarch *= -1;
 		signal.downCount = timeNum[1+isMarch];
 		signal.recentFlag = charList[1+isMarch];
 		signal.NOW.color = colorList[1+isMarch];
+		
 		march.style.color = signal.NOW.color;
+		march.innerText = signal.downCount;
 	}
 
 		
@@ -8610,7 +8614,7 @@ var tasks = [[
 		if(signal.IntervalID){
 			return;
 		}
-		march.style.color == colSymb.F;	//避免新路線時,延用關閉號誌時的灰色
+		signal.testing();
 		signal.IntervalID = window.setInterval(( () =>  {
 			signal.testing();
 		}	) , 1000);
@@ -8682,52 +8686,53 @@ var tasks = [[
 			return;
 		}
 		
-				//兩次手動的間距,代表該燈號運行時間
-			let tmpNow = Date.now();
-			let tmpStr = ((tmpNow - signal.switchTime)/1000).toFixed(0);
-		try{
-				
-			if(tmpStr >2 && tmpStr <200){
-				signal.switchTime = tmpNow;
-				addLog("秒數"+tmpStr+",成立");
-
-				signal.endNode = signal.endNodetmp;
-				signal.startNode = signal.startNodetmp;			
-				addLog("起點:" +signal.startNode+",終點:" +signal.endNode);				
-
-			}else{
-				addLog("秒數略過");
-				//return;
-			}
-		}catch(error){
-			addLog("signal.click(9ij):" + error.message);
-		}
 		//手動燈號切換
 		//addLog("run swColor at signal.click()");
 		if(signal.nextSignal !== target.title){
 			target.setColor();
 		}
+		signal.swColor();
+																				
+																				
+				//兩次手動的間距,代表該燈號運行時間
+			let tmpNow = Date.now();
+			let intervalTime = ((tmpNow - signal.switchTime)/1000).toFixed(0);
+				
+			if(intervalTime >2 && intervalTime <200){
+				signal.switchTime = tmpNow;
+				//addLog("秒數"+intervalTime+",成立");
+				if(signal.recentFlag == "R"){		//暫定值轉正式
+					signal.endNode = signal.endNodetmp;
+					addLog("終點:" +signal.endNode);
+				}else{
+					signal.startNode = signal.startNodetmp;
+					addLog("起點:" +signal.startNode);		
+				}
+				
 
-		signal.swColor();	
-		march.innerText = signal.downCount;	//因為是手動切換,所以顏色要一併變換, 不能等到下一秒
-																				//TODO 若計數器重啟更好(才有完整的第一秒)
+			}else{
+				//addLog("略過, 隔"+intervalTime+"秒");
+				if(signal.recentFlag == "R"){		//記錄暫定值
+					signal.endNodetmp = signal.nextSignal;
+					addLog("終點tmp:" +signal.endNodetmp);
+				}else{
+					signal.startNodetmp = signal.nextSignal;			
+					addLog("起點tmp:" +signal.startNodetmp);				
+				}
+				//return;
+			}
 
-		if(signal.recentFlag == "R"){	//用戶手動切到「紅」燈
-			signal.endNodetmp = signal.nextSignal;
-			// addLog("終點:" +signal.endNode);
-		}else{
-			signal.startNodetmp = signal.nextSignal;			
-			// addLog("起點:" +signal.startNode);				
-		}
 
 
 
-		//addLog( tmpStr +"秒");
-		signal.recordStr += tmpStr +"," + signal.recentFlag;
+
+
+		//addLog( intervalTime +"秒");
+		signal.recordStr += intervalTime +"," + signal.recentFlag;
 
 
 		let tmp447 = "<a style='color:"+colSymb[signal.previousFlag]+";'>";//TODO 文字顏色另外 用副程式
-		tmp447 += signal.previousFlag + tmpStr;
+		tmp447 += signal.previousFlag + intervalTime;
 		tmp447 += "</a>";					
 
 		if(signal.exitCause != ""){
@@ -8736,7 +8741,7 @@ var tasks = [[
 		}
 		let newline = "";		//綠燈結算時換行用。
 		
-		if(tmpStr >2 && tmpStr <200){	//合理範圍,秒數小代表切換過程, 秒數大代表久沒切換
+		if(intervalTime >2 && intervalTime <200){	//合理範圍,秒數小代表切換過程, 秒數大代表久沒切換
 			if(signal.previousFlag == "R"){		//結算停等時間
 	
 				if(signal.preLight == ""){		//有紅燈要保留,如小紅燈(左轉燈)
@@ -8775,7 +8780,7 @@ var tasks = [[
 		
 		/*下一節點的資訊*/
 		if(target.isShowProp){		//isShowProp為避免末通過路口時, 多次Click,而重覆顯示本訊息
-			let str22 = signal.properties+"to"+signal.towarder+"@"+signal.expTime + "fr" +signal.nextSignal;
+			let str22 = signal.properties+" to "+signal.towarder+"@"+signal.expTime + " fr " +signal.nextSignal;
 			str22=str22.replace("toundefined","toUDF");
 			str22=str22.replace("@undefined","@UDF");
 			str22=str22.replace("frundefined","frUDF");
