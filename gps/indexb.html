@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c6"; 	</script>
+	<script> 		var version = "v0.72c7"; 	</script>
 </head>
 
 <style>
@@ -8721,11 +8721,13 @@ try{
 				}
 				//return;
 			}
-			}catch(error){
-				addLog("signal.click(9ih):" + error.message);
-			}
+}catch(error){
+	addLog("signal.click(9ih):" + error.message);
+}
 
-
+		addLog("signal.click(2)");
+		
+try{
 
 
 
@@ -8779,7 +8781,11 @@ try{
 			}
 			addLog(newline + "燈:" + tmp447);
 		}
-		
+}catch(error){
+addLog("signal.click(5fb):" + error.message);
+}
+		addLog("signal.click(5)");
+try{
 		/*下一節點的資訊*/
 		if(target.isShowProp){		//isShowProp為避免末通過路口時, 多次Click,而重覆顯示本訊息
 			let str22 = signal.properties+" to "+signal.towarder+"@"+signal.expTime + " fr " +signal.nextSignal;
@@ -8804,7 +8810,10 @@ try{
 			// signal.startTitle = target.title;		//綠燈時直接以當前目標(有號誌)為階段起點
 			signal.startNode = signal.nextSignal;
 		}
-
+}catch(error){
+	addLog("signal.click(7gt):" + error.message);
+}
+addLog("signal.click(8)");
 		// e.preventDefault();	//停止事件的默認動作(放函式結尾)
 		// e.stopPropagation();//阻止事件冒泡(放函式結尾)
 		//e.stopImmediatePropagation();//其他同一層級的 listener 也不要被執行
