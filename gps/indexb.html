@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c8"; 	</script>
+	<script> 		var version = "v0.72c9"; 	</script>
 </head>
 
 <style>
@@ -8699,7 +8699,7 @@ var tasks = [[
 			let intervalTime = ((tmpNow - signal.switchTime)/1000).toFixed(0);
 try{
 addLog("秒數"+intervalTime);	
-			if(intervalTime >2 && intervalTime <200){
+			if(intervalTime >2){
 				signal.switchTime = tmpNow;
 				
 				if(signal.recentFlag == "R"){		//暫定值轉正式
@@ -8708,20 +8708,18 @@ addLog("秒數"+intervalTime);
 				}else{
 					signal.startNode = signal.startNodetmp;
 					addLog("起點:" +signal.startNode);		
-				}
-				
-
-			}else{
-				//addLog("略過, 隔"+intervalTime+"秒");
-				if(signal.recentFlag == "R"){		//記錄暫定值
-					signal.endNodetmp = signal.nextSignal;
-					addLog("終點tmp:" +signal.endNodetmp);
-				}else{
-					signal.startNodetmp = signal.nextSignal;			
-					addLog("起點tmp:" +signal.startNodetmp);				
-				}
-				//return;
+				}				
 			}
+			//addLog("略過, 隔"+intervalTime+"秒");
+			if(signal.recentFlag == "R"){		//記錄暫定值
+				signal.endNodetmp = signal.nextSignal;
+				addLog("終點tmp:" +signal.endNodetmp);
+			}else{
+				signal.startNodetmp = signal.nextSignal;			
+				addLog("起點tmp:" +signal.startNodetmp);				
+			}
+				//return;
+
 }catch(error){
 	addLog("signal.click(9ih):" + error.message);
 }
