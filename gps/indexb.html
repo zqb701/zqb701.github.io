@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c9"; 	</script>
+	<script> 		var version = "v0.72c10"; 	</script>
 </head>
 
 <style>
@@ -8691,33 +8691,33 @@ var tasks = [[
 		if(signal.nextSignal !== target.title){
 			target.setColor();
 		}
-		signal.swColor();
-																				
+		signal.swColor();																				
 																				
 				//兩次手動的間距,代表該燈號運行時間
 			let tmpNow = Date.now();
 			let intervalTime = ((tmpNow - signal.switchTime)/1000).toFixed(0);
 try{
-addLog("秒數"+intervalTime);	
+				//addLog("略過, 隔"+intervalTime+"秒");
+			if(signal.recentFlag == "R"){		//記錄暫定值
+				signal.endNodetmp = signal.nextSignal;
+				// addLog("終點tmp:" +signal.endNodetmp);
+			}else{
+				signal.startNodetmp = signal.nextSignal;			
+				// addLog("起點tmp:" +signal.startNodetmp);				
+			}
+// addLog("秒數"+intervalTime);	
 			if(intervalTime >2){
 				signal.switchTime = tmpNow;
 				
 				if(signal.recentFlag == "R"){		//暫定值轉正式
 					signal.endNode = signal.endNodetmp;
-					addLog("終點:" +signal.endNode);
+					// addLog("終點:" +signal.endNode);
 				}else{
 					signal.startNode = signal.startNodetmp;
-					addLog("起點:" +signal.startNode);		
+					// addLog("起點:" +signal.startNode);		
 				}				
 			}
-			//addLog("略過, 隔"+intervalTime+"秒");
-			if(signal.recentFlag == "R"){		//記錄暫定值
-				signal.endNodetmp = signal.nextSignal;
-				addLog("終點tmp:" +signal.endNodetmp);
-			}else{
-				signal.startNodetmp = signal.nextSignal;			
-				addLog("起點tmp:" +signal.startNodetmp);				
-			}
+
 				//return;
 
 }catch(error){
@@ -8727,7 +8727,7 @@ addLog("秒數"+intervalTime);
 		
 		
 try{
-addLog("signal.click(2)");
+// addLog("signal.click(2)");
 
 
 		//addLog( intervalTime +"秒");
@@ -8747,7 +8747,7 @@ addLog("signal.click(2)");
 		if(intervalTime >2 && intervalTime <200){	//合理範圍,秒數小代表切換過程, 秒數大代表久沒切換
 		
 			if(signal.previousFlag == "R"){		//結算停等時間
-	addLog("signal.click(3a)");
+	// addLog("signal.click(3a)");
 				if(signal.preLight == ""){		//有紅燈要保留,如小紅燈(左轉燈)
 					signal.preLight = tmp447;
 				}else{
@@ -8755,7 +8755,7 @@ addLog("signal.click(2)");
 					signal.preLight = tmp447 + "Gn" + signal.preLight;		
 				}
 			}else{		//結算行駛時間
-			addLog("signal.click(3b)");
+			// addLog("signal.click(3b)");
 				if(signal.startNode == target.title){	
 					//tmp447 = tmp447.replace("/F(\d+)/", "G$1");	//若沒通過下個點, 就算是綠燈時間
 					tmp447 = tmp447.replace("F", "G");		//241210：上一行沒作用, 暫時先用楊春版
@@ -8780,7 +8780,7 @@ addLog("signal.click(2)");
 				newline = "<br>";
 				signal.preLight = "";		//用過清除
 			}
-			addLog("signal.click(3c)");
+			// addLog("signal.click(3c)");
 			addLog(newline + "燈:" + tmp447);
 		}
 }catch(error){
@@ -8788,7 +8788,7 @@ addLog("signal.click(5fb):" + error.message);
 }
 		
 try{
-	addLog("signal.click(5)");
+	// addLog("signal.click(5)");
 		/*下一節點的資訊*/
 		if(target.isShowProp){		//isShowProp為避免末通過路口時, 多次Click,而重覆顯示本訊息
 			let str22 = signal.properties+" to "+signal.towarder+"@"+signal.expTime + " fr " +signal.nextSignal;
@@ -8816,7 +8816,7 @@ try{
 }catch(error){
 	addLog("signal.click(7gt):" + error.message);
 }
-addLog("signal.click(8)");
+// addLog("signal.click(8)");
 		// e.preventDefault();	//停止事件的默認動作(放函式結尾)
 		// e.stopPropagation();//阻止事件冒泡(放函式結尾)
 		//e.stopImmediatePropagation();//其他同一層級的 listener 也不要被執行
