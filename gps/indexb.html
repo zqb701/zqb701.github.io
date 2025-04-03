@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c10"; 	</script>
+	<script> 		var version = "v0.72c11"; 	</script>
 </head>
 
 <style>
@@ -5171,7 +5171,7 @@ var tasks = [[
 [22.998629848234690, 120.24662930482800, "復國路W","RxGx左x"],
 [22.998620148433517, 120.24691757722405, "復國路E",,,"車道減少"],
 [22.998618602544294, 120.24772394599849, "高速二街W"],
-[22.998623489376435, 120.24864727183412, "高速一街E",,,"直2右外"],
+[22.998623489376435, 120.24864727183412, "高速一街E",,,"直2右外,速限50西路中"],
 // [22.998625137243913, 120.24968198417294, "26巷"],
 [22.998553046499033, 120.25156740561475, "大灣路W",,,"車道增加"],//1102巷以東為崑大路
 [22.998526090989582, 120.25209622362244, "大灣路E",,,"F100*消防隊@08:58/F98消防隊W@09:03三/F64高速一街E&F36消防隊@09:05一/R109F80消防隊@09:15/R108F79消防隊E@09:19三/R110F75/,右提前,車道增加,速限50西路中"],
@@ -5508,7 +5508,7 @@ var tasks = [[
 [22.994178010181734, 120.30862162886453, "保東國小S(連號)",,,"R32F56永裕接頭@07:53六/R34F52永裕接頭@08:03/R36@08:15/F56@08:16/R28F43巷169@08:28一/R32F54永裕接頭@08:29二/R33F56永裕接頭@08:32三/R32F56永裕接頭@08:45/R32F51永裕接頭@08:56三/R33F52永裕接頭@08:57五/R31F59巷169@08:59日/R33G60/R29/R32,"],
 
 [22.990475540944800, 120.30924305449369, "保順路N","R51F98台86N@09:40六/R47停台86,"],
-[22.989907632816973, 120.30933693180867, "保順路S",,,"R31F57巷169@08:17三/R31F57巷169@08:17五/R32F56巷169@08:27一/R35Gn左nF58/,"],
+[22.989907632816973, 120.30933693180867, "保順路S",,,"R31F57巷169@08:17三/R31F57巷169@08:17五/R32F56巷169@08:27一/R35Gn左nF58/,左轉燈"],
 [22.989972961311278, 120.30931362799787, "輔20米南",,,"ign"],//保順路
 [22.988777289166165, 120.30961204197938, "速限60北路中","ign",,"測速"],//515巷
 [22.987868383470180, 120.30989887865047, "下湖二街北端",,,"R30F56保東路@08:24/,近速限60,"],
@@ -8800,7 +8800,7 @@ try{
 			str22=str22.replace("toUDF","");
 			str22=str22.replace("@UDF","");
 			str22=str22.replace("frUDF","");
-			document.getElementById("watchStr").innerText = str22;
+			document.getElementById("watchStr").innerText =signal.setStyle(str22);
 			target.isShowProp = false;
 		}
 		
@@ -9082,6 +9082,25 @@ try{
 			return this.properties;		//只要找到任一燈號就算號誌路口
 		}
 
+signal.setStyle=function(srcStr){
+	//srcStr = "R55G23H8F105@15:40二";
+	let tmpStr = srcStr.match(/G\d+/) ;
+	if(tmpStr){
+		srcStr = srcStr.replace(tmpStr, "<a style='color:"+signal.G.color+";'>"+tmpStr + "</a>");
+	}
+	
+	tmpStr = srcStr.match(/R\d+/) ;
+	if(tmpStr){
+		srcStr = srcStr.replace(tmpStr, "<a style='color:"+signal.R.color+";'>"+tmpStr + "</a>");
+	}
+	
+	tmpStr = srcStr.match(/F\d+/) ;
+	if(tmpStr){
+		srcStr = srcStr.replace(tmpStr, "<a style='color:"+signal.F.color+";'>"+tmpStr + "</a>");
+	}	
+		// addLog(srcStr);
+		return srcStr;
+}
 
 function getAzimuth(p0, p1){
 	d1y = getDistance([p1[0],p0[1]],p0);
