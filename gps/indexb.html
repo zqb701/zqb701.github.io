@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c11"; 	</script>
+	<script> 		var version = "v0.72c12"; 	</script>
 </head>
 
 <style>
@@ -8535,6 +8535,7 @@ var tasks = [[
 			properties  : "",			//當前號誌的燈號時間, 由當前路口號誌資料庫依時間歸納
 														//如R40G60左15F120xx路F150zz路轉左n轉右m
 			switchTime : -1,			//新秒數的啟用時間/燈號切換/最後有效手動點選
+			//intervalTime : undefined,
 			correctF : false,			//每一段路只能執行乙次(通過節點後, 從綠燈秒數, 切換為行駛秒數, )
 			// seconds = { R: 34, G: 56, F: 78,},
 			
@@ -8726,7 +8727,49 @@ try{
 
 		
 		
+addLog(signal.setStyle(signal.getRecordData(intervalTime)));
+		
 try{
+	// addLog("signal.click(5)");
+		/*下一節點的資訊*/
+		if(target.isShowProp){		//isShowProp為避免末通過路口時, 多次Click,而重覆顯示本訊息
+			let str22 = signal.properties+" to "+signal.towarder+"@"+signal.expTime + " fr " +signal.nextSignal;
+			str22=str22.replace("toundefined","toUDF");
+			str22=str22.replace("@undefined","@UDF");
+			str22=str22.replace("frundefined","frUDF");
+			addLog("預:"+str22);
+
+			str22=str22.replace("toUDF","");
+			str22=str22.replace("@UDF","");
+			str22=str22.replace("frUDF","");
+			document.getElementById("watchStr").innerHTML =signal.setStyle(str22);
+			target.isShowProp = false;
+		}
+		
+		if(signal.recentFlag == "R"){	//用戶手動切到「紅」燈
+			signal.isWaitNext = true;	//紅燈時(先以變數啟動), 待靜止時才設定起始點,
+															//既然切綠燈會設定起始點, 紅燈就不需要了???
+			signal.isReporting = true;
+		}else{	//用戶手動切到「綠」燈
+			signal.correctF = true;	//這行不能用「this.」???
+			// signal.startTitle = target.title;		//綠燈時直接以當前目標(有號誌)為階段起點
+			signal.startNode = signal.nextSignal;
+		}
+}catch(error){
+	addLog("signal.click(7gt):" + error.message);
+}
+// addLog("signal.click(8)");
+		// e.preventDefault();	//停止事件的默認動作(放函式結尾)
+		// e.stopPropagation();//阻止事件冒泡(放函式結尾)
+		//e.stopImmediatePropagation();//其他同一層級的 listener 也不要被執行
+		
+		signal.previousFlag = signal.recentFlag;
+		
+	}//end of Function click()
+	
+	signal.getRecordData=function(intervalTime){
+		let result;
+		try{
 // addLog("signal.click(2)");
 
 
@@ -8734,9 +8777,9 @@ try{
 		signal.recordStr += intervalTime +"," + signal.recentFlag;
 
 
-		let tmp447 = "<a style='color:"+colSymb[signal.previousFlag]+";'>";//TODO 文字顏色另外 用副程式
-		tmp447 += signal.previousFlag + intervalTime;
-		tmp447 += "</a>";					
+		// let tmp447 = "<a style='color:"+colSymb[signal.previousFlag]+";'>";//TODO 文字顏色另外 用副程式
+		let tmp447 = signal.previousFlag + intervalTime;
+		// tmp447 += "</a>";					
 
 		if(signal.exitCause != ""){
 			tmp447 = signal.exitCause + tmp447;
@@ -8781,49 +8824,13 @@ try{
 				signal.preLight = "";		//用過清除
 			}
 			// addLog("signal.click(3c)");
-			addLog(newline + "燈:" + tmp447);
+			result = newline + "燈:" + tmp447;
 		}
 }catch(error){
 addLog("signal.click(5fb):" + error.message);
 }
-		
-try{
-	// addLog("signal.click(5)");
-		/*下一節點的資訊*/
-		if(target.isShowProp){		//isShowProp為避免末通過路口時, 多次Click,而重覆顯示本訊息
-			let str22 = signal.properties+" to "+signal.towarder+"@"+signal.expTime + " fr " +signal.nextSignal;
-			str22=str22.replace("toundefined","toUDF");
-			str22=str22.replace("@undefined","@UDF");
-			str22=str22.replace("frundefined","frUDF");
-			addLog("預:"+str22);
-
-			str22=str22.replace("toUDF","");
-			str22=str22.replace("@UDF","");
-			str22=str22.replace("frUDF","");
-			document.getElementById("watchStr").innerText =signal.setStyle(str22);
-			target.isShowProp = false;
-		}
-		
-		if(signal.recentFlag == "R"){	//用戶手動切到「紅」燈
-			signal.isWaitNext = true;	//紅燈時(先以變數啟動), 待靜止時才設定起始點,
-															//既然切綠燈會設定起始點, 紅燈就不需要了???
-			signal.isReporting = true;
-		}else{	//用戶手動切到「綠」燈
-			signal.correctF = true;	//這行不能用「this.」???
-			// signal.startTitle = target.title;		//綠燈時直接以當前目標(有號誌)為階段起點
-			signal.startNode = signal.nextSignal;
-		}
-}catch(error){
-	addLog("signal.click(7gt):" + error.message);
-}
-// addLog("signal.click(8)");
-		// e.preventDefault();	//停止事件的默認動作(放函式結尾)
-		// e.stopPropagation();//阻止事件冒泡(放函式結尾)
-		//e.stopImmediatePropagation();//其他同一層級的 listener 也不要被執行
-		
-		signal.previousFlag = signal.recentFlag;
-		
-	}//end of Function click()
+		return result;
+	}
 	
 	
 	var march = document.getElementById("march");
@@ -9083,7 +9090,9 @@ try{
 		}
 
 signal.setStyle=function(srcStr){
-	//srcStr = "R55G23H8F105@15:40二";
+	//srcStr = "exp:R55G23H8F105@15:40二";
+	if(!srcStr)return;
+	
 	let tmpStr = srcStr.match(/G\d+/) ;
 	if(tmpStr){
 		srcStr = srcStr.replace(tmpStr, "<a style='color:"+signal.G.color+";'>"+tmpStr + "</a>");
@@ -9099,6 +9108,7 @@ signal.setStyle=function(srcStr){
 		srcStr = srcStr.replace(tmpStr, "<a style='color:"+signal.F.color+";'>"+tmpStr + "</a>");
 	}	
 		// addLog(srcStr);
+		//document.getElementById("watchStr").innerHTML = srcStr;
 		return srcStr;
 }
 
@@ -10285,8 +10295,14 @@ function geoYes (evt){
 				tmpStr +=  target.title;
 				//tmpStr += ",速" + speedKpH.toFixed(1);
 				signal.exitCause = "離";
-						tmpStr += ",燈:" + signal.getLightStr();
-				
+						// tmpStr += ",燈:" + signal.getLightStr();
+try{
+			let intervalTime = ((Date.now() - signal.switchTime)/1000).toFixed(0);
+			tmpStr += signal.setStyle(signal.getRecordData(intervalTime));
+			delete intervalTime;
+}catch(error){
+	addLog("geoYes(d4h):" + error.message);
+}		
 
 				// if(target.voiceStr){
 					// tmpStr += "[" + target.voiceStr +"]";
