@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c12"; 	</script>
+	<script> 		var version = "v0.72c13"; 	</script>
 </head>
 
 <style>
@@ -10298,6 +10298,7 @@ function geoYes (evt){
 						// tmpStr += ",燈:" + signal.getLightStr();
 try{
 			let intervalTime = ((Date.now() - signal.switchTime)/1000).toFixed(0);
+			addLog("geoYes(33e):間隔=" + intervalTime);
 			tmpStr += signal.setStyle(signal.getRecordData(intervalTime));
 			delete intervalTime;
 }catch(error){
