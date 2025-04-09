@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c14"; 	</script>
+	<script> 		var version = "v0.72c15"; 	</script>
 </head>
 
 <style>
@@ -8311,7 +8311,7 @@ var tasks = [[
 		
 		target.signStr = "";
 		target.title;	
-		target.isShowProp = true;		//同一個target,不管按幾次signal.click，只有一次顯示號誌參數
+		// target.isShowProp = true;		//同一個target,不管按幾次signal.click，只有一次顯示號誌參數
 	
 
 
@@ -8356,7 +8356,7 @@ var tasks = [[
 	target.focus=function(){	 //設定新的目標點及其資訊
 	/**忽略不要的點*/
 		target.voiceStr = points[nextPoint][4-vector];
-		target.isShowProp = true;
+		// target.isShowProp = true;
 		try{
 			if(target.voiceStr){
 				let idx = target.voiceStr.indexOf(",");
@@ -8521,6 +8521,7 @@ var tasks = [[
 			// enable:"w",				//變數一 定要給值
 			recordStr : "",
 			isReporting : false,
+			isShowProp : true,
 			startTitle : undefined,				//開始計算可行駛秒數的路口名稱, 含停紅燈的時間
 			startTitle2 : undefined,
 			
@@ -8691,6 +8692,7 @@ var tasks = [[
 		//addLog("run swColor at signal.click()");
 		if(signal.nextSignal !== target.title){
 			target.setColor();
+			signal.isShowProp = true;
 		}
 		signal.swColor();																				
 																				
@@ -8732,18 +8734,30 @@ addLog(signal.setStyle(signal.getRecordData(intervalTime)));
 try{
 	// addLog("signal.click(5)");
 		/*下一節點的資訊*/
-		if(target.isShowProp){		//isShowProp為避免末通過路口時, 多次Click,而重覆顯示本訊息
-			let str22 = signal.properties+" to "+signal.towarder+"@"+signal.expTime + " fr " +signal.nextSignal;
-			str22=str22.replace("toundefined","toUDF");
-			str22=str22.replace("@undefined","@UDF");
-			str22=str22.replace("frundefined","frUDF");
+		if(signal.isShowProp){	
+		//isShowProp為避免末通過路口時, 多次Click,而重覆顯示本訊息
+		// 但新路口就會解除為true，而非號誌路口
+			let str22 = signal.properties;
+			if(signal.towarder){
+				str22 += " to "+signal.towarder;
+			}
+			if(signal.expTime){
+				str22 += "@"+signal.expTime;
+			}
+			if(signal.nextSignal){
+				str22 += " from " +signal.nextSignal;
+			}
+			
+			// str22=str22.replace("toundefined","toUDF");
+			// str22=str22.replace("@undefined","@UDF");
+			// str22=str22.replace("frundefined","frUDF");
 			addLog("預:"+str22);
 
-			str22=str22.replace("toUDF","");
-			str22=str22.replace("@UDF","");
-			str22=str22.replace("frUDF","");
+			// str22=str22.replace("toUDF","");
+			// str22=str22.replace("@UDF","");
+			// str22=str22.replace("frUDF","");
 			document.getElementById("watchStr").innerHTML =signal.setStyle(str22);
-			target.isShowProp = false;
+			signal.isShowProp = false;
 		}
 		
 		if(signal.recentFlag == "R"){	//用戶手動切到「紅」燈
@@ -9807,7 +9821,7 @@ path.toNextNode=function(){
 				march.innerText = signal.downCount;
 				signal.NOW.color = signal.F.color;
 				march.style.color = signal.NOW.color;
-				addLog("新秒數: " +signal.downCount +"=F" +signal.F.secs+"-"+fixSec );
+				//addLog("新秒數: " +signal.downCount +"=F" +signal.F.secs+"-"+fixSec );
 			}
 		}catch(error){
 			addLog("path.toNextNode(4ri):" + error.message);
