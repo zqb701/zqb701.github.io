@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c17"; 	</script>
+	<script> 		var version = "v0.72c18"; 	</script>
 </head>
 
 <style>
@@ -8654,6 +8654,7 @@ var tasks = [[
 		if(signal.IntervalID){
 			return;
 		}
+		signal.switchTime = Date.now();
 		signal.testing();
 		signal.IntervalID = window.setInterval(( () =>  {
 			signal.testing();
@@ -8721,7 +8722,7 @@ var tasks = [[
 		//event.stopPropagation();//阻止事件繼續冒泡
 		playVoice("當");
 		if(!signal.IntervalID){
-			signal.switchTime = Date.now();
+			
 			signal.on();
 			return;
 		}
