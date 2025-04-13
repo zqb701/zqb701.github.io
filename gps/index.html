@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c20"; 	</script>
+	<script> 		var version = "v0.72c21"; 	</script>
 </head>
 
 <style>
@@ -8559,7 +8559,7 @@ var tasks = [[
 	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
 			// ",路向:" + edgeVector.toFixed(0);
 	addLog(strtmp + "<br>");
-	signal.newPath();
+	
 	// addLog("path.focus(9)");
 	}
 	
@@ -8638,14 +8638,17 @@ var tasks = [[
 
 	signal.newPath=function(){
 try{
-		let history="民生校區";
+		let histor="民生校區";
 		let sec = 43;
+		let col = colorList[0];
+		
 		let itvT = signal.getITVTime();
+		
+		if(target.title == histor){
+			signal.downCount = sec - itvT;
+			march.style.color = col;
 			addLog("signal.newPath():時間差=" + itvT + ",往"+ target.title);
-			if(target.title == history){
-				signal.downCount = sec - itvT;
-				march.style.color = colorList[0];
-			}
+		}
 }catch(error){
 	addLog("signal.newPath(ffr):" + error.message);
 }
@@ -10300,7 +10303,7 @@ minDiff = 361;
 	
 	path.focus();
 	target.focus();
-		
+	signal.newPath();
 	preDist = getDistance(recentPoint,  points[nextPoint]);
 	passTime = new Date();//todo:沒實際作用,只能避免數字過大
 }
