@@ -143,8 +143,15 @@ API
 
 自定函式
 	function 關鍵字定義傳統函數，
-	箭頭函數 (Arrow Functions) 
+	箭頭函數 (Arrow Functions)
 	
+	function test(a) {		//自帶變數
+	  console.log(a) // 1
+	  console.log(arguments[0])
+	  
+	function b(){		//取得呼叫者
+		console.log(b.caller) // [Function: a]
+	  
 	
 自定物件
 這種建立物件的方式稱為「物件實字 (Object literal)」，同時也是 JSON 格式的核心語法。
@@ -173,3 +180,10 @@ var person = {
 
 CSS Flexbox元件排列:https://www.oxxostudio.tw/articles/201501/css-flexbox.html
 
+函式可以連續接在一起???
+var arr = [1,2,3,4,5]
+var str = 
+  arr.map(function plusOne(n){ return n + 1})
+    .filter(function isEven(n){ return n % 2 === 1})
+    .join(',')
+console.log(str) // 3, 5
