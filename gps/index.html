@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c24c"; 	</script>
+	<script> 		var version = "v0.72c24d"; 	</script>
 </head>
 
 <style>
@@ -8423,18 +8423,18 @@ var tasks = [[
 	
 	target.focus=function(){	 //設定新的目標點及其資訊
 	/**忽略不要的點*/
-	addLog("target.focus(001)");
+	// addLog("target.focus(001)");
 		target.voiceStr = points[nextPoint][4-vector];
 		// target.isShowProp = true;
 		try{
 			if(target.voiceStr){
 				let idx = target.voiceStr.indexOf(",");
-				addLog("target.focus():idx=" + idx);
+				addLog("idx=" + idx+", " +target.voiceStr );
 				if(idx >= 0){
 					target.signStr = target.voiceStr.substring(0,idx);	//起始,結束
 					target.voiceStr = target.voiceStr.substring(idx+1);
-					let strtmp = idx +"[燈:" + target.signStr+"][語:"+target.voiceStr +"]";
-					addLog("<small>" + strtmp + "</small>");
+					// let strtmp = idx +"[燈:" + target.signStr+"][語:"+target.voiceStr +"]";
+					// addLog("<small>" + strtmp + "</small>");
 				}
 			}
 		}catch(err){
@@ -8465,7 +8465,7 @@ var tasks = [[
 			enAlarmSpeedLimit = 0;
 		}
 	}
-	addLog("target.focus(009)");
+	// addLog("target.focus(009)");
 	return;
 		
 		try{//240724, 依addNum調整號誌間的時間差
@@ -8489,7 +8489,7 @@ var tasks = [[
 	path.place = "地點";
 	
 	path.focus=function (){
-		addLog("path.focus(0)");
+		// addLog("path.focus(0)");
 		let str = points[0][2];
 		let idx = str.indexOf("_");
 		if(idx < 1){		//找不到或底線在字首都不行
@@ -8572,7 +8572,7 @@ var tasks = [[
 			// ",路向:" + edgeVector.toFixed(0);
 	addLog(strtmp + "<br>");
 
-	addLog("path.focus(9)");
+	// addLog("path.focus(9)");
 	}
 	
 		class signal01{}
