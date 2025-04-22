@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c24d"; 	</script>
+	<script> 		var version = "v0.72c24e"; 	</script>
 </head>
 
 <style>
@@ -834,7 +834,7 @@ var tasks = [[
 [22.667397980975174, 120.49960252661488, "輔20米西(教)","ign"],//民教路
 [22.667302235543630, 120.49977366595182, "民教路"],
 [22.666796071292328, 120.50077734793916, "輔20米西(信)","ign"],//民信街
-[22.666697960193932, 120.50093986824928, "民信街",,,"R00G00G00,右轉"],
+[22.666697960193932, 120.50093986824928, "民信街",,,"R00G00F00,右轉"],
 [22.666550917520382, 120.50114175872159, "35巷","右轉"],
 [22.666421747688970, 120.50127327267963, "輔20米東(35)",,,"ign"],//35巷
 [22.666241158925700, 120.50147007299985, "25巷"],
@@ -842,7 +842,7 @@ var tasks = [[
 
 ],[
 [22.666892039559908, 120.50177619510023, "屏市/民利路35巷_民榮街","RG_OFF"],
-[22.666656184973860, 120.50129263721031, "輔20米北","ign"],//民利路
+[22.666677257845883, 120.50133372188199, "輔25米北","ign"],//民利路
 [22.666550917520382, 120.50114175872159, "民利路"],
 [22.666209733553423, 120.50091225739330, "5號"],
 [22.665898151284400, 120.50069522733452, "民生路"],
@@ -8429,7 +8429,7 @@ var tasks = [[
 		try{
 			if(target.voiceStr){
 				let idx = target.voiceStr.indexOf(",");
-				addLog("idx=" + idx+", " +target.voiceStr );
+				addLog("idx=" + idx+", nxp= "+nextPoint+", str=" +target.voiceStr );
 				if(idx >= 0){
 					target.signStr = target.voiceStr.substring(0,idx);	//起始,結束
 					target.voiceStr = target.voiceStr.substring(idx+1);
@@ -10668,6 +10668,7 @@ function showData(){
 		// voiceStr = points[nextPoint][4-vector];
 		if(target.voiceStr){
 			str += "[" + target.voiceStr + "]";
+			addLog("showData():"+target.voiceStr);
 		}else{
 			str += "[x]";
 		}
