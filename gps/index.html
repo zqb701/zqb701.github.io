@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c24b"; 	</script>
+	<script> 		var version = "v0.72c24c"; 	</script>
 </head>
 
 <style>
@@ -834,7 +834,7 @@ var tasks = [[
 [22.667397980975174, 120.49960252661488, "輔20米西(教)","ign"],//民教路
 [22.667302235543630, 120.49977366595182, "民教路"],
 [22.666796071292328, 120.50077734793916, "輔20米西(信)","ign"],//民信街
-[22.666697960193932, 120.50093986824928, "民信街",,,"右轉"],
+[22.666697960193932, 120.50093986824928, "民信街",,,"R00G00G00,右轉"],
 [22.666550917520382, 120.50114175872159, "35巷","右轉"],
 [22.666421747688970, 120.50127327267963, "輔20米東(35)",,,"ign"],//35巷
 [22.666241158925700, 120.50147007299985, "25巷"],
@@ -8429,11 +8429,12 @@ var tasks = [[
 		try{
 			if(target.voiceStr){
 				let idx = target.voiceStr.indexOf(",");
+				addLog("target.focus():idx=" + idx);
 				if(idx >= 0){
 					target.signStr = target.voiceStr.substring(0,idx);	//起始,結束
 					target.voiceStr = target.voiceStr.substring(idx+1);
-					// let strtmp = idx +"[燈:" + target.signStr+"][語:"+target.voiceStr +"]";
-					// addLog("<small>" + strtmp + "</small>");
+					let strtmp = idx +"[燈:" + target.signStr+"][語:"+target.voiceStr +"]";
+					addLog("<small>" + strtmp + "</small>");
 				}
 			}
 		}catch(err){
