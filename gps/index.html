@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c24e"; 	</script>
+	<script> 		var version = "v0.72c24f"; 	</script>
 </head>
 
 <style>
@@ -8429,7 +8429,7 @@ var tasks = [[
 		try{
 			if(target.voiceStr){
 				let idx = target.voiceStr.indexOf(",");
-				addLog("idx=" + idx+", nxp= "+nextPoint+", str=" +target.voiceStr );
+				// addLog("idx=" + idx+", nxp= "+nextPoint+", str=" +target.voiceStr );
 				if(idx >= 0){
 					target.signStr = target.voiceStr.substring(0,idx);	//起始,結束
 					target.voiceStr = target.voiceStr.substring(idx+1);
@@ -8441,11 +8441,7 @@ var tasks = [[
 			addLog("target.focus3:" + err.message);
 		}
 		
-		while(target.voiceStr && target.voiceStr == "ign"){
-			addLog("<small>略:n" + points[nextPoint][2] + "</small>");
-			nextPoint += vector;
-			target.voiceStr = points[nextPoint][4-vector];//TODO:索引超出會有何反應, 改用for
-		}
+
 		
 		target.title = points[nextPoint][2];
 		if(!target.title){
@@ -8571,7 +8567,12 @@ var tasks = [[
 	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
 			// ",路向:" + edgeVector.toFixed(0);
 	addLog(strtmp + "<br>");
-
+	
+		while(target.voiceStr && target.voiceStr == "ign"){
+			addLog("<small>略:n" + points[nextPoint][2] + "</small>");
+			nextPoint += vector;
+			target.voiceStr = points[nextPoint][4-vector];//TODO:索引超出會有何反應, 改用for
+		}
 	// addLog("path.focus(9)");
 	}
 	
@@ -10668,7 +10669,7 @@ function showData(){
 		// voiceStr = points[nextPoint][4-vector];
 		if(target.voiceStr){
 			str += "[" + target.voiceStr + "]";
-			addLog("showData():"+target.voiceStr);
+			// addLog("showData():"+target.voiceStr);
 		}else{
 			str += "[x]";
 		}
