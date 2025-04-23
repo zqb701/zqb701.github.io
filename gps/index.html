@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c24f"; 	</script>
+	<script> 		var version = "v0.72c24g"; 	</script>
 </head>
 
 <style>
@@ -8422,9 +8422,18 @@ var tasks = [[
 	}
 	
 	target.focus=function(){	 //設定新的目標點及其資訊
-	/**忽略不要的點*/
-	// addLog("target.focus(001)");
+	
+	//忽略不要的點
 		target.voiceStr = points[nextPoint][4-vector];
+		while(target.voiceStr && target.voiceStr == "ign"){
+		//TODO:索引超出時nextPoint>0 && nextPoint <points.length
+			addLog(tools.nestedTag("略:n" + points[nextPoint][2], "small"));
+			nextPoint += vector;
+			target.voiceStr = points[nextPoint][4-vector];			
+		}
+		
+	// addLog("target.focus(001)");
+		
 		// target.isShowProp = true;
 		try{
 			if(target.voiceStr){
@@ -8568,11 +8577,7 @@ var tasks = [[
 			// ",路向:" + edgeVector.toFixed(0);
 	addLog(strtmp + "<br>");
 	
-		while(target.voiceStr && target.voiceStr == "ign"){
-			addLog("<small>略:n" + points[nextPoint][2] + "</small>");
-			nextPoint += vector;
-			target.voiceStr = points[nextPoint][4-vector];//TODO:索引超出會有何反應, 改用for
-		}
+
 	// addLog("path.focus(9)");
 	}
 	
@@ -8803,9 +8808,9 @@ try{
 			let intervalTime = signal.getITVTime(clickNow);
 try{
 				//addLog("略過, 隔"+intervalTime+"秒");
-			if(signal.recentFlag == "R"){		//記錄暫定值
+			if(signal.recentFlag == "R"){		//起/迄點的暫定值
 				signal.endNodetmp = signal.nextSignal;
-				addLog("<small>切R,終點tmp:" +signal.endNodetmp + "</small>");
+				addLog("<small>切R,迄點tmp:" +signal.endNodetmp + "</small>");
 			}else{
 				signal.startNodetmp = signal.nextSignal;			
 				addLog("<small>切G,起點tmp:" +signal.startNodetmp + "</small>");				
@@ -8814,12 +8819,12 @@ try{
 			if(intervalTime >2){
 				signal.switchTime = clickNow;
 				
-				if(signal.recentFlag == "R"){		//暫定值轉正式
+				if(signal.recentFlag == "R"){		//起/迄點暫定值轉正式值
 					signal.endNode = signal.endNodetmp;
-					addLog("<small>終點:" +signal.endNode+ "</small>");
+					addLog(tools.nestedTag("迄點:" + signal.endNod, "small"));
 				}else{
 					signal.startNode = signal.startNodetmp;
-					addLog("<small>起點:" +signal.startNode+ "</small>");		
+					addLog(tools.nestedTag("起點:" + signal.startNode, "small"));		
 				}				
 			}
 
@@ -9037,7 +9042,7 @@ addLog("signal.click(5fb):" + error.message);
 		tools.nestedTag=function(resultStr, fmt){	
 		//「nesting」 by Tag, 用標籤前後「包」起來
 				//addLog(fmt);
-			if(fmt.indexOf("small") >=0){
+			if(fmt.indexOf("small") >= 0){
 				//addLog("月");
 				resultStr = "<small>" + resultStr + "</small>";
 			}
