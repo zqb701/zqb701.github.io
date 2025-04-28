@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c25b"; 	</script>
+	<script> 		var version = "v0.72c25c"; 	</script>
 </head>
 
 <style>
@@ -8804,7 +8804,8 @@ try{
 		
 		//手動燈號切換
 		//addLog("run swColor at signal.click()");
-		//250428
+
+
 		
 																			
 																				
@@ -8840,13 +8841,12 @@ try{
 
 		addLog(signal.setStyle(signal.getRecordData(intervalTime)));
 		
-		{		//250428
 		if(signal.nextSignal !== target.title){
 			target.setColor();		//取得新參數
 			signal.isShowProp = true;
 		}
 		signal.swColor();			//依參數變更燈號
-		}
+
 		
 try{
 	// addLog("signal.click(5)");
@@ -8864,15 +8864,8 @@ try{
 			if(signal.nextSignal){
 				str22 += " from " +signal.nextSignal;
 			}
-			
-			// str22=str22.replace("toundefined","toUDF");
-			// str22=str22.replace("@undefined","@UDF");
-			// str22=str22.replace("frundefined","frUDF");
 			addLog("預:"+str22);
 
-			// str22=str22.replace("toUDF","");
-			// str22=str22.replace("@UDF","");
-			// str22=str22.replace("frUDF","");
 			document.getElementById("watchStr").innerHTML =signal.setStyle(str22);
 			signal.isShowProp = false;
 		}
@@ -8914,8 +8907,8 @@ try{
 
 
 		// let tmp447 = "<a style='color:"+colSymb[signal.previousFlag]+";'>";//TODO 文字顏色另外 用副程式
-		// let tmp447 = signal.previousFlag + intervalTime;
-		let tmp447 =signal.NOW.symb + intervalTime;	//250428
+		let tmp447 = signal.previousFlag + intervalTime;
+		// let tmp447 =signal.NOW.symb + intervalTime;	//250428
 		// tmp447 += "</a>";					
 
 		if(signal.exitCause != ""){
