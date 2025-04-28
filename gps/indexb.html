@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c25"; 	</script>
+	<script> 		var version = "v0.72c25b"; 	</script>
 </head>
 
 <style>
@@ -8692,8 +8692,10 @@ try{
 		isMarch *= -1;
 		signal.downCount = timeNum[1+isMarch];
 		signal.recentFlag = charList[1+isMarch];
-		signal.NOW = signal[signal.recentFlag];
-		//signal.NOW.color = colorList[1+isMarch];
+		// signal.NOW = signal[signal.recentFlag];
+		signal.NOW.color = colorList[1+isMarch];
+		signal.NOW.symb = charList[1+isMarch];
+		
 		
 		march.style.color = signal.NOW.color;
 		march.innerText = signal.downCount;
