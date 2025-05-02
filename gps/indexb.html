@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c25f"; 	</script>
+	<script> 		var version = "v0.72c25g"; 	</script>
 </head>
 
 <style>
@@ -8581,11 +8581,12 @@ var tasks = [[
 			nextPoint += vector;
 			target.voiceStr = points[nextPoint][4-vector];			
 		}
-		
-		while("彎 輔".indexOf(target.title.substr(0,1)) >-1){
-			addLog(tools.nestedTag("略:n" + points[nextPoint][2], "small"));
-			nextPoint += vector;
-			target.voiceStr = points[nextPoint][4-vector];			
+		if(target.title){
+			while("彎 輔".indexOf(target.title.substr(0,1)) >-1){
+				addLog(tools.nestedTag("略:n" + points[nextPoint][2], "small"));
+				nextPoint += vector;
+				target.voiceStr = points[nextPoint][4-vector];			
+			}
 		}
 	}catch(error){
 		addLog("path.focus(ees):" + error.message);
@@ -8953,7 +8954,7 @@ try{
 					tmp447 = tmp447.replace("F", "G");		//241210：上一行沒作用, 暫時先用楊春版
 				}else{
 					tmp447 = tmp447.replace("G","F");		//TODO testing會自動從G轉換到F, 本行可省略?
-					if(!signal.endNode){
+					if(signal.endNode){
 						tmp447 += signal.endNode.replace(/[(].*/,"");	//輪出前清除刮號內容		
 					}
 				}
