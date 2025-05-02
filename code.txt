@@ -37,7 +37,7 @@ const, let, ver,
 		toUpperCase / toLowerCase		//大小寫轉換
 		
 		replace();	//取代(正規式另詳)
-		match;//傳回陣列(正規式另詳)
+		match;		//傳回陣列(正規式另詳)
 
 		search(支援正規式)
 		split(支援正規式),傳回陣列,以符合規則的字串去分割其它字串
