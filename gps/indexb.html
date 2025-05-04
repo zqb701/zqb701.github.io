@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c25g"; 	</script>
+	<script> 		var version = "v0.72c25h"; 	</script>
 </head>
 
 <style>
@@ -2297,7 +2297,7 @@ var tasks = [[
 [23.472749864973483, 120.43784898344194, "新建街W(陸橋東)","R64G60走,速限50路中"],//東向,以東為垂楊路
 
 ],[
-[23.496766334522040, 120.38117966779565, "太保/中正路_北港路"],
+[23.496766334522040, 120.38117966779565, "太保/中正路@_北港路"],
 [23.498049702841540, 120.38148915195524, "中山路"],
 [23.498811449552825, 120.38288491422452, "南新里222巷"],
 [23.498685567556375, 120.38373134026160, "198號(書屋)"],
@@ -3836,7 +3836,7 @@ var tasks = [[
 
 ],[
 [23.421322776131504, 120.39056551765121, "後壁/台1_一指路(超商)"],//水上
-[23.418492089578205, 120.38885649125324, "台82N"],
+[23.418492089578205, 120.38885649125324, "台82N",,,",直左/紅燈1秒/直左"],
 [23.417910902458330, 120.38852149208205, "台82S"],
 [23.415766159990383, 120.38727002088828, "嘉41"],
 [23.413559662039592, 120.38598065398031, "南靖車站"],
@@ -3845,7 +3845,8 @@ var tasks = [[
 
 [23.402531013178034, 120.38180044268740, "彎09(橋南)"],//以南為後壁
 [23.397429734693910, 120.37915539874425, "彎13"],
-[23.393957996074340, 120.37914702381198, "彎16"],
+[23.396118977462763, 120.37927979589932, "雅聞",,,"/,號誌"],
+[23.393957996074340, 120.37914702381198, "彎16",,,"號誌預告"],
 [23.391227897313787, 120.37721616759353, "頂茄苳小路"],
 [23.391042800343733, 120.37708327422060, "輔25米南",,,"ign"],
 [23.388776969923804, 120.37544645322666, "頂茄苳N"],
@@ -8580,14 +8581,14 @@ var tasks = [[
 			addLog(tools.nestedTag("略:n" + points[nextPoint][2], "small"));
 			nextPoint += vector;
 			target.voiceStr = points[nextPoint][4-vector];			
-		}
-		if(target.title){
-			while("彎 輔".indexOf(target.title.substr(0,1)) >-1){
+		}		
+
+			while("彎 輔".indexOf(points[nextPoint][2].substr(0,1)) >-1){
 				addLog(tools.nestedTag("略:n" + points[nextPoint][2], "small"));
 				nextPoint += vector;
 				target.voiceStr = points[nextPoint][4-vector];			
 			}
-		}
+		
 	}catch(error){
 		addLog("path.focus(ees):" + error.message);
 	}
@@ -8669,20 +8670,25 @@ var tasks = [[
 
 	signal.newPath=function(){
 		//轉向後,新路線的第一個遇到號誌通常為紅燈, 功能為自動切換。
+		//可是瑞光路南向轉台1,太慢會擋在火葬路
 try{
-		let histor="民生校區";
+		let histor="民生校區 安心巷 巷11 勝利路 興中一巷 巷66E";		//開發階段的暫時清單
 		let sec = 43;
 		let col = colorList[0];
+		let flag = "R";
 		let logmsg = "signal.newPath():";
 		
-		if(target.title == histor){
+		if(histor.indexOf(target.title) >-1){
+		// if(target.title == histor){
 			signal.downCount = sec - signal.getITVTime();
 			march.style.color = col;
-			target.setColor();	//250428
+			signal.recentFlag = flag;
 			
+			target.setColor();	//250428			
+			logmsg += "往"+ target.title;
+			addLog(logmsg);
 		}
-		logmsg += "往"+ target.title;
-		addLog(logmsg);
+		
 }catch(error){
 	addLog("signal.newPath(ffr):" + error.message);
 }
@@ -8835,10 +8841,10 @@ try{
 				
 				if(signal.previousFlag == "R"){		//起/迄點暫定值轉正式值
 					signal.endNode = signal.endNodetmp;
-					addLog(tools.nestedTag("迄點:" + signal.endNode, "small"));
+					// addLog(tools.nestedTag("迄點:" + signal.endNode, "small"));
 				}else{
 					signal.startNode = signal.startNodetmp;
-					addLog(tools.nestedTag("起點:" + signal.startNode, "small"));		
+					// addLog(tools.nestedTag("起點:" + signal.startNode, "small"));		
 				}
 				signal.previousFlag = signal.recentFlag;
 			}
@@ -8859,10 +8865,10 @@ try{
 				//addLog("略過, 隔"+intervalTime+"秒");
 			if(signal.recentFlag == "R"){		//起/迄點的暫定值
 				signal.endNodetmp = signal.nextSignal;
-				addLog("<small>切R,迄點tmp:" +signal.endNodetmp + "</small>");
+				// addLog("<small>切R,迄點tmp:" +signal.endNodetmp + "</small>");
 			}else{
 				signal.startNodetmp = signal.nextSignal;			
-				addLog("<small>切G,起點tmp:" +signal.startNodetmp + "</small>");				
+				// addLog("<small>切G,起點tmp:" +signal.startNodetmp + "</small>");				
 			}
 		
 try{
@@ -8924,8 +8930,8 @@ try{
 
 
 		// let tmp447 = "<a style='color:"+colSymb[signal.previousFlag]+";'>";//TODO 文字顏色另外 用副程式
-		let tmp447 = signal.previousFlag + intervalTime;
-		// let tmp447 =signal.NOW.symb + intervalTime;	//250428
+		// let tmp447 = signal.previousFlag + intervalTime;
+		let tmp447 =signal.NOW.symb + intervalTime;	//250504
 		// tmp447 += "</a>";					
 
 		if(signal.exitCause != ""){
@@ -8947,19 +8953,20 @@ try{
 				result = undefined;
 			}else{		//結算行駛時間
 			
-			addLog("(3j4):startNode="+signal.startNode+",title="+target.title);
-			
+			// addLog("(3j4):startNode="+signal.startNode+",title="+target.title);
+/*			
 			if(signal.startNode == target.title){	
 					//tmp447 = tmp447.replace("/F(\d+)/", "G$1");	//若沒通過下個點, 就算是綠燈時間
-					tmp447 = tmp447.replace("F", "G");		//241210：上一行沒作用, 暫時先用楊春版
-				}else{
-					tmp447 = tmp447.replace("G","F");		//TODO testing會自動從G轉換到F, 本行可省略?
-					if(signal.endNode){
-						tmp447 += signal.endNode.replace(/[(].*/,"");	//輪出前清除刮號內容		
-					}
+				tmp447 = tmp447.replace("F", "G");		//241210：上一行沒作用, 暫時先用楊春版
+			}else{
+				tmp447 = tmp447.replace("G","F");		//TODO testing會自動從G轉換到F, 本行可省略?
+				if(signal.endNode){
+					tmp447 += signal.endNode.replace(/[(].* /,"");	//輪出前清除刮號內容		
 				}
+			}//250504 		*/
+			
 				// if((signal.NOW.color == signal.F.color) && target.title){
-						// tmp447 += target.title.replace(/[(].*/,"a");	//前刮號起清除, 只是為了簡化字串
+			tmp447 += target.title.replace(/[(].*/,"");	//前刮號起清除, 只是為了簡化字串
 					// }
 
 				tmp447 = signal.preLight + tmp447;	//把紅燈加在前面
@@ -9966,15 +9973,17 @@ path.toNextNode=function(){
 		//addLog(this.correctF +", " +signal.startTitle+", "+target.title);
 		try{
 			if( signal.NOW.color == signal.G.color && target.title == signal.startNode){
+				
 				signal.correctF = false;
 				signal.downCount = signal.F.secs - signal.getITVTime();		//已進行的秒數要扣掉
-				//this.recentFlag ="F";
 				signal.NOW.color = signal.F.color;
 				signal.NOW.symb = signal.F.symb;
 				
 				march.innerText = signal.downCount;
 				march.style.color = signal.NOW.color;
-				//addLog("新秒數: " +signal.downCount +"=F" +signal.F.secs+"-"+fixSec );
+				
+				let logmsg = "G" + (signal.F.secs-signal.downCount) + " to F" + signal.downCount
+				addLog("新號誌: " + logmsg);
 			}
 		}catch(error){
 			addLog("path.toNextNode(4ri):" + error.message);
