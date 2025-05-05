@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c25j"; 	</script>
+	<script> 		var version = "v0.72c25k"; 	</script>
 </head>
 
 <style>
@@ -8755,11 +8755,13 @@ try{
 		signal.swColor;	//為了要有顏色
 		// march.style.color = "gray";//灰色
 		signal.testing();
-		addLog("signal.on():color=" + march.style.color);
+		addLog("signal.on():color=" + march.style.color +", " + colorList[1+isMarch] );
 	}
 	
 		
-	signal.testing=function(num){		
+	signal.testing=function(num){
+		march.innerText = signal.downCount--;
+		
 		/* 剩餘行駛時間 */		
 		if(signal.downCount <= 23 && march.style.color !== colSymb.R){
 			march.style.color = "yellow";		//黃色, 可行駛時間剩23秒(為何是23 ???)
@@ -8770,7 +8772,7 @@ try{
 			signal.swColor();
 		}
 		
-		march.innerText = signal.downCount--;
+		
 	}
 	
 	signal.getITVTime=function(baseTime){
