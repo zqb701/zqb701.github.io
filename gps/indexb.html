@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c25k"; 	</script>
+	<script> 		var version = "v0.72c25l"; 	</script>
 </head>
 
 <style>
@@ -6654,7 +6654,7 @@ var tasks = [[
 ],[		//從民生路(商技校區)切開
 [22.660495963946264, 120.51025894060876, "屏市/台1b_巷66E(雙號誌)",,,"R36F73殺蛇溪E@08:22三/R34F78民生校區@09:56一/F71殺蛇溪E@12:42四/F80菸廠路@16:42四/F75民生校區@16:54四/F97殺蛇溪E@17:12二/R40F99殺蛇溪@18:06/R36G90F60,/"],
 
-[22.659860492291360, 120.51138037531653, "民生路E",,,"R35G55&左60F53/,"],
+[22.659860492291360, 120.51138037531653, "民生路E",,,"R35G55&左60F53/,綠60後可左轉"],
 [22.659473739849265, 120.51209523720857, "安心巷","G107@12:36四/,前n秒左轉佳",,"R43G104/,速限50北路中"],
 [22.659354934594027, 120.51230340397994, "輔25米南",,,"ign"], //安心巷
 [22.658536946690514, 120.51373885291224, "民生家商",,,"R40@16:42四/,近速限50"],
@@ -6714,6 +6714,7 @@ var tasks = [[
 [22.616886938038647, 120.55771409628198, "輔25米北","ign"],//自強路
 [22.616662718550568, 120.55775531281208, "自強路","R40G80",,"R40G80"],
 [22.616441884741910, 120.55780222869214, "輔25米南",,,"ign"],//自強路
+//以下接「內埔/台1」
 
 ],[
 [22.626598848575842, 120.52366501088144, "麟洛/永豐路_中正路(屏39竹田)"],
@@ -8679,7 +8680,7 @@ try{
 		let sec = 43;
 		let col = colorList[0];
 		let flag = "R";
-		let logmsg = "signal.newPath():";
+		let logmsg = "(7hr)";//"signal.newPath():";
 		
 		if(histor.indexOf(target.title) >-1){
 		// if(target.title == histor){
@@ -8762,10 +8763,10 @@ try{
 	signal.testing=function(num){
 		march.innerText = signal.downCount--;
 		
-		/* 剩餘行駛時間 */		
+		/* 剩餘行駛時間	
 		if(signal.downCount <= 23 && march.style.color !== colSymb.R){
 			march.style.color = "yellow";		//黃色, 可行駛時間剩23秒(為何是23 ???)
-		}
+		}*/
 		
 		/* 倒數結束換下一燈色及秒數 */
 		if(signal.downCount < 0){
@@ -8936,8 +8937,8 @@ try{
 
 
 		// let tmp447 = "<a style='color:"+colSymb[signal.previousFlag]+";'>";//TODO 文字顏色另外 用副程式
-		// let tmp447 = signal.previousFlag + intervalTime;
-		let tmp447 =signal.NOW.symb + intervalTime;	//250504
+		let tmp447 = signal.previousFlag + intervalTime;
+		// let tmp447 =signal.NOW.symb + intervalTime;	//250504
 		// tmp447 += "</a>";					
 
 		if(signal.exitCause != ""){
@@ -9128,6 +9129,8 @@ addLog("signal.click(5fb):" + error.message);
 		signal.expTime = undefined;
 		signal.towarder = undefined;
 		if(!src)return;
+		
+		
 		let strTimes = src.match(/\d\d:\d\d/g);
 		if(!strTimes){
 			let sgn = src.match(/F\d+/g);
@@ -9985,6 +9988,7 @@ path.toNextNode=function(){
 				signal.downCount = signal.F.secs - signal.getITVTime();		//已進行的秒數要扣掉
 				signal.NOW.color = signal.F.color;
 				signal.NOW.symb = signal.F.symb;
+				signal.previousFlag = signal.F.symb;
 				
 				march.innerText = signal.downCount;
 				march.style.color = signal.NOW.color;
