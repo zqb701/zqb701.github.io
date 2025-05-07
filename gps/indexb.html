@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c25l"; 	</script>
+	<script> 		var version = "v0.72c25m"; 	</script>
 </head>
 
 <style>
@@ -8721,8 +8721,7 @@ try{
 		signal.recentFlag = charList[1+isMarch];
 		// signal.NOW = signal[signal.recentFlag];
 		signal.NOW.color = colorList[1+isMarch];
-		signal.NOW.symb = charList[1+isMarch];
-		
+		signal.NOW.symb = charList[1+isMarch];		
 		
 		march.style.color = signal.NOW.color;
 		march.innerText = signal.downCount;
@@ -8768,12 +8767,10 @@ try{
 			march.style.color = "yellow";		//黃色, 可行駛時間剩23秒(為何是23 ???)
 		}*/
 		
-		/* 倒數結束換下一燈色及秒數 */
+		/* 倒數結束換下一燈色及秒數(TODO:藍燈停在"F0") */
 		if(signal.downCount < 0){
 			signal.swColor();
-		}
-		
-		
+		}		
 	}
 	
 	signal.getITVTime=function(baseTime){
@@ -8937,7 +8934,7 @@ try{
 
 
 		// let tmp447 = "<a style='color:"+colSymb[signal.previousFlag]+";'>";//TODO 文字顏色另外 用副程式
-		let tmp447 = signal.previousFlag + intervalTime;
+		let tmp447 = signal.recentFlagFlag + intervalTime;
 		// let tmp447 =signal.NOW.symb + intervalTime;	//250504
 		// tmp447 += "</a>";					
 
@@ -9988,7 +9985,7 @@ path.toNextNode=function(){
 				signal.downCount = signal.F.secs - signal.getITVTime();		//已進行的秒數要扣掉
 				signal.NOW.color = signal.F.color;
 				signal.NOW.symb = signal.F.symb;
-				signal.previousFlag = signal.F.symb;
+				signal.recentFlagFlag = signal.F.symb;
 				
 				march.innerText = signal.downCount;
 				march.style.color = signal.NOW.color;
