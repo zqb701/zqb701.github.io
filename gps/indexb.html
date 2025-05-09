@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c25n"; 	</script>
+	<script> 		var version = "v0.72c25o"; 	</script>
 </head>
 
 <style>
@@ -8950,7 +8950,7 @@ try{
 
 
 		// let tmp447 = "<a style='color:"+colSymb[signal.previousFlag]+";'>";//TODO 文字顏色另外 用副程式
-		let tmp447 = signal.recentFlagFlag + intervalTime;
+		let tmp447 = signal.recentFlag + intervalTime;
 		// let tmp447 =signal.NOW.symb + intervalTime;	//250504
 		// tmp447 += "</a>";					
 
@@ -10001,7 +10001,7 @@ path.toNextNode=function(){
 				signal.downCount = signal.F.secs - signal.getITVTime();		//已進行的秒數要扣掉
 				signal.NOW.color = signal.F.color;
 				signal.NOW.symb = signal.F.symb;
-				signal.recentFlagFlag = signal.F.symb;
+				signal.recentFlag = signal.F.symb;
 				
 				march.innerText = signal.downCount;
 				march.style.color = signal.NOW.color;
