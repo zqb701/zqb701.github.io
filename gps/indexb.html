@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c25o"; 	</script>
+	<script> 		var version = "v0.72c25p"; 	</script>
 </head>
 
 <style>
@@ -8634,11 +8634,12 @@ var tasks = [[
 			// enable:"w",				//變數一 定要給值
 			recordStr : "",
 			isReporting : false,
-			isShowProp : true,
+			// isShowProp : true,
+			showID : "",
 			startTitle : undefined,				//開始計算可行駛秒數的路口名稱, 含停紅燈的時間
 			startTitle2 : undefined,
 			
-			nextSignal : undefined,		//當前號誌的路口
+			nextSignal : undefined,		//當前號誌的路口(往後找到有號誌的路口)
 			startNode : undefined,		//切紅燈時設定為終點
 			endNode : undefined,			//切綠燈時設定為起點
 			startNodetmp : undefined,
@@ -8734,7 +8735,7 @@ try{
 	/*「用戶」切換燈號(顏色及秒數)，第一階段只有2種模式,R跟G*/
 		isMarch *= -1;
 		signal.downCount = timeNum[1+isMarch];
-		signal.recentFlag = charList[1+isMarch];
+
 		// signal.NOW = signal[signal.recentFlag];
 		signal.NOW.color = colorList[1+isMarch];
 		signal.NOW.symb = charList[1+isMarch];		
@@ -8846,11 +8847,6 @@ try{
 		
 		//手動燈號切換
 		//addLog("run swColor at signal.click()");
-
-
-		
-																			
-																				
 			let clickNow = Date.now();
 			let intervalTime = signal.getITVTime(clickNow);
 try{
@@ -8859,14 +8855,13 @@ try{
 			if(intervalTime >2){
 				signal.switchTime = clickNow;
 				
-				if(signal.previousFlag == "R"){		//起/迄點暫定值轉正式值
+				if(signal.recentFlag == "R"){		//起/迄點暫定值轉正式值
 					signal.endNode = signal.endNodetmp;
 					// addLog(tools.nestedTag("迄點:" + signal.endNode, "small"));
 				}else{
 					signal.startNode = signal.startNodetmp;
 					// addLog(tools.nestedTag("起點:" + signal.startNode, "small"));		
 				}
-				signal.previousFlag = signal.recentFlag;
 			}
 
 				//return;
@@ -8874,29 +8869,30 @@ try{
 }catch(error){
 	addLog("signal.click(9ih):" + error.message);
 }
-
 		addLog(signal.setStyle(signal.getRecordData(intervalTime)));
+		addLog("-");
 		
 		if(signal.nextSignal !== target.title){
 			target.setColor();		//取得新參數
 			signal.isShowProp = true;
 		}
 		signal.swColor();			//依參數變更燈號
+		signal.recentFlag = charList[1+isMarch];
+		
 				//addLog("略過, 隔"+intervalTime+"秒");
 			if(signal.recentFlag == "R"){		//起/迄點的暫定值
 				signal.endNodetmp = signal.nextSignal;
 				// addLog("<small>切R,迄點tmp:" +signal.endNodetmp + "</small>");
 			}else{
-				signal.startNodetmp = signal.nextSignal;			
+				signal.startNodetmp = target.title +"(" +signal.nextSignal +")";
 				// addLog("<small>切G,起點tmp:" +signal.startNodetmp + "</small>");				
 			}
 		
 try{
 	// addLog("signal.click(5)");
 		/*下一節點的資訊*/
-		if(signal.isShowProp){	
-		//isShowProp為避免末通過路口時, 多次Click,而重覆顯示本訊息
-		// 但新路口就會解除為true，而非號誌路口
+		if(signal.showID != target.title){
+			signal.showID = target.title;		//為避免末通過路口時, 多次Click,而重覆顯示本訊息
 			let str22 = signal.properties;
 			if(signal.towarder){
 				str22 += " to "+signal.towarder;
@@ -8904,13 +8900,14 @@ try{
 			if(signal.expTime){
 				str22 += "@"+signal.expTime;
 			}
+		
 			if(signal.nextSignal){
 				str22 += " from " +signal.nextSignal;
 			}
 			addLog("預:"+str22);
 
 			document.getElementById("watchStr").innerHTML =signal.setStyle(str22);
-			signal.isShowProp = false;
+			
 		}
 		
 		if(signal.recentFlag == "R"){	//用戶手動切到「紅」燈
@@ -8985,9 +8982,10 @@ try{
 				}
 			}//250504 		*/
 			
-				// if((signal.NOW.color == signal.F.color) && target.title){
-			tmp447 += target.title.replace(/[(].*/,"");	//前刮號起清除, 只是為了簡化字串
-					// }
+				if(target.title){
+					tmp447 += target.title.replace(/[(].*/,"");	//前刮號起清除, 只是為了簡化字串
+					tmp447 += "("+signal.endNode+")";
+				}
 
 				tmp447 = signal.preLight + tmp447;	//把紅燈加在前面
 				
@@ -8999,7 +8997,7 @@ try{
 				newline = "<br>";
 				signal.preLight = "";		//用過清除
 			}
-			result = newline + "燈:" + tmp447;
+			result = "燈:" + tmp447;
 			// addLog("signal.xx(3cc)");
 		}else{
 			// addLog("(y8n)intervalTime=" +intervalTime);
@@ -9304,7 +9302,9 @@ signal.setStyle=function(srcStr){
 		return srcStr;
 }
 
-function getAzimuth(p0, p1){
+	// signal.off=function(){
+path.getAzimuth=function(p0, p1){
+	/* 取得方位角 */
 	d1y = getDistance([p1[0],p0[1]],p0);
 	if(p1[0] < p0[0]){
 		d1y *= -1;
@@ -9322,10 +9322,12 @@ function getAzimuth(p0, p1){
 	return ga * 180/Math.PI;	//轉方位角0~360
 }
 
-function angleOffset(p0,p1,p2){		
-	a1 = getAzimuth(p0,p1);
-	a2 = getAzimuth(p0,p2);
-	dA = Math.abs(a1 - a2);
+// signal.off=function(){
+path.angleOffset=function(p0,p1,p2){		
+	/*取得夾角角度*/
+	let a1 = path.getAzimuth(p0,p1);	//取得方位角
+	let a2 = path.getAzimuth(p0,p2);
+	let dA = Math.abs(a1 - a2);
 
 	if(dA > 180){
 		dA = 360 - dA;
@@ -9334,45 +9336,6 @@ function angleOffset(p0,p1,p2){
 	return dA;
 }
 	
-	function t03(){
-		p=[	[22.66654286222146, 120.50113602621077,"民利35巷"],
-			[22.665285944517155, 120.50179304264677,"殺蛇橋"],
-			[22.66608654077297, 120.50036725372237,"工業路"],
-			[22.6684552313614, 120.5042532586352, "伊谷"],
-			[22.668182980030384, 120.50013875013059,"泳池"]
-			];
-			a1 = getAzimuth(p[0], p[1]);
-			if(true){
-
-					d1 = Math.PI/2 - a1;
-				if(d1 < 0){
-					d1 += Math.PI*2;
-				}
-						
-			}else{
-				d1 = -a1 -(-Math.PI/2);
-				
-				if( d1 > Math.PI*2 ){
-					d1 -= Math.PI*2;
-				}
-			}
-			d1 *= 180/Math.PI;
-console.log(a1, d1);
-			
-			
-	}
-	function t04(){
-		alert('a');
-		addLog("<br>aaa");
-		addLog("bbb<br>");
-		addLog("<br>ccc");
-	}
-	
-	function t05(){
-		//var strGPS = "1234";	//
-		strGPS = strGPS.substr(1,4)+strGPS.charAt(0);
-		document.getElementById("speed").innerText = strGPS.charAt(0);
-	}
 	
 	// _test.t07 = function(){
 	function t07(){
@@ -9410,14 +9373,6 @@ console.log(a1, d1);
 		}
 	}
 	
-	function t06(){
-		if(a){
-			alert("A");
-		}else{
-			alert("B");
-		}
-	}
-	
 	function testMaps(){
 		// alert(window.location.href.substr(0,4));
 		if(window.location.href.substr(0,4) != "file"){
@@ -9448,43 +9403,6 @@ console.log(a1, d1);
 	// var _test = new Test();
 	// _text.t01 = function(){
 		
-
-	_test.t01 = function(){
-			p=[	[22.66654286222146, 120.50113602621077,"民利35巷"],
-			[22.665285944517155, 120.50179304264677,"殺蛇橋"],
-			[22.66608654077297, 120.50036725372237,"工業路"]];
-	pp = [[,],[,],[,]];
-	
-	console.log(Math.atan(-1));
-	pp[1][0] = p[0][0];
-	pp[1][1] = p[1][1];
-	// per1=	(p[1][1]-p[0][1]) / (p[1][0]-p[0][0]);
-	per1=	getDistance( pp[1],p[0]) / -getDistance(pp[1],p[1]);
-	
-	an1 = Math.atan(per1);
-		an1 = Math.atan2(-getDistance(pp[1],p[0]),getDistance( pp[1],p[1]))
-	console.log(per1,an1);
-	
-	pp[2][0] = p[0][0];
-	pp[2][1] = p[2][1];
-	// per1=	(p[1][1]-p[0][1]) / (p[1][0]-p[0][0]);
-	per2=	getDistance( pp[2],p[0]) / getDistance(pp[2],p[2]);
-	an2 = Math.atan(per2);	
-
-	console.log(per2,an2);
-	// alert("stop!");		
-	}
-	
-	_test.t02 = function(){
-			// _test.t02 = function(){
-	p0=	[22.665588375791046, 120.50101392899106,""];
-		// [22.66654286222146, 120.50113602621077,"民利35巷"],
-		p1=[22.665285944517155, 120.50179304264677,"殺蛇橋"];
-		p2 = [22.66608654077297, 120.50036725372237,"工業路"];
-	angleOffset(p0,p1,p2);
-	}
-	
-
 function initGUI(){
 	// var signalGui = document.getElementById("march");
 	// signalGui.addEventListener("click");
@@ -9998,7 +9916,9 @@ path.toNextNode=function(){
 			// if( signal.NOW.color == signal.G.color && target.title == signal.startNode){
 				
 				signal.correctF = false;
-				signal.downCount = signal.F.secs - signal.getITVTime();		//已進行的秒數要扣掉
+				let logmsg = "G" + signal.downCount;
+				signal.preLight += logmsg;
+				signal.downCount = signal.F.secs - signal.downCount;		//已進行的秒數要扣掉
 				signal.NOW.color = signal.F.color;
 				signal.NOW.symb = signal.F.symb;
 				signal.recentFlag = signal.F.symb;
@@ -10006,8 +9926,8 @@ path.toNextNode=function(){
 				march.innerText = signal.downCount;
 				march.style.color = signal.NOW.color;
 				
-				let logmsg = "G" + (signal.F.secs-signal.downCount) + " to F" + signal.downCount
-				addLog("新號誌: " + logmsg);
+				logmsg += " to F" + signal.downCount
+				addLog("綠轉藍: " + logmsg);				
 			}
 		}catch(error){
 			addLog("path.toNextNode(4ri):" + error.message);
@@ -10082,7 +10002,7 @@ path.toNextNode=function(){
 // showMsg("a3");	
 	//220930 取消指定路口檢查偏角
 	if( false && points[nextPoint][4] && points[nextPoint][4].indexOf("s") >= 0){
-		edgeVector = getAzimuth(points[nextPoint],  points[nextPoint+vector]);	
+		edgeVector = path.getAzimuth(points[nextPoint],  points[nextPoint+vector]);	
 		diff = Math.abs(coords_heading - edgeVector); 
 		strtmp =
 			// ", 車" + Math.round(coords_heading) + 
@@ -10317,7 +10237,7 @@ path.toNearNode=function(){
 		for(let i=1; i < tasks[t].length; i++){
 			 // showMsg(tasks[t][i-1][2]);
 			//dist = getDistance(recentPoint,  tasks[t][i]);
-			ang = angleOffset(recentPoint, tasks[t][i-1], tasks[t][i]);
+			ang = path.angleOffset(recentPoint, tasks[t][i-1], tasks[t][i]);
 	//相鄰兩點之線段與當前座標, 夾角最接近180度者
 			ang_i = i;
 			ang_t = t;
@@ -10389,7 +10309,7 @@ minDiff = 361;
 	}
 	
 	//行車方向與路段夾角, 決定路徑為順向(+1)或反向(-1)
-	edgeVector = getAzimuth(points[nextPoint-1],  points[nextPoint]);
+	edgeVector = path.getAzimuth(points[nextPoint-1],  points[nextPoint]);
 	diff = Math.abs(coords_heading - edgeVector); 
 	if(diff > 90 && diff < 270){
 		vector = -1;//反向
