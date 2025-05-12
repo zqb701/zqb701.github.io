@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c25p"; 	</script>
+	<script> 		var version = "v0.72c25q"; 	</script>
 </head>
 
 <style>
@@ -40,7 +40,7 @@
 </style>
 
 <body onload="init();" bgcolor="black" text="white" margin="0" 
-	onkeydown="addLog('['+ event.keyCode+']');">
+	onkeydown="tools.addlog('['+ event.keyCode+']');">
 	<f function HTML_body(){}/>
 
 	<div class="cmdButton" id="speed" style="position:fixed; font-size:100px; border-radius: 30%;">速</div>
@@ -78,12 +78,12 @@
 </div>
 
 		<div class="cmdButton" id="speedTime" 
-		onclick="addLog(speeder.myFinal());" 
+		onclick="tools.addlog(speeder.myFinal());" 
 		style="font-size:80px; border-radius: 0 40% 40% 0;"
 		>0</div>
 		
 		<div class="cmdButton" 
-		onclick="addLog('尋標');path.toNearNode();"
+		onclick="tools.addlog('尋標');path.toNearNode();"
 		style="border-radius: 0 40% 40% 0; font-size: 50px;" rem="🔍☎📢"
 		>🔍</div>
 	</div>	
@@ -98,8 +98,8 @@
 	<input type="button" value="更新快取" onClick="newCache();">
 	<input type="button" value="通知測試" onClick="displayNotification();">
 	
-	<input type="button" value="行駛" 			onClick="addLog(speeder.check(6));">
-	<input type="button" value="停車" 			onClick="addLog(speeder.check(2));">
+	<input type="button" value="行駛" 			onClick="tools.addlog(speeder.check(6));">
+	<input type="button" value="停車" 			onClick="tools.addlog(speeder.check(2));">
 	<input type="button" value="測試01" 	onClick="tools.setColor('停384F23');">
 	
 	<input type="button" value="清除" onClick="tools.cleanLog();">
@@ -633,7 +633,7 @@ var tasks = [[
 [22.660830889356372, 120.50967927191667, "瑞屏街W(雙號誌)","R33@15:45一/R33G90/,"],
 [22.660495963946264, 120.51025894060876, "巷66E(雙號誌)",,,"R36F73殺蛇溪E@08:22三/R37F69殺蛇溪E@09:23一/R34F78民生校區@09:56一/F70殺蛇溪E@10:18一/F71殺蛇溪E@12:42四/F80菸廠路@16:42四/F75民生校區@16:54四/F97殺蛇溪E@17:12二/R40F99殺蛇溪@18:06/,"],
 
-[22.659908488349370, 120.51121889337335, "和生路","F105永達@06:24一250505/F106永達@06:54一/F122永達@07:23二/F94果菜市場F104永達@08:09二/F90果菜市場@08:11四/F104永達@08:14:12一/F94果菜市場@08:14三/F94果菜市場@08:24一/F95@08:34/F90@08:41/R91F95果菜市場@08:47四/F94果菜市場@09:09一/R96F94果菜市場@10:19一/F90果菜市場@10:41一/R118G61@15:46五/R105F149瑞光路N@15:47一/R110G60F50/走R50瑞光/,安心巷紅多10秒,右提前"],
+[22.659908488349370, 120.51121889337335, "和生路","R104/F105永達@06:24一250505/F106永達@06:54一/F122永達@07:23二/F94果菜市場F104永達@08:09二/F90果菜市場@08:11四/F104永達@08:14:12一/F94果菜市場@08:14三/F94果菜市場@08:24一/F95@08:34/F90@08:41/R91F95果菜市場@08:47四/F94果菜市場@09:09一/R96F94果菜市場@10:19一/F90果菜市場@10:41一/R118G61@15:46五/R105F149瑞光路N@15:47一/R110G60F50/走R50瑞光/,安心巷紅多10秒,右提前"],
 
 ],[
 [22.672704298914464, 120.49293309520853, "屏市/仁愛路_林森路"],
@@ -985,7 +985,7 @@ var tasks = [[
 
 [22.655579780727386, 120.51407578585876, "彎10"],
 [22.654285266265962, 120.51290058024507, "歸智巷","R39F54歸禮巷N@15:54一/R40G50,",,"R39F49民生東路@09:46/R40G50,"],
-[22.653399707004777, 120.51195347112373, "11巷",,,"R38"],
+[22.653399707004777, 120.51195347112373, "巷11",,,"R38"],
 [22.652296396827296, 120.51072923537126, "歸禮巷N","R35G50"],
 [22.651959088511326, 120.51035576174327, "歸禮巷S",,,"R37@15:55一/R35G50"],
 
@@ -999,9 +999,9 @@ var tasks = [[
 
 ],[
 [22.651497604490107, 120.48594643648780, "屏市/台27南段_和生路S"],
-[22.649809737258780, 120.48589926224109, "231巷"],
-[22.647320547903206, 120.48581062120374, "376巷(超商)"],
-[22.646248176255884, 120.48577060181395, "399巷(眷村)"],//慈恩十六村
+[22.649809737258780, 120.48589926224109, "巷231"],
+[22.647320547903206, 120.48581062120374, "巷376(超商)"],
+[22.646248176255884, 120.48577060181395, "巷399(眷村)"],//慈恩十六村
 [22.644857923127800, 120.48572529109260, "新興街"],
 [22.641162851824046, 120.48558901364656, "屏45N"],
 [22.640269825210037, 120.48557096996655, "中柳路S"],
@@ -1020,7 +1020,7 @@ var tasks = [[
 [22.606215071002932, 120.48742775321385, "廣維路",,,"G31,F95停26"],
 [22.602767076674350, 120.48827422944480, "丹榮路","左2,綠燈後段,左彎又紅燈",,"R67,F40停20"],
 
-[22.599417478349690, 120.49108799566446, "31巷"],//東外環
+[22.599417478349690, 120.49108799566446, "巷31"],//東外環
 [22.597246432443807, 120.49279619173203, "彎3(台電)"],
 [22.595274999880196, 120.49298735940094, "四維東路"],
 [22.591925550761868, 120.49269825799061, "萬榮街"],
@@ -1045,7 +1045,7 @@ var tasks = [[
 [22.586232920669470, 120.49144910919566, "成功街"],
 [22.585642683138197, 120.49346120222258, "丹榮路"],
 [22.585190975896980, 120.49487817952618, "大發路"],
-[22.584377488722023, 120.49764858158525, "200巷"],
+[22.584377488722023, 120.49764858158525, "巷200"],
 
 ],[
 [22.589378055778420, 120.48710950077408, "萬丹/大學路_西環路"],
@@ -1057,12 +1057,12 @@ var tasks = [[
 
 ],[
 [22.602958978996100, 120.48820959414384, "萬丹/萬丹路_丹榮路"],
-[22.599416629210467, 120.48846856607900, "118巷"],
+[22.599416629210467, 120.48846856607900, "巷118"],
 [22.596835718664025, 120.48863249540112, "萬丹國中","速限50南路中"],
 [22.595725000445450, 120.48870831894752, "四維東路"],
 [22.592778498269297, 120.48890072463008, "西環路"],
 [22.590196810362514, 120.48908043957239, "大憲街","R33",,"R33F30"],
-[22.588896235460897, 120.48955226653520, "280號(八二五)"],
+[22.588896235460897, 120.48955226653520, "號280(八二五)"],
 [22.587808822747697, 120.48990562349044, "和平東路","R46",,"R46"],
 [22.586635358272126, 120.48958562183063, "萬壽路"],
 [22.583963710909470, 120.48899091273360, "中興路"],
@@ -8251,7 +8251,7 @@ var tasks = [[
 		this.switc = function(){
 			let nowTime = Date.now();
 			if((nowTime - this.clickTime) < 400){		
-				addLog("a");
+				tools.addlog("a");
 				return;
 			}else{
 				if(this.intervalID){
@@ -8285,8 +8285,8 @@ var tasks = [[
 		};
 		
 		this.stop = function(){
-			addLog(this.myFinal());
-							// addLog("stop");
+			tools.addlog(this.myFinal());
+							// tools.addlog("stop");
 			window.clearInterval(this.intervalID);
 			this.intervalID = undefined;
 			this.meter.innerText = "0";
@@ -8313,18 +8313,15 @@ var tasks = [[
 					this.meter.style.color = "cyan";//移動中計時器為粉藍色
 					this.highStart = points[nextPoint][2];
 					
-					if(signal.isWaitNext){	
-						signal.startTitle = target.title;		//即使切紅燈, 要到停止狀態才設定起始點
-						signal.isWaitNext = false;
-					}
+
 				}else{}	// 仍為停止				
 			}else{//移動狀態
 				if(speed < 3){
 					//TODO 併為函式onStop及onMove
-					// addLog("結算移動時間");
+					// tools.addlog("結算移動時間");
 					theTime = this.highTime;
 					theChar = "走:";
-					signal.isReporting = true;
+
 				/*	
 					try{
 						let str34 = "x";
@@ -8334,7 +8331,7 @@ var tasks = [[
 						document.getElementById("watchStr").innerText = str34;
 						target.signStr = "";	//用過要清空
 					}catch(err){
-						addLog("str34 : " + err.message);
+						tools.addlog("str34 : " + err.message);
 					}
 				*/
 					// addstr = ",均:XX km/h";
@@ -8363,7 +8360,7 @@ var tasks = [[
 		}
 			//只結算
 		this.myFinal = function(){
-			// addLog("myFinal");
+			// tools.addlog("myFinal");
 			let theTime;
 			let theChar;
 			if(this.slowTime){//只有關閉GUI才執行
@@ -8384,7 +8381,7 @@ var tasks = [[
 			let strtmp = theChar + tools.secToHMS(secTmp);
 			// strtmp += addstr;
 
-			// addLog(strtmp);
+			// tools.addlog(strtmp);
 			return strtmp;
 		}
 	}//end of function Speeder
@@ -8414,14 +8411,14 @@ var tasks = [[
 		//抓出最近的紅綠燈秒數
 		try{
 			//240914, 從這一點開始, 丟字串給signal分析, 
-			//addLog("target.focus(): signal.enable="+signal.enable);
+			//tools.addlog("target.focus(): signal.enable="+signal.enable);
 			if(signal.IntervalID){
 				let find = false;
 				for(let p = nextPoint; p>=0 && p<points.length; p += vector){
 					if(signal.setColor(points[p][4-vector])){
 						find = true;
 						signal.nextSignal = points[p][2];
-						//addLog("號誌路口:" + signal.nextSignal);
+						//tools.addlog("號誌路口:" + signal.nextSignal);
 						//findPoint = p;		//TODO 下次從這點開始找,以免浪費電
 						break;
 					}
@@ -8440,7 +8437,7 @@ var tasks = [[
 				//signal.addTime(target.runNum - source.runNum);
 			
 		}catch(err){
-			addLog("target.focus6d:" + err.message);
+			tools.addlog("target.focus6d:" + err.message);
 		}
 	}
 	
@@ -8448,22 +8445,22 @@ var tasks = [[
 	
 
 		
-	// addLog("target.focus(001)");
+	// tools.addlog("target.focus(001)");
 		
 		// target.isShowProp = true;
 		try{
 			if(target.voiceStr){
 				let idx = target.voiceStr.indexOf(",");
-				// addLog("idx=" + idx+", nxp= "+nextPoint+", str=" +target.voiceStr );
+				// tools.addlog("idx=" + idx+", nxp= "+nextPoint+", str=" +target.voiceStr );
 				if(idx >= 0){
 					target.signStr = target.voiceStr.substring(0,idx);	//起始,結束
 					target.voiceStr = target.voiceStr.substring(idx+1);
 					// let strtmp = idx +"[燈:" + target.signStr+"][語:"+target.voiceStr +"]";
-					// addLog("<small>" + strtmp + "</small>");
+					// tools.addlog("<small>" + strtmp + "</small>");
 				}
 			}
 		}catch(err){
-			addLog("target.focus3:" + err.message);
+			tools.addlog("target.focus3:" + err.message);
 		}
 		
 
@@ -8486,22 +8483,22 @@ var tasks = [[
 			enAlarmSpeedLimit = 0;
 		}
 	}
-	// addLog("target.focus(009)");
+	// tools.addlog("target.focus(009)");
 	return;
 		
 		try{//240724, 依addNum調整號誌間的時間差
 			if(signal.recentFlag == "F"){
 				let passingTime = signal.getITVTime();
-				addLog("target.focus()\setTime: runNum = " + target.runNum+ ",passingTime=" + passingTime);
+				tools.addlog("target.focus()\setTime: runNum = " + target.runNum+ ",passingTime=" + passingTime);
 				signal.setTime(target.runNum - passingTime); //同時變綠
 				
 				if(target.addNum != 0){		//延後或提前變綠
-					addLog("target.focus()\setTime: addNum = " + target.addNum);
+					tools.addlog("target.focus()\setTime: addNum = " + target.addNum);
 					signal.addTime(target.addNum);
 				}
 			}
 		}catch(err){
-				addLog("target.focus(): " + err.message);
+				tools.addlog("target.focus(): " + err.message);
 			}
 	}//end of  target.focus
 	
@@ -8510,18 +8507,18 @@ var tasks = [[
 	path.place = "地點";
 	
 	path.focus=function (){
-		// addLog("path.focus(0)");
+		// tools.addlog("path.focus(0)");
 		let str = points[0][2];
 		let idx = str.indexOf("_");
 		if(idx < 1){		//找不到或底線在字首都不行
-			addLog("err!格式錯誤(沒有底線):" +str);
+			tools.addlog("err!格式錯誤(沒有底線):" +str);
 			path.title = str;
 		}else{
 			path.title = str.substr(0, idx);					//起始,長度
 			
 			idx = str.indexOf("/");
 			if(idx < 1){
-				addLog("err!格式錯誤(沒有斜線):" +str);
+				tools.addlog("err!格式錯誤(沒有斜線):" +str);
 				path.place = str;
 			}else{
 				path.place = str.substr(0,idx);
@@ -8537,22 +8534,22 @@ var tasks = [[
 			}
 			
 		
-		// addLog("path.focus(1)");
+		// tools.addlog("path.focus(1)");
 
 		/**是否將號誌啟用 */
 		try{
 			let strtmp = points[0][3];
 			if(strtmp && (strtmp.indexOf("RG_OFF") >-1)){//內含RG_OFF
-					//addLog("path.focus():號誌停用(RG_OFF)" + path.title);
+					//tools.addlog("path.focus():號誌停用(RG_OFF)" + path.title);
 					signal.off();
 				}else{
-					//addLog("path.focus():號誌啟用"+ path.title);
+					//tools.addlog("path.focus():號誌啟用"+ path.title);
 					signal.on();//本行「可能」造成新路線時紅綠燈重置
 				}			
 		}catch(err){
-			addLog("err498, path.focus():" + err.message);
+			tools.addlog("err498, path.focus():" + err.message);
 		}
-		// addLog("path.focus(2)");
+		// tools.addlog("path.focus(2)");
 		
 		/** 產生報告字串*/
 		strtmp = "";
@@ -8573,12 +8570,12 @@ var tasks = [[
 				*/
 			}
 		}catch(err){
-			addLog("err776, path.focus():" + err.message+","+points[tmpP][2]);
+			tools.addlog("err776, path.focus():" + err.message+","+points[tmpP][2]);
 		}
 		
-		// addLog("path.focus(3)");
+		// tools.addlog("path.focus(3)");
 
-	// addLog("path.focus(4)");
+	// tools.addlog("path.focus(4)");
 	if(taskID != oldTask){
 		strtmp  += "<br>";
 		strtmp  += "新:";
@@ -8591,28 +8588,28 @@ var tasks = [[
 					 
 	// strtmp += ",順反:" + vector + ",GPS向:" + coords_heading.toFixed(0) + 
 			// ",路向:" + edgeVector.toFixed(0);
-	addLog(strtmp + "<br>");
+	tools.addlog(strtmp + "<br>");
 	
 		//忽略不要的點
 	try{
 		target.voiceStr = points[nextPoint][4-vector];
 		while(target.voiceStr && target.voiceStr == "ign"){
 		//TODO:索引超出時nextPoint>0 && nextPoint <points.length
-			addLog(tools.nestedTag("略:n" + points[nextPoint][2], "small"));
+			tools.addlog(tools.nestedTag("略:n" + points[nextPoint][2], "small"));
 			nextPoint += vector;
 			target.voiceStr = points[nextPoint][4-vector];			
 		}		
 
 			while("彎 輔".indexOf(points[nextPoint][2].substr(0,1)) >-1){
-				addLog(tools.nestedTag("略:n" + points[nextPoint][2], "small"));
+				tools.addlog(tools.nestedTag("略:n" + points[nextPoint][2], "small"));
 				nextPoint += vector;
 				target.voiceStr = points[nextPoint][4-vector];			
 			}
 		
 	}catch(error){
-		addLog("path.focus(ees):" + error.message);
+		tools.addlog("path.focus(ees):" + error.message);
 	}
-	// addLog("path.focus(9)");
+	// tools.addlog("path.focus(9)");
 	}
 	
 		class signal01{}
@@ -8632,27 +8629,18 @@ var tasks = [[
 		var signal = {
 			IntervalID : undefined,		//signal有一個計數器,以「秒」為「倒數」間隔。
 			// enable:"w",				//變數一 定要給值
-			recordStr : "",
-			isReporting : false,
-			// isShowProp : true,
 			showID : "",
-			startTitle : undefined,				//開始計算可行駛秒數的路口名稱, 含停紅燈的時間
-			startTitle2 : undefined,
 			
 			nextSignal : undefined,		//當前號誌的路口(往後找到有號誌的路口)
 			startNode : undefined,		//切紅燈時設定為終點
 			endNode : undefined,			//切綠燈時設定為起點
 			startNodetmp : undefined,
-			endNodetmp : undefined,	
-			
-			isWaitNext : true,
-			exitCause : "",			//離、端... 等代表路徑變換的字元,脫離原因escape
+			endNodetmp : undefined,				
+
 			properties  : "",			//當前號誌的燈號時間, 由當前路口號誌資料庫依時間歸納
 														//如R40G60左15F120xx路F150zz路轉左n轉右m
 			switchTime : -1,			//新秒數的啟用時間/燈號切換/最後有效手動點選
-			//intervalTime : undefined,
-			correctF : false,			//每一段路只能執行乙次(通過節點後, 從綠燈秒數, 切換為行駛秒數, )
-			// seconds = { R: 34, G: 56, F: 78,},
+			// intervalTime : undefined,
 			
 			recentFlag : "",			//當前的燈色手動切換只有G跟R
 			downCount : -1,		//秒數(倒數),原countdown
@@ -8668,19 +8656,17 @@ var tasks = [[
 			F : {secs:78, color:"cyan", symb:"F"},	//LightBlue, cyan青色,BlueViolet藍紫
 			// Y : {secs:9, color:"yellow"},					//黃燈秒數少, 可能要電腦判讀時代才用到
 			
-			initt(){				
-			// addLog("signal.initt()" + this);
-			},	//方法寫法
-			f: function() {alert(this.R);},	//方法寫法
+			initt(){
+			// tools.addlog("signal.initt()" + this);
+			},	//方法寫法(但npp抓不到)
+			f: function() {alert(this.R);},	//方法寫法(但npp抓不到)
 		};
-		
-		signal.initt();
-		
+
 		signal.init=function(){
-				// addLog("signal.init()"+ this.previousFlag);
+				// tools.addlog("signal.init()"+ this.previousFlag);
 				// signal.defPrep =  "R30G40F100";//初值可併到colSymb
-			}
-		signal.init();
+			}//方法寫法(npp可以抓到)
+
 		
 		//可能要等300ms
 	var isMarch = -1;	//行進中,motion, move, 靜止still
@@ -8690,29 +8676,37 @@ var tasks = [[
 	var charList = ["R",,"G"];
 
 	signal.newPath=function(){
-		//轉向後,新路線的第一個遇到號誌通常為紅燈, 功能為自動切換。
-		//可是瑞光路南向轉台1,太慢會擋在火葬路
+		/*
+		a.前進轉向後,新路線的第一個遇到號誌通常為紅燈(有連動), 本功能為自動切換。		可是瑞光路南向轉台1,太慢會擋在火葬路, 所以要多層識別,如火葬巷G10果菜市場R20
+		b.
+		*/
 try{
-		let histor="民生校區 安心巷 巷11 勝利路 興中一巷 巷66E";		//開發階段的暫時清單
+		let histor="民生校區";// 安心巷 巷11 勝利路 興中一巷 巷66E";		//開發階段的暫時清單
 		let sec = 43;
 		let col = colorList[0];
 		let flag = "R";
 		let logmsg = "(7hr)";//"signal.newPath():";
 		
 		if(histor.indexOf(target.title) >-1){
-		// if(target.title == histor){
-			signal.downCount = sec - signal.getITVTime();
-			march.style.color = col;
-			signal.recentFlag = flag;
-			isMarch *= -1;//TODO 顏色不樣才要切換
-			
-			target.setColor();	//250428			
 			logmsg += "往"+ target.title;
-			addLog(logmsg);
+		// if(target.title == histor){
+			march.style.color = col;
+			if(signal.recentFlag != flag){
+				isMarch *= -1;
+				signal.recentFlag == flag
+			}
+			logmsg = "(" + signal.recentFlag + signal.downCount;
+			signal.downCount = sec - signal.getITVTime();
+			logmsg = " to " + flag + sec+")";
+			
+			
+			target.setColor();	
+			
+			tools.addlog(logmsg);
 		}
 		
 }catch(error){
-	addLog("signal.newPath(ffr):" + error.message);
+	tools.addlog("signal.newPath(ffr):" + error.message);
 }
 	}
 	
@@ -8726,13 +8720,13 @@ try{
 			signal.recentFlag = charList[0];		
 			march.style.color = colorList[0];
 		}
-		//addLog("signal.addTime\march.innerText =" + march.innerText);
+		//tools.addlog("signal.addTime\march.innerText =" + march.innerText);
 		signal.downCount = num2;
 	}
 
 
 	signal.swColor=function(){		
-	/*「用戶」切換燈號(顏色及秒數)，第一階段只有2種模式,R跟G*/
+	/*切換燈號(顏色及秒數)，第一階段只有2種模式,R跟G*/
 		isMarch *= -1;
 		signal.downCount = timeNum[1+isMarch];
 
@@ -8749,17 +8743,17 @@ try{
 		// signal.enable = false;
 		window.clearInterval(signal.IntervalID);
 		signal.IntervalID = undefined;
-		//addLog("signal.off(9):signal.IntervalID=" +signal.IntervalID);
+		//tools.addlog("signal.off(9):signal.IntervalID=" +signal.IntervalID);
 		march.style.color = "gray";//灰色
 		march.innerText = "_";
-		addLog("signal.off()");
+		tools.addlog("signal.off()");
 	}
 		
 		
 	signal.on=function(){
 		try{
 		if(signal.IntervalID){
-			// addLog("signal.IntervalID已經有值!  ");
+			// tools.addlog("signal.IntervalID已經有值!  ");
 			return;
 		}
 		signal.switchTime = Date.now();
@@ -8767,12 +8761,12 @@ try{
 			signal.testing();
 		}	) , 1000);
 		}catch(error){
-			addLog("signal.on(22w):" + error.message);
+			tools.addlog("signal.on(22w):" + error.message);
 		}
 		signal.swColor;	//為了要有顏色
 		// march.style.color = "gray";//灰色
 		signal.testing();
-		addLog("signal.on():color=" + march.style.color +", " + colorList[1+isMarch] );
+		tools.addlog("signal.on():color=" + march.style.color +", " + colorList[1+isMarch] );
 	}
 	
 		
@@ -8791,6 +8785,7 @@ try{
 	}
 	
 	signal.getITVTime=function(baseTime){
+		/*取得間隔秒數*/
 		if(!baseTime){
 			baseTime = Date.now();
 		}
@@ -8800,7 +8795,7 @@ try{
 	signal.setTime=function(num){
 		signal.downCount = num;
 		march.innerText = num;
-		addLog("signal.setTime\march.innerText =" + march.innerText);
+		tools.addlog("signal.setTime\march.innerText =" + march.innerText);
 	}
 
 		
@@ -8818,7 +8813,7 @@ try{
 					resultStr += "+</a>";
 				}
 			}catch(err){
-				addLog("signal.getLightStr(8tf):" + err.message);
+				tools.addlog("signal.getLightStr(8tf):" + err.message);
 			}
 			return resultStr;		//為何會傳回空白字串? 24/12/17泰武
 		}
@@ -8846,50 +8841,50 @@ try{
 		}
 		
 		//手動燈號切換
-		//addLog("run swColor at signal.click()");
+		//tools.addlog("run swColor at signal.click()");
 			let clickNow = Date.now();
 			let intervalTime = signal.getITVTime(clickNow);
 try{
 
-// addLog("秒數"+intervalTime);	
+// tools.addlog("秒數"+intervalTime);	
 			if(intervalTime >2){
 				signal.switchTime = clickNow;
 				
 				if(signal.recentFlag == "R"){		//起/迄點暫定值轉正式值
 					signal.endNode = signal.endNodetmp;
-					// addLog(tools.nestedTag("迄點:" + signal.endNode, "small"));
+					// tools.addlog(tools.nestedTag("迄點:" + signal.endNode, "small"));
 				}else{
 					signal.startNode = signal.startNodetmp;
-					// addLog(tools.nestedTag("起點:" + signal.startNode, "small"));		
+					// tools.addlog(tools.nestedTag("起點:" + signal.startNode, "small"));		
 				}
 			}
 
 				//return;
 
 }catch(error){
-	addLog("signal.click(9ih):" + error.message);
+	tools.addlog("signal.click(9ih):" + error.message);
 }
-		addLog(signal.setStyle(signal.getRecordData(intervalTime)));
-		addLog("-");
+		tools.addlog(signal.setStyle(signal.getRecordData(intervalTime)));
+		// tools.addlog("-");
 		
 		if(signal.nextSignal !== target.title){
 			target.setColor();		//取得新參數
 			signal.isShowProp = true;
 		}
-		signal.swColor();			//依參數變更燈號
+		signal.swColor();
 		signal.recentFlag = charList[1+isMarch];
 		
-				//addLog("略過, 隔"+intervalTime+"秒");
+				//tools.addlog("略過, 隔"+intervalTime+"秒");
 			if(signal.recentFlag == "R"){		//起/迄點的暫定值
 				signal.endNodetmp = signal.nextSignal;
-				// addLog("<small>切R,迄點tmp:" +signal.endNodetmp + "</small>");
+				// tools.addlog("<small>切R,迄點tmp:" +signal.endNodetmp + "</small>");
 			}else{
 				signal.startNodetmp = target.title +"(" +signal.nextSignal +")";
-				// addLog("<small>切G,起點tmp:" +signal.startNodetmp + "</small>");				
+				// tools.addlog("<small>切G,起點tmp:" +signal.startNodetmp + "</small>");				
 			}
 		
 try{
-	// addLog("signal.click(5)");
+	// tools.addlog("signal.click(5)");
 		/*下一節點的資訊*/
 		if(signal.showID != target.title){
 			signal.showID = target.title;		//為避免末通過路口時, 多次Click,而重覆顯示本訊息
@@ -8904,25 +8899,17 @@ try{
 			if(signal.nextSignal){
 				str22 += " from " +signal.nextSignal;
 			}
-			addLog("預:"+str22);
-
+			if(str22){
+				tools.addlog("預:"+str22);
+			}
 			document.getElementById("watchStr").innerHTML =signal.setStyle(str22);
 			
 		}
 		
-		if(signal.recentFlag == "R"){	//用戶手動切到「紅」燈
-			signal.isWaitNext = true;	//紅燈時(先以變數啟動), 待靜止時才設定起始點,
-															//既然切綠燈會設定起始點, 紅燈就不需要了???
-			signal.isReporting = true;
-		}else{	//用戶手動切到「綠」燈
-			signal.correctF = true;	//這行不能用「this.」???
-			// signal.startTitle = target.title;		//綠燈時直接以當前目標(有號誌)為階段起點
-			// signal.startNode = signal.nextSignal;
-		}
 }catch(error){
-	addLog("signal.click(7gt):" + error.message);
+	tools.addlog("signal.click(7gt):" + error.message);
 }
-// addLog("signal.click(8)");
+// tools.addlog("signal.click(8)");
 		// e.preventDefault();	//停止事件的默認動作(放函式結尾)
 		// e.stopPropagation();//阻止事件冒泡(放函式結尾)
 		//e.stopImmediatePropagation();//其他同一層級的 listener 也不要被執行
@@ -8939,28 +8926,19 @@ try{
 		}
 		
 		try{
-// addLog("signal.click(2)");
+// tools.addlog("signal.click(2)");
 
 
-		//addLog( intervalTime +"秒");
-		signal.recordStr += intervalTime +"," + signal.recentFlag;
-
-
+		//tools.addlog( intervalTime +"秒");
 		// let tmp447 = "<a style='color:"+colSymb[signal.previousFlag]+";'>";//TODO 文字顏色另外 用副程式
 		let tmp447 = signal.recentFlag + intervalTime;
 		// let tmp447 =signal.NOW.symb + intervalTime;	//250504
 		// tmp447 += "</a>";					
-
-		if(signal.exitCause != ""){
-			tmp447 = signal.exitCause + tmp447;
-			signal.exitCause = "";
-		}
-		let newline = "";		//綠燈結算時換行用。
-		
+	
 		if(intervalTime >2 && intervalTime <200){	//合理範圍,秒數小代表切換過程, 秒數大代表久沒切換
 		
 			if(signal.recentFlag == "R"){		//結算停等時間
-	// addLog("signal.click(3a)");
+	// tools.addlog("signal.click(3a)");
 				if(signal.preLight == ""){		//有紅燈要保留,如小紅燈(左轉燈)
 					signal.preLight = tmp447;
 				}else{
@@ -8970,7 +8948,7 @@ try{
 				result = undefined;
 			}else{		//結算行駛時間
 			
-			// addLog("(3j4):startNode="+signal.startNode+",title="+target.title);
+			// tools.addlog("(3j4):startNode="+signal.startNode+",title="+target.title);
 /*			
 			if(signal.startNode == target.title){	
 					//tmp447 = tmp447.replace("/F(\d+)/", "G$1");	//若沒通過下個點, 就算是綠燈時間
@@ -8994,17 +8972,16 @@ try{
 				
 				tmp447 += "/for" + signal.startNode;
 				
-				newline = "<br>";
 				signal.preLight = "";		//用過清除
 			}
 			result = "燈:" + tmp447;
-			// addLog("signal.xx(3cc)");
+			// tools.addlog("signal.xx(3cc)");
 		}else{
-			// addLog("(y8n)intervalTime=" +intervalTime);
+			// tools.addlog("(y8n)intervalTime=" +intervalTime);
 			
 		}
 }catch(error){
-addLog("signal.click(5fb):" + error.message);
+tools.addlog("signal.click(5fb):" + error.message);
 }
 		return result;
 	}//end of function click
@@ -9026,7 +9003,7 @@ addLog("signal.click(5fb):" + error.message);
 				return "err453";
 			}
 			time = time.toFixed(0);
-			// addLog(time);
+			// tools.addlog(time);
 			if(time < 180){	// 180秒以內不要轉換,也不要加「秒」。minimum最小值
 				return time;
 			}
@@ -9092,9 +9069,9 @@ addLog("signal.click(5fb):" + error.message);
 		
 		tools.nestedTag=function(resultStr, fmt){	
 		//「nesting」 by Tag, 用標籤前後「包」起來
-				//addLog(fmt);
+				//tools.addlog(fmt);
 			if(fmt.indexOf("small") >= 0){
-				//addLog("月");
+				//tools.addlog("月");
 				resultStr = "<small>" + resultStr + "</small>";
 			}
 			//alert(resultStr);
@@ -9108,7 +9085,7 @@ addLog("signal.click(5fb):" + error.message);
 				 localStorage.insertCoord='';
 				 localStorage.placeRcd='';
 				 document.title = tools.myDate();
-				 addLog('清除。' + version +', ' +tools.myDate() )
+				 tools.addlog('清除。' + version +', ' +tools.myDate() )
 			 }
 		 }
 		
@@ -9238,20 +9215,20 @@ addLog("signal.click(5fb):" + error.message);
 	
 	
 		signal.setColor=function(srcStr){ 		/*分析參數以設定各燈號與秒數*/
-			//addLog("setColor(debug0)");
+			//tools.addlog("setColor(debug0)");
 
 			if(!srcStr) return false;
 			//TODO 分析字串內的時間與燈號
 			//1.原始字串, 切割到現在時間之前, 抓最後一個相符字串
 			let rstStr = "";	//result String, 因為可能是字串的開頭,所以不能是undefined
-			//addLog("setColor(debug1)");
+			//tools.addlog("setColor(debug1)");
 			let tmpStr = srcStr.match(/A\d+/);	//抓出偏移秒數(TODO含負值)
 			target.addNum = 0;
 			if(tmpStr){
 				target.addNum = parseInt( tmpStr[0].substring(1));
-				//addLog("<u>" + target.title+": add="+ target.addNum + "</u>");
+				//tools.addlog("<u>" + target.title+": add="+ target.addNum + "</u>");
 			}
-			//addLog("setColor(debug2)");
+			//tools.addlog("setColor(debug2)");
 			tmpStr = srcStr.match(/R\d+/);	//「直接」抓出紅燈秒數
 			if(tmpStr){
 				target.runNum = parseInt( tmpStr[0].substring(1));				
@@ -9259,7 +9236,7 @@ addLog("signal.click(5fb):" + error.message);
 				rstStr += "R" + target.runNum;
 			}//沒抓到就用舊的
 			
-			//addLog("setColor(debug3");
+			//tools.addlog("setColor(debug3");
 			tmpStr = srcStr.match(/G\d+/) ;//「直接」抓綠燈秒數
 			if(tmpStr){
 				target.stopNum = parseInt(tmpStr[0].substring(1));
@@ -9297,7 +9274,7 @@ signal.setStyle=function(srcStr){
 	if(tmpStr){
 		srcStr = srcStr.replace(tmpStr, "<a style='color:"+signal.F.color+";'>"+tmpStr + "</a>");
 	}	
-		// addLog(srcStr);
+		// tools.addlog(srcStr);
 		//document.getElementById("watchStr").innerHTML = srcStr;
 		return srcStr;
 }
@@ -9348,7 +9325,7 @@ path.angleOffset=function(p0,p1,p2){
 			// optionalServices: ['battery_service']
 		})
 		.then(device => {
-			addLog("取得裝置" + device.name);
+			tools.addlog("取得裝置" + device.name);
 			return device.gatt.connect();
 		})
 		.then(service => {
@@ -9363,7 +9340,7 @@ path.angleOffset=function(p0,p1,p2){
 		.then(value => {
 		  console.log(`Battery percentage is ${value.getUint8(0)}`);
 		})
-		.catch(error => { addLog("失敗"); });
+		.catch(error => { tools.addlog("失敗"); });
 		
 		function handleCharacteristicValueChanged(event) {
 		  const value = event.target.value;
@@ -9376,7 +9353,7 @@ path.angleOffset=function(p0,p1,p2){
 	function testMaps(){
 		// alert(window.location.href.substr(0,4));
 		if(window.location.href.substr(0,4) != "file"){
-			addLog("略過testMaps().");
+			tools.addlog("略過testMaps().");
 			return;
 		}else{
 			// alert("testMaps");
@@ -9411,7 +9388,7 @@ function initGUI(){
 function init(){
 	//由onload()啟動
 	
-	addLog("程式啟動, " + version + ", " +tools.myDate() + "<br>" );
+	tools.addlog("程式啟動, " + version + ", " +tools.myDate() + "<br>" );
 	
 	
 	if(localStorage.placeRcd){
@@ -9474,7 +9451,7 @@ function init(){
 			hiddenTime = Date.now();
 			break;
 		case 'visible':
-			addLog("休:" + tools.secToHMS((Date.now() - hiddenTime)/1000)+
+			tools.addlog("休:" + tools.secToHMS((Date.now() - hiddenTime)/1000)+
 			"從ooxx"+
 			", " + version +"<br>");
 			speeder.myFinal();
@@ -9499,7 +9476,7 @@ function insertCoord(coordType){	//	記錄點
 	}catch(e){
 		strtmp += "null";
 	}	
-	addLog(strtmp);
+	tools.addlog(strtmp);
 }
 
 function addZero(num){
@@ -9510,7 +9487,7 @@ var logDate=-1;
 var logHour=-1;
 var lastBlank = false;//
 
-function addLog(str){
+tools.addlog=function(str){
 	if(!str)return;		//undefined不處理
 	// alert(str);
 	let now = new Date();
@@ -9581,7 +9558,7 @@ function newSpace(){
 	}
 	
 	if(zoom > 100000){
-		// addLog("zoom="+ Math.round(zoom)+"(上限10萬)");//放大倍數要有上限。
+		// tools.addlog("zoom="+ Math.round(zoom)+"(上限10萬)");//放大倍數要有上限。
 		zoom = 100000;
 	}
 	zoom0 = zoom;
@@ -9640,7 +9617,7 @@ function gesturesMove(x, y){
 		 if(zoom < zoom0/3)zoom = zoom0/3;
 		 myCanvas.drawMiddleCross();
 		 myCanvas.drawBaseMap();
-		 // addLog("zoom=" + zoom);
+		 // tools.addlog("zoom=" + zoom);
 	 }
 }
 
@@ -9682,14 +9659,14 @@ async function noSleep(){
 			wakeLock = await navigator.wakeLock.request('screen');
 			wakeLock.addEventListener('release', () => {
 				//console.log('Screen Wake Lock was released');
-				//addLog('Screen Wake Lock was released'); //視窗隱藏時會觸發「取消」(因為失去控制權)
+				//tools.addlog('Screen Wake Lock was released'); //視窗隱藏時會觸發「取消」(因為失去控制權)
 			});
 		//console.log('Screen Wake Lock is active');
-		//addLog('Screen Wake Lock is active');	//不會休眠
+		//tools.addlog('Screen Wake Lock is active');	//不會休眠
 		
 		} catch (err) {
 			// console.error(`${err.name}, ${err.message}`);
-			addLog(err.message);
+			tools.addlog(err.message);
 		}
 	};
 	// Request a screen wake lock…
@@ -9866,7 +9843,7 @@ function playVoice(str){
 				return;
 		}
 	}catch(error){
-		addLog("playVoice():" + error.message);
+		tools.addlog("playVoice():" + error.message);
 	}
 	
 	voiceOK = false;
@@ -9879,7 +9856,7 @@ function playVoice(str){
 		voiceOK = true;
 	}catch (err) {	//完全抓不到error
 		_todo._750找不到語音檔要報錯_並播放其它 = function(){}	//AAAAAAAA
-		addLog(fileName + ":" + err.message);
+		tools.addlog(fileName + ":" + err.message);
 	}
 }
 
@@ -9906,31 +9883,32 @@ path.initTask=function(){
 }	
 
 path.toNextNode=function(){
-			// addLog("path.toNextNode(0)");
+			// tools.addlog("path.toNextNode(0)");
 		/* 功能：綠燈G在通過號誌後轉換為藍燈F */
 		/* TODO F秒數可能有兩組,例：慢一點會停歸仁路 */
-		/* 需旗標, 以限制綠燈後只能運作乙次 */
-		//addLog(this.correctF +", " +signal.startTitle+", "+target.title);
+
+		let intervalTime = signal.getITVTime();
+		// tools.addlog("(r9f):.recentFlag="+ signal.recentFlag+"G.symb="+ signal.G.symb);
 		try{
-			if( signal.NOW.color == signal.G.color){
+			if( signal.recentFlag == signal.G.symb){
 			// if( signal.NOW.color == signal.G.color && target.title == signal.startNode){
 				
-				signal.correctF = false;
-				let logmsg = "G" + signal.downCount;
+				let logmsg = "G" + intervalTime;
 				signal.preLight += logmsg;
-				signal.downCount = signal.F.secs - signal.downCount;		//已進行的秒數要扣掉
+				
+				signal.downCount = signal.F.secs - intervalTime;		//已進行的秒數要扣掉
 				signal.NOW.color = signal.F.color;
 				signal.NOW.symb = signal.F.symb;
 				signal.recentFlag = signal.F.symb;
 				
-				march.innerText = signal.downCount;
+				// march.innerText = signal.downCount;	//註解掉, 因為testing會執行
 				march.style.color = signal.NOW.color;
 				
 				logmsg += " to F" + signal.downCount
-				addLog("綠轉藍: " + logmsg);				
+				tools.addlog("綠轉藍: " + logmsg);				
 			}
 		}catch(error){
-			addLog("path.toNextNode(4ri):" + error.message);
+			tools.addlog("path.toNextNode(4ri):" + error.message);
 		}	
 		
 /* 報告字串 */
@@ -9944,34 +9922,17 @@ path.toNextNode=function(){
 	if(target.voiceStr){
 		////strtmp += ",[" + target.voiceStr + "]";//單向的語音
 	}
-	//addLog("skipPoint(debug2)");
-	if(signal.isReporting && signal.recordStr ){
-		try{
-				if(target.title && "輔彎".indexOf(target.title.substr(0,1)) > -1){ 	//標題開頭為特定字元
-					//strtmp += "x";
-				}
-				if(signal.recordStr.match(/,/g) == "," ){			//或, 記錄只有一個逗號 (自動轉型,省略toString())
-					//strtmp += "X";
-				}
-		}catch(error){
-			addLog("path.toNextNode(887):" + error.message);
-		}
-		
-		//strtmp += ",燈:" + signal.recordStr;	//手動時的記錄
-		signal.recordStr = "";
-		signal.isReporting = false;
-	}
-	//addLog("skipPoint(debug3)");
-	try{
+	//tools.addlog("skipPoint(debug2)");
+
+	//tools.addlog("skipPoint(debug3)");
+
 		if(signal.IntervalID){
-			strtmp += ",秒:" + signal.getITVTime();
+			strtmp += ",秒:" + intervalTime;
 		}
-	}catch(error){
-		addLog("path.toNextNode(7nw):" + error.message);
-	}
+
 	
 	// strtmp += ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
-	// addLog("path.toNextNode(3)/訊息ok");
+	// tools.addlog("path.toNextNode(3)/訊息ok");
 	
 	/* 保存舊資料*/
 	passPoint[0] = points[nextPoint][0];
@@ -9979,23 +9940,23 @@ path.toNextNode=function(){
 	source.runNum =  target.runNum;
 	
 	//函式應切割為離開blur這一點及前往focus下一點,target.blur().focus()
-//addLog("skipPoint(debug4)");
-	// addLog("skipPoint():01");
+//tools.addlog("skipPoint(debug4)");
+	// tools.addlog("skipPoint():01");
 	// showMsg("a2");
 	if(nextPoint+vector == -1 || nextPoint+vector == points.length){
 		// strtmp += "(" + target.title + ")";
 		//logTitle = "端:";
-		addLog( "端:"+ strtmp);
-		signal.exitCause = "端";
-		// addLog("_");
+		tools.addlog( "端:"+ strtmp);
+
+		// tools.addlog("_");
 		searchPoint = true;
-		//addLog("skipPoint(debug5):");
+		//tools.addlog("skipPoint(debug5):");
 		return false;
 	}else{
 		if(logTitle == "跳:"){
 			strtmp = tools.nestedTag(strtmp,"small");
 		}
-		addLog( logTitle+ strtmp);
+		tools.addlog( logTitle+ strtmp);
 	}
 	passTime = new Date();
 		
@@ -10010,8 +9971,8 @@ path.toNextNode=function(){
 			"偏角" + Math.round(diff);
 			
 		if(diff > 5 && diff < 355){			
-			addLog(strtmp+","+points[nextPoint+vector][2]);
-			addLog("<br>347");
+			tools.addlog(strtmp+","+points[nextPoint+vector][2]);
+			tools.addlog("<br>347");
 			searchPoint = true;
 			return false;
 		}
@@ -10021,17 +9982,17 @@ path.toNextNode=function(){
 	//target = path.getNext();
 	nextPoint += vector;
 	target.voiceStr = points[nextPoint][4-vector];	
-	while(target.voiceStr && target.voiceStr == "ign"){	//todo:改用迴圈, 以連續跳過多個ign
-		addLog("<small>略:" + points[nextPoint][2] + "</small>");
+	while(target.voiceStr && target.voiceStr == "ign"){	//todo:改用「for」迴圈, 以連續跳過多個ign
+		tools.addlog("<small>略:" + points[nextPoint][2] + "</small>");
 		nextPoint += vector;
 		// strVoc = points[nextPoint][4-vector];//TODO:索引超出會有何反應
 		target.voiceStr = points[nextPoint][4-vector];
 	}
 	
 	target.focus();
-// addLog("path.toNextNode(5)/target.focus(ok)");
+// tools.addlog("path.toNextNode(5)/target.focus(ok)");
 
-		// addLog("skipPoint():03");
+		// tools.addlog("skipPoint():03");
 	//速限語音
 	enAlarm = true;
 	enAlarmHigh = true;
@@ -10062,9 +10023,9 @@ path.toNextNode=function(){
 	}
 
 	preDist = getDistance(recentPoint,  points[nextPoint]);
-	// addLog("skipPoint():preDist=" + preDist);
+	// tools.addlog("skipPoint():preDist=" + preDist);
 	// preDist = -1;
-	// addLog("path.toNextNode(9)");
+	// tools.addlog("path.toNextNode(9)");
 	return true;
 }//end of skipPoint()
 
@@ -10303,7 +10264,7 @@ minDiff = 361;
 		try{
 				speeder.myFinal();
 		}catch(error){
-			addLog("path.toNearNode(224):" + error.message);
+			tools.addlog("path.toNearNode(224):" + error.message);
 		}
 		//TODO vector改變的處置 (原路線調頭)
 	}
@@ -10328,7 +10289,7 @@ minDiff = 361;
 
 
 function geoYes (evt){
-	// addLog("geoYes(debug1)");
+	// tools.addlog("geoYes(debug1)");
 	strGPS = strGPS.substr(1,4)+strGPS.charAt(0);
 	
 	recentPoint[0] = evt.coords.latitude;
@@ -10342,7 +10303,7 @@ function geoYes (evt){
 		let strtmp = speeder.check(speedKpH);
 		if(strtmp){
 			strtmp += ",距:" + nextDist*1000 + "米";
-			addLog(strtmp);
+			tools.addlog(strtmp);
 		}
 	
 	if(speedKpH < 1){
@@ -10357,29 +10318,29 @@ function geoYes (evt){
 		if(rctSpeedLevel == 3){
 			let addSpd = ((speedKpH - spd10k)/((+new Date()) - time10k)*1000);
 			if(addSpd > 2){
-				// addLog("加速度：" + addSpd.toFixed(1) + "km/s(10~30)");
+				// tools.addlog("加速度：" + addSpd.toFixed(1) + "km/s(10~30)");
 			}
 		}
 		if(rctSpeedLevel == 1){
-			//addLog("時速：" + speedKpH.toFixed(1) + "(" + rctSpeedLevel + ")");
+			//tools.addlog("時速：" + speedKpH.toFixed(1) + "(" + rctSpeedLevel + ")");
 			time10k = (+new Date());
 			spd10k = speedKpH;
 		}
 	}
 	preSpeedLevel = rctSpeedLevel;
 
-	// addLog("geoYes (evt):debug01");
+	// tools.addlog("geoYes (evt):debug01");
 	// showMsg("c1.5");
 	// showMsg("geoYes(3)");
 	if(searchPoint ){
 		searchPoint = false;
-		//addLog("from:" +taskID +", "+ nextPoint +", "+ vector);//240922
+		//tools.addlog("from:" +taskID +", "+ nextPoint +", "+ vector);//240922
 		path.toNearNode();
-		//addLog("to:" +taskID +", "+ nextPoint +", "+ vector);//240922
+		//tools.addlog("to:" +taskID +", "+ nextPoint +", "+ vector);//240922
 		incCount = 0;
 		incDistMsg = "";
 	}
-	// addLog("geoYes (evt):debug02");
+	// tools.addlog("geoYes (evt):debug02");
 	myCanvas.drawLine(recentPoint[0], recentPoint[1], prevPoint[0], prevPoint[1],"white", 3);
 	prevPoint[0]= recentPoint[0];
 	prevPoint[1]= recentPoint[1];
@@ -10395,9 +10356,9 @@ function geoYes (evt){
 	nextDist = getDistance(recentPoint,  points[nextPoint]);
 	
 	// strtmp = ",距(" + (preDist * 1000).toFixed(1)+"," + (nextDist * 1000).toFixed(1)+")";
-	// addLog(strtmp);
+	// tools.addlog(strtmp);
 	if (nextDist > preDist ){	//遠離中
-	// addLog("geoYes (evt):debug03");
+	// tools.addlog("geoYes (evt):debug03");
 		// if(nextDist < (evt.coords.speed/1000*2 + 0.020) ){
 		// if(nextDist < 0.04 ){//40公尺
 		if(preDist < 0.019 ){//40公尺, fixDate:20230123, 以preDist取代nextDist
@@ -10407,7 +10368,7 @@ function geoYes (evt){
 			//角度變化量判定轉彎中, 在路口增加輔助點
 			path.toNextNode();
 		}else{
-			// addLog("geoYes (evt):debug04");
+			// tools.addlog("geoYes (evt):debug04");
 			fcolor = "color='red'";
 			// incCount ++;
 			incDistMsg += "," + (preDist*1000).toFixed(0);
@@ -10417,41 +10378,32 @@ function geoYes (evt){
 				//tmpStr += speeder.getRunPeriod() + "," ;
 				tmpStr +=  target.title;
 				//tmpStr += ",速" + speedKpH.toFixed(1);
-				signal.exitCause = "離";
-
 				tmpStr += "<small>(" + (((+new Date()) - passTime)/1000).toFixed(0)+"秒";
 				tmpStr +=  incDistMsg + ")</small>";
-				addLog(tmpStr);
+				tools.addlog(tmpStr);
 try{
-			addLog(signal.setStyle(signal.getRecordData()));
+			tools.addlog(signal.setStyle(signal.getRecordData()));
 }catch(error){
-	addLog("geoYes(d4h):" + error.message);
+	tools.addlog("geoYes(d4h):" + error.message);
 }	
 				
-				// addLog("_");
+				// tools.addlog("_");
 				incCount = 0;	//fixDate:20230116, 增加此列
 				incDistMsg = "";
-				try{
-					signal.startTitle = points[nextPoint - vector][2];	//「脫離」時前一個目標的title
-					//addLog("9rj_signal.startTitle=" + signal.startTitle);
-				}catch(error){
-					addLog("9rj_" + error.message);
-				}
 				searchPoint = true;
 			}
 			preDist = nextDist;
 		}
 	}else{		//接近中
-	// addLog("geoYes (evt):debug05");
+	// tools.addlog("geoYes (evt):debug05");
 
 		playAlarm();
 		incCount = 0;
 		incDistMsg = "";
 		preDist = nextDist;
-
 	}
 	showData();	
-	// addLog("geoYes(debug9)");
+	// tools.addlog("geoYes(debug9)");
 }
 
 function isSlow(speed){
@@ -10485,17 +10437,17 @@ try{	//測試後移除(231206設置)
 		if(nextDist < 0.050){
 			enAlarmSpeedLimit = 0;
 			playVoice("測速");
-			// addLog("測速50,距:" + nextDist);
+			// tools.addlog("測速50,距:" + nextDist);
 		}
 		
 		if( (enAlarmSpeedLimit == 2) && (nextDist < 0.300) ){
 			enAlarmSpeedLimit --;
 			playVoice("測速");
-			// addLog("測速300,距:" + nextDist);
+			// tools.addlog("測速300,距:" + nextDist);
 		}	
 	}
 }catch(err){
-	addLog("err@playAlarm():" +err.message);
+	tools.addlog("err@playAlarm():" +err.message);
 }
 	/*
 try{	
@@ -10510,7 +10462,7 @@ try{
 		}
 	}
 }catch(err){
-	addLog(err.message);
+	tools.addlog(err.message);
 }
 */
 	/** 事前提醒*/
@@ -10551,47 +10503,47 @@ function _geoNo(evt){
 var watchID;
 var GPSpremis;
 function initGPS(){
-	addLog("initGPS()...");
+	tools.addlog("initGPS()...");
 	if (!navigator.geolocation) {
-		addLog("瀏攬器不支援GPS。");
+		tools.addlog("瀏攬器不支援GPS。");
 		return;
 	}
 	
 	navigator.permissions.query({name:'geolocation'}).then(function(GPSpremis) {
-		addLog("權限狀態:"+GPSpremis.state);
+		tools.addlog("權限狀態:"+GPSpremis.state);
 		if (GPSpremis.state == 'denied') {	//denied 禁用, prompt 詢問, granted 允許
-			addLog("GPS禁用！");
+			tools.addlog("GPS禁用！");
 		}
-		// addLog("c1");
+		// tools.addlog("c1");
 		if (GPSpremis.state == 'granted') {
 			startGPS();
 		}
-		// addLog("c2");
+		// tools.addlog("c2");
 		GPSpremis.onchange = function() {
-			addLog("gps.onchang:" + GPSpremis.state);
+			tools.addlog("gps.onchang:" + GPSpremis.state);
 			if (GPSpremis.state == 'granted') {
 				startGPS();
 			}
 		}
-		// addLog("c3");
+		// tools.addlog("c3");
 	});
-	// addLog("c4");
+	// tools.addlog("c4");
 	// startGPS();
-	// addLog("c5");
+	// tools.addlog("c5");
 }
 
 function startGPS(){
 	/*
-	addLog("startGPS()...");
+	tools.addlog("startGPS()...");
 	navigator.geolocation.getCurrentPosition( success, fail );
 	function success(position) {
-		addLog("user_lat=" + position.coords.latitude + 
+		tools.addlog("user_lat=" + position.coords.latitude + 
 		", user_lon=" + position.coords.longitude + 
 		", accuracy=" + position.coords.accuracy);
 	}
 
 	function fail() {
-		addLog("fail");
+		tools.addlog("fail");
 		// Could not obtain location
 	}
 	*/
@@ -10607,11 +10559,11 @@ function startGPS(){
 	watchID = navigator.geolocation.watchPosition(
 		geoYes,		//成功函式, 就算成功, 但中途失敗如何告知?
 		(evt) =>{	//失敗函式
-			addLog("watch err: " + evt.message);	////進山洞沒訊號???
+			tools.addlog("watch err: " + evt.message);	////進山洞沒訊號???
 			if(evt.code == 1){
-				// addLog("GPS失敗！");	//User denied Geolocation
+				// tools.addlog("GPS失敗！");	//User denied Geolocation
 			}else{
-				// addLog(evt.code + ", " + evt.message);
+				// tools.addlog(evt.code + ", " + evt.message);
 				//2, Network location provider at 'https://www.googleapis.com/' : ERR_NAME_NOT_RESOLVED
 			}
 		}, {enableHighAccuracy: true});
@@ -10619,7 +10571,7 @@ function startGPS(){
 
 function stopGPS(){
 	navigator.geolocation.clearWatch( watchID );
-	addLog("GPS停止定位。");
+	tools.addlog("GPS停止定位。");
 }
 
 function getDistance(coord1, coord2) {
@@ -10649,13 +10601,13 @@ function getDistance(coord1, coord2) {
 	var fcolor = "";
 	var strGPS = "＼｜／-";	//
 function showData(){
-	// addLog("showData(0)");
+	// tools.addlog("showData(0)");
 		let str="";	
 		
 		// voiceStr = points[nextPoint][4-vector];
 		if(target.voiceStr){
 			str += "[" + target.voiceStr + "]";
-			// addLog("showData():"+target.voiceStr);
+			// tools.addlog("showData():"+target.voiceStr);
 		}else{
 			str += "[x]";
 		}
@@ -10711,7 +10663,7 @@ function showData(){
 		*/
 		
 
-// addLog("showData(9)");
+// tools.addlog("showData(9)");
 }
 
 var msgList = ["","","","","","","","","",""];
