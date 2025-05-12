@@ -139,7 +139,13 @@ DOM
 Document Object Model，元素(節點))與選擇器。屬性,事件,方法。
 
 API
-	Fetch	抓網頁
+	Canvas
+	Fetch	抓網頁，Promise...
+	File
+	xxx(GPS)
+	Nav...
+	Video
+	Window
 
 自定函式
 	function 關鍵字定義傳統函數，
@@ -151,7 +157,9 @@ API
 	  
 	function b(){		//取得呼叫者
 		console.log(b.caller) // [Function: a]
-	  
+	
+	? async function
+	? await
 	
 自定物件
 這種建立物件的方式稱為「物件實字 (Object literal)」，同時也是 JSON 格式的核心語法。
