@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c25r"; 	</script>
+	<script> 		var version = "v0.72c25s"; 	</script>
 </head>
 
 <style>
@@ -8883,7 +8883,8 @@ try{
 				signal.endNodetmp = signal.nextSignal;
 				// tools.addlog("<small>切R,迄點tmp:" +signal.endNodetmp + "</small>");
 			}else{
-				signal.startNodetmp = target.title +"(" +signal.nextSignal +")";
+				signal.startNodetmp = target.title;
+				// signal.startNodetmp += "(" +signal.nextSignal +")";
 				// tools.addlog("<small>切G,起點tmp:" +signal.startNodetmp + "</small>");				
 			}
 		
@@ -8966,7 +8967,7 @@ try{
 			
 				if(target.title){
 					tmp447 += target.title.replace(/[(].*/,"");	//前刮號起清除, 只是為了簡化字串
-					tmp447 += "("+signal.endNode+")";
+					// tmp447 += "("+signal.endNode+")";
 				}
 
 				tmp447 = signal.preLight + tmp447;	//把紅燈加在前面
@@ -9897,19 +9898,24 @@ path.toNextNode=function(){
 			if( signal.recentFlag == signal.G.symb){
 			// if( signal.NOW.color == signal.G.color && target.title == signal.startNode){
 				
-				let logmsg = "G" + intervalTime +"+";
-				signal.preLight += logmsg;
+				let logmsg = "G" + intervalTime ;
+				if(intervalTime > 30){
+					signal.preLight += (logmsg+"+");
+				}
 				
-				signal.downCount = signal.F.secs - intervalTime;		//已進行的秒數要扣掉
-				signal.NOW.color = signal.F.color;
-				signal.NOW.symb = signal.F.symb;
 				signal.recentFlag = signal.F.symb;
-				
-				// march.innerText = signal.downCount;	//註解掉, 因為testing會執行
-				march.style.color = signal.NOW.color;
-				
-				logmsg += " to F" + signal.downCount
-				tools.addlog("綠轉藍: " + logmsg);				
+					
+				if(signal.F.secs > intervalTime){
+					signal.downCount = signal.F.secs - intervalTime;		//已進行的秒數要扣掉
+					signal.NOW.color = signal.F.color;
+					signal.NOW.symb = signal.F.symb;
+					
+					// march.innerText = signal.downCount;	//註解掉, 因為testing會執行
+					march.style.color = signal.NOW.color;
+					
+					logmsg += " to F" + signal.downCount
+					tools.addlog("綠轉藍: " + logmsg);
+				}
 			}
 		}catch(error){
 			tools.addlog("path.toNextNode(4ri):" + error.message);
