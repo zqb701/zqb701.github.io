@@ -1,11 +1,12 @@
 ﻿<html>
 <head>
-<title>時間記錄器</title>
+<title>時間記錄器v0.01</title>
 </head>
 <body>
 	<button onclick="rcd('A');">A</button>
 	<button onclick="rcd('B');">B</button>
 	<button onclick="clearr();">清除</button>
+	v0.1
 	<div id="list"></div>
 </body>
 
@@ -25,7 +26,7 @@
   }
   
   function clearr(){
-  			 if(window.confirm("清除?")){
+  			 if((localStorage.tr01_list !="")&& window.confirm("清除?")){
 				 list.innerHTML="";
 				 localStorage.tr01_list="";
 			 }
