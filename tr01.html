@@ -11,6 +11,9 @@
 
   <script>
   var list = document.getElementById("list");
+  if(!localStorage.tr01_list){
+	localStorage.tr01_list = "";
+  }
   list.innerHTML=localStorage.tr01_list;
   
   function rcd(str){
