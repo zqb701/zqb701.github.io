@@ -1,0 +1,32 @@
+﻿<html>
+<head>
+<title>時間記錄器</title>
+</head>
+<body>
+	<button onclick="rcd('A');">A</button>
+	<button onclick="rcd('B');">B</button>
+	<button onclick="clearr();">清除</button>
+	<div id="list"></div>
+</body>
+
+  <script>
+  var list = document.getElementById("list");
+  list.innerHTML=localStorage.tr01_list;
+  
+  function rcd(str){
+	let now = new Date();
+	let nowStr = now.getMonth()+1 +"/" + now.getDate() +" " +now.getHours()+":"+now.getMinutes();
+			
+	localStorage.tr01_list = str + "_" + nowStr + "<br>" + localStorage.tr01_list;
+	list.innerHTML=localStorage.tr01_list;
+  }
+  
+  function clearr(){
+  			 if(window.confirm("清除?")){
+				 list.innerHTML="";
+				 localStorage.tr01_list="";
+			 }
+  }
+  
+   </script>
+</html>
