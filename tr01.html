@@ -1,19 +1,39 @@
 ﻿<html>
 <head>
-<title>時間記錄器v0.01</title>
+		<title>時間記錄器v0.01b</title>
+		<meta charset="utf-8"><!-- 避免亂碼 -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
+		<meta name="language" content="tw">		<!-- 希望不會詢問是否翻譯 -->
 </head>
+
 <body>
 	<button onclick="rcd('A');">A</button>
 	<button onclick="rcd('B');">B</button>
+	<button onclick="rcd('C');">C</button>
 	<button onclick="clearr();">清除</button>
+	<button onclick="total();">結算</button>
 	<hr>
 	<div id="total">
-	<button onclick="total();">結算</button>
-	範例：林OO, 五月份加班, 1.66共14小時(23.24), 1.33共47小時(62.51), 時薪220元, 加班費總計18865元。
+	範例：林OO，四月份加班，1.66共14小時(23.24)，1.33共47小時(62.51)，時薪220元， 加班費總計18865元。<br>
+	4/30三，A_17:33，B_20:28，175分鐘，1.33*2，1.66*0。<br>
+	4/29二，A_18:09，B_19:49，100分鐘，1.33*2，1.66*0。<br>
+	4/28一，A_17:20，B_20:37，197分鐘，1.33*2，1.66*2。<br><br>
+	4/25五，A_17:10，B_21:37，267分鐘，1.33*2，1.66*3，超過4小時。<br>
+	4/24四，C請假_06:30。<br>
+	4/23三，A_17:10，沒有B卡。<br>
+	4/22二，，B_21:37，沒有A卡。<br>
+	4/21一<br><br>
+	4/14一<br><br>
+	4/7一<br><br>
+	4/1二<br>
+	
 	</div>
 	
 	<hr>
 	<div id="list"></div>
+	<hr>
+	<a href="https://zqb701.github.io/tr01.html?mode=A">A</a>
 </body>
 
   <script>
@@ -25,7 +45,7 @@
   
   function rcd(str){
 	let now = new Date();
-	let nowStr = now.getMonth()+1 +"/" + now.getDate() +" " +now.getHours()+":"+now.getMinutes();
+	let nowStr = (now.getFullYear()-2000)+ "/" + (now.getMonth()+1) +"/" + now.getDate() +" " +now.getHours()+":"+now.getMinutes();
 			
 	localStorage.tr01_list = str + "_" + nowStr + "<br>" + localStorage.tr01_list;
 	list.innerHTML=localStorage.tr01_list;
