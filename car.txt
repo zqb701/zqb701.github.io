@@ -63,7 +63,7 @@ TOYOTA tercel/VIOS, yaris, rav4, cc, c-hr, auris, AE86, premio, exsior, wish/sie
 TOBE M'car, M'way, 
 U
 vinfast vf8, vf9
-Volkswagen UP!, Vento/Polo, golf/plus, scirocco, passat, octavia, Arteon, Caddy, T cross, Transporter, SHARAN, pointer, 
+Volkswagen UP!, Vento/Polo, golf/plus, scirocco, passat, octavia, Arteon, Caddy, T cross, Transporter, SHARAN, pointer, tiguan, Touareg, 
 volvo c30,  v40/60, S40/60/90, XC40/60, EX90
 
 台塑 一號, 二號
