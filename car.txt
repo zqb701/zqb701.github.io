@@ -43,7 +43,7 @@ mitsubishi galant, sportback, eclipse, colt/coltplus, outland, savrin, ASX, zing
 
 Nissan juke, tiida, kicks, march, sentra, livina, X-trail, altima, 240Z/350Z/370Z, gtr, bluebird, cerfiro, teana, QRV, Skyline, SE-R, Primera, silvia, ad, Quest, Rogue, Murano, Armada(Infiniti QX80),
 Opel Astra, Mokka, Grandland, tigar, Zafira, kadett
-peugeot 2008, 3008, 408, 308, 108, 5008
+peugeot 106~8, 206~8, 307~8, 2008, 3008, 408,  5008, 6xxx, 8xxx
 Pontiac Grand AM, 龐蒂克火鳥共, 
 Porsche Macan, taycan, cayenne
 Proton persona, gen2(賤免), Iriz, perdana, Saga, Savvy, X70, Jumbuck, Jumbuck
