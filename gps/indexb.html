@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c26g"; 	</script>
+	<script> 		var version = "v0.72c26h"; 	</script>
 </head>
 
 <style>
@@ -8952,7 +8952,7 @@ try{
 try{
 
 // tools.addlog("秒數"+intervalTime);	
-		tools.addlog("切"+signal.recentFlag);
+		
 			if(intervalTime >2){
 				signal.switchTime = clickNow;
 				
@@ -8972,6 +8972,7 @@ try{
 }
 		
 		// tools.addlog("-");
+		tools.addlog(signal.setStyle(signal.getRecordData(intervalTime)));
 		
 		if(signal.nextSignal !== target.title){
 			target.setColor();		//取得新參數
@@ -8981,9 +8982,10 @@ try{
 		signal.recentFlag = charList[1+isMarch];
 		
 		//需要新的signal.nextSignal
-		tools.addlog(signal.setStyle(signal.getRecordData(intervalTime)));
+		//tools.addlog(signal.setStyle(signal.getRecordData(intervalTime)));
 		
 				//tools.addlog("略過, 隔"+intervalTime+"秒");
+				tools.addlog("切"+signal.recentFlag);
 			if(signal.recentFlag == "R"){		//起/迄點的暫定值
 				signal.endNodetmp = signal.nextSignal;
 				// tools.addlog("<small>切R,迄點tmp:" +signal.endNodetmp + "</small>");
