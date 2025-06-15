@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c26f"; 	</script>
+	<script> 		var version = "v0.72c26g"; 	</script>
 </head>
 
 <style>
@@ -2962,8 +2962,13 @@ var tasks = [[
 [23.166381521636070, 120.19410125709373, "同安寮(南51)",,,"R49F55@09:47/R48G60"],
 [23.163948416334236, 120.18235471843579, "佳東路(台19)",,,"G77走"],
 
-[23.165389855077912, 120.17815692521748, "延平路"],
+[23.165369711772204, 120.17833870079293, "延平路E(連號)"],
+[23.165452271850853, 120.17765543676234, "中山路W(連號)"],
+
 [23.165718934097523, 120.17493202856102, "光復路"],
+[23.166389550818135, 120.17432849579832, "公園路E"],
+[23.166825846045228, 120.17405382799872, "公園路W"],
+[23.167831640273793, 120.172907629963, "安北路"],
 
 ],[
 [23.165718934097523, 120.17493202856102, "佳里/光復路@_忠孝路"],
@@ -8507,6 +8512,7 @@ var tasks = [[
 			//tools.addlog("target.focus(): signal.enable="+signal.enable);
 			if(signal.IntervalID){
 				let find = false;
+				signal.nextSignal = undefined;
 				for(let p = nextPoint; p>=0 && p<points.length; p += vector){
 					if(signal.setColor(points[p][4-vector])){
 						find = true;
@@ -8945,9 +8951,10 @@ try{
 try{
 
 // tools.addlog("秒數"+intervalTime);	
+		tools.addlog("切"+signal.recentFlag);
 			if(intervalTime >2){
 				signal.switchTime = clickNow;
-				tools.addlog("切"+signal.recentFlag);
+				
 				if(signal.recentFlag == "R"){		//起/迄點暫定值轉正式值
 					signal.endNode = signal.endNodetmp;
 					// tools.addlog(tools.nestedTag("迄點:" + signal.endNode, "small"));
@@ -9605,23 +9612,23 @@ tools.addlog=function(str, fmt){
 		}*/
 	if(lastBlank){	//避免連空兩行
 		//要找出行尾換行去掉,用regex
-		str = str.replace(/<br>$/,"");	//字串尾端
+		str = str.replace(/<br>$/, "");	//字串尾端
 	}
 	
 	if(str.match(/^<br>/)){	//若行首有br(換行), 移到時間字串前面
-		str = str.replace(/^<br>/,"");
+		str = str.replace(/^<br>/, "");
 		// alert(str);
 		timeStr = "<br>";
 		lastBlank = true;
 	}else{
 		lastBlank = false;
 	}
-	if(fmt){
-		if(fmt.indexOf("sml") >= 0){
-			str = "<smalll>" + str + "</small>";
-		}
-	}
 	
+	if(fmt && 
+		fmt.indexOf("sml") >= 0){
+		str = "<small>" + str + "</small>";
+	}
+
 	timeStr +=
 		addZero(now.getHours())+ ":" +
 		addZero(now.getMinutes())+ ":" +
@@ -9993,9 +10000,9 @@ path.toNextNode=function(){
 			// tools.addlog("path.toNextNode(0)");
 		/* 功能：綠燈G在通過號誌後轉換為藍燈F */
 		/* TODO F秒數可能有兩組,例：慢一點會停歸仁路 */
-		/* TODO 遇到端點不會執行, */
 		let intervalTime = signal.getITVTime();
-		tools.addlog("(r9f)_nextSignal="+ signal.nextSignal+"target="+ target.title, "sml");	//TODO 遇到端點不會變藍色, 檢查中...(nextSignal沒有值???)
+		tools.addlog("(r9f)_nextSignal="+ signal.nextSignal, "sml");
+		//TODO 遇到端點不會變藍色, 檢查中...(nextSignal沒有值???)
 		
 		try{
 			if( signal.recentFlag == signal.G.symb 
