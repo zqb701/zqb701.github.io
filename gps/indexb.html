@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c26h"; 	</script>
+	<script> 		var version = "v0.72c26i"; 	</script>
 </head>
 
 <style>
@@ -8513,7 +8513,7 @@ var tasks = [[
 			//tools.addlog("target.focus(): signal.enable="+signal.enable);
 			if(signal.IntervalID){
 				let find = false;
-				signal.nextSignal = undefined;
+				//signal.nextSignal = undefined;
 				for(let p = nextPoint; p>=0 && p<points.length; p += vector){
 					if(signal.setColor(points[p][4-vector])){
 						find = true;
@@ -8796,9 +8796,9 @@ try{
 				signal.recentFlag == flag
 			}
 			
-			logmsg = "(" + signal.recentFlag + signal.downCount;
+			logmsg += "(" + signal.recentFlag + signal.downCount;
 			signal.downCount = sec - signal.getITVTime();
-			logmsg = "_to_" + flag + sec+")";
+			logmsg += "_to_" + flag + sec+")";
 			tools.addlog(logmsg, "sml");
 			
 			
@@ -8972,20 +8972,23 @@ try{
 }
 		
 		// tools.addlog("-");
-		tools.addlog(signal.setStyle(signal.getRecordData(intervalTime)));
+		
 		
 		if(signal.nextSignal !== target.title){
 			target.setColor();		//取得新參數
 			signal.isShowProp = true;
+			// rcdStr = rcdStr.replace("NEXT_SIGNAL", signal.nextSignal);
 		}
+		let rcdStr = signal.getRecordData(intervalTime);
+		tools.addlog(signal.setStyle(rcdStr));
+		
 		signal.swColor();
 		signal.recentFlag = charList[1+isMarch];
 		
 		//需要新的signal.nextSignal
-		//tools.addlog(signal.setStyle(signal.getRecordData(intervalTime)));
 		
 				//tools.addlog("略過, 隔"+intervalTime+"秒");
-				tools.addlog("切"+signal.recentFlag);
+				tools.addlog("手切"+signal.recentFlag);
 			if(signal.recentFlag == "R"){		//起/迄點的暫定值
 				signal.endNodetmp = signal.nextSignal;
 				// tools.addlog("<small>切R,迄點tmp:" +signal.endNodetmp + "</small>");
@@ -9075,6 +9078,7 @@ try{
 					if(signal.nextSignal){
 						tmp447 += "("+signal.nextSignal.replace(/[(].*/,"")+")";
 					}
+					// tmp447 += "(NEXT_SIGNAL)";
 				}
 
 				tmp447 = signal.preLight + tmp447;	//把紅燈加在前面
@@ -10004,7 +10008,7 @@ path.toNextNode=function(){
 		/* 功能：綠燈G在通過號誌後轉換為藍燈F */
 		/* TODO F秒數可能有兩組,例：慢一點會停歸仁路 */
 		let intervalTime = signal.getITVTime();
-		tools.addlog("(r9f)_nextSignal="+ signal.nextSignal, "sml");
+		//tools.addlog("(r9f)_nextSignal="+ signal.nextSignal, "sml");
 		//TODO 遇到端點不會變藍色, 檢查中...(nextSignal沒有值???)
 		
 		try{
@@ -10027,7 +10031,7 @@ path.toNextNode=function(){
 
 					
 					logmsg += " to F" + signal.downCount
-					tools.addlog(tools.nestedTag("綠轉藍: " + logmsg, "small"));
+					tools.addlog("綠轉藍: " + logmsg, "sml");
 				}
 			}
 		}catch(error){
