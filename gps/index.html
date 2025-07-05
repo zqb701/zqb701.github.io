@@ -7,7 +7,7 @@
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c26m1"; 	</script>
+	<script> 		var version = "v0.72c26m2"; 	</script>
 </head>
 
 <style>
@@ -8996,10 +8996,11 @@ try{
 		//tools.addlog("run swColor at signal.click()");
 			let clickNow = Date.now();
 			let intervalTime = signal.getITVTime(clickNow);
+			let str88="UDF";
 try{
 
 // tools.addlog("秒數"+intervalTime);	
-		let str88="UDF";
+		
 			if(intervalTime >2){
 				signal.switchTime = clickNow;				
 				if(signal.recentFlag == "R"){		//起/迄點暫定值轉正式值
