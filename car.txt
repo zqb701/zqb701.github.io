@@ -25,7 +25,7 @@ Honda Brio, Fit, city, civic(七代稱Freio, Si版), accord(k7 coupe EX) , HR-v,
 hyundai verna, picanto, elantra, sonata,  venue,  kano, tuvson, Santa Fe, velaster, i10, i20, i30, i35, i40, veloster, Grandeur, casper,
 
 infiniti QX55, G35/37, M25/37, EX35, 
-JAGUAR F-PACE , R75, XKR
+JAGUAR E/F/I-PACE, F-type , R75, XKR
 kia eurostar/atos, morning, stonic, soul, carens, sportage, optima, ceed系列, Sorento, Ray, stinger,EV9, Carnival
 Lamborghini Lanzador, urus
 lancia蘭吉雅/義大利 Ypsilon(信義路)
@@ -71,5 +71,6 @@ FCA 與PSA 兩大汽車集團合併而成Stellantis 正式成立，成為全球�
 
 Xiaomi(小米)  SU7
 Xpeng小鵬 P7, G3, G9
+DFSK東風小康
 
 
