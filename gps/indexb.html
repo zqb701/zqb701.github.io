@@ -9,19 +9,20 @@
 				path.focus 增path.msgBuffer = ""; 以清除舊資料
 251026 易動2行。號誌重啟後燈號不可為F。
 251030 signal.click中，on之後的return註解
+251106 行signal.nextSignal == target.title;從2個等號改為1個等號。
 -->
 
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c27a"; 	</script>
+	<script> 		var version = "v0.72c27c"; 	</script>
 </head>
 
 <style>
 
 	:root {
 		--size1: 120px;
-		--size2: 270px;
+		--size2: 280px;
 		//CSS Variables, 限放在選取器, 建議最高層級的:root
 	  //--primary: Aquamarine;
 	  //--background-color: Teal;
@@ -63,20 +64,20 @@
 		<div 左側區塊>
 				<div class="cmdButton" id="divLeft"
 				ontouchstart_="target.giveup();" 
-				style="font-size:150px; width:var(--size2);height:var(--size2);line-height: 270px; border-radius: 40% 0  0 40%; display:none;"
+				style="font-size:150px; width:var(--size2);height:var(--size2);line-height: 270px; border-radius: 40% 0  0 40%; display_:none;"
 				>左</div>	
 				
 				<div class="cmdButton" "⏭️會變成彩色圖片, 》太靠左邊"
 				ontouchstart="target.giveup();" 
 				style="font-size:200px; width:var(--size2);height:var(--size2);line-height: 270px; border-radius: 0 0  0 40%;"
-				>&#187;</div "HTML常用的特殊符號">
+				>&#187;</div "HTML特殊符號/emoji懶人包/辦公室 常用特殊符號/">
 				
 				<div class="cmdButton" 
 				onclick="location.reload();"
 				style="border-radius: 40% 0  0 40%; font-size: 50px; float: right;"
 				>↻</div>
 		</div 左側區塊>
-		<div 中間區塊 style_="display: flex;  align-content: center; flex-wrap: wrap;">
+		<div 中間區塊 style="display: flex;  align-content: center; flex-wrap: wrap;">
 
 				<div class="cmdButton" id="march" rem="綠燈"
 					style="font-size:150px;  border-radius:50%;
@@ -85,25 +86,30 @@
 
 				<div class="cmdButton" id="divRed" rem="紅燈"
 					style="font-size:150px;  border-radius:15%;
-					width: var(--size2); height: var(--size2); line-height: var(--size2);display:none;"
-				>停</div>
+					width: var(--size2); height: var(--size2); line-height: var(--size2);
+					display_:none;"
+				>紅</div>
 				
 				<div class="cmdButton" 
-				onclick="tools.addlog('尋標');path.toNearNode();"
-				style="border-radius: 0 40% 40% 0; font-size: 50px;" rem="🔍☎📢⚙♫"
+					onclick="tools.addlog('尋標');path.toNearNode();"
+					style="border-radius: 0 40% 40% 0; font-size: 50px;" rem="🔍☎📢⚙♫⚓📌"
 				>🔍</div>
+				
+				<div class="cmdButton" 
+				onclick_="tools.addlog('尋標');path.toNearNode();"
+				ontouchstart="path.recordCoord();" 
+				style="border-radius: 0 40% 40% 0; font-size: 50px;"
+				>📌</div>
 
 		</div 中間區塊>
 		<div 右側區塊>
 				<div class="cmdButton" id="divRight"
-				ontouchstart_="" 
-				style="font-size:150px; width:var(--size2);height:var(--size2);line-height: 270px; border-radius: 0 40% 40% 0;display:none;"
+				style="font-size:150px; width:var(--size2);height:var(--size2);line-height: 270px; border-radius: 0 40% 40% 0;display_:none;"
 				>右</div>	
 				
-				<div class="cmdButton" 
-				ontouchstart="path.recordCoord();" 
+				<div class="cmdButton"  id="divYellow"
 				style="font-size:150px; width:var(--size2);height:var(--size2);line-height: 270px; border-radius: 0 0 40% 0;"
-				>@</div>	
+				>黃</div>
 				
 				<div class="cmdButton" id="speedTime" 
 				onclick="tools.addlog(speeder.myFinal());" 
@@ -656,8 +662,8 @@ var tasks = [[
 // [22.664943755849396, 120.50238328795535, "輔20米南",,,"ign"],//民福路
 
 [22.664221944275300, 120.50369274070279, "民生校區","R40G80/F84巷66E@07:11五/F81巷66E@07:14二/F85巷66E+@07:24三/F84巷66E@07:47三/F81瑞屏街W@07:53二/F84巷66@08:59甫/F84巷66E@14:51四/F85瑞屏街/F53歸仁路/F54歸仁路N@07:49二/F62歸仁路N@17:39三/,",,"R44/,"],
-[22.663392101851596, 120.50520911909595, "菸廠路","R46@10:50一/R44F60歸仁路N@15:35五/R41F60歸仁路N@15:42一/R46@17:53/R46@18:06/R46F60歸仁路N@18:59三/R45@19:12三/閃黃@05:25日/有號誌@06:10/G80/,對向先行5秒",,"R45F71殺蛇溪W@08:29一/R46F70殺蛇溪W@11:00一/R40F73殺蛇溪@16:42/R40G80/閃黃@05:25日/有號誌@06:10/,左1直2/6點前閃黃"],
-[22.662795198326197, 120.50622976219097, "瑞民路","R40G80/,左1",,"R40G80/,速限50北路邊"],		
+[22.663392101851596, 120.50520911909595, "菸廠路","R46@10:50一/R44F60歸仁路N@15:35五/R41F60歸仁路N@15:42一/R46@17:53/R46@18:06/R46F60歸仁路N@18:59三/R45@19:12三/閃黃@05:25日/有號誌@06:10/G80/,對向先行10秒",,"R45F71殺蛇溪W@08:29一/R46F70殺蛇溪W@11:00一/R40F73殺蛇溪@16:42/R40G80/閃黃@05:25日/有號誌@06:10/,左1直2/6點前閃黃"],
+[22.662795198326197, 120.50622976219097, "瑞民路","R40G80/,左1直2",,"R40G80/,速限50北路邊"],		
 [22.662275461613092, 120.50716147358473, "歸仁路N","R73@07:40二/R68F75瑞屏街W@15:38五/R54左13GnF78瑞屏街W@15:44一/R88@17:41三/R77F88瑞屏街W@19:02三/R55左15G45/R70/,紅後左1"],
 [22.662155418196413, 120.50732844110323, "歸仁路S",,,"R70/F61殺蛇溪E@07:25五/R76F60殺蛇溪E@08:01一/F60殺蛇溪E@12:06一/R69F61殺蛇溪W@15:31四/F64殺蛇溪W@16:02二/R56左10F65殺蛇溪E@16:32/R55左15G45F61@16:40/F96殺蛇溪W@17:02二/R52F93殺蛇溪W@18:25六/F53@06:35日/,近速限50,紅後左1"],
 
@@ -687,6 +693,7 @@ var tasks = [[
 [22.663862620807908, 120.51202456100643, "瑞屏街"],
 [22.663413854041078, 120.51276086944469, "巷30"],
 [22.662300315672294, 120.51367051053855, "八橫巷(往國小)","GR",,"GR"],
+
 // [22.660964382261263, 120.51352579661676, "輔樂居","ign"],//美廉社。太遠
 [22.66069607984931, 120.51337397962484, "輔30米北","ign"],
 // [22.660660539467713, 120.51333519614160, "輔25米北","ign"],//太近
@@ -696,7 +703,7 @@ var tasks = [[
 [22.660023719986977, 120.51254056850917, "輔30米北","ign"],
 //[22.659992290324233, 120.51251127517769, "輔25米北","ign"],//太近
 [22.659829384961450, 120.51235636555258, "田中巷"],
-[22.659602318262934, 120.51218577865760, "民生路N","R120"],
+[22.659602318262934, 120.51218577865760, "民生路N","R120,"],
 [22.659372360695624, 120.51204699758851, "民生路S"],//路邊
 
 ],[
@@ -3195,7 +3202,8 @@ var tasks = [[
 [23.078379879426276, 120.25657709560014, "輔105米西","ign"],//匝道國1西出,槽化線西端分隔島
 [23.078220289328048, 120.25752142599080, "國1(6k)","ign",,"交流道"],//結束點,西出
 
-[23.073111658100240, 120.26744454429979, "輔南135"],//平面
+// [23.073111658100240, 120.26744454429979, "輔南135(平面)"],
+[23.072356996526500, 120.26859429749854, "匝道結束點","ign"],
 [23.067233837372765, 120.27433279226237, "新市9k","雙線",,"ign"],//東出
 // [23.064872594139170, 120.27735609821930, "南科聯絡道(平面)"],
 [23.063739824733250, 120.27888366322557, "富強路(平面)","號誌"],//西向偏離判定用
@@ -8823,18 +8831,18 @@ var tasks = [[
 		target.addNum = -3;	//號誌偏移秒數
 		/*TODO 以上三行應移給signal*/
 		
-		target.signStr = "";
+		target.signStr = "";	//燈號資料庫(未匯整)
 		target.title;	
 		// target.isShowProp = true;		//同一個target,不管按幾次signal.click，只有一次顯示號誌參數
 	
 
 
 	target.blur = function(){ 
-		//失焦，完成本目標，成為「prevTarget」正常轉移到下一點，
+		//失焦，完成本目標finish，成為「prevTarget」，將轉移到下一點，
 	}
 
 	target.setColor = function(){
-		//抓出最近的紅綠燈秒數
+		//抓出下一個(最接近)紅綠燈節點的秒數內容
 		try{
 			//240914, 從這一點開始, 丟字串給signal分析, 
 			//tools.addlog("target.focus(): signal.enable="+signal.enable);
@@ -8846,7 +8854,7 @@ var tasks = [[
 						find = true;
 						signal.nextSignal = points[p][2];
 						//tools.addlog("號誌路口:" + signal.nextSignal);
-						//findPoint = p;		//TODO 下次從這點開始找,以免浪費電
+						//findPoint = p;		//TODO 下次從這點開始找,path.signalNode,以免浪費電
 						break;
 					}
 				}
@@ -8869,12 +8877,8 @@ var tasks = [[
 	}
 	
 	target.focus=function(){	 //設定新的目標點及其資訊
-	
-
-		
-	// tools.addlog("target.focus(001)");
-		
-		// target.isShowProp = true;
+		// tools.addlog("target.focus(001)");
+			// target.isShowProp = true;
 		try{
 			if(target.voiceStr){
 				let idx = target.voiceStr.indexOf(",");
@@ -9101,10 +9105,10 @@ var tasks = [[
 
 		
 		//可能要等300ms
-	var isMarch = -1;	//行進中,motion, move, 靜止still
-	var timeNum = [33,,55];	//TODO 連續號誌使用同一時序。轉向時兩個值互換。
-	var colSymb = { R: "red",	F: "cyan", G: "lime", };	//燈號對應的顏色。	變數名稱不可用中文
-	var colorList = ["red",,"lime"];	//萊姆色(亮綠)
+	var isMarch = -1;		//行進中,motion, move, 靜止still
+	var timeNum = [33,,55];		//TODO 連續號誌使用同一時序。轉向時兩個值互換。
+	var colSymb = { R: "red",	F: "cyan", G: "lime", };		//燈號對應的顏色。	變數名稱不可用中文
+	var colorList = ["red",,"lime"];		//萊姆色(亮綠)
 	var charList = ["R",,"G"];
 
 	signal.newPath=function(){
@@ -9131,9 +9135,9 @@ try{
 			logmsg += "(" + signal.recentFlag + signal.downCount;
 			signal.downCount = sec - signal.getITVTime();
 			logmsg += "_to_" + flag + signal.downCount+")";
-			tools.addlog(logmsg, "sml");			
+			tools.addlog(logmsg, "sml");
 			
-			target.setColor();				
+			target.setColor();
 		}
 		
 }catch(error){
@@ -9162,12 +9166,13 @@ try{
 		
 		//TODO 遇到端點不會變藍色, 檢查中...(nextSignal沒有值???)
 		if(nextPoint+vector == -1 || nextPoint+vector == points.length){
-			signal.nextSignal == target.title;	//為了使端點可以符合執行綠轉藍的區塊
+			signal.nextSignal = target.title;	//為了使端點可以符合執行綠轉藍的區塊
+			// tools.addlog("signal.swGtoB : ");
 		}
 		
 		try{
 			if( signal.recentFlag == signal.G.symb 
-					&& signal.nextSignal == target.title){
+					&& signal.nextSignal == target.title){	//本身須是燈號,以略過非燈號的點
 				
 				let logmsg = "G" + intervalTime ;
 				if(intervalTime > 50){	//綠燈(通過前)超過50秒時「順便」記下來
@@ -9190,6 +9195,8 @@ try{
 			tools.addlog("path.toNextNode(4ri):" + error.message);
 		}	
 	}
+	
+	
 	signal.swColor=function(){
 	/*切換燈號(顏色及秒數)，第一階段只有2種模式,R跟G*/
 		isMarch *= -1;
@@ -9255,7 +9262,19 @@ try{
 	}
 	
 	signal.toRed = function(){
-		tools.addlog("toRed");
+		tools.addlog("toRed_" + signal.getITVTime());
+	}
+	
+	signal.toYellow = function(){
+		tools.addlog("toYellow_" + signal.getITVTime());
+	}
+	
+	signal.toLeft = function(){
+		tools.addlog("toLeft_" + signal.getITVTime());
+	}
+	
+	signal.toRight = function(){
+		tools.addlog("toRight_" + signal.getITVTime());
 	}
 	
 	signal.getITVTime=function(baseTime){
@@ -9310,7 +9329,8 @@ try{
 		//event.stopPropagation();//阻止事件繼續冒泡
 		playVoice("當");
 		// tools.addlog("signal.IntervalID=" +signal.IntervalID);
-		if(!signal.IntervalID){			
+		if(!signal.IntervalID){
+			tools.addlog("RG_ON");
 			signal.on();
 			//return;		251030
 		}
@@ -9486,6 +9506,15 @@ tools.addlog("signal.click(5fb):" + error.message);
 	
 	var lightRed = document.getElementById("divRed");
 	lightRed.addEventListener("touchstart", signal.toRed);
+	
+	var lightYellow = document.getElementById("divYellow");
+	lightYellow.addEventListener("touchstart", signal.toYellow);
+	
+	var lightLeft = document.getElementById("divLeft");
+	lightLeft.addEventListener("touchstart", signal.toLeft);
+	
+	var lightRight = document.getElementById("divRight");
+	lightRight.addEventListener("touchstart", signal.toRight);
 	
 /*
 	document.onscroll= function(event) {
