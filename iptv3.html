@@ -46,12 +46,14 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 
 <div id="btnGrp" style="display:none; position: absolute; z-index:1;background:#737373;"
 	onclick="event.stopPropagation();">
-	<button onclick="volume(-7);" title="按鍵 down">vol-</button>
-	<button onclick="swMute();">M</button>
-	<button onclick="volume(3);">vol+</button>
-	音量:上/下, 靜音:M
-	<br>
+	
+	<button onclick="volume(-7);" title="按鍵 down">v-7</button>
+	<button id="BTN_Mute" onclick="swMute();">M</button>
+	<button onclick="volume(3);">v+3</button>
+	音量:上/下, 靜音:M	<br>
+	
 	<button onclick="ch(-1);" title="按鍵 left">ch-</button>
+	<button >home</button>
 	<button onclick="ch(1);">ch+</button>
 	 選台:左/右
 	 <br>
@@ -84,6 +86,7 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 <script>
 //https://developers.google.com/youtube/iframe_api_reference
   var player;
+  const defVOL = 23;
   var isUserStop = false;
   var myiframe;
   var scrMode = "0";
@@ -227,7 +230,7 @@ function onYouTubeIframeAPIReady() {
 function onPlayerReady(e) {
 	ch(4);	//預設頻道
 	e.target.unMute().playVideo();
-	e.target.setVolume(23);	//初始音量
+	e.target.setVolume(defVOL);	//初始音量
 }
 
 function onPlayerStateChange(event) {
@@ -235,13 +238,29 @@ function onPlayerStateChange(event) {
         event.target.setPlaybackQuality('hd720');  // <-- WORKS!
     }
 }
-
+btnMute = document.getElementById("BTN_Mute");
+btnMute.innerText  = defVOL;
 function volume(flag){
 		if(player.isMuted()){
 			player.unMute();
 		}
-		player.setVolume(player.getVolume() + flag);
+		let newVol = player.getVolume() + flag
+		if(newVol < 0 ){
+			newVol = 0;
+		}
+		player.setVolume(newVol);
+		btnMute.innerText  = newVol;
 }
+
+  function swMute(){
+	  if(player.isMuted()){
+			player.unMute();
+			btnMute.innerText  = player.getVolume();
+		}else{
+			player.mute();
+			btnMute.innerText = "X";
+		}
+  }
 
 function ch(flag){
 	if(Math.abs(flag) == 1){
@@ -255,15 +274,7 @@ function ch(flag){
 	document.getElementById("ytID").value = channelList[currentCh].ytID;
 }
 
-  function swMute(){
-	  if(player.isMuted()){
-			player.unMute();
-			event.target.innerText  = player.getVolume();
-		}else{
-			player.mute();
-			event.target.innerText = "X";
-		}
-  }
+
   
 function stop() {
 	state = player.getPlayerState();
