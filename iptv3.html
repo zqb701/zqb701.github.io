@@ -47,6 +47,7 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 <div id="btnGrp" style="display:none; position: absolute; z-index:1;background:#737373;"
 	onclick="event.stopPropagation();">
 	<button onclick="volume(-7);" title="按鍵 down">vol-</button>
+	<button onclick="swMute();">M</button>
 	<button onclick="volume(3);">vol+</button>
 	音量:上/下, 靜音:M
 	<br>
@@ -236,7 +237,10 @@ function onPlayerStateChange(event) {
 }
 
 function volume(flag){
-	player.setVolume(player.getVolume() + flag);
+		if(player.isMuted()){
+			player.unMute();
+		}
+		player.setVolume(player.getVolume() + flag);
 }
 
 function ch(flag){
@@ -250,6 +254,16 @@ function ch(flag){
 	document.title = channelList[currentCh].channel + "_" + channelList[currentCh].title;
 	document.getElementById("ytID").value = channelList[currentCh].ytID;
 }
+
+  function swMute(){
+	  if(player.isMuted()){
+			player.unMute();
+			event.target.innerText  = player.getVolume();
+		}else{
+			player.mute();
+			event.target.innerText = "0";
+		}
+  }
   
 function stop() {
 	state = player.getPlayerState();
@@ -387,11 +401,7 @@ function doKeyDown(event){
 		window.resizeTo(scrWs,scrHs);
 		break;
 	case 77:	//靜音<M>
-		if(player.isMuted()){
-			player.unMute();
-		}else{
-			player.mute();
-		}
+		swMute();
 		break;
 	case 34:	//<PgDn>
 
