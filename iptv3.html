@@ -68,19 +68,10 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	 路徑:<input id="ytID" type="text" value="a"/>
 	 <button>go</button>
 	 <br>
-<video
-  id="bgMusic"
-  class="video-js"
-  loop
-  playsinline
-  muted
-  preload="auto"
-></video>
-
-<button id="playBtn" class="play-button">播放 PLAY</button>
-
-<script src="https://www.pbs.gov.tw/live/js/video.min.js"></script>
-<script src="https://www.pbs.gov.tw/live/js/my.js"></script>
+<audio controls 
+src="https://stream.rcs.revma.com/ks4vsmg3qtzuv?中廣音樂網,本機可聽"
+ onloadstart="this.volume=.1;"
+</audio>
 
 	<!-- select id="scrModeSe" onchange="scrModeCh();">
 		<option value="0">自動</option>
