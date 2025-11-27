@@ -48,9 +48,9 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	onclick="event.stopPropagation();">
 	
 	<button onclick="volume(-7);" title="按鍵 down">v-7</button>
-	<button id="BTN_Mute" onclick="swMute();">M</button>
-	<button onclick="volume(3);">v+3</button>
-	音量:上/下, 靜音:M	<br>
+	<button id="BTN_Mute" onclick="swMute();" title="靜音M">M</button>
+	<button onclick="volume(3);" title="按鍵up">v+3</button>
+	<div id="timehhmm"></div>	<br>
 	
 	<button onclick="ch(-1);" title="按鍵 left">ch-</button>
 	<button >home</button>
@@ -166,6 +166,7 @@ src="https://stream.rcs.revma.com/ks4vsmg3qtzuv?中廣音樂網,本機可聽"
 		// if(idelCount == 0){
 		if(oTimerId == undefined){
 					document.getElementById("btnGrp").style.display = "block";
+					document.getElementById("timehhmm").innerText = now.getHours() +":" +now.getMinutes();
 					document.body.style.cursor = "";
 			 oTimerId = setInterval(()=>{
 				newT = new Date().getTime();
@@ -296,7 +297,9 @@ function stop() {
 }
 
 function dspCtrlPal(mode){
+	//251123:本fun完全沒用到,
 	document.getElementById("btnGrp").style.display = mode;
+	
 	oldTime = new Date().getTime();
 }
 	

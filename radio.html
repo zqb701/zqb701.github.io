@@ -1,12 +1,19 @@
 ﻿<html><head>
-<title>中廣音樂網</title>
+<title>audio</title>
 </head>
 <body>
-<video 
-controls id="video" class="media" width="200px" height="30px" 
-frameborder="0" scrolling="no" style="position: absolute; top: 0px; left: 0px;" 
-src_="https://stream.rcs.revma.com/ks4vsmg3qtzuv?中廣音樂網" type="audio/mpeg" 
-src="https://stream.pbs.gov.tw:443/live/TPS/playlist.m3u8"
-onloadstart="this.volume=.02">
+
+<audio controls 
+src="https://stream.rcs.revma.com/ks4vsmg3qtzuv?中廣音樂網,本機可聽"
+ onloadstart="this.volume=.1;"
+</audio>
+
+<video
+controls id_="video" class_="media" width_="200px" height_="30px" 
+frameborder_="0" scrolling_="no" style_="position: absolute; top: 0px; left: 0px;" 
+src_="https://stream.rcs.revma.com/ks4vsmg3qtzuv?中廣音樂網,本機可聽" type_="audio/mpeg" 
+src="https://stream.pbs.gov.tw:443/live/TPS/playlist.m3u8?手機才能播"
+onloadstart="this.volume=.4;//def=1.0">
 </video>
+
 </body></html>
