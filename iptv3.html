@@ -50,6 +50,8 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	<button onclick="volume(-7);" title="按鍵 down">v-7</button>
 	<button id="BTN_Mute" onclick="swMute();" title="靜音M">M</button>
 	<button onclick="volume(3);" title="按鍵up">v+3</button>
+	<input type="checkbox" id="c" title="失焦時暫停Mute when Blur"/>M@B
+	<button title="more...">...</button>
 	<span id="timehhmm" style="display:none;"></span>
 	<br>
 	
@@ -60,9 +62,7 @@ FullScreen全螢幕屬browser功能,無內建, 事件放在body。 另加放ifra
 	 <br>
 	 <button onclick="window.resizeTo(scrWs,scrHs);" title="key -">z-</button>
 	<button onclick="window.resizeTo(scrWm,scrHm);" title="按鍵 +">z+</button>
-	 尺寸:加/減/F
-	 <br>
-	 失焦時靜音(或降比或指定)
+	 尺寸:縮/放/F全屏
 	 <br>
 	 播放/暫停: space key 或滑鼠點畫面
 	 <br>
