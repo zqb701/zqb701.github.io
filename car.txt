@@ -9,7 +9,7 @@ BMW	118, 2AT, 318, 4xx, 5, 6, 7, 8, X1/3/5, X2/4/6, E30/60/90, GP?, i5, G21/60/6
 Bugatti Veyron, Chiron
 Buick
 BYD
-Chery(奇瑞) FRESH(全台349輛), Apola
+
 Chevrolet Camaro, bolt, Equinox, Corvette(七代c7 ZR1/Z06??), 
 Chrysler
 citroen C1, C2, C3, C4, C5, Traction Avant, Berlingo, 
@@ -26,7 +26,7 @@ hyundai atos, verna, , elantra, sonata,  venue,  kano, tuvson, Santa Fe, velaste
 
 infiniti QX55, G35/37, M25/37, EX35, 
 JAGUAR E/F/I-PACE, F-type , R75, XKR
-kia eurostar/picanto/morning, stonic, soul, carens, sportage, optima, ceed系列, Sorento, Ray, stinger,EV9, Carnival
+kia picanto(EuroStar/morning), stonic, soul, carens, sportage, optima, ceed系列, Sorento, Ray, stinger,EV9, Carnival
 Lamborghini Lanzador, urus
 lancia蘭吉雅/義大利 Ypsilon(信義路), Thesis 3.2 V6, Delta, 
 Land Rover RangeRover, defender, discovery, Velar, EVOQUE
@@ -52,21 +52,25 @@ Range Rover Evoque
 RENAULT 雷諾9號, 11、紅龍、R19, ZOE, Clio, megane, Scenic, 
 RollsRoyce
 saab 9-3, 9000, 95, 93, 
-skoda citigo, superb, fabis, Fabia 1.2TSi/1.6NA, Octavia, Kamiq, kodiaq, yeti, Rapid
+skoda citigo, superb, Fabia 1.2TSi/1.6NA, Octavia, Kamiq, kodiaq, yeti, Rapid
 smart two four ROADSTER
 SsangYong
 Subaru impreza, WRX, outbark, Forest, XV, BRZ, legacy, Levorg
 Suzuki Swift、Swift、Baleno、Vitara、SX4, jimmy, ignis, solio, alto,liana, Kizashi, cappuccino, Ertiga, Cultus福星, 
 雪佛蘭 大黃蜂
 Tesla
-TOYOTA tercel/VIOS, yaris, rav4, cc, c-hr, auris, AE86, premio, exsior, wish/sienta, crown, camry, Alphard, Venza, veloz, mr2,  Century, ???range, 4runner,Land Cruiser, CELICA, innova, SIENNA, Celica
-TOBE M'car, M'way, 
+TOYOTA tercel/VIOS, yaris(日規vitz), rav4, cc, c-hr, auris, AE86, premio, exsior, wish/sienta, crown, camry, Alphard, Venza, veloz, mr2,  Century, ???range, 4runner,Land Cruiser, CELICA, innova, SIENNA, Celica
+
+
 U
 vinfast vf8, vf9
 Volkswagen UP!, Vento/Polo, golf/plus, scirocco, passat, octavia, Arteon, Caddy, T cross, Transporter, SHARAN, pointer, tiguan, Touareg, 
 volvo c30,  v40/60, S40/60/90, XC40/60, EX90
 
+TOBE(裕隆/吉利) M'car, M'way, W,car
+Chery(勝榮/奇瑞) FRESH(全台349輛), Apola
 台塑 一號, 二號
+
 FCA 與PSA 兩大汽車集團合併而成Stellantis 正式成立，成為全球第四大汽車集團
 
 Xiaomi(小米)  SU7
