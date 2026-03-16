@@ -9786,17 +9786,17 @@ tools.addlog("signal.click(5fb):" + error.message);
 		}
 		
 		tools.num2big5=function(srcStr){
-			/* 全形轉半形, 時間專用(只有數字及冒號) */
+			/* 全形轉半形, 時間專用(只轉數字及冒號共5碼) */
 			//srcStr="23:45d";
 			const pattenStr="０１２３４５６７８９";
 			let srcChar, tarChar, idx;
 			
 			srcStr = srcStr.replace(":", "：");
-			for(let i=srcStr.length-1; i>=0; i--){
+			for(let i=0; i<5; i++){
 				srcChar = srcStr.substr(i, 1);
-				idx=parseInt(srcChar);				
+				idx=parseInt(srcChar);
 				if(!isNaN(idx)){
-					let tarChar = pattenStr.substr(idx, 1);
+					tarChar = pattenStr.substr(idx, 1);
 					srcStr = srcStr.replace(srcChar,tarChar);
 				}
 			}
@@ -9804,10 +9804,14 @@ tools.addlog("signal.click(5fb):" + error.message);
 			return srcStr;
 		}	//end of tools.nun2big5
 		
-		tools.nowByHHMM=function(colon){
+		tools.nowByHHMM=function(colon=""){
 			//colon冒號, 也可以放別的分隔符號
 			let now = new Date();
 			let strH = "" + now.getHours();
+			/*
+			用運算子補零
+			(now.getMinutes()/10).toFixed() + (now.getMinutes()%10);
+			*/
 			if(strH< 10){
 				strH = "0"+ strH;
 			}
