@@ -31,7 +31,7 @@ xxxxxx	候選清單：現況是切綠燈時取得第一筆Fn，須增加「其�
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c30f"; 	</script>
+	<script> 		var version = "v0.72c30g"; 	</script>
 </head>
 
 <style>
@@ -9655,20 +9655,22 @@ try{
 try{
 	
 		if(signal.towarder){
-			tools.addlog("towarder=" + signal.towarder);
-			let totalDist = -1;
-			let dist = -1;
-			let distStr = "*";
-			for(let id=nextPoint+vector; id>=0 || id>points.length; id+=vector){
-				dist = getDistance(points[id-vector],  points[id]);
-				totalDist +=  dist;
-				distStr += points[id][2] + ":" + (dist*1000).toFixed() + "m,";
+			//tools.addlog("towarder=" + signal.towarder);
+			// let totalDist = 0;
+			// let dist;
+			// let distStr = "*";
+			let id
+			for(id=nextPoint+vector; id>=0 || id>points.length; id+=vector){
+				// dist = getDistance(points[id-vector],  points[id]);
+				// totalDist +=  dist;
+				// distStr += points[id][2] + ":" + (dist*1000).toFixed() + "m,";
 				if(points[id][2] == signal.towarder){
 					break;
 				}
 			}
-			distStr = signal.towarder + (totalDist*1000).toFixed() + "m=" + distStr;
-			tools.addlog(distStr);
+			let dist = getDistance(points[nextPoint+vector],  points[id]);
+			
+			tools.addlog((dist*1000).toFixed() + "m");
 		}
 		//		document.getElementById("timeUp2").innerText = totalDist;
 }catch(err){
