@@ -31,7 +31,7 @@ xxxxxx	候選清單：現況是切綠燈時取得第一筆Fn，須增加「其�
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c30h"; 	</script>
+	<script> 		var version = "v0.72c30i"; 	</script>
 </head>
 
 <style>
@@ -9662,6 +9662,7 @@ try{
 					break;
 				}
 			}
+			tools.addlog("<u>signal.click: signal.towarderId</u>=" + signal.towarderId);
 		}
 }catch(err){
 	tools.addlog("showData(err45) : " + err.message);
@@ -10778,6 +10779,7 @@ path.toNextNode=function() {
 	try{
 		if(signal.towarderId){
 			signal.towardDist = getDistance(points[nextPoint+vector],  points[signal.towarderId]);
+			tools.addlog("<u>path.toNextNode: signal.towardDist</u>=" + signal.towardDist);
 		}
 	}catch(err){
 		console.log("path.toNextNode(err867):" + err.message);
@@ -11434,6 +11436,7 @@ try{
 
 	if(signal.towarderId){
 		let arriveSec =  towardDist*1000/coords_speed;
+		tools.addlog("<u>showData: arriveSec</u>=" + arriveSec);
 		document.getElementById("timeUp2").innerText = arriveSec.toFixed(0);
 	}
 		// index = points[0][2].indexOf("_");
