@@ -31,7 +31,7 @@ xxxxxx	候選清單：現況是切綠燈時取得第一筆Fn，須增加「其�
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c30p"; 	</script>
+	<script> 		var version = "v0.72c30q"; 	</script>
 </head>
 
 <style>
@@ -9223,7 +9223,7 @@ try{
 			// ",路向:" + edgeVector.toFixed(0);
 			strtmp += path.msgBuffer;
 	tools.addlog(strtmp + "<br>");
-	tools.addlog("path.focus(8)");
+	// tools.addlog("path.focus(8)");
 	
 		//忽略不要的點
 	try{
@@ -9244,11 +9244,11 @@ try{
 	}catch(error){
 		tools.addlog("path.focus(ees):" + error.message);
 	}
-	tools.addlog("path.focus(9)");
+	// tools.addlog("path.focus(9)");
 	
 		signal.towarderId = path.indexOf(signal.towarder);
 		tools.addlog("<u>path.focus(5fh): *.towarderId</u>=" + signal.towarderId);
-	tools.addlog("path.focus(end)");
+	// tools.addlog("path.focus(end)");
 	}
 	
 		class signal01{}
@@ -9664,8 +9664,8 @@ try{
 			document.getElementById("watchStr").innerHTML =signal.setStyle(str22);
 			
 			let towStr = signal.towarder +"~" + signal.F.secs + "s";
-			document.getElementById("title2").innerText = toStr;
-			tools.addlog(toStr);
+			document.getElementById("title2").innerText = towStr;
+			tools.addlog(towStr);
 		}
 }catch(error){
 	tools.addlog("signal.click(7gt):" + error.message);
