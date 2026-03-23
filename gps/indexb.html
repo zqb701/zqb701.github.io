@@ -31,7 +31,7 @@ xxxxxx	候選清單：現況是切綠燈時取得第一筆Fn，須增加「其�
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c30n"; 	</script>
+	<script> 		var version = "v0.72c30p"; 	</script>
 </head>
 
 <style>
@@ -9100,8 +9100,8 @@ var tasks = [[
 			}
 		}
 		// tools.addlog("target.focus(009)");
-		return;
 		
+/*		
 		try{//240724, 依addNum調整號誌間的時間差
 			if(signal.recentFlag == "F"){
 				let passingTime = signal.getITVTime();
@@ -9116,7 +9116,7 @@ var tasks = [[
 		}catch(err){
 				tools.addlog("target.focus(): " + err.message);
 			}
-			
+		*/	
 try{
 		if(signal.towarderId){
 			signal.towardDist = getDistance(points[nextPoint+vector],  points[signal.towarderId]);
@@ -9130,6 +9130,7 @@ try{
 	}catch(err){
 		console.log("path.toNextNode(err867):" + err.message);
 	}
+	
 	}//end of  target.focus
 	
 	class myPath{}
@@ -9211,9 +9212,7 @@ try{
 
 	// tools.addlog("path.focus(4)");
 	if(taskID != oldTask){
-		strtmp  += "<br>";
-		strtmp  += "新:";
-		strtmp += path.title;
+		strtmp  += "<br>新:"+ path.title;
 	}
 	
 	// strtmp += ",角:" + bigAng[0].toFixed(0);	//收集資訊, 以決定角度太小者要定時重找。
@@ -9224,6 +9223,7 @@ try{
 			// ",路向:" + edgeVector.toFixed(0);
 			strtmp += path.msgBuffer;
 	tools.addlog(strtmp + "<br>");
+	tools.addlog("path.focus(8)");
 	
 		//忽略不要的點
 	try{
@@ -9244,9 +9244,11 @@ try{
 	}catch(error){
 		tools.addlog("path.focus(ees):" + error.message);
 	}
+	tools.addlog("path.focus(9)");
+	
 		signal.towarderId = path.indexOf(signal.towarder);
 		tools.addlog("<u>path.focus(5fh): *.towarderId</u>=" + signal.towarderId);
-	// tools.addlog("path.focus(9)");
+	tools.addlog("path.focus(end)");
 	}
 	
 		class signal01{}
@@ -9600,7 +9602,7 @@ try{
 					 str88 = "起點:" + signal.startNode +", ";		
 				}
 			}else{
-				str88 = "ee4";
+				str88 = "(ee4)";
 			}
 
 				//return;
@@ -9660,16 +9662,18 @@ try{
 				signal.reviewStr = "估:" + str22;
 			}
 			document.getElementById("watchStr").innerHTML =signal.setStyle(str22);
-			document.getElementById("title2").innerText = signal.towarder +"~" + signal.F.secs + "s";
 			
+			let towStr = signal.towarder +"~" + signal.F.secs + "s";
+			document.getElementById("title2").innerText = toStr;
+			tools.addlog(toStr);
 		}
 }catch(error){
 	tools.addlog("signal.click(7gt):" + error.message);
 }
 
 		signal.towarderId = path.indexOf(signal.towarder);
-		tools.addlog("<u>signal.click(11q): *.towarderId</u>=" + signal.towarderId);
-	}//end of Function click()
+		tools.addlog("<u>(11q): *.towarderId</u>=" + signal.towarderId);
+	}//end of Function signal.click()
 	
 	
 	path.indexOf=function(nodeTitle){
@@ -9975,7 +9979,7 @@ tools.addlog("signal.click(5fb):" + error.message);
 			let idx6 = src.indexOf("@");
 			signal.towarder =src.substring(idx5, idx6);		//取第一個Fxx後的節點名稱
 			// console.log(signal.towarder);
-			tools.addlog("<u>signal.getNearforward(6y7):signal.towarder</u>=" +signal.towarder);
+			tools.addlog("<u>(6y7):towarder</u>=" +signal.towarder);
 			return result;
 		}else{
 			//適當的時間,卻沒有Fd+字串...[先往前才往後找]
