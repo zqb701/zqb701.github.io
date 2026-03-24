@@ -31,7 +31,7 @@ xxxxxx	候選清單：現況是切綠燈時取得第一筆Fn，須增加「其�
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c30d"; 	</script>
+	<script> 		var version = "v0.72c30e"; 	</script>
 </head>
 
 <style>
@@ -9119,6 +9119,11 @@ var tasks = [[
 		*/	
 try{
 		signal.towardDist = undefined;
+		if((nextPoint+vector) == signal.towarderId){	//超過停靠點時清除
+			signal.towarderId = undefined;
+			tools.addlog("(7yg):tow~Id 清除");
+		}
+		
 		if(signal.towarderId){
 			signal.towardDist = getDistance(points[nextPoint+vector],  points[signal.towarderId]);
 			let logstr = "<u>(287): *.tow~Dist</u>=";
@@ -10581,16 +10586,14 @@ function gridCmd(x,y){
 			// tools.addlog("target.giveup(9)");
 }
 
-function vectorMode(){
-	
-	vector *=-1;
-	console.log("vector swith to " + vector);
-	nextPoint += vector;
-	if(nextPoint == -1 || nextPoint == points.length){
-		showMsg("vectorMode():端點");
+function vectorMode(){	/*掉頭*/
+	if(nextPoint == 0 || nextPoint == (points.length-1)){
+		tools.addlog("端點!(忽略掉頭指令)");
 	}else{
-		const vStr = ["回程",,"去程"];
-		// playVoice(vStr[1+vector]);
+		const vStr = ["反向",,"順向"];
+		vector *=-1;
+		nextPoint += vector;
+		tools.addlog("掉頭("+vStr[vector+1]+")");
 		showData();
 	}
 }
