@@ -31,7 +31,7 @@ xxxxxx	候選清單：現況是切綠燈時取得第一筆Fn，須增加「其�
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c30g"; 	</script>
+	<script> 		var version = "v0.72c30h"; 	</script>
 </head>
 
 <style>
@@ -9119,16 +9119,16 @@ var tasks = [[
 		*/	
 try{
 		signal.towardDist = undefined;
-		if((nextPoint+vector) == signal.towarderId){	//超過停靠點時清除
+		if((nextPoint) == signal.towarderId){	//超過停靠點時清除
 			signal.towarderId = undefined;
 			tools.addlog("(7yg):tow~Id 清除");
 		}
 		
 		if(signal.towarderId){
-			signal.towardDist = getDistance(points[nextPoint+vector],  points[signal.towarderId]);
+			signal.towardDist = getDistance(points[nextPoint],  points[signal.towarderId]);
 			let logstr = "<u>(v87): *.tow~Dist</u>=";
 			logstr += signal.towardDist;
-			logstr += "[" + (nextPoint+vector) + points[nextPoint+vector][2];
+			logstr += "[" + (nextPoint) + points[nextPoint][2];
 			logstr += "," + signal.towarderId + points[signal.towarderId][2]+ "]";
 			tools.addlog(logstr);
 		}
