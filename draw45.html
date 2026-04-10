@@ -46,13 +46,19 @@ canvas.width = window.innerWidth;
 
 	// ctx.beginPath();
 	// ctx.moveTo(0, 0);
-			// ctx.lineTo(100,100);
+			// ctx.lineTo(300,300);
+// ctx.closePath();			
 	// ctx.stroke();
+	ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
+	// ctx.strokeRect(100,100,100,100);	//外框
+	// ctx.strokeRect(300,100,100,100);	//外框
+	// drawDiamond(300,100);
+	// drawDiamond(100,300);
 		// ctx.fillStyle = "black";	//填滿色
 	// ctx.fillRect(0,0,canvas.width,canvas.height);
 	// ctx.strokeStyle = "blue";	//線條色
 	// ctx.lineWidth = 2;	//線條粗度
-	ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
+	
 	// ctx.strokeRect(canvas.width/3,canvas.height/3,canvas.width/3,canvas.height/3);//內框
 	
 	function mouseDown(e){
@@ -68,8 +74,12 @@ canvas.width = window.innerWidth;
 
 	function gesturesStart(x,y){
 		enGestures = true;
-		// drawDiamond(x, y);
-		drawCircle(x, y);
+		// ctx.beginPath();
+		// ctx.arc(x,y,1,0,Math.PI*2);	//
+		 // ctx.stroke();
+		 // ctx.closePath();
+		drawDiamond(x, y);
+		// drawCircle(x, y);
 	}
 	
 
@@ -86,8 +96,8 @@ canvas.width = window.innerWidth;
 function gesturesMove(x, y){
 
 	if(enGestures){		
-		drawCircle(x,y);
-
+		// drawCircle(x,y);
+drawDiamond(x, y);
 	 }
 }
 	
@@ -110,47 +120,53 @@ function gesturesMove(x, y){
 	// drawDiamond(69,100);
 	function drawDiamond(x0, y0){
 			
-			
-					ctx.strokeStyle = "green";	//線條色
-		ctx.lineWidth = "1";	//線條粗度
-		ctx.fillStyle = "black";	//填滿色
-		 ctx.arc(x0,y0,2,0,Math.PI*2);
-		 ctx.stroke();
+			// ctx.beginPath();
+					// ctx.strokeStyle = "green";	//線條色
+		// ctx.lineWidth = "1";	//線條粗度
+		// ctx.fillStyle = "black";	//填滿色
+		 // ctx.arc(x0,y0,2,0,Math.PI*2);
+		 // ctx.stroke();
 			
 			
 				let str="a(" +x0+"," +y0+")";
 			// let r2=r*1.414;	//間隔
 			let x1,y1;
 //順轉45度後的座標
+let v = 1;
 if(x0 > y0){
 	y1 = (y0-x0)/1.414;	//y為負值
 	x1 = (x0 +y0)/ 1.414;
-	// x1 -= y1;
+	v = -1;
 }else{
 	y1 = (y0-x0)/1.414;
-	x1 *= 1.414;
-	x1 += y1;
+	x1 = (y0 + x0)/1.414;
 }
-str += "b[" + ~~x1 +"," + ~~y1 +"]";
-			let w=50;	//間隔
-		x1 = ~~(x1/w);
+
+str += "b1[" + ~~x1 +"," + ~~y1 +"]";
+			let w=10;	//間隔
+		x1 = Math.trunc(x1/w);
 		// xx = x%2;
 		// x *= 2;
 		x1 *=w;
 		x1 += w/2;
 		
-		y1 = ~~(y1/w);
+		y1 = Math.trunc(y1/w);
 		// yy=y%2;
 		// if(!xx && !yy)return;
 		// y = ~~(y/2);
 		// y *=2;
 		y1 *= w ;
-		y1 += w/2;
-		str += "c[" + ~~x1 +"," + ~~y1 +"]";
+		// if(y1<0){
+			// y1 -= w/2;
+		// }else{
+			y1 += v * w/2;			
+		// }
+		str += "b2[" + ~~x1 +"," + ~~y1 +"]";
 		//再轉回來
 		if(y1 <0){
 			y0 = (x1+y1)/1.414;
-			x0 = x1 * 1.414 + y1;
+			x0 = (x1-y1) / 1.414;
+			// x0 = x1 * 1.414 + y1;
 		}else{
 			x0=(x1-y1)/1.414;
 			y0=(x1+y1)/1.414;
@@ -158,22 +174,22 @@ str += "b[" + ~~x1 +"," + ~~y1 +"]";
 		// x /=1.414;
 		// y /=1.414;
 		// ctx.arc(x0,y0,1,0,Math.PI*2,true);
-		str += "d[" + ~~x0 +"," + ~~y0 +"]";
+		str += "c[" + ~~x0 +"," + ~~y0 +"]";
 		console.log(str);
 
 
 		
-		let gap = 0;
+		let gap = 1;
 		let r3 =w/1.414 - gap;
 		ctx.beginPath();
-		ctx.moveTo(x0-r3, y0);	
-		// ctx.lineTo(x0-r3, y0);	//菱形上方
-		ctx.lineTo(x0, y0+r3);	//右
-		ctx.lineTo(x0+r3, y0);	//下
-		ctx.lineTo(x0, y0-r3);		//左
+		// ctx.moveTo(x0, y0);	
+		ctx.moveTo(x0, y0-r3);
+		ctx.lineTo(x0+r3, y0);
+		ctx.lineTo(x0, y0+r3);
+		ctx.lineTo(x0-r3, y0);
 		ctx.closePath();
 		// ctx.arc(x, y,r,0,Math.PI*2,true);
-		ctx.stroke();
+		ctx.fill();
 	}
 		function drawDiamond_(x, y){
 			enGestures = true;
@@ -236,6 +252,21 @@ function drawCircle(x, y,r=4,r2=8,w=1, c="black"){
 	ctx.rect(x-r,y-r,r*2,r*2);
 		// ctx.arc(x,y,r,0,Math.PI*2,true);
 ctx.fill();
+}
+
+// drawText();
+function drawText(){
+	//
+	
+	ctx.font = "300px sans-serif" //設定文字字型 大小
+// ctx.fillStyle="#00A0E9" //設定文字填滿顏色
+// ctx.strokeStyle="#D50A17" //設定文字邊框
+// ctx.strokeText("好像快沒梗", 10, 150) //邊框文字
+
+let textWidth=ctx.measureText("永").width //測量文字寬度
+let textHeight=ctx.measureText("永").height //測量文字高度
+console.log(textWidth,textHeight);
+ctx.fillText("永", 0, 250)  //填滿文字, 座標從左下角起算
 }
 </script>
 </html>
