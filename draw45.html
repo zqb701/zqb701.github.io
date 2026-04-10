@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>draw45</title>
+		<title>菱格紋</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -21,10 +21,13 @@ body {
   <script>   </script>
 </head>
 <body>
-<canvas id="canvas" ></canvas>
+<canvas id="canvas2" style="position:fixed;top:10px;left:10px;"></canvas>
+<canvas id="canvas" style="position:fixed;"></canvas>
 </body>
 <script>
 var canvas = document.getElementById("canvas");
+var cvs2 = document.getElementById("canvas2");
+
     canvas.addEventListener('mousedown',mouseDown);
 	canvas.addEventListener('mousemove',mouseMove);
 	canvas.addEventListener('mouseup',mouseUp);
@@ -33,13 +36,16 @@ var canvas = document.getElementById("canvas");
     canvas.addEventListener('touchmove',touchMove);
     canvas.addEventListener('touchend',touchEnd);
 
-	// canvas.width = 950;canvas.height = 850;		//寬高預設值為300×150
-	canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
-	// canvas.width = Window.width;canvas.height = Window.height;		//寬高預設值為300×150
+	canvas.width = 300;
+	canvas.height = 300;
+	cvs2.height = 300;
+	// canvas.height = window.innerHeight;
+	// canvas.width = window.innerWidth;
+	
 	
 	
 	var ctx = canvas.getContext("2d");
+	var ctx2 = cvs2.getContext("2d");
 	var enGestures=false;
 	// ctx.rotate((Math.PI / 180) * 45);//轉畫布
 
@@ -50,6 +56,7 @@ canvas.width = window.innerWidth;
 // ctx.closePath();			
 	// ctx.stroke();
 	ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
+	ctx2.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
 	// ctx.strokeRect(100,100,100,100);	//外框
 	// ctx.strokeRect(300,100,100,100);	//外框
 	// drawDiamond(300,100);
@@ -164,9 +171,8 @@ str += "b1[" + ~~x1 +"," + ~~y1 +"]";
 		str += "b2[" + ~~x1 +"," + ~~y1 +"]";
 		//再轉回來
 		if(y1 <0){
-			y0 = (x1+y1)/1.414;
 			x0 = (x1-y1) / 1.414;
-			// x0 = x1 * 1.414 + y1;
+			y0 = (x1+y1)/1.414;
 		}else{
 			x0=(x1-y1)/1.414;
 			y0=(x1+y1)/1.414;
@@ -175,7 +181,7 @@ str += "b1[" + ~~x1 +"," + ~~y1 +"]";
 		// y /=1.414;
 		// ctx.arc(x0,y0,1,0,Math.PI*2,true);
 		str += "c[" + ~~x0 +"," + ~~y0 +"]";
-		console.log(str);
+		// console.log(str);
 
 
 		
@@ -254,19 +260,17 @@ function drawCircle(x, y,r=4,r2=8,w=1, c="black"){
 ctx.fill();
 }
 
-// drawText();
+drawText();
 function drawText(){
-	//
-	
-	ctx.font = "300px sans-serif" //設定文字字型 大小
-// ctx.fillStyle="#00A0E9" //設定文字填滿顏色
-// ctx.strokeStyle="#D50A17" //設定文字邊框
-// ctx.strokeText("好像快沒梗", 10, 150) //邊框文字
+	ctx2.font = "300px sans-serif" //設定文字字型 大小
+	ctx2.fillStyle="#00A0E9" //設定文字填滿顏色
+	// ctx.strokeStyle="#D50A17" //設定文字邊框
+	// ctx.strokeText("好像快沒梗", 10, 150) //邊框文字
 
-let textWidth=ctx.measureText("永").width //測量文字寬度
-let textHeight=ctx.measureText("永").height //測量文字高度
-console.log(textWidth,textHeight);
-ctx.fillText("永", 0, 250)  //填滿文字, 座標從左下角起算
+	let textWidth=ctx2.measureText("永").width //測量文字寬度
+	let textHeight=ctx2.measureText("永").height //測量文字高度
+	console.log(textWidth,textHeight);
+	ctx2.fillText("永", 0, 250)  //填滿文字, 座標從左下角起算
 }
 </script>
 </html>
