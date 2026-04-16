@@ -23,6 +23,7 @@ body {
 <body>
 <canvas id="canvas2" style="position:fixed;top:10px;left:10px;"></canvas>
 <canvas id="canvas" style="position:fixed;"></canvas>
+v=0.1a
 </body>
 <script>
 /*
@@ -50,7 +51,7 @@ var gui = {};
 	
 	var ctx = canvas.getContext("2d");
 	var ctx2 = cvs2.getContext("2d");	//底圖
-	ctx.globalCompositeOperation ="xor";		//destination-out";
+	ctx.globalCompositeOperation ="xor";		//預設值"source-over"
 	
 	var enGestures=false;
 	// ctx.rotate((Math.PI / 180) * 45);//轉畫布
@@ -78,34 +79,7 @@ var gui = {};
 	gui.mouseDown = function (e){
 		e.preventDefault();
 		e.stopPropagation();
-		let tar = tools.rotate45(e.offsetX, e.offsetY, dmWidth);
-		
-		if(e.button ==0){
-			
-			
-			gesturesStart(tar.x, tar.y);
-						oldX = tar.x;
-			oldY = tar.y;
-// ctx.globalCompositeOperation ="source-over";
-		
-		}
-		if(e.button ==2){	//右鍵,會跳出瀏覽器的內建選單
-			
-			// let w = dmWidth*1.414;
-			// let x0 = tar.x-w/2;
-			// let y0=tar.y - w/2;
-			// ctx.clearRect(x0, y0, w,w);		//只能清除矩形,再把上下左右畫回來
-			ctx.globalCompositeOperation ="destination-out";
-			gesturesStart(tar.x, tar.y);
-			ctx.globalCompositeOperation ="source-over";
-			
-
-
-			// ctx.globalAlpha=0.5 //「畫上去」透明度(0.0全透~1.0不透)
-			// ctx.fillStyle='transparent';
-            // ctx.fillRect(e.offsetX, e.offsetY, 10,10);
-		}
-
+		gesturesStart(e.offsetX, e.offsetY);
 	}
 	
 	function touchStart(e){
@@ -116,30 +90,29 @@ var gui = {};
 
 	function gesturesStart(x,y){
 		enGestures = true;
-		// ctx.beginPath();
-		// ctx.arc(x,y,1,0,Math.PI*2);	//
-		 // ctx.stroke();
-		 // ctx.closePath();
-		drawDiamond(x, y);
-		// drawCircle(x, y);
+		let tar = tools.rotate45(x, y, dmWidth);
+		drawDiamond(tar.x, tar.y);
+			oldX = tar.x;
+			oldY = tar.y;
 	}
 	
 
 	
 	function mouseMove(e){
-		gesturesMove(e);
+		gesturesMove(e.offsetX, e.offsetY);
 		e.preventDefault();
 	}
+	
 	function touchMove(e){
 		gesturesMove(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
 		e.preventDefault();
 	}
 
 let oldX,oldY;
-function gesturesMove(event){
+function gesturesMove(x, y){
 
 	if(enGestures){
-		let tar = tools.rotate45(event.offsetX, event.offsetY, dmWidth);
+		let tar = tools.rotate45(x, y, dmWidth);
 		if(tar.x == oldX && tar.y == oldY){
 			
 		}else{
