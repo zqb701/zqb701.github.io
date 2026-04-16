@@ -49,6 +49,7 @@ self.addEventListener('install', (event) => {
 	cache.addAll(voiceList);
 	cache.add('.');
 	cache.add('index.html');
+	cache.add('..\draw45.html');
   })());
   // Force the waiting service worker to become the active service worker.
   self.skipWaiting();
