@@ -110,9 +110,10 @@ init = function(){
 	gui.touchStart = function(e){
 		let x = e.targetTouches[0].pageX;
 		let y = e.targetTouches[0].pageY;
-		x-= canvas.style.left;
-		y-= canvas.style.top;
-		gui.gesturesStart(x,y);
+		let x1 = canvas.getBoundingClientRect().left;
+		let y1 = canvas.getBoundingClientRect().top;
+		// console.log(~~x,~~y,~~x1,~~y1);
+		gui.gesturesStart(x-x1,y-y1);
 		e.preventDefault();			//停止事件的默認動作
 		// e.stopPropagation();		//阻止事件冒泡
 	}
@@ -144,11 +145,11 @@ init = function(){
 	}
 	
 	gui.touchMove = function (e){
-				let x = e.targetTouches[0].pageX;
+		let x = e.targetTouches[0].pageX;
 		let y = e.targetTouches[0].pageY;
-		x-= canvas.style.left;
-		y-= canvas.style.top;
-		gui.gesturesMove(x, y);
+		let x1 = canvas.getBoundingClientRect().left;
+		let y1 = canvas.getBoundingClientRect().top;
+		gui.gesturesMove(x - x1, y-y1);
 		e.preventDefault();
 	}
 
