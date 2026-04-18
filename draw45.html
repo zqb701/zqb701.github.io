@@ -21,39 +21,65 @@ body {
   <script>   </script>
 </head>
 <body>
-<canvas id="canvas2" style="position:fixed;top:10px;left:10px;"></canvas>
-<canvas id="canvas" style="position:fixed;"></canvas>
-v=0.1a
+<div>
+	<div id="cmd01" onClick="cmd.savelocal();">A</div>
+</div>
+
+<div>
+	<canvas id="canvas2"  style="position:fixed;"></canvas>
+	<canvas id="canvas" style="position:fixed;"></canvas>
+</div>
 </body>
 <script>
 /*
 依滑鼠座標畫菱形格(轉45度取整數為中心點再轉正)
 菱形格清除(xor模式), 邊界沒清除.
-離線
+離線：加到sw.js
+格點陣列,暫存,存檔
 背景,
-格點,寬度,
-
+前稿：寬度,
+列印
 */
-var canvas = document.getElementById("canvas");
-var cvs2 = document.getElementById("canvas2");
-var gui = {};
+	var canvas	= document.getElementById("canvas");
+	var cvs2		= document.getElementById("canvas2");
+		
+	var gui = {};
 
-
-
-	canvas.width = 300;
-	canvas.height = 300;
-	cvs2.height = 300;
-	var dmWidth =  30;
-	// canvas.height = window.innerHeight;
-	// canvas.width = window.innerWidth;
+	var dmWidth = 20;
+	const sqrt2 = 1.414;		//Math.sqrt(2);xor之後會留下格線
 	
-	
-	
+	var aArray =  new Array();
 	var ctx = canvas.getContext("2d");
-	var ctx2 = cvs2.getContext("2d");	//底圖
-	ctx.globalCompositeOperation ="xor";		//預設值"source-over"
+	var ctx2 = cvs2.getContext("2d");	//底圖	
 	
 	var enGestures=false;
+		
+init = function(){
+	
+		cvs2.height = 1100;
+		canvas.width = 700;
+		canvas.height = 1100;
+		
+		ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
+		ctx2.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
+		
+
+	mycanvas.drawText();
+				// canvas.height = window.innerHeight;
+	// canvas.width = window.innerWidth;
+	
+		tools.initArr();
+		
+
+
+
+	}
+	
+
+	
+	
+	
+
 	// ctx.rotate((Math.PI / 180) * 45);//轉畫布
 
 
@@ -62,8 +88,7 @@ var gui = {};
 			// ctx.lineTo(300,300);
 // ctx.closePath();			
 	// ctx.stroke();
-	ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
-	ctx2.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
+
 		// ctx.fillStyle = 'silver'
 	 // ctx.fillRect(0,0,150,150);
 	// ctx.strokeRect(300,100,100,100);	//外框
@@ -79,18 +104,22 @@ var gui = {};
 	gui.mouseDown = function (e){
 		e.preventDefault();
 		e.stopPropagation();
-		gesturesStart(e.offsetX, e.offsetY);
+		gui.gesturesStart(e.offsetX, e.offsetY);
 	}
 	
-	function touchStart(e){
-		gesturesStart(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
+	gui.touchStart = function(e){
+		gui.gesturesStart(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
 		e.preventDefault();			//停止事件的默認動作
 		// e.stopPropagation();		//阻止事件冒泡
 	}
 
-	function gesturesStart(x,y){
+	gui.gesturesStart=function (x,y){
 		enGestures = true;
+		
 		let tar = tools.rotate45(x, y, dmWidth);
+		let theCR = tools.getColRaw(tar.x, tar.y);
+		tools.setArr(theCR);
+		
 		drawDiamond(tar.x, tar.y);
 			oldX = tar.x;
 			oldY = tar.y;
@@ -98,24 +127,27 @@ var gui = {};
 	
 
 	
-	function mouseMove(e){
-		gesturesMove(e.offsetX, e.offsetY);
+	gui.mouseMove=function (e){
+		gui.gesturesMove(e.offsetX, e.offsetY);
 		e.preventDefault();
 	}
 	
-	function touchMove(e){
-		gesturesMove(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
+	gui.touchMove = function (e){
+		gui.gesturesMove(e.targetTouches[0].pageX,e.targetTouches[0].pageY);
 		e.preventDefault();
 	}
 
 let oldX,oldY;
-function gesturesMove(x, y){
+gui.gesturesMove=function (x, y){
 
 	if(enGestures){
 		let tar = tools.rotate45(x, y, dmWidth);
-		if(tar.x == oldX && tar.y == oldY){
+		
+		if(tar.x == oldX && tar.y == oldY){		//避免move時在同一格範圍內重覆繪製
 			
 		}else{
+			let theCR = tools.getColRaw(tar.x, tar.y);
+			tools.setArr(theCR);
 			drawDiamond(tar.x, tar.y);
 			oldX = tar.x;
 			oldY = tar.y;
@@ -123,16 +155,17 @@ function gesturesMove(x, y){
 	 }
 }
 	
-	function mouseUp(e){
-		gesturesEnd();
+	gui.mouseUp = function (e){
+		gui.gesturesEnd();
 		e.preventDefault();
 	}
-	function touchEnd(e){
-	gesturesEnd();
-	e.preventDefault();
-}
 	
-	function gesturesEnd(){
+	gui.touchEnd=function (e){
+		gui.gesturesEnd();
+		e.preventDefault();
+	}
+	
+	gui.gesturesEnd=function (){
 		if(enGestures){
 			enGestures = false;
 		}
@@ -141,65 +174,21 @@ function gesturesMove(x, y){
 	// drawDiamond(100,100);
 	// drawDiamond(69,100);
 	function drawDiamond(x0, y0){
-
+			// console.log("ddm:",x0,y0);
 		let gap = 1;
-		let r3 = dmWidth /1.414 - gap;
+		let r3 = dmWidth /sqrt2 - gap;
 		ctx.beginPath();
 		ctx.fillStyle = "black";	//填滿色
-		// ctx.moveTo(x0, y0);	
 		ctx.moveTo(x0, y0-r3);
 		ctx.lineTo(x0+r3, y0);
 		ctx.lineTo(x0, y0+r3);
 		ctx.lineTo(x0-r3, y0);
 		ctx.closePath();
-		// ctx.arc(x, y,r,0,Math.PI*2,true);
+ctx.globalCompositeOperation ="xor";		//預設值"source-over"
 		ctx.fill();
+		ctx.globalCompositeOperation ="source-over";		//預設值"source-over"
 	}
-		function drawDiamond_(x, y){
-			enGestures = true;
-			drawCircle(x,y);
-				let str="(" +x+"," +y+")";
-			// let r2=r*1.414;	//間隔
-//轉45度後的距離
-			x *=1.414;
-			y *=1.414;
-			 // r2*=1.414;
-
-			let w=50;	//間隔
-		x = ~~(x/w);
-		// xx = x%2;
-		// x *= 2;
-		x *=w;
-		x	+= w/2;
-		
-		y = ~~(y/w);
-		// yy=y%2;
-		// if(!xx && !yy)return;
-		// y = ~~(y/2);
-		// y *=2;
-		y *= w ;
-		y += w/2;
-		
-		x /=1.414;
-		y /=1.414;
-		drawCircle(x,y,1,1,1,"red");
-		str += "[" + ~~x +"," + ~~y +"]";
-		console.log(str);
-
-		ctx.strokeStyle = "green";	//線條色
-		ctx.lineWidth = "1";	//線條粗度
-		ctx.fillStyle = "black";	//填滿色
-		ctx.beginPath();
-		let gap = 5;
-		let r3 =w/1.414 - gap;
-		ctx.moveTo(x-r3, y);	//菱形上方
-		ctx.lineTo(x, y+r3);	//右
-		ctx.lineTo(x+r3, y);	//下
-		ctx.lineTo(x, y-r3);		//左
-		ctx.closePath();
-		// ctx.arc(x, y,r,0,Math.PI*2,true);
-		ctx.stroke();
-	}
+	
 
 function drawCircle(x, y,r=4,r2=8,w=1, c="black"){	
 			ctx.strokeStyle = c;	//線條色
@@ -218,8 +207,8 @@ function drawCircle(x, y,r=4,r2=8,w=1, c="black"){
 ctx.fill();
 }
 
-drawText();
-function drawText(){
+var mycanvas={};
+mycanvas.drawText = function(){
 	ctx2.font = "300px sans-serif" //設定文字字型 大小
 	ctx2.fillStyle="#00A0E9" //設定文字填滿顏色
 	// ctx.strokeStyle="#D50A17" //設定文字邊框
@@ -227,68 +216,146 @@ function drawText(){
 
 	let textWidth=ctx2.measureText("永").width //測量文字寬度
 	let textHeight=ctx2.measureText("永").height //測量文字高度
-	console.log(textWidth,textHeight);
+	// console.log(textWidth,textHeight);
 	ctx2.fillText("永", 0, 250)  //填滿文字, 座標從左下角起算
 }
+var cmd={};
+cmd.savelocal = function(){
 
+	localStorage.setItem("dmdArr", JSON.stringify(aArray));
+// alert(aArray);
+
+
+}
 var tools={};
-tools.clearDiamond = function(x, y){
+tools.getXYbyRC = function(raw, col){  //列行值轉座標
+	let r = dmWidth/sqrt2;
+	let r2=r*2;
+	let sftx = raw%2 * r;	//奇數行向右偏移
+	let x0= col * r2 - r+ sftx;
+	let y0 = raw *r;
+
+	let result={};
+	result.x = x0;
+	result.y = y0;
+	return result;
+}
+
+tools.getColRaw=function(x0, y0){  //座標轉列行值
+
+	let r = dmWidth/sqrt2;
+	let col = Math.trunc((x0+r/3)/r);
+	col = Math.trunc((x0+r/3)/(r*2)) + col%2;
 	
+	//col奇數時,y0要加偏移值
+	let raw = Math.trunc((y0+r/3)/r) ;
+		let result={};
+	result.col = col;
+	result.raw = raw;
+	return result;
+}
+
+
+tools.initArr = function(){
+	/*取得暫存陣列或重置*/
+	let dmdArrlocal = localStorage.getItem("dmdArr");
+	if(dmdArrlocal){
+		
+		aArray = JSON.parse(dmdArrlocal); 
+		// aArray[0][0] = "0";
+		console.log("讀取陣列:" + aArray.length +"," + aArray[0].length);
+		let p;
+		for(let idxr=0;idxr<aArray.length;idxr++){
+			for(let idxc=0;idxc<aArray[0].length;idxc++){
+				// let bit = 
+				if(aArray[idxr] && aArray[idxr][idxc] && aArray[idxr][idxc]== "1"){
+					console.log(idxr,idxc);
+					p= tools.getXYbyRC(idxr,idxc);
+					drawDiamond(p.x, p.y);
+				}
+		}}
+	}else{
+		console.log("建立陣列");
+		for(let raw=14; raw>=0; raw--){	//???另用小圖存放???
+			aArray[raw]=new Array(10);
+		}
+	}
+}
+
+
+tools.setArr = function(src){  
+/*指定的格點記錄為0或1*/
+	let raw= src.raw;
+	let col = src.col;
+	
+	if(col >aArray[0].length){
+		for(let idxr=0;idxr<aArray.length;idxr++){
+			aArray[idxr].length = col;
+		}
+		// console.log("add col to", col);
+	}
+	
+	if(!aArray[raw]){
+		aArray[raw] = new Array(aArray[0].length);
+		// console.log("add raw to",raw);
+	}
+	
+	
+		if(aArray[raw][col]== undefined){
+		aArray[raw][col] = 1;
+	}else{
+		if(aArray[raw][col] == 1){
+			aArray[raw][col] = 0;
+		}else{
+			aArray[raw][col] = 1;	
+		}
+	}
+	console.log("RC=",raw,col,aArray[raw][col]);
 }
 tools.rotate45 = function(x, y, w){
-				let x0=x,y0=y;
-				let x1,y1;
+	let x0=x,y0=y;
+	let x1,y1;
 //順轉45度後的座標
-let v = 1;
-if(x0 > y0){
-	y1 = (y0-x0)/1.414;	//y為負值
-	x1 = (x0 +y0)/ 1.414;
-	v = -1;
-}else{
-	y1 = (y0-x0)/1.414;
-	x1 = (y0 + x0)/1.414;
-}
+	let v = 1;
+	if(x0 > y0){
+		y1 = (y0-x0)/sqrt2;	//y為負值
+		x1 = (x0 +y0)/ sqrt2;
+		v = -1;	//改為Math.sign(y0-x0);
+	}else{
+		y1 = (y0-x0)/sqrt2;
+		x1 = (y0 + x0)/sqrt2;
+	}
+	//取整數格
+	x1 = Math.trunc(x1/w);
+	x1 *= w;
+	x1 += w/2;
+	
+	y1 = Math.trunc(y1/w);
+	y1 *= w ;
+	y1 += v * w/2;			
+	// console.log(col,raw);
+	//再轉回來
+	if(y1 <0){
+		x0 = (x1-y1) / sqrt2;
+		y0 = (x1+y1)/sqrt2;
+	}else{
+		x0=(x1-y1)/sqrt2;
+		y0=(x1+y1)/sqrt2;
+	}
 
-// str += "b1[" + ~~x1 +"," + ~~y1 +"]";
-
-		x1 = Math.trunc(x1/w);
-		// xx = x%2;
-		// x *= 2;
-		x1 *=w;
-		x1 += w/2;
-		
-		y1 = Math.trunc(y1/w);
-		// yy=y%2;
-		// if(!xx && !yy)return;
-		// y = ~~(y/2);
-		// y *=2;
-		y1 *= w ;
-		// if(y1<0){
-			// y1 -= w/2;
-		// }else{
-			y1 += v * w/2;			
-		// }
-		// str += "b2[" + ~~x1 +"," + ~~y1 +"]";
-		//再轉回來
-		if(y1 <0){
-			x0 = (x1-y1) / 1.414;
-			y0 = (x1+y1)/1.414;
-		}else{
-			x0=(x1-y1)/1.414;
-			y0=(x1+y1)/1.414;
-		}
-		let tar = {};
-		tar.x = x0;
-		tar.y = y0;
+	let tar = {};
+	tar.x = x0;
+	tar.y = y0;
 	return tar;
 }
 
     canvas.addEventListener('mousedown', gui.mouseDown);
-	canvas.addEventListener('mousemove',mouseMove);
-	canvas.addEventListener('mouseup',mouseUp);
+	canvas.addEventListener('mousemove',gui.mouseMove);
+	canvas.addEventListener('mouseup',gui.mouseUp);
 	
-	canvas.addEventListener('touchstart',touchStart);
-    canvas.addEventListener('touchmove',touchMove);
-    canvas.addEventListener('touchend',touchEnd);
+	canvas.addEventListener('touchstart',gui.touchStart);
+    canvas.addEventListener('touchmove',gui.touchMove);
+    canvas.addEventListener('touchend',gui.touchEnd);
+init();		
 </script>
 </html>
