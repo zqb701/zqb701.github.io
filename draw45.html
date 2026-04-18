@@ -24,7 +24,7 @@ body {
 
 <div style_="display: flex; flex-wrap:wrap;">
 	<div id="cmd01" style="position: absolute;border: 5px solid yellow;top:5px;left:5px;" onClick="cmd.swmode();" draggable="true">1</div>
-	<div id="cmd02" style="position: absolute;border: 5px solid yellow;top:30px;left:30px;" onClick="cmd.test();">b</div>
+	<div id="cmd02" style="position: absolute;border: 5px solid yellow;top:30px;left:30px;" onClick="cmd.test();">c</div>
 	<canvas id="canvas2"  style="position: absolute;;top:120px;left:120px;"></canvas>
 	<canvas id="canvas" style="position: absolute;top:100px;left:100px;" draggable="true"></canvas>
 	
@@ -108,7 +108,11 @@ init = function(){
 	}
 	
 	gui.touchStart = function(e){
-		gui.gesturesStart(e.targetTouches[0].offsetX,e.targetTouches[0].offsetY);
+		let x = e.targetTouches[0].pageX;
+		let y = e.targetTouches[0].pageY;
+		x-= canvas.style.left;
+		y-= canvas.style.top;
+		gui.gesturesStart(x,y);
 		e.preventDefault();			//停止事件的默認動作
 		// e.stopPropagation();		//阻止事件冒泡
 	}
@@ -140,7 +144,11 @@ init = function(){
 	}
 	
 	gui.touchMove = function (e){
-		gui.gesturesMove(e.targetTouches[0].offsetX,e.targetTouches[0].offsetY);
+				let x = e.targetTouches[0].pageX;
+		let y = e.targetTouches[0].pageY;
+		x-= canvas.style.left;
+		y-= canvas.style.top;
+		gui.gesturesMove(x, y);
 		e.preventDefault();
 	}
 
