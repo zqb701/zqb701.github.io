@@ -21,13 +21,13 @@ body {
   <script>   </script>
 </head>
 <body>
-<div>
-	<div id="cmd01" onClick="cmd.savelocal();">A</div>
-</div>
 
-<div>
-	<canvas id="canvas2"  style="position:fixed;"></canvas>
-	<canvas id="canvas" style="position:fixed;"></canvas>
+<div style_="display: flex; flex-wrap:wrap;">
+	<div id="cmd01" style="position: absolute;border: 5px solid yellow;top:5px;left:5px;" onClick="cmd.swmode();" draggable="true">0</div>
+	<div id="cmd02" style="position: absolute;border: 5px solid yellow;top:30px;left:30px;" onClick="cmd.test();">a</div>
+	<canvas id="canvas2"  style="position: absolute;;top:120px;left:120px;"></canvas>
+	<canvas id="canvas" style="position: absolute;top:100px;left:100px;" draggable="true"></canvas>
+	
 </div>
 </body>
 <script>
@@ -45,7 +45,7 @@ body {
 		
 	var gui = {};
 
-	var dmWidth = 20;
+	var dmWidth = 10;
 	const sqrt2 = 1.414;		//Math.sqrt(2);xor之後會留下格線
 	
 	var aArray =  new Array();
@@ -53,33 +53,33 @@ body {
 	var ctx2 = cvs2.getContext("2d");	//底圖	
 	
 	var enGestures=false;
+	
+	var mode = 1;
+	var mouseX;
+	var mouseY;
+	
+	var clickTime;
 		
 init = function(){
 	
-		cvs2.height = 1100;
-		canvas.width = 700;
-		canvas.height = 1100;
+		cvs2.height = 300;
+		// cvs2.top = 100;
+		canvas.width = 900;
+		canvas.height = 1500;
 		
 		ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
 		ctx2.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
 		
 
 	mycanvas.drawText();
+	
+	
 				// canvas.height = window.innerHeight;
 	// canvas.width = window.innerWidth;
-	
+	// document.getElementById("canvas").getContext("2d").translate( -50, -50);
 		tools.initArr();
 		
-
-
-
 	}
-	
-
-	
-	
-	
-
 	// ctx.rotate((Math.PI / 180) * 45);//轉畫布
 
 
@@ -115,17 +115,24 @@ init = function(){
 
 	gui.gesturesStart=function (x,y){
 		enGestures = true;
+		clickTime = Date.now();
 		
-		let tar = tools.rotate45(x, y, dmWidth);
-		let theCR = tools.getColRaw(tar.x, tar.y);
-		tools.setArr(theCR);
-		
-		drawDiamond(tar.x, tar.y);
+		if(mode==0){//編輯
+			let tar = tools.rotate45(x, y, dmWidth);
+			let theCR = tools.getColRaw(tar.x, tar.y);
+			tools.setArr(theCR);
+			
+			drawDiamond(tar.x, tar.y);
 			oldX = tar.x;
 			oldY = tar.y;
+		}
+		
+		if(mode==1){
+			mouseX = x;
+			mouseY = y;
+			console.log("a:",mouseX,mouseY);
+		}
 	}
-	
-
 	
 	gui.mouseMove=function (e){
 		gui.gesturesMove(e.offsetX, e.offsetY);
@@ -140,10 +147,18 @@ init = function(){
 let oldX,oldY;
 gui.gesturesMove=function (x, y){
 
-	if(enGestures){
+	// let delay = Date.now() - clickTime;
+	// if(delay >100){
+		// enGestures = false;
+	// }
+	if(!enGestures){
+		return;
+	}
+	
+	if(mode==0){
 		let tar = tools.rotate45(x, y, dmWidth);
 		
-		if(tar.x == oldX && tar.y == oldY){		//避免move時在同一格範圍內重覆繪製
+		if(tar.x == oldX && tar.y == oldY){		//避免同一格範圍內重覆繪製(改用列行較佳)
 			
 		}else{
 			let theCR = tools.getColRaw(tar.x, tar.y);
@@ -153,27 +168,39 @@ gui.gesturesMove=function (x, y){
 			oldY = tar.y;
 		}
 	 }
+	 
+	 if(mode == 1){
+		 // canvas.style.left += x - startX;
+		 console.log("b:",x - mouseX,y - mouseY);
+		mouseX = x;
+		mouseY = y;
+	 }
 }
 	
 	gui.mouseUp = function (e){
-		gui.gesturesEnd();
+		gui.gesturesEnd(e);
 		e.preventDefault();
 	}
 	
 	gui.touchEnd=function (e){
-		gui.gesturesEnd();
+		gui.gesturesEnd(e);
 		e.preventDefault();
 	}
 	
-	gui.gesturesEnd=function (){
+gui.gesturesEnd=function (event){
 		if(enGestures){
 			enGestures = false;
-		}
-	}
+		}		
+		
+		let x = event.offsetX;
+		let y = event.offsetY;
+		
+		// let delay = Date.now() - clickTime;
+}
 	
 	// drawDiamond(100,100);
 	// drawDiamond(69,100);
-	function drawDiamond(x0, y0){
+	function drawDiamond(x0, y0, sftx=0,sfty=0){
 			// console.log("ddm:",x0,y0);
 		let gap = 1;
 		let r3 = dmWidth /sqrt2 - gap;
@@ -220,13 +247,30 @@ mycanvas.drawText = function(){
 	ctx2.fillText("永", 0, 250)  //填滿文字, 座標從左下角起算
 }
 var cmd={};
-cmd.savelocal = function(){
+cmd.test = function(){
+	let a = canvas.style.left;
+	let b=-50;
 
-	localStorage.setItem("dmdArr", JSON.stringify(aArray));
-// alert(aArray);
-
-
+	canvas.style.left = b;
+	//document.getElementById("canvas").getContext("2d").translate( -50, -50);
+	console.log("cmd.test");
 }
+
+
+cmd.savelocal = function(){
+	localStorage.setItem("dmdArr", JSON.stringify(aArray));
+}
+
+cmd.swmode = function(){
+	let mode_len = 2;
+	mode += 1;
+	if(mode == mode_len){
+		mode = 0;
+	}
+	document.getElementById("cmd01").innerText = mode;
+	// console.log(mode);
+}
+
 var tools={};
 tools.getXYbyRC = function(raw, col){  //列行值轉座標
 	let r = dmWidth/sqrt2;
@@ -259,9 +303,11 @@ tools.getColRaw=function(x0, y0){  //座標轉列行值
 tools.initArr = function(){
 	/*取得暫存陣列或重置*/
 	let dmdArrlocal = localStorage.getItem("dmdArr");
-	if(dmdArrlocal){
-		
+	// alert(dmdArrlocal);
+	
+	if(dmdArrlocal && dmdArrlocal !="[]"){
 		aArray = JSON.parse(dmdArrlocal); 
+
 		// aArray[0][0] = "0";
 		console.log("讀取陣列:" + aArray.length +"," + aArray[0].length);
 		let p;
@@ -269,17 +315,20 @@ tools.initArr = function(){
 			for(let idxc=0;idxc<aArray[0].length;idxc++){
 				// let bit = 
 				if(aArray[idxr] && aArray[idxr][idxc] && aArray[idxr][idxc]== "1"){
-					console.log(idxr,idxc);
+					// console.log(idxr,idxc);
 					p= tools.getXYbyRC(idxr,idxc);
 					drawDiamond(p.x, p.y);
 				}
-		}}
+			}
+		}
+		
 	}else{
 		console.log("建立陣列");
 		for(let raw=14; raw>=0; raw--){	//???另用小圖存放???
 			aArray[raw]=new Array(10);
 		}
 	}
+	
 }
 
 
@@ -288,11 +337,15 @@ tools.setArr = function(src){
 	let raw= src.raw;
 	let col = src.col;
 	
-	if(col >aArray[0].length){
+	if(col >= aArray[0].length){
 		for(let idxr=0;idxr<aArray.length;idxr++){
-			aArray[idxr].length = col;
+			if(!aArray[idxr]){
+				aArray[idxr] = new Array(aArray[0].length);
+			}
+				aArray[idxr].length = col;
+			
 		}
-		// console.log("add col to", col);
+		console.log("add col to", col);
 	}
 	
 	if(!aArray[raw]){
@@ -310,8 +363,9 @@ tools.setArr = function(src){
 			aArray[raw][col] = 1;	
 		}
 	}
-	console.log("RC=",raw,col,aArray[raw][col]);
+	// console.log("RC=",raw,col,aArray[raw][col]);
 }
+
 tools.rotate45 = function(x, y, w){
 	let x0=x,y0=y;
 	let x1,y1;
@@ -356,6 +410,12 @@ tools.rotate45 = function(x, y, w){
 	canvas.addEventListener('touchstart',gui.touchStart);
     canvas.addEventListener('touchmove',gui.touchMove);
     canvas.addEventListener('touchend',gui.touchEnd);
+	
+	window.onbeforeunload = function() {
+		localStorage.setItem("dmdArr", JSON.stringify(aArray));
+		//localStorage.removeItem(key);
+	};
+
 init();		
 </script>
 </html>
