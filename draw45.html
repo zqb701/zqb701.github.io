@@ -24,7 +24,7 @@ body {
 
 <div style_="display: flex; flex-wrap:wrap;">
 	<div id="cmd01" style="position: absolute;border: 5px solid yellow;top:5px;left:5px;" onClick="cmd.swmode();" draggable="true">1</div>
-	<div id="cmd02" style="position: absolute;border: 5px solid yellow;top:30px;left:30px;" onClick="cmd.test();">c</div>
+	<div id="cmd02" style="position: absolute;border: 5px solid yellow;top:30px;left:30px;" onClick="cmd.test();">d</div>
 	<canvas id="canvas2"  style="position: absolute;;top:120px;left:120px;"></canvas>
 	<canvas id="canvas" style="position: absolute;top:100px;left:100px;" draggable="true"></canvas>
 	
@@ -110,8 +110,8 @@ init = function(){
 	gui.touchStart = function(e){
 		let x = e.targetTouches[0].pageX;
 		let y = e.targetTouches[0].pageY;
-		let x1 = canvas.getBoundingClientRect().left;
-		let y1 = canvas.getBoundingClientRect().top;
+		let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
+		let y1 = e.target.getBoundingClientRect().top;
 		// console.log(~~x,~~y,~~x1,~~y1);
 		gui.gesturesStart(x-x1,y-y1);
 		e.preventDefault();			//停止事件的默認動作
@@ -135,7 +135,7 @@ init = function(){
 		if(mode==1){
 			mouseX = x;
 			mouseY = y;
-			console.log("a:",mouseX,mouseY);
+			// console.log("a:",mouseX,mouseY);
 		}
 	}
 	
@@ -147,8 +147,8 @@ init = function(){
 	gui.touchMove = function (e){
 		let x = e.targetTouches[0].pageX;
 		let y = e.targetTouches[0].pageY;
-		let x1 = canvas.getBoundingClientRect().left;
-		let y1 = canvas.getBoundingClientRect().top;
+		let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
+		let y1 = e.target.getBoundingClientRect().top;
 		gui.gesturesMove(x - x1, y-y1);
 		e.preventDefault();
 	}
@@ -178,9 +178,11 @@ gui.gesturesMove=function (x, y){
 		}
 	 }
 	 
-	 if(mode == 1){
-		 // canvas.style.left += x - startX;
-		 console.log("b:",x - mouseX,y - mouseY);
+	 if(mode == 1){		//移動模式
+		//TODO邊界查
+		 canvas.style.left =canvas.getBoundingClientRect().left +(x-mouseX);
+		 canvas.style.top =canvas.getBoundingClientRect().top +(y-mouseY);
+		 // console.log("b:",x - mouseX,y - mouseY);
 		mouseX = x;
 		mouseY = y;
 	 }
