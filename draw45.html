@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋d</title>
+		<title>菱格紋e</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -18,13 +18,25 @@ body_ {
   <script>   </script>
 </head>
 <body>
-
-<div style_="display: flex; flex-wrap:wrap;">
+<div>
+	<div style="display: inline-block;">xxx</div>
+	<div onClick="tools.saveFile();" style="display: inline-block;">儲存</div>
+	<div onClick="upload();" style="display: inline-block;">載入</div>
+	<div onClick="drawClearAll();" style="display: inline-block;">清空</div>
+	<div onClick="window.print();;" style="display: inline-block;">列印</div>
+	<div onClick="" style="display: inline-block;">線寬</div>
+	
+</div>	
 	<div id="cmd01" 
-	style="position: fixed; overscroll-behavior: contain;	border: 5px solid yellow;top:5px;left:5px;user-select:none;cursor: pointer;" onClick="cmd.swmode();" draggable="true">1</div>
-	<div id="cmd02" style="position: absolute;border: 5px solid yellow;top:30px;left:30px;" onClick="cmd.test();">d</div>
-	<canvas id="canvas2"  style="position: absolute;"></canvas>
-	<canvas id="canvas" style="position: absolute;top:100px;left:100px;" draggable="true"></canvas>
+	style="position: fixed; border: 5px solid yellow;top:5px;left:5px;user-select:none;cursor: pointer;" onClick="cmd.swmode();" draggable="true">1</div>
+	
+<div style_="display: flex; flex-wrap:wrap;">
+	
+	<div id="cmd02" style="position: absolute;border: 5px solid yellow;left:30px;
+	cursor: pointer;user-select:none;" onClick="cmd.test();">d</div>
+	
+	<canvas id="canvas2"  style="position: absolute;top:30px;left:10px;"></canvas>
+	<canvas id="canvas" style="position: absolute;top:30px;left:10px;" draggable="true"></canvas>
 	
 </div>
 </body>
@@ -38,12 +50,12 @@ body_ {
 格點陣列_記憶,下載*,全黑*.全白*，(待規劃)壓縮(有逗號易讀取, 0改為空字串)，區塊複製
 標題當狀態列,附秒數
 前稿_(背景及格線要同步)平移(***限位)/記憶、縮放比/記憶
-	前稿_寬度設定2.3mm~
+	前稿_寬度設定2.3mm~,全圖重畫
 背景
   0.內建圖片
   1.前移以操作 el.style.zIndex = "10",清除用空字串或"auto", 
   2.載入圖片從本機/網路
-  3.獨立平移、縮放、「旋轉」
+  3.獨立平移、縮放、「旋轉」,記憶
   4. 暫存/移除/隱常
 (待規劃)
 控制器位置用plug實作
@@ -63,6 +75,7 @@ body_ {
 	var ctx2 = cvs2.getContext("2d");	//底圖	
 	
 	var enGestures=false;
+	var isMove=false;	//單擊畫點時,由gest...End畫點, 但要避免連續畫點時,最後一點又畫一次,變清除
 	
 	var mode = 1;
 	var mouseX;
@@ -74,12 +87,13 @@ init = function(){
 	
 		cvs2.height = 300;
 		// cvs2.top = 100;
-		canvas.width = 900;
-		canvas.height = 2000;
+		canvas.width = 950;
+		canvas.height = 1280;
 		
 		ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
 		ctx2.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
 		
+		dmWidth = canvas.width * 2.3 / 190;	//A4短邊21cm(8.27英寸), 中間190mm
 
 	mycanvas.drawText();
 	
@@ -118,6 +132,8 @@ init = function(){
 	}
 	
 	gui.touchStart = function(e){
+		let touchCnt = e.targetTouches.length;
+		tools.log("touchCnt=" + touchCnt);
 		let x = e.targetTouches[0].pageX;
 		let y = e.targetTouches[0].pageY;
 		let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
@@ -127,20 +143,19 @@ init = function(){
 		e.preventDefault();			//停止事件的默認動作
 		// e.stopPropagation();		//阻止事件冒泡
 	}
-
+/*
+手勢操作
+1.同一點200ms內,放開時畫點
+2.移動時,連續畫點(底圖時用來旋轉)
+3.200ms後移動 mode1 => 移圖
+4.100內連點,後移動mode2 => 縮放
+3&4顯示控制器
+1&2隱常控制器
+*/
 	gui.gesturesStart=function (x,y){
 		enGestures = true;
+		isMove = false;
 		clickTime = Date.now();
-		
-		if(mode==0){//編輯
-			let tar = tools.rotate45(x, y, dmWidth);
-			let theCR = tools.getColRaw(tar.x, tar.y);
-			tools.setArr(theCR);
-			
-			drawDiamond(tar.x, tar.y);
-			oldX = tar.x;
-			oldY = tar.y;
-		}
 		
 		if(mode==1){
 			mouseX = x;
@@ -175,6 +190,7 @@ gui.gesturesMove=function (x, y){
 	}
 	
 	if(mode==0){
+		isMove = true;
 		let tar = tools.rotate45(x, y, dmWidth);
 		
 		if(tar.x == oldX && tar.y == oldY){		//避免同一格範圍內重覆繪製(改用列行較佳)
@@ -190,7 +206,7 @@ gui.gesturesMove=function (x, y){
 	 
 	 if(false){		//移動模式// 暫時用browser的功能,只是解析度變低
 		//TODO邊界查
-		let rect = canvas.getBoundingClientRect();
+		let rect = canvas.getBoundingClientRect();	//另有canvas.position().x;
 		 canvas.style.left = rect.left +(x-mouseX);
 		 canvas.style.top =canvas.getBoundingClientRect().top +(y-mouseY);
 		 // console.log("b:",x - mouseX,y - mouseY);
@@ -200,28 +216,80 @@ gui.gesturesMove=function (x, y){
 }
 	
 	gui.mouseUp = function (e){
-		gui.gesturesEnd(e);
+		gui.gesturesEnd(e.offsetX, e.offsetY);
 		e.preventDefault();
 	}
 	
 	gui.touchEnd=function (e){
-		gui.gesturesEnd(e);
+		let x = e.touches[0].pageX;
+		let y = e.touches[0].pageY;
+		let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
+		let y1 = e.target.getBoundingClientRect().top;
+		gui.gesturesEnd(x - x1, y-y1);
 		e.preventDefault();
 	}
 	
-gui.gesturesEnd=function (event){
-		if(enGestures){
-			enGestures = false;
-		}		
-		
-		let x = event.offsetX;
-		let y = event.offsetY;
+gui.gesturesEnd=function (x, y){
+	if(enGestures){
+		enGestures = false;
+	}
+	if(isMove){
+			
+	}else{	//沒有移動過
+		let delay =  Date.now() - clickTime;
+		if(delay <200){
+			if(mode==0){//編輯
+				let tar = tools.rotate45(x, y, dmWidth);
+				let theCR = tools.getColRaw(tar.x, tar.y);
+				tools.setArr(theCR);
+				
+				drawDiamond(tar.x, tar.y);
+				oldX = tar.x;
+				oldY = tar.y;
+			}
+		}else{
+			cmd.swmode();
+		}
+	}
+
 		
 		// let delay = Date.now() - clickTime;
 }
 	
 	// drawDiamond(100,100);
-	// drawDiamond(69,100);
+	function setWidth(){
+		// let w = prompt('寬度:'));
+		// dmWidth = 計算
+		// ctx.clearRect(...)
+		// drawAlldmd()...
+	}
+	
+	function drawClearAll(){
+		let answer = confirm('清空畫布？');
+		if(answer){
+			// drawAlldmd();
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			aArray=[];
+			localStorage.setItem("dmdArr", JSON.stringify(aArray));	//暫存編輯資料
+		}else{
+		 
+		}
+	}
+	
+	function drawAlldmd(){
+				let p;
+		for(let idxr=0;idxr<aArray.length;idxr++){
+			for(let idxc=0;idxc<aArray[0].length;idxc++){
+				// let bit = 
+				if(aArray[idxr] && aArray[idxr][idxc] && aArray[idxr][idxc]== "1"){
+					// console.log(idxr,idxc);
+					p= tools.getXYbyRC(idxr,idxc);
+					drawDiamond(p.x, p.y);
+				}
+			}
+		}
+	}
+	
 	function drawDiamond(x0, y0, sftx=0,sfty=0){
 			// console.log("ddm:",x0,y0);
 		let border = 1;
@@ -270,12 +338,10 @@ mycanvas.drawText = function(){
 }
 var cmd={};
 cmd.test = function(){
-	let a = canvas.style.left;
-	let b=-50;
-
-	canvas.style.left = b;
-	//document.getElementById("canvas").getContext("2d").translate( -50, -50);
-	console.log("cmd.test");
+	// upload();
+	tools.saveFile('0418.dm1');
+	
+	tools.log("cmd.test");
 }
 
 
@@ -341,23 +407,12 @@ tools.initArr = function(){
 	
 	if(dmdArrlocal && dmdArrlocal !="[]"){
 		aArray = JSON.parse(dmdArrlocal); 
-
+		drawAlldmd();
 		// aArray[0][0] = "0";
-		console.log("讀取陣列:" + aArray.length +"," + aArray[0].length);
-		let p;
-		for(let idxr=0;idxr<aArray.length;idxr++){
-			for(let idxc=0;idxc<aArray[0].length;idxc++){
-				// let bit = 
-				if(aArray[idxr] && aArray[idxr][idxc] && aArray[idxr][idxc]== "1"){
-					// console.log(idxr,idxc);
-					p= tools.getXYbyRC(idxr,idxc);
-					drawDiamond(p.x, p.y);
-				}
-			}
-		}
+		// console.log("讀取陣列:" + aArray.length +"," + aArray[0].length);
 		
 	}else{
-		console.log("建立陣列");
+		// console.log("建立陣列");
 		for(let raw=14; raw>=0; raw--){	//???另用小圖存放???
 			aArray[raw]=new Array(10);
 		}
@@ -442,6 +497,34 @@ tools.log = function(str, sec){
 	document.title = str;
 }
 
+tools.saveFile = function (fileName="1234.dm1") {
+	let content =  JSON.stringify(aArray);
+	localStorage.setItem("dmdArr",content);	//暫存編輯資料
+	
+	// 1. 建立 Blob 物件 (內容, 類型)
+  const blob = new Blob([content], { type: 'text/plain' });
+  // 2. 建立下載連結
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);  
+  a.download = fileName; // 設定檔名
+
+  // 3. 模擬點擊並移除
+  a.click();
+  URL.revokeObjectURL(a.href); // 釋放記憶體
+}
+
+async function upload(){
+	let [fileHandle] = await window.showOpenFilePicker({
+    startIn: 'pictures'
+  });
+  const file = await fileHandle.getFile();
+  const contents = await file.text();
+  
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  aArray = JSON.parse(contents); 
+  drawAlldmd();
+}
+
     canvas.addEventListener('mousedown', gui.mouseDown);
 	canvas.addEventListener('mousemove',gui.mouseMove);
 	canvas.addEventListener('mouseup',gui.mouseUp);
@@ -461,8 +544,11 @@ window.addEventListener("scroll", function () {
 	    div.style.position = "fixed";
     div.style.top = "0";
 	tools.log(window.pageYOffset);
-});*/
-
+	//overscroll-behavior: contain超過時有反彈拉回的效果, none 則無。
+	//	touch-action: none; 
+	//scroll-behavior:auto直接跳到定位, smooth 捲動效果
+});
+*/
 /*
 window.scroll=function(){
   var div = document.getElementById("cmd01");
@@ -476,7 +562,15 @@ window.scroll=function(){
   // }
 };	
 */
+window.addEventListener('keydown', function(e){  
+  var keyID = e.code;
+  
+  if(keyID === 'KeyS')  {
+		cmd.swmode();
+      e.preventDefault();
+  }
 
+}, false);
 
 init();		
 </script>
