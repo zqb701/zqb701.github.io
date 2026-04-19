@@ -1,16 +1,13 @@
 <html>
 	<head>
-		<title>菱格紋</title>
+		<title>菱格紋a</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
 		<meta name="language" content="tw">		<!-- 希望不會詢問是否翻譯 -->
-
-		
-		
 <style>
 html,
-body {
+body_ {
 	border: none;
 	margin: 0;
 	padding: 0;
@@ -23,7 +20,7 @@ body {
 <body>
 
 <div style_="display: flex; flex-wrap:wrap;">
-	<div id="cmd01" style="position: absolute;border: 5px solid yellow;top:5px;left:5px;" onClick="cmd.swmode();" draggable="true">1</div>
+	<div id="cmd01" style="position: absolute;border: 5px solid yellow;top:5px;left:5px;user-select:none;cursor: pointer;" onClick="cmd.swmode();" draggable="true">1</div>
 	<div id="cmd02" style="position: absolute;border: 5px solid yellow;top:30px;left:30px;" onClick="cmd.test();">d</div>
 	<canvas id="canvas2"  style="position: absolute;;top:120px;left:120px;"></canvas>
 	<canvas id="canvas" style="position: absolute;top:100px;left:100px;" draggable="true"></canvas>
@@ -33,12 +30,24 @@ body {
 <script>
 /*
 依滑鼠座標畫菱形格(轉45度取整數為中心點再轉正)
-菱形格清除(xor模式), 邊界沒清除.
-離線：加到sw.js
-格點陣列,暫存,存檔
-背景,
-前稿：寬度,
-列印
+菱形格清除(xor模式), 邊界清除要重新載入.
+列印用chrome可輪出成pdf
+
+離線：加到sw.js? manyfast?
+格點陣列_記憶,下載*,全黑*.全白*，(待規劃)壓縮(有逗號易讀取, 0改為空字串)，區塊複製
+標題當狀態列,附秒數
+前稿_(背景及格線要同步)平移(***限位)/記憶、縮放比/記憶
+	前稿_寬度設定2.3mm~
+背景
+  0.內建圖片
+  1.前移以操作 el.style.zIndex = "10",清除用空字串或"auto", 
+  2.載入圖片從本機/網路
+  3.獨立平移、縮放、「旋轉」
+  4. 暫存/移除/隱常
+(待規劃)
+控制器位置用plug實作
+分格線_獨立圖層，顏色/寬度，無格線
+格點選取以複製、稿圖庫、浮水印
 */
 	var canvas	= document.getElementById("canvas");
 	var cvs2		= document.getElementById("canvas2");
@@ -78,7 +87,7 @@ init = function(){
 	// canvas.width = window.innerWidth;
 	// document.getElementById("canvas").getContext("2d").translate( -50, -50);
 		tools.initArr();
-		
+		tools.log("init");
 	}
 	// ctx.rotate((Math.PI / 180) * 45);//轉畫布
 
@@ -180,7 +189,8 @@ gui.gesturesMove=function (x, y){
 	 
 	 if(mode == 1){		//移動模式
 		//TODO邊界查
-		 canvas.style.left =canvas.getBoundingClientRect().left +(x-mouseX);
+		let rect = canvas.getBoundingClientRect();
+		 canvas.style.left = rect.left +(x-mouseX);
 		 canvas.style.top =canvas.getBoundingClientRect().top +(y-mouseY);
 		 // console.log("b:",x - mouseX,y - mouseY);
 		mouseX = x;
@@ -213,8 +223,8 @@ gui.gesturesEnd=function (event){
 	// drawDiamond(69,100);
 	function drawDiamond(x0, y0, sftx=0,sfty=0){
 			// console.log("ddm:",x0,y0);
-		let gap = 1;
-		let r3 = dmWidth /sqrt2 - gap;
+		let border = 1;
+		let r3 = dmWidth /sqrt2 - border;
 		ctx.beginPath();
 		ctx.fillStyle = "black";	//填滿色
 		ctx.moveTo(x0, y0-r3);
@@ -279,6 +289,7 @@ cmd.swmode = function(){
 		mode = 0;
 	}
 	document.getElementById("cmd01").innerText = mode;
+	tools.log("mode="+mode);
 	// console.log(mode);
 }
 
@@ -414,12 +425,17 @@ tools.rotate45 = function(x, y, w){
 	return tar;
 }
 
+/* 用標題列顯示訊息, 附秒數*/
+tools.log = function(str, sec){
+	document.title = str;
+}
+
     canvas.addEventListener('mousedown', gui.mouseDown);
 	canvas.addEventListener('mousemove',gui.mouseMove);
 	canvas.addEventListener('mouseup',gui.mouseUp);
 	
 	canvas.addEventListener('touchstart',gui.touchStart);
-    canvas.addEventListener('touchmove',gui.touchMove);
+    // canvas.addEventListener('touchmove',gui.touchMove);
     canvas.addEventListener('touchend',gui.touchEnd);
 	
 	window.onbeforeunload = function() {
