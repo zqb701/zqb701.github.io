@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋a</title>
+		<title>菱格紋c</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -74,7 +74,7 @@ init = function(){
 		cvs2.height = 300;
 		// cvs2.top = 100;
 		canvas.width = 900;
-		canvas.height = 1500;
+		canvas.height = 2000;
 		
 		ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
 		ctx2.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
@@ -87,7 +87,7 @@ init = function(){
 	// canvas.width = window.innerWidth;
 	// document.getElementById("canvas").getContext("2d").translate( -50, -50);
 		tools.initArr();
-		tools.log("init");
+		// tools.log("init");
 	}
 	// ctx.rotate((Math.PI / 180) * 45);//轉畫布
 
@@ -187,7 +187,7 @@ gui.gesturesMove=function (x, y){
 		}
 	 }
 	 
-	 if(mode == 1){		//移動模式
+	 if(false){		//移動模式// 暫時用browser的功能,只是解析度變低
 		//TODO邊界查
 		let rect = canvas.getBoundingClientRect();
 		 canvas.style.left = rect.left +(x-mouseX);
@@ -290,6 +290,17 @@ cmd.swmode = function(){
 	}
 	document.getElementById("cmd01").innerText = mode;
 	tools.log("mode="+mode);
+	if(mode ==0){
+			canvas.addEventListener('touchstart',		gui.touchStart);
+		canvas.addEventListener('touchmove',	gui.touchMove);
+		canvas.addEventListener('touchend',		gui.touchEnd);
+	}
+	if(mode ==1){
+		//把事件移除, 就能使用瀏覽器的移動與縮放
+		canvas.removeEventListener('touchstart',		gui.touchStart);
+		canvas.removeEventListener('touchmove',	gui.touchMove);
+		canvas.removeEventListener('touchend',		gui.touchEnd);
+	}
 	// console.log(mode);
 }
 
@@ -434,14 +445,35 @@ tools.log = function(str, sec){
 	canvas.addEventListener('mousemove',gui.mouseMove);
 	canvas.addEventListener('mouseup',gui.mouseUp);
 	
-	canvas.addEventListener('touchstart',gui.touchStart);
-    // canvas.addEventListener('touchmove',gui.touchMove);
-    canvas.addEventListener('touchend',gui.touchEnd);
-	
-	window.onbeforeunload = function() {
-		localStorage.setItem("dmdArr", JSON.stringify(aArray));
-		//localStorage.removeItem(key);
-	};
+
+/*關閉視窗時*/	
+window.onbeforeunload = function() {
+	localStorage.setItem("dmdArr", JSON.stringify(aArray));	//暫存編輯資料
+	//localStorage.removeItem(key);
+};
+
+/*視窗變動時*/
+window.addEventListener("scroll", function () {
+    //內容...
+	var div = document.getElementById("cmd01");
+	    div.style.position = "fixed";
+    div.style.top = "0";
+	tools.log(window.pageYOffset);
+});
+/*
+window.scroll=function(){
+  var div = document.getElementById("cmd01");
+  // 滚动超过 100px 后固定
+  // if (window.pageYOffset > 100) {
+    div.style.position = "fixed";
+    div.style.top = "0";
+  // } else {
+    // div.style.position = "absolute"; // 回到原位
+    // div.style.top = "100px";
+  // }
+};	
+*/
+
 
 init();		
 </script>
