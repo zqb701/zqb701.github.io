@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋a9</title>
+		<title>菱格紋b1</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -35,6 +35,8 @@ body {
 		
 	<canvas id="canvas2"  style="position: absolute;top:30px;left:0px;"></canvas>
 	<canvas id="canvas" style="position: absolute;top:30px;left:0px;"></canvas>
+	<canvas id="cmdpanel" style="position: absolute;top:30px;left:0px;"></canvas>
+	
 </body>
 <script>
 /*
@@ -61,6 +63,7 @@ body {
 	var canvas	= document.getElementById("canvas");
 	var canvasrect = canvas.getBoundingClientRect();
 	var cvs2		= document.getElementById("canvas2");
+	var cmdpanel = document.getElementById("cmdpanel");
 		
 	var gui = {};
 
@@ -98,8 +101,7 @@ init = function(){
 	mycanvas.drawText();
 	
 	
-				// canvas.height = window.innerHeight;
-	// canvas.width = window.innerWidth;
+				cmdpanel.height = window.innerHeight;	cmdpanel.width = window.innerWidth;
 	// document.getElementById("canvas").getContext("2d").translate( -50, -50);
 		tools.initArr();
 		// tools.log("init");
@@ -282,11 +284,13 @@ gui.gesturesMove=function (x, y){
 		let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
 		let y1 = e.target.getBoundingClientRect().top;
 		if(isZoon){
+			isZoon=false;
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
 			drawAlldmd();
+		}else{
+			gui.gesturesEnd(x - x1, y-y1);
 		}
-		gui.gesturesEnd(x - x1, y-y1);
 		e.preventDefault();
 	}
 	
@@ -330,7 +334,8 @@ gui.gesturesEnd=function (x, y){
 		if(answer){
 			// drawAlldmd();
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			tools.initArr();
+			aArray = new Array();
+			aArray[0] =  new Array(10);
 			localStorage.setItem("dmdArr", JSON.stringify(aArray));	//暫存編輯資料
 		}else{
 		 
@@ -474,6 +479,8 @@ tools.initArr = function(){
 
 tools.setArr = function(src){  
 /*指定的格點記錄為0或1*/
+//TODO 使用稀疏陣列
+//TODO 直接移除元素
 	let raw= src.raw;
 	let col = src.col;
 	
@@ -485,7 +492,7 @@ tools.setArr = function(src){
 				aArray[idxr].length = col;
 			
 		}
-		console.log("add col to", col);
+		// console.log("add col to", col);
 	}
 	
 	if(!aArray[raw]){
@@ -576,13 +583,13 @@ async function upload(){
   drawAlldmd();
 }
 
-    document.addEventListener('mousedown', gui.mouseDown);
-	document.addEventListener('mousemove',gui.mouseMove);
-	document.addEventListener('mouseup',gui.mouseUp);
+    cmdpanel.addEventListener('mousedown', gui.mouseDown);
+	cmdpanel.addEventListener('mousemove',gui.mouseMove);
+	cmdpanel.addEventListener('mouseup',gui.mouseUp);
 	
-	document.addEventListener('touchstart',		gui.touchStart);
-	document.addEventListener('touchmove',	gui.touchMove);
-	document.addEventListener('touchend',		gui.touchEnd);
+	cmdpanel.addEventListener('touchstart',		gui.touchStart);
+	cmdpanel.addEventListener('touchmove',	gui.touchMove);
+	cmdpanel.addEventListener('touchend',		gui.touchEnd);
 
 /*關閉視窗時*/	
 window.onbeforeunload = function() {
