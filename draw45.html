@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋b7</title>
+		<title>菱格紋b8</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -185,7 +185,6 @@ init = function(){
 			isZoon = false;
 			
 		if(touchCnt ==2){
-			let str = "";
 			isZoon = true;
 			//依中心點變化量移動
 			let x1 = e.targetTouches[1].pageX;
@@ -214,12 +213,15 @@ init = function(){
 			
 			//依距離變化量縮放
 			let dist = Math.sqrt((x0-x1)*(x0-x1) +(y0-y1)*(y0-y1))
+			if(!distPrev){
+				distPrev = dist;
+			}
 			let zoon = dist/distPrev;
 			
 			// str += ",z"+  zoon.toFixed(2);;
 			distPrev = dist;
-			// canvas.style.height = rect.height * zoon;
-			// canvas.style.width = rect.width * zoon;
+			canvas.style.height = rect.height * zoon;
+			canvas.style.width = rect.width * zoon;
 
 		}else{
 			let sftx = e.target.getBoundingClientRect().x - rect.left;
