@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋a8</title>
+		<title>菱格紋a9</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -11,7 +11,7 @@ body {
 	border: none;
 	margin: 0;
 	padding: 0;
-	overflow: hidden;
+	overflow: hidden;	//禁止滾動。overflow-x: hidden;只禁X軸
 }
 </style>
 
@@ -141,8 +141,8 @@ init = function(){
 		let y1 = e.target.getBoundingClientRect().top;
 		// console.log(~~x,~~y,~~x1,~~y1);
 		gui.gesturesStart(x-x1,y-y1);
-//		e.preventDefault();			//停止事件的默認動作
-		// e.stopPropagation();		//阻止事件冒泡
+		e.preventDefault();			//停止事件的默認動作
+		e.stopPropagation();		//阻止事件冒泡
 	}
 /*
 手勢操作
@@ -172,6 +172,9 @@ init = function(){
 	}
 	
 	gui.touchMove = function (e){
+		e.preventDefault();
+		e.stopPropagation();
+		
 		touchCnt = e.targetTouches.length;
 		
 		let x0 = e.targetTouches[0].pageX;
