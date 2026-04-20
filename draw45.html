@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋c3</title>
+		<title>菱格紋c4</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -35,7 +35,7 @@ body {
 		
 	<canvas id="canvas2"  style="position: absolute;top:30px;left:0px;"></canvas>
 	<canvas id="canvas" style="position: absolute;top:30px;left:0px;"></canvas>
-	<canvas id="cmdpanel" style="position: absolute;top:30px;left:0px;"></canvas>
+	<canvas id="cmdpanel" style="position: absolute;top:80px;left:50px;"></canvas>
 	
 </body>
 <script>
@@ -61,19 +61,20 @@ body {
 格點選取以複製、稿圖庫、浮水印
 */
 	var canvas	= document.getElementById("canvas");
-	let rect = canvas.getBoundingClientRect();
+	var rect = canvas.getBoundingClientRect();
 	var cvs2		= document.getElementById("canvas2");
 	var cmdpanel = document.getElementById("cmdpanel");
+	
+	var ctx = canvas.getContext("2d");
+	var ctx2 = cvs2.getContext("2d");	//底圖	
 		
-	var gui = {};
+	
 
 	var dmWidth = 10;
 	const sqrt2 = Math.sqrt(2);	//xor之後會留下格線
 	
-	var aArray =  new Array();
-	var ctx = canvas.getContext("2d");
-	var ctx2 = cvs2.getContext("2d");	//底圖	
 	
+	var aArray =  new Array();
 	var enGestures=false;	//判斷滑鼠有無「按住」,手機應該用不到
 	var isMove=false;	//單擊畫點時,由gest...End畫點, 但要避免連續畫點時,最後一點又畫一次,變清除
 	var isZoon=false;
@@ -85,6 +86,8 @@ body {
 	var centerY;
 	var distPrev;
 	var clickTime;
+	
+	var gui = {};
 		
 init = function(){
 	
@@ -92,6 +95,8 @@ init = function(){
 		// cvs2.top = 100;
 		canvas.width = 950;
 		canvas.height = 1280;
+		cmdpanel.width = 950;
+		cmdpanel.height = 1280;
 		
 		ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
 		ctx2.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
@@ -131,7 +136,7 @@ init = function(){
 		touchCnt = 1;	//因為手機版要判斷觸控點數,所以桌機版也要用此變數
 		e.preventDefault();
 		e.stopPropagation();
-		gui.gesturesStart(e.offsetX, e.offsetY);
+		gui.gesturesStart(e.pageX - rect.left, e.pageY - rect.top);
 	}
 	
 	gui.touchStart = function(e){
@@ -143,8 +148,8 @@ init = function(){
 		let y1 = e.target.getBoundingClientRect().top;
 		// console.log(~~x,~~y,~~x1,~~y1);
 		gui.gesturesStart(x-x1,y-y1);
-		e.preventDefault();			//停止事件的默認動作
-		e.stopPropagation();		//阻止事件冒泡
+		// e.preventDefault();			// 這行會報錯 //停止事件的默認動作
+		// e.stopPropagation();		//阻止事件冒泡
 	}
 /*
 手勢操作
@@ -169,7 +174,7 @@ init = function(){
 	}
 	
 	gui.mouseMove=function (e){
-		gui.gesturesMove(e.offsetX, e.offsetY);
+		gui.gesturesMove(e.pageX - rect.left, e.pageY - rect.top);
 		e.preventDefault();
 	}
 	
@@ -184,7 +189,7 @@ init = function(){
 
 			isZoon = false;
 			
-		if(touchCnt ==3){
+		if(touchCnt ==2){
 			isZoon = true;
 			//依中心點變化量移動
 			let x1 = e.targetTouches[1].pageX;
@@ -224,10 +229,10 @@ init = function(){
 			// canvas.style.width = rect.width * zoon;
 
 		}else{
-			let sftx = e.target.getBoundingClientRect().x - rect.left;
-			let sfty = e.target.getBoundingClientRect().y - rect.top;
+			// let sftx = e.target.getBoundingClientRect().x - rect.left;
+			// let sfty = e.target.getBoundingClientRect().y - rect.top;
 			// console.log(x0, e.target.getBoundingClientRect().x ,rect.left);
-			gui.gesturesMove(x0 - sftx, y0- sfty);
+			gui.gesturesMove(x0 - rect.left, y0- rect.top);
 		}
 		e.preventDefault();
 	}
@@ -261,7 +266,7 @@ gui.gesturesMove=function (x, y){
 	 
 	 if(false){		//移動模式// 暫時用browser的功能,只是解析度變低
 		//TODO邊界查
-		let rect = canvas.getBoundingClientRect();	//另有canvas.position().x;
+		// let rect = canvas.getBoundingClientRect();	//另有canvas.position().x;
 		 canvas.style.left = rect.left +(x-mouseX);
 		 canvas.style.top =canvas.getBoundingClientRect().top +(y-mouseY);
 		 // console.log("b:",x - mouseX,y - mouseY);
@@ -271,7 +276,7 @@ gui.gesturesMove=function (x, y){
 }
 	
 	gui.mouseUp = function (e){
-		gui.gesturesEnd(e.offsetX, e.offsetY);
+		gui.gesturesEnd(e.pageX - rect.left, e.pageY - rect.top);
 		e.preventDefault();
 	}
 	
@@ -294,10 +299,10 @@ gui.gesturesMove=function (x, y){
 			
 			// tools.log( str );
 		}else{
-			let sftx = e.target.getBoundingClientRect().x - rect.left;
-			let sfty = e.target.getBoundingClientRect().y - rect.top;
+			// let sftx = e.target.getBoundingClientRect().x - rect.left;
+			// let sfty = e.target.getBoundingClientRect().y - rect.top;
 			// console.log(x0, e.target.getBoundingClientRect().x ,rect.left);
-			gui.gesturesEnd(x0 - sftx, y0 - sfty);
+			gui.gesturesEnd(x0 - rect.left, y0 - rect.top);
 			// gui.gesturesEnd(x - x1, y-y1);
 		}
 		e.preventDefault();
@@ -415,7 +420,7 @@ var cmd={};
 cmd.test = function(){		
 	let str = "cmd.test:";
 	// upload();
-	let rect = canvas.getBoundingClientRect();
+	// let rect = canvas.getBoundingClientRect();
 	canvas.style.top = rect.y + 30;
 	str += "rect.y=" + rect.y;
 tools.log(str);
