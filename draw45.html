@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋a3</title>
+		<title>菱格紋a4</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -63,7 +63,7 @@ body_ {
 	var gui = {};
 
 	var dmWidth = 10;
-	const sqrt2 = 1.414;		//Math.sqrt(2);xor之後會留下格線
+	const sqrt2 = Math.sqrt(2);	//xor之後會留下格線
 	
 	var aArray =  new Array();
 	var ctx = canvas.getContext("2d");
@@ -72,7 +72,7 @@ body_ {
 	var enGestures=false;	//判斷滑鼠有無「按住」,手機應該用不到
 	var isMove=false;	//單擊畫點時,由gest...End畫點, 但要避免連續畫點時,最後一點又畫一次,變清除
 	var touchCnt;
-	var mode = 1;
+	var mode = 0;
 	var mouseX;
 	var mouseY;	
 	var centerX;
@@ -170,36 +170,53 @@ init = function(){
 	gui.touchMove = function (e){
 		touchCnt = e.targetTouches.length;
 		
-		
 		let x0 = e.targetTouches[0].pageX;
 		let y0 = e.targetTouches[0].pageY;
 		
 		let rect = e.target.getBoundingClientRect();
 			let x2 = rect.left;	//手機沒有offsetX可用
 			let y2 = rect.top;
+			isZoon = false;
 			
 		if(touchCnt ==2){
 			let str = "";
 			//依中心點變化量移動
 			let x1 = e.targetTouches[1].pageX;
-			let xx =  (x0+x1)/2;
-			canvas.style.left = x2 + (xx - centerX);
-			str += "x" + (~~xx);
+			let xC =  (x0+x1)/2;
+			let newLeft = x2 + (xC - centerX);
+			// if(newLeft >0){
+				// 不執行
+			// }
+			//let newRight = newLeft + width;
+			//if(newRight < screen.width){
+			//		//不執行	
+			//}
+			canvas.style.left = newLeft;
+	
 			centerX= xx;
 			
 			let y1 = e.targetTouches[1].pageY;
 			let yy =  (y0+y1)/2;
-			str += ",y" + (~~yy);
-			canvas.style.top = y2 + (yy - centerY);
+			let newTop = y2 + (yy - centerY);
+			// if(newTop > 0){
+				// newTop =0;
+			// }
+			canvas.style.top = newTop;
 			centerY= yy;
 			
 			//依距離變化量縮放
 			let dist = Math.sqrt((x0-x1)*(x0-x1) +(y0-y1)*(y0-y1))
 			let zoon = dist/distPrev;
-			str += ",z"+  zoon.toFixed(2);;
+			isZoon = true;
+			// str += ",z"+  zoon.toFixed(2);;
 			distPrev = dist;
 			canvas.style.height = rect.height * zoon;
 			canvas.style.width = rect.width * zoon;
+			str += "x"+canvas.style.left;
+			str += "y"+canvas.style.top;
+			str += "w"+canvas.style.width;
+			str += "h"+canvas.style.height;
+			
 			tools.log( str );
 		}else{
 			gui.gesturesMove(x0 - x2, y0-y2);
@@ -257,6 +274,10 @@ gui.gesturesMove=function (x, y){
 		let x = e.changedTouches[0].pageX;
 		let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
 		let y1 = e.target.getBoundingClientRect().top;
+		if(isZoon){
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			drawAlldmd();
+		}
 		gui.gesturesEnd(x - x1, y-y1);
 		e.preventDefault();
 	}
@@ -280,7 +301,7 @@ gui.gesturesEnd=function (x, y){
 				oldY = tar.y;
 			}
 		}else{
-			cmd.swmode();
+			// cmd.swmode();
 		}
 	}
 
