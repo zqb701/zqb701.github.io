@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋e</title>
+		<title>菱格紋f</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -74,13 +74,15 @@ body_ {
 	var ctx = canvas.getContext("2d");
 	var ctx2 = cvs2.getContext("2d");	//底圖	
 	
-	var enGestures=false;
+	var enGestures=false;	//判斷滑鼠有無「按住」,手機應該用不到
 	var isMove=false;	//單擊畫點時,由gest...End畫點, 但要避免連續畫點時,最後一點又畫一次,變清除
-	
+	var touchCnt;
 	var mode = 1;
 	var mouseX;
-	var mouseY;
-	
+	var mouseY;	
+	var centerX;
+	var centerY;
+	var distPrev;
 	var clickTime;
 		
 init = function(){
@@ -132,7 +134,7 @@ init = function(){
 	}
 	
 	gui.touchStart = function(e){
-		let touchCnt = e.targetTouches.length;
+		touchCnt = e.targetTouches.length;
 		tools.log("touchCnt=" + touchCnt);
 		let x = e.targetTouches[0].pageX;
 		let y = e.targetTouches[0].pageY;
@@ -152,6 +154,7 @@ init = function(){
 3&4顯示控制器
 1&2隱常控制器
 */
+/* 手機與桌機共用事件*/
 	gui.gesturesStart=function (x,y){
 		enGestures = true;
 		isMove = false;
@@ -170,11 +173,38 @@ init = function(){
 	}
 	
 	gui.touchMove = function (e){
-		let x = e.targetTouches[0].pageX;
-		let y = e.targetTouches[0].pageY;
-		let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
-		let y1 = e.target.getBoundingClientRect().top;
-		gui.gesturesMove(x - x1, y-y1);
+		touchCnt = e.targetTouches.length;
+		tools.log("touchCnt=" + touchCnt);
+		
+		let x0 = e.targetTouches[0].pageX;
+		let y0 = e.targetTouches[0].pageY;
+		
+		let rect = e.target.getBoundingClientRect();
+			let x2 = rect.left;	//手機沒有offsetX可用
+			let y2 = rect.top;
+			
+		if(touchCnt ==2){
+			//依中心點變化量移動
+			let x1 = e.targetTouches[1].pageX;
+			let xx =  (x0+x1)/2;
+			canvas.left = x2 + (xx - centerX);
+			centerX= xx;
+			
+			let y1 = e.targetTouches[1].pageY;
+			let yy =  (y0+y1)/2;
+			canvas.top = y2 + (yy - centerY);
+			centerY= yy;
+			
+			//依距離變化量縮放
+			let dist = Math.sqrt((x0-x1)*(x0-x1) +(y0-y1)*(y0-y1))
+			let zoon = dist/distPrev;
+			distPrev = dist;
+			canvas.height = rect.height * zoon;
+			canvas.width = rect.width * zoon;
+			
+		}else{
+			gui.gesturesMove(x0 - x2, y0-y2);
+		}
 		e.preventDefault();
 	}
 
@@ -189,12 +219,12 @@ gui.gesturesMove=function (x, y){
 		return;
 	}
 	
-	if(mode==0){
+	if(mode==0 && touchCnt==1){	//單點觸擊才畫
 		isMove = true;
 		let tar = tools.rotate45(x, y, dmWidth);
 		
-		if(tar.x == oldX && tar.y == oldY){		//避免同一格範圍內重覆繪製(改用列行較佳)
-			
+		if(tar.x == oldX && tar.y == oldY){
+					//同一格範圍內不再繪製(改用列行較佳)
 		}else{
 			let theCR = tools.getColRaw(tar.x, tar.y);
 			tools.setArr(theCR);
@@ -203,6 +233,7 @@ gui.gesturesMove=function (x, y){
 			oldY = tar.y;
 		}
 	 }
+
 	 
 	 if(false){		//移動模式// 暫時用browser的功能,只是解析度變低
 		//TODO邊界查
@@ -221,6 +252,8 @@ gui.gesturesMove=function (x, y){
 	}
 	
 	gui.touchEnd=function (e){
+		touchCnt = e.targetTouches.length;
+		tools.log("touchCnt=" + touchCnt);
 		let x = e.touches[0].pageX;
 		let y = e.touches[0].pageY;
 		let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
