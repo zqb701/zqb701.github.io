@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋c4</title>
+		<title>菱格紋c5</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -61,7 +61,7 @@ body {
 格點選取以複製、稿圖庫、浮水印
 */
 	var canvas	= document.getElementById("canvas");
-	var rect = canvas.getBoundingClientRect();
+	
 	var cvs2		= document.getElementById("canvas2");
 	var cmdpanel = document.getElementById("cmdpanel");
 	
@@ -136,6 +136,7 @@ init = function(){
 		touchCnt = 1;	//因為手機版要判斷觸控點數,所以桌機版也要用此變數
 		e.preventDefault();
 		e.stopPropagation();
+		let rect = canvas.getBoundingClientRect();
 		gui.gesturesStart(e.pageX - rect.left, e.pageY - rect.top);
 	}
 	
@@ -174,6 +175,7 @@ init = function(){
 	}
 	
 	gui.mouseMove=function (e){
+		let rect = canvas.getBoundingClientRect();
 		gui.gesturesMove(e.pageX - rect.left, e.pageY - rect.top);
 		e.preventDefault();
 	}
@@ -192,6 +194,7 @@ init = function(){
 		if(touchCnt ==2){
 			isZoon = true;
 			//依中心點變化量移動
+			let rect = canvas.getBoundingClientRect();
 			let x1 = e.targetTouches[1].pageX;
 			let xC =  (x0+x1)/2;
 			let newLeft = rect.left + (xC - centerX);
@@ -225,13 +228,14 @@ init = function(){
 			
 			// str += ",z"+  zoon.toFixed(2);;
 			distPrev = dist;
-			// canvas.style.height = rect.height * zoon;
-			// canvas.style.width = rect.width * zoon;
+			canvas.style.height = rect.height * zoon;
+			canvas.style.width = rect.width * zoon;
 
 		}else{
 			// let sftx = e.target.getBoundingClientRect().x - rect.left;
 			// let sfty = e.target.getBoundingClientRect().y - rect.top;
 			// console.log(x0, e.target.getBoundingClientRect().x ,rect.left);
+			let rect = canvas.getBoundingClientRect();
 			gui.gesturesMove(x0 - rect.left, y0- rect.top);
 		}
 		e.preventDefault();
@@ -262,22 +266,12 @@ gui.gesturesMove=function (x, y){
 			oldY = tar.y;
 		}
 	 }
-
-	 
-	 if(false){		//移動模式// 暫時用browser的功能,只是解析度變低
-		//TODO邊界查
-		// let rect = canvas.getBoundingClientRect();	//另有canvas.position().x;
-		 canvas.style.left = rect.left +(x-mouseX);
-		 canvas.style.top =canvas.getBoundingClientRect().top +(y-mouseY);
-		 // console.log("b:",x - mouseX,y - mouseY);
-		mouseX = x;
-		mouseY = y;
-	 }
 }
 	
 	gui.mouseUp = function (e){
+		let rect = canvas.getBoundingClientRect();
 		gui.gesturesEnd(e.pageX - rect.left, e.pageY - rect.top);
-		e.preventDefault();
+		// e.preventDefault();
 	}
 	
 	gui.touchEnd=function (e){
@@ -285,8 +279,8 @@ gui.gesturesMove=function (x, y){
 		// tools.log("touchCnt=" + touchCnt);
 		let y0 = e.changedTouches[0].pageY;	//touchEnd沒有 targetTouches
 		let x0 = e.changedTouches[0].pageX;
-		let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
-		let y1 = e.target.getBoundingClientRect().top;
+		// let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
+		// let y1 = e.target.getBoundingClientRect().top;
 		if(isZoon){
 			isZoon=false;
 			// ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -302,10 +296,11 @@ gui.gesturesMove=function (x, y){
 			// let sftx = e.target.getBoundingClientRect().x - rect.left;
 			// let sfty = e.target.getBoundingClientRect().y - rect.top;
 			// console.log(x0, e.target.getBoundingClientRect().x ,rect.left);
+			let rect = canvas.getBoundingClientRect();
 			gui.gesturesEnd(x0 - rect.left, y0 - rect.top);
 			// gui.gesturesEnd(x - x1, y-y1);
 		}
-		e.preventDefault();
+		// e.preventDefault();//這行會報錯
 	}
 	
 gui.gesturesEnd=function (x, y){
@@ -318,6 +313,7 @@ gui.gesturesEnd=function (x, y){
 		let delay =  Date.now() - clickTime;
 		if(delay <200){
 			if(mode==0){//編輯
+			console.log("gesturesEnd");
 				let tar = tools.rotate45(x, y, dmWidth);
 				let theCR = tools.getColRaw(tar.x, tar.y);
 				tools.setArr(theCR);
@@ -420,7 +416,7 @@ var cmd={};
 cmd.test = function(){		
 	let str = "cmd.test:";
 	// upload();
-	// let rect = canvas.getBoundingClientRect();
+	let rect = canvas.getBoundingClientRect();
 	canvas.style.top = rect.y + 30;
 	str += "rect.y=" + rect.y;
 tools.log(str);
