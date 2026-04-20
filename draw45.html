@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋b5</title>
+		<title>菱格紋b6</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -61,7 +61,7 @@ body {
 格點選取以複製、稿圖庫、浮水印
 */
 	var canvas	= document.getElementById("canvas");
-	var canvasrect = canvas.getBoundingClientRect();
+	let rect = canvas.getBoundingClientRect();
 	var cvs2		= document.getElementById("canvas2");
 	var cmdpanel = document.getElementById("cmdpanel");
 		
@@ -182,13 +182,14 @@ init = function(){
 		let x0 = e.targetTouches[0].pageX;
 		let y0 = e.targetTouches[0].pageY;
 		
-		let rect = canvas.getBoundingClientRect();
+		
 
 
 			isZoon = false;
 			
 		if(touchCnt ==2){
 			let str = "";
+			isZoon = true;
 			//依中心點變化量移動
 			let x1 = e.targetTouches[1].pageX;
 			let xC =  (x0+x1)/2;
@@ -217,21 +218,17 @@ init = function(){
 			//依距離變化量縮放
 			let dist = Math.sqrt((x0-x1)*(x0-x1) +(y0-y1)*(y0-y1))
 			let zoon = dist/distPrev;
-			isZoon = true;
+			
 			// str += ",z"+  zoon.toFixed(2);;
 			distPrev = dist;
 			canvas.style.height = rect.height * zoon;
 			canvas.style.width = rect.width * zoon;
-			str += "x"+ (~~rect.left);
-			str += ",y"+ (~~rect.top);
-			str += ",w"+ (~~rect.width);
-			str += ",h"+ (~~rect.height);
-			
-			tools.log( str );
+
 		}else{
-			let sftx = rect.left - e.target.getBoundingClientRect().x;
-			let sfty = rect.top - e.target.getBoundingClientRect().y;
-			gui.gesturesMove(x0 - sftx, y0-sfty);
+			let sftx = e.target.getBoundingClientRect().x - rect.left;
+			let sfty = e.target.getBoundingClientRect().y - rect.top;
+			// console.log(x0, e.target.getBoundingClientRect().x ,rect.left);
+			gui.gesturesMove(x0 - sftx, y0- sfty);
 		}
 		e.preventDefault();
 	}
@@ -282,17 +279,27 @@ gui.gesturesMove=function (x, y){
 	gui.touchEnd=function (e){
 		touchCnt = e.changedTouches.length;
 		// tools.log("touchCnt=" + touchCnt);
-		let y = e.changedTouches[0].pageY;	//touchEnd沒有 targetTouches
-		let x = e.changedTouches[0].pageX;
+		let y0 = e.changedTouches[0].pageY;	//touchEnd沒有 targetTouches
+		let x0 = e.changedTouches[0].pageX;
 		let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
 		let y1 = e.target.getBoundingClientRect().top;
 		if(isZoon){
 			isZoon=false;
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
-			drawAlldmd();
+			// ctx.clearRect(0, 0, canvas.width, canvas.height);
+			// ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
+			// drawAlldmd();
+			let str = "x"+ (~~rect.left);
+			str += ",y"+ (~~rect.top);
+			str += ",w"+ (~~rect.width);
+			str += ",h"+ (~~rect.height);
+			
+			tools.log( str );
 		}else{
-			gui.gesturesEnd(x - x1, y-y1);
+			let sftx = e.target.getBoundingClientRect().x - rect.left;
+			let sfty = e.target.getBoundingClientRect().y - rect.top;
+			// console.log(x0, e.target.getBoundingClientRect().x ,rect.left);
+			gui.gesturesEnd(x0 - sftx, y0 - sfty);
+			// gui.gesturesEnd(x - x1, y-y1);
 		}
 		e.preventDefault();
 	}
@@ -400,10 +407,10 @@ mycanvas.drawText = function(){
 	// ctx.strokeStyle="#D50A17" //設定文字邊框
 	// ctx.strokeText("好像快沒梗", 10, 150) //邊框文字
 
-	let textWidth=ctx2.measureText("永").width //測量文字寬度
-	let textHeight=ctx2.measureText("永").height //測量文字高度
+	let textWidth=ctx2.measureText("茶").width //測量文字寬度
+	let textHeight=ctx2.measureText("茶").height //測量文字高度
 	// console.log(textWidth,textHeight);
-	ctx2.fillText("永", 0, 250)  //填滿文字, 座標從左下角起算
+	ctx2.fillText("茶", 0, 250)  //填滿文字, 座標從左下角起算
 }
 var cmd={};
 cmd.test = function(){		
