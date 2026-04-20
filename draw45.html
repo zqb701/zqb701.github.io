@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋a1</title>
+		<title>菱格紋a2</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -29,16 +29,11 @@ body_ {
 </div>	
 	<div id="cmd01" 
 	style="position: fixed; border: 5px solid yellow;top:5px;left:5px;user-select:none;cursor: pointer;" onClick="cmd.swmode();" draggable="true">1</div>
-	
-<div style_="display: flex; flex-wrap:wrap;">
-	
-	<div id="cmd02" style="position: absolute;border: 5px solid yellow;left:30px;
-	cursor: pointer;user-select:none;" onClick="cmd.test();">d</div>
-	
-	<canvas id="canvas2"  style="position: absolute;top:30px;left:10px;"></canvas>
-	<canvas id="canvas" style="position: absolute;top:30px;left:10px;" draggable="true"></canvas>
-	
-</div>
+		
+	<div id="cmd02" style="position: absolute;border: 5px solid yellow;left:300px;top:0px;	cursor: pointer;user-select:none;" onClick="cmd.test();">cmd</div>
+		
+	<canvas id="canvas2"  style="position: absolute;top:0px;left:0px;"></canvas>
+	<canvas id="canvas" style="position: absolute;top:30px;left:30px;"></canvas>
 </body>
 <script>
 /*
@@ -188,23 +183,23 @@ init = function(){
 			//依中心點變化量移動
 			let x1 = e.targetTouches[1].pageX;
 			let xx =  (x0+x1)/2;
-			canvas.left = x2 + (xx - centerX);
+			canvas.style.left = x2 + (xx - centerX);
 			str += "x" + (~~xx);
 			centerX= xx;
 			
 			let y1 = e.targetTouches[1].pageY;
 			let yy =  (y0+y1)/2;
 			str += ",y" + (~~yy);
-			canvas.top = y2 + (yy - centerY);
+			canvas.style.top = y2 + (yy - centerY);
 			centerY= yy;
 			
 			//依距離變化量縮放
 			let dist = Math.sqrt((x0-x1)*(x0-x1) +(y0-y1)*(y0-y1))
 			let zoon = dist/distPrev;
-			str += ",z"+(~~zoon);
+			str += ",z"+  zoon.toFixed(2);;
 			distPrev = dist;
-			canvas.height = rect.height * zoon;
-			canvas.width = rect.width * zoon;
+			canvas.style.height = rect.height * zoon;
+			canvas.style.width = rect.width * zoon;
 			tools.log( str );
 		}else{
 			gui.gesturesMove(x0 - x2, y0-y2);
@@ -374,11 +369,13 @@ mycanvas.drawText = function(){
 	ctx2.fillText("永", 0, 250)  //填滿文字, 座標從左下角起算
 }
 var cmd={};
-cmd.test = function(){
+cmd.test = function(){		
+	let str = "cmd.test:";
 	// upload();
-	tools.saveFile('0418.dm1');
-	
-	tools.log("cmd.test");
+	let rect = canvas.getBoundingClientRect();
+	canvas.style.top = rect.y + 30;
+	str += "rect.y=" + rect.y;
+tools.log(str);
 }
 
 
