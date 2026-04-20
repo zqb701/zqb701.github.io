@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋f</title>
+		<title>菱格紋a1</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -19,7 +19,7 @@ body_ {
 </head>
 <body>
 <div>
-	<div style="display: inline-block;">xxx</div>
+	<div style="display: inline-block;">____</div>
 	<div onClick="tools.saveFile();" style="display: inline-block;">儲存</div>
 	<div onClick="upload();" style="display: inline-block;">載入</div>
 	<div onClick="drawClearAll();" style="display: inline-block;">清空</div>
@@ -189,19 +189,19 @@ init = function(){
 			let x1 = e.targetTouches[1].pageX;
 			let xx =  (x0+x1)/2;
 			canvas.left = x2 + (xx - centerX);
-			str += xx +",";
+			str += "x" + (~~xx);
 			centerX= xx;
 			
 			let y1 = e.targetTouches[1].pageY;
 			let yy =  (y0+y1)/2;
-			str += yy +",";
+			str += ",y" + (~~yy);
 			canvas.top = y2 + (yy - centerY);
 			centerY= yy;
 			
 			//依距離變化量縮放
 			let dist = Math.sqrt((x0-x1)*(x0-x1) +(y0-y1)*(y0-y1))
 			let zoon = dist/distPrev;
-			str += zoon;
+			str += ",z"+(~~zoon);
 			distPrev = dist;
 			canvas.height = rect.height * zoon;
 			canvas.width = rect.width * zoon;
