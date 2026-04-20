@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋b9</title>
+		<title>菱格紋c1</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -220,8 +220,8 @@ init = function(){
 			
 			// str += ",z"+  zoon.toFixed(2);;
 			distPrev = dist;
-			canvas.style.height = rect.height * zoon;
-			canvas.style.width = rect.width * zoon;
+			// canvas.style.height = rect.height * zoon;
+			// canvas.style.width = rect.width * zoon;
 
 		}else{
 			let sftx = e.target.getBoundingClientRect().x - rect.left;
@@ -287,12 +287,12 @@ gui.gesturesMove=function (x, y){
 			// ctx.clearRect(0, 0, canvas.width, canvas.height);
 			// ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
 			// drawAlldmd();
-			let str = "x"+ (~~rect.left);
-			str += ",y"+ (~~rect.top);
-			str += ",w"+ (~~rect.width);
-			str += ",h"+ (~~rect.height);
+			// let str = "x"+ (~~rect.left);
+			// str += ",y"+ (~~rect.top);
+			// str += ",w"+ (~~rect.width);
+			// str += ",h"+ (~~rect.height);
 			
-			tools.log( str );
+			// tools.log( str );
 		}else{
 			let sftx = e.target.getBoundingClientRect().x - rect.left;
 			let sfty = e.target.getBoundingClientRect().y - rect.top;
