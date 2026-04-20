@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋a5</title>
+		<title>菱格紋a6</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -212,10 +212,10 @@ init = function(){
 			distPrev = dist;
 			canvas.style.height = rect.height * zoon;
 			canvas.style.width = rect.width * zoon;
-			str += "x"+canvas.style.left;
-			str += "y"+canvas.style.top;
-			str += "w"+canvas.style.width;
-			str += "h"+canvas.style.height;
+			str += "x"+rect.left;
+			str += ",y"+rect.top;
+			str += ",w"+rect.width;
+			str += ",h"+rect.height;
 			
 			tools.log( str );
 		}else{
