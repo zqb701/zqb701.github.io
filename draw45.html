@@ -174,7 +174,7 @@ init = function(){
 	
 	gui.touchMove = function (e){
 		touchCnt = e.targetTouches.length;
-		tools.log("touchCnt=" + touchCnt);
+		
 		
 		let x0 = e.targetTouches[0].pageX;
 		let y0 = e.targetTouches[0].pageY;
@@ -184,24 +184,28 @@ init = function(){
 			let y2 = rect.top;
 			
 		if(touchCnt ==2){
+			let str = "";
 			//依中心點變化量移動
 			let x1 = e.targetTouches[1].pageX;
 			let xx =  (x0+x1)/2;
 			canvas.left = x2 + (xx - centerX);
+			str += xx +",";
 			centerX= xx;
 			
 			let y1 = e.targetTouches[1].pageY;
 			let yy =  (y0+y1)/2;
+			str += yy +",";
 			canvas.top = y2 + (yy - centerY);
 			centerY= yy;
 			
 			//依距離變化量縮放
 			let dist = Math.sqrt((x0-x1)*(x0-x1) +(y0-y1)*(y0-y1))
 			let zoon = dist/distPrev;
+			str += zoon;
 			distPrev = dist;
 			canvas.height = rect.height * zoon;
 			canvas.width = rect.width * zoon;
-			
+			tools.log( str );
 		}else{
 			gui.gesturesMove(x0 - x2, y0-y2);
 		}
@@ -254,8 +258,8 @@ gui.gesturesMove=function (x, y){
 	gui.touchEnd=function (e){
 		touchCnt = e.targetTouches.length;
 		tools.log("touchCnt=" + touchCnt);
-		let x = e.touches[0].pageX;
-		let y = e.touches[0].pageY;
+		let y = e.changedTouches[0].pageY;	//touchEnd沒有 targetTouches
+		let x = e.changedTouches[0].pageX;
 		let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
 		let y1 = e.target.getBoundingClientRect().top;
 		gui.gesturesEnd(x - x1, y-y1);
