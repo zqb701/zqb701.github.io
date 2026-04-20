@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋a4</title>
+		<title>菱格紋a5</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -28,7 +28,7 @@ body_ {
 	
 </div>	
 	<div id="cmd01" 
-	style="position: fixed; border: 5px solid yellow;top:5px;left:5px;user-select:none;cursor: pointer;" onClick="cmd.swmode();" draggable="true">1</div>
+	style="position: fixed; border: 5px solid yellow;top:5px;left:5px;user-select:none;cursor: pointer;" onClick="cmd.swmode();" draggable="true">0</div>
 		
 	<div id="cmd02" style="position: absolute;border: 5px solid yellow;left:300px;top:0px;	cursor: pointer;user-select:none;" onClick="cmd.test();">cmd</div>
 		
@@ -193,7 +193,7 @@ init = function(){
 			//}
 			canvas.style.left = newLeft;
 	
-			centerX= xx;
+			centerX= xC;
 			
 			let y1 = e.targetTouches[1].pageY;
 			let yy =  (y0+y1)/2;
@@ -417,6 +417,7 @@ cmd.swmode = function(){
 		canvas.addEventListener('touchmove',	gui.touchMove);
 		canvas.addEventListener('touchend',		gui.touchEnd);
 	}
+	
 	if(mode ==1){
 		//把事件移除, 就能使用瀏覽器的移動與縮放
 		canvas.removeEventListener('touchstart',		gui.touchStart);
@@ -584,6 +585,9 @@ async function upload(){
 	canvas.addEventListener('mousemove',gui.mouseMove);
 	canvas.addEventListener('mouseup',gui.mouseUp);
 	
+				canvas.addEventListener('touchstart',		gui.touchStart);
+		canvas.addEventListener('touchmove',	gui.touchMove);
+		canvas.addEventListener('touchend',		gui.touchEnd);
 
 /*關閉視窗時*/	
 window.onbeforeunload = function() {
