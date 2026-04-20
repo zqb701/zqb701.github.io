@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋c6</title>
+		<title>菱格紋c8</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -136,8 +136,8 @@ init = function(){
 		touchCnt = 1;	//因為手機版要判斷觸控點數,所以桌機版也要用此變數
 		e.preventDefault();
 		e.stopPropagation();
-		let rect = canvas.getBoundingClientRect();
-		gui.gesturesStart(e.pageX - rect.left, e.pageY - rect.top);
+
+		gui.gesturesStart(e.pageX, e.pageY);
 	}
 	
 	gui.touchStart = function(e){
@@ -148,7 +148,7 @@ init = function(){
 		let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
 		let y1 = e.target.getBoundingClientRect().top;
 		// console.log(~~x,~~y,~~x1,~~y1);
-		gui.gesturesStart(x-x1,y-y1);
+		gui.gesturesStart(x,y);
 		// e.preventDefault();			// 這行會報錯 //停止事件的默認動作
 		// e.stopPropagation();		//阻止事件冒泡
 	}
@@ -175,8 +175,8 @@ init = function(){
 	}
 	
 	gui.mouseMove=function (e){
-		let rect = canvas.getBoundingClientRect();
-		gui.gesturesMove(e.pageX - rect.left, e.pageY - rect.top);
+		// let rect = canvas.getBoundingClientRect();
+		gui.gesturesMove(e.pageX, e.pageY);
 		e.preventDefault();
 	}
 	
@@ -199,15 +199,9 @@ init = function(){
 			let xC =  (x0+x1)/2;
 			let newLeft = rect.left + (xC - centerX);
 			let newRight = rect.right + (xC - centerX);
-			// if(newLeft <0 &&  newRight >  window.innerWidth ){	//限制移動範圍
+			if(newLeft <0 &&  newRight >  window.innerWidth ){	//限制移動範圍
 				canvas.style.left = newLeft;
-			// }
-			//let newRight = newLeft + width;
-			//if(newRight < screen.width){
-			//		//不執行	
-			//}
-			
-	
+			}
 			centerX= xC;
 			
 			let y1 = e.targetTouches[1].pageY;
@@ -272,8 +266,8 @@ gui.gesturesMove=function (x, y){
 }
 	
 	gui.mouseUp = function (e){
-		let rect = canvas.getBoundingClientRect();
-		gui.gesturesEnd(e.pageX - rect.left, e.pageY - rect.top);
+		// let rect = canvas.getBoundingClientRect();
+		gui.gesturesEnd(e.pageX, e.pageY);
 		// e.preventDefault();
 	}
 	
@@ -299,8 +293,8 @@ gui.gesturesMove=function (x, y){
 			// let sftx = e.target.getBoundingClientRect().x - rect.left;
 			// let sfty = e.target.getBoundingClientRect().y - rect.top;
 			// console.log(x0, e.target.getBoundingClientRect().x ,rect.left);
-			let rect = canvas.getBoundingClientRect();
-			gui.gesturesEnd(x0 - rect.left, y0 - rect.top);
+			
+			gui.gesturesEnd(x0 , y0);
 			// gui.gesturesEnd(x - x1, y-y1);
 		}
 		// e.preventDefault();//這行會報錯
@@ -316,8 +310,9 @@ gui.gesturesEnd=function (x, y){
 		let delay =  Date.now() - clickTime;
 		if(delay <200){
 			if(mode==0){//編輯
-			console.log("gesturesEnd");
-				let tar = tools.rotate45(x, y, dmWidth);
+			// console.log("gesturesEnd");
+				let rect = canvas.getBoundingClientRect();
+				let tar = tools.rotate45(x - rect.left, y - rect.top, dmWidth);
 				let theCR = tools.getColRaw(tar.x, tar.y);
 				tools.setArr(theCR);
 				
