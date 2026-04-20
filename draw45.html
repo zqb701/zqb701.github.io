@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋c5</title>
+		<title>菱格紋c6</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -61,7 +61,7 @@ body {
 格點選取以複製、稿圖庫、浮水印
 */
 	var canvas	= document.getElementById("canvas");
-	
+	//TODO var rect改為全域
 	var cvs2		= document.getElementById("canvas2");
 	var cmdpanel = document.getElementById("cmdpanel");
 	
@@ -235,8 +235,10 @@ init = function(){
 			// let sftx = e.target.getBoundingClientRect().x - rect.left;
 			// let sfty = e.target.getBoundingClientRect().y - rect.top;
 			// console.log(x0, e.target.getBoundingClientRect().x ,rect.left);
-			let rect = canvas.getBoundingClientRect();
-			gui.gesturesMove(x0 - rect.left, y0- rect.top);
+			
+			// let rect = canvas.getBoundingClientRect();
+			// gui.gesturesMove(x0 - rect.left, y0- rect.top);
+			gui.gesturesMove(x0, y0);
 		}
 		e.preventDefault();
 	}
@@ -254,7 +256,8 @@ gui.gesturesMove=function (x, y){
 	
 	if(mode==0 && touchCnt==1){	//單點觸擊才畫
 		isMove = true;
-		let tar = tools.rotate45(x, y, dmWidth);
+		let rect = canvas.getBoundingClientRect();
+		let tar = tools.rotate45(x - rect.left, y - rect.top, dmWidth);
 		
 		if(tar.x == oldX && tar.y == oldY){
 					//同一格範圍內不再繪製(改用列行較佳)
@@ -419,7 +422,7 @@ cmd.test = function(){
 	let rect = canvas.getBoundingClientRect();
 	canvas.style.top = rect.y + 30;
 	str += "rect.y=" + rect.y;
-tools.log(str);
+// tools.log(str);
 }
 
 
