@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋a6</title>
+		<title>菱格紋a7</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -33,7 +33,7 @@ body_ {
 	<div id="cmd02" style="position: absolute;border: 5px solid yellow;left:300px;top:0px;	cursor: pointer;user-select:none;" onClick="cmd.test();">cmd</div>
 		
 	<canvas id="canvas2"  style="position: absolute;top:30px;left:0px;"></canvas>
-	<canvas id="canvas" style="position: absolute;top:40px;left:30px;"></canvas>
+	<canvas id="canvas" style="position: absolute;top:30px;left:0px;"></canvas>
 </body>
 <script>
 /*
@@ -58,6 +58,7 @@ body_ {
 格點選取以複製、稿圖庫、浮水印
 */
 	var canvas	= document.getElementById("canvas");
+	var canvasrect = canvas.getBoundingClientRect();
 	var cvs2		= document.getElementById("canvas2");
 		
 	var gui = {};
@@ -71,6 +72,7 @@ body_ {
 	
 	var enGestures=false;	//判斷滑鼠有無「按住」,手機應該用不到
 	var isMove=false;	//單擊畫點時,由gest...End畫點, 但要避免連續畫點時,最後一點又畫一次,變清除
+	var isZoon=false;
 	var touchCnt;
 	var mode = 0;
 	var mouseX;
@@ -123,6 +125,7 @@ init = function(){
 	// ctx.strokeRect(canvas.width/3,canvas.height/3,canvas.width/3,canvas.height/3);//內框
 	
 	gui.mouseDown = function (e){
+		touchCnt = 1;	//因為手機版要判斷觸控點數,所以桌機版也要用此變數
 		e.preventDefault();
 		e.stopPropagation();
 		gui.gesturesStart(e.offsetX, e.offsetY);
@@ -130,14 +133,14 @@ init = function(){
 	
 	gui.touchStart = function(e){
 		touchCnt = e.targetTouches.length;
-		tools.log("touchCnt=" + touchCnt);
+		// tools.log("touchCnt=" + touchCnt);
 		let x = e.targetTouches[0].pageX;
 		let y = e.targetTouches[0].pageY;
 		let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
 		let y1 = e.target.getBoundingClientRect().top;
 		// console.log(~~x,~~y,~~x1,~~y1);
 		gui.gesturesStart(x-x1,y-y1);
-		e.preventDefault();			//停止事件的默認動作
+//		e.preventDefault();			//停止事件的默認動作
 		// e.stopPropagation();		//阻止事件冒泡
 	}
 /*
@@ -184,14 +187,14 @@ init = function(){
 			let x1 = e.targetTouches[1].pageX;
 			let xC =  (x0+x1)/2;
 			let newLeft = x2 + (xC - centerX);
-			// if(newLeft >0){
-				// 不執行
-			// }
+			if(newLeft <0 && rect.right >  window.innerWidth ){
+				canvas.style.left = newLeft;
+			}
 			//let newRight = newLeft + width;
 			//if(newRight < screen.width){
 			//		//不執行	
 			//}
-			canvas.style.left = newLeft;
+			
 	
 			centerX= xC;
 			
@@ -212,10 +215,10 @@ init = function(){
 			distPrev = dist;
 			canvas.style.height = rect.height * zoon;
 			canvas.style.width = rect.width * zoon;
-			str += "x"+rect.left;
-			str += ",y"+rect.top;
-			str += ",w"+rect.width;
-			str += ",h"+rect.height;
+			str += "x"+ (~~rect.left);
+			str += ",y"+ (~~rect.top);
+			str += ",w"+ (~~rect.width);
+			str += ",h"+ (~~rect.height);
 			
 			tools.log( str );
 		}else{
@@ -268,14 +271,15 @@ gui.gesturesMove=function (x, y){
 	}
 	
 	gui.touchEnd=function (e){
-		touchCnt = e.targetTouches.length;
-		tools.log("touchCnt=" + touchCnt);
+		touchCnt = e.changedTouches.length;
+		// tools.log("touchCnt=" + touchCnt);
 		let y = e.changedTouches[0].pageY;	//touchEnd沒有 targetTouches
 		let x = e.changedTouches[0].pageX;
 		let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
 		let y1 = e.target.getBoundingClientRect().top;
 		if(isZoon){
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
 			drawAlldmd();
 		}
 		gui.gesturesEnd(x - x1, y-y1);
@@ -322,7 +326,7 @@ gui.gesturesEnd=function (x, y){
 		if(answer){
 			// drawAlldmd();
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			aArray=[];
+			tools.initArr();
 			localStorage.setItem("dmdArr", JSON.stringify(aArray));	//暫存編輯資料
 		}else{
 		 
@@ -412,18 +416,6 @@ cmd.swmode = function(){
 	}
 	document.getElementById("cmd01").innerText = mode;
 	tools.log("mode="+mode);
-	if(mode ==0){
-			canvas.addEventListener('touchstart',		gui.touchStart);
-		canvas.addEventListener('touchmove',	gui.touchMove);
-		canvas.addEventListener('touchend',		gui.touchEnd);
-	}
-	
-	if(mode ==1){
-		//把事件移除, 就能使用瀏覽器的移動與縮放
-		canvas.removeEventListener('touchstart',		gui.touchStart);
-		canvas.removeEventListener('touchmove',	gui.touchMove);
-		canvas.removeEventListener('touchend',		gui.touchEnd);
-	}
 	// console.log(mode);
 }
 
@@ -473,7 +465,6 @@ tools.initArr = function(){
 			aArray[raw]=new Array(10);
 		}
 	}
-	
 }
 
 
@@ -581,13 +572,13 @@ async function upload(){
   drawAlldmd();
 }
 
-    canvas.addEventListener('mousedown', gui.mouseDown);
-	canvas.addEventListener('mousemove',gui.mouseMove);
-	canvas.addEventListener('mouseup',gui.mouseUp);
+    document.addEventListener('mousedown', gui.mouseDown);
+	document.addEventListener('mousemove',gui.mouseMove);
+	document.addEventListener('mouseup',gui.mouseUp);
 	
-				canvas.addEventListener('touchstart',		gui.touchStart);
-		canvas.addEventListener('touchmove',	gui.touchMove);
-		canvas.addEventListener('touchend',		gui.touchEnd);
+	document.addEventListener('touchstart',		gui.touchStart);
+	document.addEventListener('touchmove',	gui.touchMove);
+	document.addEventListener('touchend',		gui.touchEnd);
 
 /*關閉視窗時*/	
 window.onbeforeunload = function() {
