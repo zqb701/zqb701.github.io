@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋b3</title>
+		<title>菱格紋b4</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -194,9 +194,9 @@ init = function(){
 			let xC =  (x0+x1)/2;
 			let newLeft = rect.left + (xC - centerX);
 			let newRight = rect.right + (xC - centerX);
-			if(newLeft <0 &&  newRight >  window.innerWidth ){	//限制移動範圍
+			// if(newLeft <0 &&  newRight >  window.innerWidth ){	//限制移動範圍
 				canvas.style.left = newLeft;
-			}
+			// }
 			//let newRight = newLeft + width;
 			//if(newRight < screen.width){
 			//		//不執行	
