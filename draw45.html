@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋b4</title>
+		<title>菱格紋b5</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -229,7 +229,9 @@ init = function(){
 			
 			tools.log( str );
 		}else{
-			gui.gesturesMove(x0 -rect.left, y0-rect.top);
+			let sftx = rect.left - e.target.getBoundingClientRect().x;
+			let sfty = rect.top - e.target.getBoundingClientRect().y;
+			gui.gesturesMove(x0 - sftx, y0-sfty);
 		}
 		e.preventDefault();
 	}
