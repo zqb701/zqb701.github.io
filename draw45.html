@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋b1</title>
+		<title>菱格紋b2</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -182,7 +182,7 @@ init = function(){
 		let x0 = e.targetTouches[0].pageX;
 		let y0 = e.targetTouches[0].pageY;
 		
-		let rect = e.target.getBoundingClientRect();
+		let rect = canvas.getBoundingClientRect();
 			let x2 = rect.left;	//手機沒有offsetX可用
 			let y2 = rect.top;
 			isZoon = false;
