@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋d1</title>
+		<title>菱格紋d2</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -34,8 +34,8 @@ body {
 	<div id="cmd02" style="position: absolute;border: 5px solid yellow;left:300px;top:0px;	cursor: pointer;user-select:none;" onClick="cmd.test();">cmd</div>
 		
 	<canvas id="canvas2"  style="position: absolute;top:30px;left:0px;"></canvas>
-	<canvas id="canvas" style="position: absolute;top:0px;left:0px;"></canvas>
-	<canvas id="cmdpanel" style="position: absolute;top:80px;left:50px;"></canvas>
+	<canvas id="canvas" style="position: absolute;top:30px;left:0px;"></canvas>
+	<canvas id="cmdpanel" style="position: absolute;top:30px;left:50px;"></canvas>
 	
 </body>
 <script>
@@ -80,6 +80,7 @@ body {
 	var isZoon=false;
 	var touchCnt;
 	var mode = 0;
+	
 	var mouseX;
 	var mouseY;	
 	var centerX;
@@ -215,7 +216,9 @@ init = function(){
 			centerY= yy;
 			
 			//依距離變化量縮放
-			let dist = Math.sqrt((x0-x1)*(x0-x1) +(y0-y1)*(y0-y1))
+			let dx = x1 - x0;
+			let dy = y1 - y0;
+			let dist = Math.sqrt(dx**2 +dy**2);	//平方和開根號
 			if(!distPrev){
 				distPrev = dist;
 			}
@@ -281,6 +284,7 @@ gui.gesturesMove=function (x, y){
 		// let y1 = e.target.getBoundingClientRect().top;
 		if(isZoon){
 			isZoon=false;
+			distPrev = undefined;
 			// ctx.clearRect(0, 0, canvas.width, canvas.height);
 			// ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
 			// drawAlldmd();
