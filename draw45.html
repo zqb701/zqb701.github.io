@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋d2</title>
+		<title>菱格紋d3</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -35,14 +35,14 @@ body {
 		
 	<canvas id="canvas2"  style="position: absolute;top:30px;left:0px;"></canvas>
 	<canvas id="canvas" style="position: absolute;top:30px;left:0px;"></canvas>
-	<canvas id="cmdpanel" style="position: absolute;top:30px;left:50px;"></canvas>
+	<canvas id="cmdpanel" style="position: absolute;top:30px;left:0px;"></canvas>
 	
 </body>
 <script>
 /*
 依滑鼠座標畫菱形格(轉45度取整數為中心點再轉正)
 菱形格清除(xor模式), 邊界清除要重新載入.
-列印用chrome可輪出成pdf
+列印用chrome可輪出成pdf(要先隱常按鈕，且canvas是點陣圖)
 
 離線：加到sw.js? manyfast?
 格點陣列_記憶,下載*,全黑*.全白*，(待規劃)壓縮(有逗號易讀取, 0改為空字串)，區塊複製
@@ -59,6 +59,7 @@ body {
 控制器位置用plug實作
 分格線_獨立圖層，顏色/寬度，無格線
 格點選取以複製、稿圖庫、浮水印
+直接輸出PDF以提高畫質
 */
 	var canvas	= document.getElementById("canvas");
 	//TODO var rect改為全域
@@ -148,6 +149,7 @@ init = function(){
 		let y = e.targetTouches[0].pageY;
 		let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
 		let y1 = e.target.getBoundingClientRect().top;
+		// isZoom = false;	//touchEnd有放就可以了。
 		// console.log(~~x,~~y,~~x1,~~y1);
 		gui.gesturesStart(x,y);
 		// e.preventDefault();			// 這行會報錯 //停止事件的默認動作
@@ -186,49 +188,48 @@ init = function(){
 		// e.stopPropagation();
 		
 		touchCnt = e.targetTouches.length;
-		
 		let x0 = e.targetTouches[0].pageX;
 		let y0 = e.targetTouches[0].pageY;
 
-			isZoon = false;
-			
-		if(touchCnt ==2){
-			isZoon = true;
-			//依中心點變化量移動
+		
+		if(touchCnt ==2){			
 			let rect = canvas.getBoundingClientRect();
 			let x1 = e.targetTouches[1].pageX;
-			let xC =  (x0+x1)/2;
-			let newLeft = rect.left + (xC - centerX);
-			let newRight = rect.right + (xC - centerX);
-			// if(newLeft <0 &&  newRight >  window.innerWidth ){	//限制移動範圍
-			 if(newLeft < 10 ){	//限制移動範圍
-				canvas.style.left = newLeft;
-			}
-			centerX= xC;
-			
 			let y1 = e.targetTouches[1].pageY;
+
+			let xC =  (x0+x1)/2;	//中心點
 			let yy =  (y0+y1)/2;
-			let newTop = rect.top + (yy - centerY);
-			// if(newTop > 0){
-				// newTop =0;
-			// }
-			canvas.style.top = newTop;
-			centerY= yy;
-			
-			//依距離變化量縮放
+
 			let dx = x1 - x0;
 			let dy = y1 - y0;
-			let dist = Math.sqrt(dx**2 +dy**2);	//平方和開根號
-			if(!distPrev){
-				distPrev = dist;
-			}
-			let zoon = dist/distPrev;
+			let dist = Math.sqrt(dx**2 +dy**2);	//距離(平方和開根號)
 			
-			// str += ",z"+  zoon.toFixed(2);;
-			distPrev = dist;
-			canvas.style.height = rect.height * zoon;
-			canvas.style.width = rect.width * zoon;
+			if(isZoom){
+				let newLeft = rect.left + (xC - centerX);
+				let newRight = rect.right + (xC - centerX);
+				// if(newLeft <0 &&  newRight >  window.innerWidth ){	//限制移動範圍
+				 if(newLeft < 0 ){	//限制移動範圍
+					canvas.style.left = newLeft;
+				}
 
+
+				let newTop = rect.top + (yy - centerY);
+				// if(newTop > 0){
+					// newTop =0;
+				// }
+				canvas.style.top = newTop;
+
+				let zoon = dist/distPrev;
+					canvas.style.height = rect.height * zoon;
+				canvas.style.width = rect.width * zoon;		
+				// str += ",z"+  zoon.toFixed(2);;
+			}else{
+				isZoom = true;
+			}
+			
+			centerX= xC;
+			centerY= yy;
+			distPrev = dist;
 		}else{
 			// let sftx = e.target.getBoundingClientRect().x - rect.left;
 			// let sfty = e.target.getBoundingClientRect().y - rect.top;
@@ -282,9 +283,11 @@ gui.gesturesMove=function (x, y){
 		let x0 = e.changedTouches[0].pageX;
 		// let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
 		// let y1 = e.target.getBoundingClientRect().top;
-		if(isZoon){
+		if(isZoon){	//縮放後放開
 			isZoon=false;
-			distPrev = undefined;
+			// distPrev = undefined;
+			// centerX = undefined;
+			// centerY = undefined;
 			// ctx.clearRect(0, 0, canvas.width, canvas.height);
 			// ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
 			// drawAlldmd();
