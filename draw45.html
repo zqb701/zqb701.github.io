@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋d3</title>
+		<title>菱格紋d4</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -23,7 +23,7 @@ body {
 	<div style="display: inline-block;">____</div>
 	<div onClick="tools.saveFile();" style="display: inline-block;">儲存</div>
 	<div onClick="upload();" style="display: inline-block;">載入</div>
-	<div onClick="drawClearAll();" style="display: inline-block;">清空</div>
+	<div onClick="drawClearAll();" style="display: inline-block;">全白</div>
 	<div onClick="window.print();;" style="display: inline-block;">列印</div>
 	<div onClick="" style="display: inline-block;">線寬</div>
 	
@@ -31,35 +31,53 @@ body {
 	<div id="cmd01" 
 	style="position: fixed; border: 5px solid yellow;top:5px;left:5px;user-select:none;cursor: pointer;" onClick="cmd.swmode();" draggable="true">0</div>
 		
-	<div id="cmd02" style="position: absolute;border: 5px solid yellow;left:300px;top:0px;	cursor: pointer;user-select:none;" onClick="cmd.test();">cmd</div>
-		
+	<div id="cmd02" style="position: absolute;border: 5px solid yellow;left:300px;top:0px;	cursor: pointer;user-select:none;" onClick="cmd.test();">cmdA</div>
+	
+	<div id="cmd03" style="position: absolute;border: 5px solid yellow;left:350px;top:0px;	cursor: pointer;user-select:none;" onClick="cmd.test2();">cmdB</div>
+	
 	<canvas id="canvas2"  style="position: absolute;top:30px;left:0px;"></canvas>
 	<canvas id="canvas" style="position: absolute;top:30px;left:0px;"></canvas>
 	<canvas id="cmdpanel" style="position: absolute;top:30px;left:0px;"></canvas>
-	
+	<textarea id="ttaa" style="position: absolute;top:100px;left:0px;">></textarea>
 </body>
 <script>
 /*
 依滑鼠座標畫菱形格(轉45度取整數為中心點再轉正)
 菱形格清除(xor模式), 邊界清除要重新載入.
-列印用chrome可輪出成pdf(要先隱常按鈕，且canvas是點陣圖)
+列印用chrome可輪出成pdf(要先隱藏按鈕，且canvas是點陣圖)
+============
 
-離線：加到sw.js? manyfast?
-格點陣列_記憶,下載*,全黑*.全白*，(待規劃)壓縮(有逗號易讀取, 0改為空字串)，區塊複製
-標題當狀態列,附秒數
+全白再按全黑*，
+控制器(編輯/鎖定/背景)
+列印前隱藏控制器
+暫存也要含畫面不可視
 前稿_(背景及格線要同步)平移(***限位)/記憶、縮放比/記憶
 	前稿_寬度設定2.3mm~,全圖重畫
 背景
-  0.內建圖片
-  1.前移以操作 el.style.zIndex = "10",清除用空字串或"auto", 
+  0.內建圖片取消
+  1.(不需要)前移以操作 el.style.zIndex = "10",清除用空字串或"auto", 
   2.載入圖片從本機/網路
   3.獨立平移、縮放、「旋轉」,記憶
-  4. 暫存/移除/隱常
+  4. 暫存/移除/隱藏
+  = err ===============
+  err 手機模式畫單點會兩次
+  err 陣列邊界擴充異常
+  err 點清除後留框
+  err 頁面滾動後,畫點座標錯誤
+  chrome的下載「對話框」要到「設定」，將「詢問...」開啟。
+  ====================
 (待規劃)
+輸出檔壓縮(留逗號易讀取, 0/null 改為空字串)
+標題當狀態列,n秒後回復(但chrome顯示的是網址)
+(還是用標準GUI)網址列放參數, 如「茶」
+離線：加到sw.js? manyfast?
 控制器位置用plug實作
 分格線_獨立圖層，顏色/寬度，無格線
 格點選取以複製、稿圖庫、浮水印
 直接輸出PDF以提高畫質
+字型抓Google font來用,字體設定。 有毛笔字在線生成器
+區塊複製,基本繪圖功能如直線...
+用svg取代canvas
 */
 	var canvas	= document.getElementById("canvas");
 	//TODO var rect改為全域
@@ -91,12 +109,12 @@ body {
 	
 	var gui = {};
 		
-init = function(){
-	
-		cvs2.height = 300;
+init = function(){		
 		// cvs2.top = 100;
 		canvas.width = 950;
-		canvas.height = 1280;
+		canvas.height = canvas.width*1.414;
+		cvs2.width = canvas.width;
+		cvs2.height = canvas.height;
 		cmdpanel.width = 950;
 		cmdpanel.height = 1280;
 		
@@ -144,6 +162,14 @@ init = function(){
 	
 	gui.touchStart = function(e){
 		touchCnt = e.targetTouches.length;
+		/*
+		th2p.setup(e);{
+		th2p.x0 =  e.targetTouches[0].pageX;
+		th2p.y0 =  e.targetTouches[0].pageY;
+		th2p.x1 =  e.targetTouches[1].pageX;
+		th2p.y1 =  e.targetTouches[1].pageY;
+		}
+		*/
 		// tools.log("touchCnt=" + touchCnt);
 		let x = e.targetTouches[0].pageX;
 		let y = e.targetTouches[0].pageY;
@@ -162,7 +188,7 @@ init = function(){
 3.200ms後移動 mode1 => 移圖
 4.100內連點,後移動mode2 => 縮放
 3&4顯示控制器
-1&2隱常控制器
+1&2隱藏控制器
 */
 /* 手機與桌機共用事件*/
 	gui.gesturesStart=function (x,y){
@@ -204,7 +230,7 @@ init = function(){
 			let dy = y1 - y0;
 			let dist = Math.sqrt(dx**2 +dy**2);	//距離(平方和開根號)
 			
-			if(isZoom){
+			if(isZoom){	//TODO 在touchStart取初值, touchMove就不用每次判斷是否初次取值
 				let newLeft = rect.left + (xC - centerX);
 				let newRight = rect.right + (xC - centerX);
 				// if(newLeft <0 &&  newRight >  window.innerWidth ){	//限制移動範圍
@@ -408,7 +434,7 @@ ctx.fill();
 
 var mycanvas={};
 mycanvas.drawText = function(){
-	ctx2.font = "300px sans-serif" //設定文字字型 大小
+	ctx2.font = "900px cursive" //設定文字字型 大小, cursive 對應楷書, sans-serif 對應黑體,serif 對應明體/宋體
 	ctx2.fillStyle="#00A0E9" //設定文字填滿顏色
 	// ctx.strokeStyle="#D50A17" //設定文字邊框
 	// ctx.strokeText("好像快沒梗", 10, 150) //邊框文字
@@ -416,18 +442,15 @@ mycanvas.drawText = function(){
 	let textWidth=ctx2.measureText("茶").width //測量文字寬度
 	let textHeight=ctx2.measureText("茶").height //測量文字高度
 	// console.log(textWidth,textHeight);
-	ctx2.fillText("茶", 0, 250)  //填滿文字, 座標從左下角起算
+	ctx2.fillText("茶", 0, 900)  //填滿文字, 座標從左下角起算
 }
 var cmd={};
 cmd.test = function(){		
-	let str = "cmd.test:";
-	// upload();
-	let rect = canvas.getBoundingClientRect();
-	canvas.style.top = rect.y + 30;
-	str += "rect.y=" + rect.y;
-// tools.log(str);
+document.getElementById("ttaa").value = "a";
 }
-
+cmd.test2 = function(){		
+alert(document.getElementById("ttaa").value);
+}
 
 cmd.savelocal = function(){
 	localStorage.setItem("dmdArr", JSON.stringify(aArray));
@@ -514,14 +537,12 @@ tools.setArr = function(src){
 	if(!aArray[raw]){
 		aArray[raw] = new Array(aArray[0].length);
 		// console.log("add raw to",raw);
-	}
-	
-	
+	}	
 		if(aArray[raw][col]== undefined){
 		aArray[raw][col] = 1;
 	}else{
 		if(aArray[raw][col] == 1){
-			aArray[raw][col] = 0;
+			aArray[raw][col] = "";
 		}else{
 			aArray[raw][col] = 1;	
 		}
