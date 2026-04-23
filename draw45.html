@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋d4</title>
+		<title>菱格紋d5</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -38,7 +38,7 @@ body {
 	<canvas id="canvas2"  style="position: absolute;top:30px;left:0px;"></canvas>
 	<canvas id="canvas" style="position: absolute;top:30px;left:0px;"></canvas>
 	<canvas id="cmdpanel" style="position: absolute;top:30px;left:0px;"></canvas>
-	<textarea id="ttaa" style="position: absolute;top:100px;left:0px;">></textarea>
+	<textarea id="ttaa" style="position: absolute;top:100px;left:0px;"></textarea>
 </body>
 <script>
 /*
@@ -445,11 +445,14 @@ mycanvas.drawText = function(){
 	ctx2.fillText("茶", 0, 900)  //填滿文字, 座標從左下角起算
 }
 var cmd={};
-cmd.test = function(){		
-document.getElementById("ttaa").value = "a";
+cmd.test = function(){
+	document.getElementById("ttaa").value = JSON.stringify(aArray);
 }
-cmd.test2 = function(){		
-alert(document.getElementById("ttaa").value);
+
+cmd.test2 = function(){
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	aArray = JSON.parse(document.getElementById("ttaa").value); 
+	drawAlldmd();
 }
 
 cmd.savelocal = function(){
