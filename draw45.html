@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋d5</title>
+		<title>菱格紋d6</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -11,7 +11,7 @@ body {
 	border: none;
 	margin: 0;
 	padding: 0;
-	overflow: hidden;	//禁止滾動。overflow-x: hidden;只禁X軸
+	//overflow: hidden;	//禁止滾動頁面。overflow-x: hidden;只禁X軸
 }
 </style>
 
@@ -19,81 +19,94 @@ body {
   <script>   </script>
 </head>
 <body>
-<div>
-	<div style="display: inline-block;">____</div>
+<div id="control" style="position: fixed; top:0px; left:30px; border_: 5px solid yellow; background-color:yellow; z-index:9; user-select:none; cursor: pointer;">
+
+	<div onClick="cmd.swPen(this);" style="display: inline-block;">筆跡⧫</div>
 	<div onClick="tools.saveFile();" style="display: inline-block;">儲存</div>
 	<div onClick="upload();" style="display: inline-block;">載入</div>
-	<div onClick="drawClearAll();" style="display: inline-block;">全白</div>
-	<div onClick="window.print();;" style="display: inline-block;">列印</div>
-	<div onClick="" style="display: inline-block;">線寬</div>
+	<div onClick="drawClearAll();" style="display: inline-block;">清空</div>
+	<div onClick="cmd.print();" style="display: inline-block;">列印</div>
+	<div onClick="tools.askLineWidth();" style="display: inline-block;">線寬</div>
+	<input type="checkbox" id="check1" checked  ><label for="check1">黑邊線</label>
+	<input type="checkbox" id="check2" checked ><label for="check2">白格線</label>
+	
 	
 </div>	
+<!--
 	<div id="cmd01" 
 	style="position: fixed; border: 5px solid yellow;top:5px;left:5px;user-select:none;cursor: pointer;" onClick="cmd.swmode();" draggable="true">0</div>
-		
+	
 	<div id="cmd02" style="position: absolute;border: 5px solid yellow;left:300px;top:0px;	cursor: pointer;user-select:none;" onClick="cmd.test();">cmdA</div>
 	
 	<div id="cmd03" style="position: absolute;border: 5px solid yellow;left:350px;top:0px;	cursor: pointer;user-select:none;" onClick="cmd.test2();">cmdB</div>
-	
+	-->
 	<canvas id="canvas2"  style="position: absolute;top:30px;left:0px;"></canvas>
 	<canvas id="canvas" style="position: absolute;top:30px;left:0px;"></canvas>
 	<canvas id="cmdpanel" style="position: absolute;top:30px;left:0px;"></canvas>
-	<textarea id="ttaa" style="position: absolute;top:100px;left:0px;"></textarea>
+	<!--textarea id="ttaa" style="position: absolute;top:100px;left:0px;"></textarea -->
 </body>
 <script>
 /*
-依滑鼠座標畫菱形格(轉45度取整數為中心點再轉正)
-菱形格清除(xor模式), 邊界清除要重新載入.
-列印用chrome可輪出成pdf(要先隱藏按鈕，且canvas是點陣圖)
+
+列印用chrome可輪出成pdf(canvas是點陣圖)
+  chrome的下載「對話框」要到「設定」，將「詢問...」開啟。
 ============
 
-全白再按全黑*，
-控制器(編輯/鎖定/背景)
-列印前隱藏控制器
-暫存也要含畫面不可視
-前稿_(背景及格線要同步)平移(***限位)/記憶、縮放比/記憶
-	前稿_寬度設定2.3mm~,全圖重畫
+十字定位線動畫圖層
+自訂檔名
+記錄載入時的路徑(失敗)
+
 背景
   0.內建圖片取消
   1.(不需要)前移以操作 el.style.zIndex = "10",清除用空字串或"auto", 
   2.載入圖片從本機/網路
   3.獨立平移、縮放、「旋轉」,記憶
-  4. 暫存/移除/隱藏
+  4. 暫存/移除/隱藏  
+  
   = err ===============
+  
   err 手機模式畫單點會兩次
   err 陣列邊界擴充異常
-  err 點清除後留框
   err 頁面滾動後,畫點座標錯誤
-  chrome的下載「對話框」要到「設定」，將「詢問...」開啟。
+  
+  err 以XOR點清除後會留框(為了保持透明才能看到底圖)
   ====================
 (待規劃)
-輸出檔壓縮(留逗號易讀取, 0/null 改為空字串)
-標題當狀態列,n秒後回復(但chrome顯示的是網址)
+cursor url 自訂滑鼠游標圖(畫點為黑菱形,清除為白菱形)
+桌機版角落放縮圖
+十字線, 10秒沒動就清除(要計時功能)
+狀態列,n秒後回復(標題當但chrome手機版顯示的是網址)
 (還是用標準GUI)網址列放參數, 如「茶」
 離線：加到sw.js? manyfast?
 控制器位置用plug實作
-分格線_獨立圖層，顏色/寬度，無格線
-格點選取以複製、稿圖庫、浮水印
+
+區塊複製,多格點選取以複製、稿圖庫、浮水印
+,基本繪圖功能如直線...
+底圖_字型抓Google font來用,字體設定。 有毛笔字在線生成器
 直接輸出PDF以提高畫質
-字型抓Google font來用,字體設定。 有毛笔字在線生成器
-區塊複製,基本繪圖功能如直線...
 用svg取代canvas
 */
+
+ "use strict";
 	var canvas	= document.getElementById("canvas");
-	//TODO var rect改為全域
+	var rect = canvas.getBoundingClientRect();
 	var cvs2		= document.getElementById("canvas2");
 	var cmdpanel = document.getElementById("cmdpanel");
 	
 	var ctx = canvas.getContext("2d");
 	var ctx2 = cvs2.getContext("2d");	//底圖	
+	var ctxcmd = cmdpanel.getContext("2d");
+	
+	var chk1 = document.getElementById("check1");
+	var chk2 = document.getElementById("check2");
 		
 	
-
-	var dmWidth = 10;
-	const sqrt2 = Math.sqrt(2);	//xor之後會留下格線
+	var userWidth = 2.3;
+	var dmWidth;
+	const sqrt2 = Math.sqrt(2);
 	
 	
-	var aArray =  new Array();
+	var aArray = [];
 	var enGestures=false;	//判斷滑鼠有無「按住」,手機應該用不到
 	var isMove=false;	//單擊畫點時,由gest...End畫點, 但要避免連續畫點時,最後一點又畫一次,變清除
 	var isZoon=false;
@@ -107,28 +120,36 @@ body {
 	var distPrev;
 	var clickTime;
 	
-	var gui = {};
+	var showBorder = true;
+	var showGrid = true;
+	
+	var gui = {};	
+var init = function(){		
+
+
 		
-init = function(){		
-		// cvs2.top = 100;
-		canvas.width = 950;
+		canvas.width = 1077;// window.innerWidth;//TODO如何取得1079
+		//1079px用chrome預覽時可見,印成pdf,用chrome看時,不可見,直到1077
 		canvas.height = canvas.width*1.414;
+		
+		// cmdpanel.width = window.innerWidth;	
+		// cmdpanel.height = window.innerHeight;
+		cmdpanel.height = canvas.height;
+		cmdpanel.width = canvas.width;			
+		
 		cvs2.width = canvas.width;
 		cvs2.height = canvas.height;
-		cmdpanel.width = 950;
-		cmdpanel.height = 1280;
 		
-		ctx.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
-		ctx2.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
-		
-		dmWidth = canvas.width * 2.3 / 190;	//A4短邊21cm(8.27英寸), 中間190mm
-
-	mycanvas.drawText();
+		ctx.strokeRect(0, 0, canvas.width, canvas.height);	//外框
+		dmWidth = 1.414 * userWidth * canvas.width  / 190;		//A4短邊21cm(8.27英寸),
+	
+	//TODO 暫時停用 mycanvas.drawText();	//放字(另放圖)
+		// ctx2.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
 	
 	
-				cmdpanel.height = window.innerHeight;	cmdpanel.width = window.innerWidth;
 	// document.getElementById("canvas").getContext("2d").translate( -50, -50);
 		tools.initArr();
+		drawRefresh();
 		// tools.log("init");
 	}
 	// ctx.rotate((Math.PI / 180) * 45);//轉畫布
@@ -151,19 +172,31 @@ init = function(){
 	// ctx.lineWidth = 2;	//線條粗度
 	
 	// ctx.strokeRect(canvas.width/3,canvas.height/3,canvas.width/3,canvas.height/3);//內框
+	var ismouseDown = false;
+	gui.mouseLeave = function (e){
+		// console.log("mouseLeave");
+		enGestures = false;		//桌機版鼠標可能移出繪圖區,要取消連續模式
+	}
 	
-	gui.mouseDown = function (e){
-		touchCnt = 1;	//因為手機版要判斷觸控點數,所以桌機版也要用此變數
-		e.preventDefault();
-		e.stopPropagation();
+gui.mouseDown = function (e){
+	// console.log("mouseDown");
+	touchCnt = 1;	//因為手機版要判斷觸控點數,所以桌機版也要用此變數?
+	ismouseDown = true;
+	clickTime = Date.now();
 
+	
+	if(e.button == 0){		//左鍵才可畫點
+		enGestures = true;
 		gui.gesturesStart(e.pageX, e.pageY);
 	}
+	e.preventDefault();
+	e.stopPropagation();
+}
 	
 	gui.touchStart = function(e){
 		touchCnt = e.targetTouches.length;
 		/*
-		th2p.setup(e);{
+		th2p.setup(e);{	//初始化move要用的x,y值
 		th2p.x0 =  e.targetTouches[0].pageX;
 		th2p.y0 =  e.targetTouches[0].pageY;
 		th2p.x1 =  e.targetTouches[1].pageX;
@@ -173,7 +206,7 @@ init = function(){
 		// tools.log("touchCnt=" + touchCnt);
 		let x = e.targetTouches[0].pageX;
 		let y = e.targetTouches[0].pageY;
-		let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
+		let x1 = e.target.getBoundingClientRect().left;
 		let y1 = e.target.getBoundingClientRect().top;
 		// isZoom = false;	//touchEnd有放就可以了。
 		// console.log(~~x,~~y,~~x1,~~y1);
@@ -194,7 +227,7 @@ init = function(){
 	gui.gesturesStart=function (x,y){
 		enGestures = true;
 		isMove = false;
-		clickTime = Date.now();
+		
 		
 		if(mode==1){
 			mouseX = x;
@@ -202,12 +235,38 @@ init = function(){
 			// console.log("a:",mouseX,mouseY);
 		}
 	}
-	
-	gui.mouseMove=function (e){
-		// let rect = canvas.getBoundingClientRect();
-		gui.gesturesMove(e.pageX, e.pageY);
-		e.preventDefault();
-	}
+var firstMove = false;
+gui.mouseMove=function (e){
+	drawCross(e);
+	// console.log("mouseMove" );
+
+			if(enGestures){
+
+				if(ismouseDown){
+					// clickTime = Date.now();	//若mouseDown同時觸發.Move, 本行要啟用
+					ismouseDown =false;
+					firstMove = true;
+					return;
+				}
+				
+				if(firstMove){
+					let delay = Date.now() - clickTime;
+					if(delay > 200){
+						enGestures = false;
+						// console.log("逾時取消M");
+						return;
+					}
+					firstMove = false;
+				}
+			}else{
+				return;
+			}		
+		// console.log("enG2=" + enGestures);
+	gui.gesturesMove(e.pageX, e.pageY);
+
+	e.preventDefault();
+	e.stopPropagation();
+}
 	
 	gui.touchMove = function (e){
 		// e.preventDefault();
@@ -218,8 +277,8 @@ init = function(){
 		let y0 = e.targetTouches[0].pageY;
 
 		
-		if(touchCnt ==2){			
-			let rect = canvas.getBoundingClientRect();
+		if(touchCnt ==2){
+			
 			let x1 = e.targetTouches[1].pageX;
 			let y1 = e.targetTouches[1].pageY;
 
@@ -249,6 +308,7 @@ init = function(){
 					canvas.style.height = rect.height * zoon;
 				canvas.style.width = rect.width * zoon;		
 				// str += ",z"+  zoon.toFixed(2);;
+				rect = canvas.getBoundingClientRect();
 			}else{
 				isZoom = true;
 			}
@@ -275,21 +335,35 @@ gui.gesturesMove=function (x, y){
 	// if(delay >100){
 		// enGestures = false;
 	// }
-	if(!enGestures){
-		return;
-	}
-	
+	// if(!enGestures){
+		// return;
+	// }
+	// console.log(enGestures);
 	if(mode==0 && touchCnt==1){	//單點觸擊才畫
 		isMove = true;
-		let rect = canvas.getBoundingClientRect();
+		// let rect = canvas.getBoundingClientRect();
 		let tar = tools.rotate45(x - rect.left, y - rect.top, dmWidth);
 		
 		if(tar.x == oldX && tar.y == oldY){
-					//同一格範圍內不再繪製(改用列行較佳)
+					//滑鼠在同一格範圍內移動則不再繪製(改用列行較佳)
 		}else{
+			
 			let theCR = tools.getColRaw(tar.x, tar.y);
-			tools.setArr(theCR);
-			drawDiamond(tar.x, tar.y);
+
+				if(pen ==0){
+					if(!aArray[theCR.raw] ||!aArray[theCR.raw][theCR.col] ){	//畫點
+						tools.setArr(theCR);
+						drawDiamond(tar.x, tar.y);
+					}
+				}
+				if(pen ==1){
+					if(aArray[theCR.raw] && aArray[theCR.raw][theCR.col] ){	//清除
+						aArray[theCR.raw][theCR.col] = null;
+						ctx.globalCompositeOperation = "xor";		//預設值"source-over"
+						drawDiamond(tar.x, tar.y);
+						ctx.globalCompositeOperation ="source-over";		//預設值"source-over"
+					}
+				}
 			oldX = tar.x;
 			oldY = tar.y;
 		}
@@ -297,9 +371,14 @@ gui.gesturesMove=function (x, y){
 }
 	
 	gui.mouseUp = function (e){
+
+		 // console.log("mouseUp",e.pageX, e.pageY);
 		// let rect = canvas.getBoundingClientRect();
-		gui.gesturesEnd(e.pageX, e.pageY);
-		// e.preventDefault();
+		if(e.button == 0){		//左鍵才可畫點
+			gui.gesturesEnd(e.pageX, e.pageY);
+		}
+			e.preventDefault();
+			e.stopPropagation();
 	}
 	
 	gui.touchEnd=function (e){
@@ -307,7 +386,7 @@ gui.gesturesMove=function (x, y){
 		// tools.log("touchCnt=" + touchCnt);
 		let y0 = e.changedTouches[0].pageY;	//touchEnd沒有 targetTouches
 		let x0 = e.changedTouches[0].pageX;
-		// let x1 = e.target.getBoundingClientRect().left;	//手機沒有offsetX可用
+		// let x1 = e.target.getBoundingClientRect().left;
 		// let y1 = e.target.getBoundingClientRect().top;
 		if(isZoon){	//縮放後放開
 			isZoon=false;
@@ -341,20 +420,38 @@ gui.gesturesEnd=function (x, y){
 	if(isMove){
 			
 	}else{	//沒有移動過
+	// console.log("mouseUp");
 		let delay =  Date.now() - clickTime;
-		if(delay <200){
+		if(delay < 200){
 			if(mode==0){//編輯
-			// console.log("gesturesEnd");
-				let rect = canvas.getBoundingClientRect();
+			// console.log("畫點",x,y);
+				// let rect = canvas.getBoundingClientRect();
 				let tar = tools.rotate45(x - rect.left, y - rect.top, dmWidth);
 				let theCR = tools.getColRaw(tar.x, tar.y);
-				tools.setArr(theCR);
 				
-				drawDiamond(tar.x, tar.y);
+				if(pen ==0){
+					if(!aArray[theCR.raw] ||!aArray[theCR.raw][theCR.col] ){	//畫點
+						tools.setArr(theCR);
+						drawDiamond(tar.x, tar.y);
+					}
+				}
+				
+				if(pen ==1){
+					if(aArray[theCR.raw] && aArray[theCR.raw][theCR.col] ){	//清除
+						ctx.globalCompositeOperation = "xor";		//預設值"source-over"
+						aArray[theCR.raw][theCR.col] = undefined;
+						drawDiamond(tar.x, tar.y);
+						ctx.globalCompositeOperation ="source-over";		//預設值"source-over"
+					}
+				}
+
+				
 				oldX = tar.x;
 				oldY = tar.y;
 			}
 		}else{
+			// console.log("逾時取消U");
+			return;
 			// cmd.swmode();
 		}
 	}
@@ -363,33 +460,27 @@ gui.gesturesEnd=function (x, y){
 		// let delay = Date.now() - clickTime;
 }
 	
-	// drawDiamond(100,100);
-	function setWidth(){
-		// let w = prompt('寬度:'));
-		// dmWidth = 計算
-		// ctx.clearRect(...)
-		// drawAlldmd()...
-	}
-	
+
 	function drawClearAll(){
-		let answer = confirm('清空畫布？');
+		let answer = confirm('清除圖案？');
 		if(answer){
-			// drawAlldmd();
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			aArray = new Array();
-			aArray[0] =  new Array(10);
+			aArray = [];	//new Array();
+			// aArray = new Array();
+			// aArray[0] =  new Array(10);
 			localStorage.setItem("dmdArr", JSON.stringify(aArray));	//暫存編輯資料
+			drawRefresh();
 		}else{
 		 
 		}
 	}
 	
-	function drawAlldmd(){
-				let p;
-		for(let idxr=0;idxr<aArray.length;idxr++){
-			for(let idxc=0;idxc<aArray[0].length;idxc++){
+function drawAlldmd(){
+			let p;
+	for(let idxr=0;idxr<aArray.length;idxr++){
+		if(aArray[idxr]){
+			for(let idxc=0;idxc<aArray[idxr].length;idxc++){
 				// let bit = 
-				if(aArray[idxr] && aArray[idxr][idxc] && aArray[idxr][idxc]== "1"){
+				if(aArray[idxr][idxc]){
 					// console.log(idxr,idxc);
 					p= tools.getXYbyRC(idxr,idxc);
 					drawDiamond(p.x, p.y);
@@ -397,21 +488,115 @@ gui.gesturesEnd=function (x, y){
 			}
 		}
 	}
+}
+	
+	
+	/*重繪畫面(通常用在整體參數異動時)*/
+	function drawRefresh(){
+		ctx.clearRect(0, 0, canvas.width, canvas.height);		//清空
+		ctx.strokeRect(0, 0, canvas.width, canvas.height);	//外框
+		
+		if(chk2.checked){
+			drawGrid();
+		}
+		drawAlldmd();
+		drawMsg();
+	}
+	
+	function drawMsg(){
+		let msg = "菱格紋輔助設計APP, userWidth:" + userWidth +"mm";
+		msg += ", 白格細"+ "0.5" +"px";
+		msg += ", 白格粗"+"1.5" +"px";
+		msg += ", 黑邊線"+"0.5" +"px";
+		ctx2.font = "20px sans-serif "; //設定文字字型 大小, cursive 對應楷書, sans-serif 對應黑體,serif 對應明體/宋體
+	// ctx2.fillStyle="#00A0E9"; //設定文字填滿顏色
+	// ctx.strokeStyle="#D50A17" //設定文字邊框
+	// ctx.strokeText("好像快沒梗", 10, 150) //邊框文字
+
+		// let textWidth=ctx2.measureText("msg").width; //TODO 數值錯誤(指定字型37,沒指定19)
+		// console.log("textWidth:"+textWidth);
+		// ctx2.fillText(msg, canvas.width - textWidth, 20)  //填滿文字, 座標從左下角起算
+		ctx2.fillText(msg, 5, canvas.height - 5)  //填滿文字, 座標從左下角起算
+	}
+	
+	/*畫十字線(準星/瞄準線)*/
+	function drawCross(e){
+		let cvs = e.target;
+		let ctx = cvs.getContext("2d");
+		let x0 = e.pageX;
+		let y0 = e.pageY - cvs.getBoundingClientRect().top;
+		let c0 = dmWidth * 1.414 * 3 / 2
+			ctx.clearRect(0,0, cvs.width, cvs.height);
+			ctx.beginPath();
+			ctx.moveTo(x0,0);
+			ctx.lineTo(x0, y0-c0);
+			
+			ctx.moveTo(x0, y0+c0);
+			ctx.lineTo(x0, cvs.height);
+			
+			ctx.moveTo(0, y0);
+			ctx.lineTo(x0-c0, y0);
+			
+			ctx.moveTo(x0+c0, y0);
+			ctx.lineTo(cvs.width, y0);
+			ctx.closePath();
+			ctx.stroke();
+	}
+	/*畫白格線*/
+	function drawGrid(){
+
+		let r1 = dmWidth * 1.414;
+		let r5 = r1*5;
+		let w9 = Math.max(canvas.width, canvas.height);	//依較長邊畫正方形範圍
+		w9 = (Math.trunc(w9/r5)+1) *r5;	//畫布長寬取格寬的整數
+		
+				ctx.lineWidth = 0.5;	//線條粗度
+			ctx.strokeStyle = "Silver";	//框線顏色
+			ctx.setLineDash([2, 4]);
+	for(let id = 1;id<6;id+=4){
+		for(let xa = 0; xa<w9; xa+=(r1*id)){
+			ctx.beginPath();
+			ctx.moveTo(xa, 0);
+			ctx.lineTo(w9, w9 - xa);			
+			ctx.moveTo(xa, 0);
+			ctx.lineTo(0, xa);
+			ctx.moveTo(xa, w9);
+			ctx.lineTo(0, w9-xa);
+			ctx.moveTo(xa, w9);
+			ctx.lineTo(w9, xa);
+			ctx.closePath();
+
+			ctx.stroke();
+		}
+		ctx.lineWidth = 1.5;
+		ctx.setLineDash([]);
+	}
+
+		
+		
+
+	}
+	
 	
 	function drawDiamond(x0, y0, sftx=0,sfty=0){
 			// console.log("ddm:",x0,y0);
-		let border = 1;
-		let r3 = dmWidth /sqrt2 - border;
+		let border = .5;	//間隔用比例可否?		 
+		let r3 = dmWidth /sqrt2 + border;
 		ctx.beginPath();
-		ctx.fillStyle = "black";	//填滿色
-		ctx.moveTo(x0, y0-r3);
+		ctx.moveTo(x0, y0-r3);	//上方
 		ctx.lineTo(x0+r3, y0);
 		ctx.lineTo(x0, y0+r3);
 		ctx.lineTo(x0-r3, y0);
 		ctx.closePath();
-ctx.globalCompositeOperation ="xor";		//預設值"source-over"
+		
+		ctx.fillStyle = "gray";	//填滿色
 		ctx.fill();
-		ctx.globalCompositeOperation ="source-over";		//預設值"source-over"
+		
+		if(document.getElementById("check1").checked){
+			ctx.lineWidth = 1.5;	//線條粗度
+			 ctx.strokeStyle = "Silver";	//框線條色
+			 ctx.stroke();
+		}
 	}
 	
 
@@ -434,17 +619,38 @@ ctx.fill();
 
 var mycanvas={};
 mycanvas.drawText = function(){
-	ctx2.font = "900px cursive" //設定文字字型 大小, cursive 對應楷書, sans-serif 對應黑體,serif 對應明體/宋體
-	ctx2.fillStyle="#00A0E9" //設定文字填滿顏色
+	ctx2.font = "900px cursive"; //設定文字字型 大小, cursive 對應楷書, sans-serif 對應黑體,serif 對應明體/宋體
+	ctx2.fillStyle="#00A0E9"; //設定文字填滿顏色
 	// ctx.strokeStyle="#D50A17" //設定文字邊框
 	// ctx.strokeText("好像快沒梗", 10, 150) //邊框文字
 
-	let textWidth=ctx2.measureText("茶").width //測量文字寬度
-	let textHeight=ctx2.measureText("茶").height //測量文字高度
+	let textWidth=ctx2.measureText("茶").width; //測量文字寬度
+	let textHeight=ctx2.measureText("茶").height; //測量文字高度
 	// console.log(textWidth,textHeight);
-	ctx2.fillText("茶", 0, 900)  //填滿文字, 座標從左下角起算
+	ctx2.fillText("茶", 0, 900);  //填滿文字, 座標從左下角起算
 }
 var cmd={};
+var pen = 0;
+
+cmd.print = function(){
+	//列印前
+	document.getElementById("control").style.display = "none";	//隱藏控制器
+	drawRefresh();
+	cmdpanel.getContext("2d").clearRect(0,0,cmdpanel.width,cmdpanel.height);
+	//標題名稱加上日期時間
+	window.print();
+	document.getElementById("control").style.display = "block";
+}
+
+
+cmd.swPen=function(tar){
+	let chars = ["⧫","◊"];	//第三種"筆⧫/◊",為互斥模式
+	pen++;
+	if(pen == chars.length){
+		pen = 0;
+	}
+	tar.innerText = "筆跡" + chars[pen];
+}
 cmd.test = function(){
 	document.getElementById("ttaa").value = JSON.stringify(aArray);
 }
@@ -471,6 +677,27 @@ cmd.swmode = function(){
 }
 
 var tools={};
+/*陣列轉成字串後, 「null」換成空字串*/
+tools.trim = function(){
+	
+}
+tools.askLineWidth = function(){
+	let answer = prompt('請輸入線框:', "" + userWidth);
+	if(!answer){
+		return;
+	}
+	let w = parseFloat(answer);
+	if(w && w >= 1 && w<=5){
+		userWidth = Math.trunc(w*100)/100;		//因為會用在下一次的預設值,所以小數點限2位
+		dmWidth = 1.414 * userWidth * canvas.width  / 190;		//A4短邊21cm(8.27英寸), 中間190mm
+		ctx.clearRect(0, 0, canvas.width, canvas.height);	//清空
+		ctx.strokeRect(0, 0, canvas.width, canvas.height);	//外框
+		drawGrid();	//格線
+		drawAlldmd();		
+	}
+}
+
+
 tools.getXYbyRC = function(raw, col){  //列行值轉座標
 	let r = dmWidth/sqrt2;
 	let r2=r*2;
@@ -501,20 +728,19 @@ tools.getColRaw=function(x0, y0){  //座標轉列行值
 
 tools.initArr = function(){
 	/*取得暫存陣列或重置*/
-	let dmdArrlocal = localStorage.getItem("dmdArr");
-	// alert(dmdArrlocal);
-	
-	if(dmdArrlocal && dmdArrlocal !="[]"){
+	let dmdArrlocal = localStorage.getItem("dmdArr");	
+		
+	// if(dmdArrlocal && dmdArrlocal !="[]"){
+	if(dmdArrlocal){
 		aArray = JSON.parse(dmdArrlocal); 
-		drawAlldmd();
+	}
+		// console.log( aArray.toString());
+		// drawAlldmd();
 		// aArray[0][0] = "0";
 		// console.log("讀取陣列:" + aArray.length +"," + aArray[0].length);
-		
+	if(aArray){
 	}else{
-		// console.log("建立陣列");
-		for(let raw=14; raw>=0; raw--){	//???另用小圖存放???
-			aArray[raw]=new Array(10);
-		}
+		aArray = [];
 	}
 }
 
@@ -525,32 +751,14 @@ tools.setArr = function(src){
 //TODO 直接移除元素
 	let raw= src.raw;
 	let col = src.col;
-	
-	if(col >= aArray[0].length){
-		for(let idxr=0;idxr<aArray.length;idxr++){
-			if(!aArray[idxr]){
-				aArray[idxr] = new Array(aArray[0].length);
-			}
-				aArray[idxr].length = col;
-			
-		}
-		// console.log("add col to", col);
-	}
-	
+	// console.log("setArr("+raw+","+col+")");
 	if(!aArray[raw]){
-		aArray[raw] = new Array(aArray[0].length);
-		// console.log("add raw to",raw);
-	}	
-		if(aArray[raw][col]== undefined){
-		aArray[raw][col] = 1;
-	}else{
-		if(aArray[raw][col] == 1){
-			aArray[raw][col] = "";
-		}else{
-			aArray[raw][col] = 1;	
-		}
+		aArray[raw] = new Array();
+		// console.log("new raw:",aArray.length);
 	}
-	// console.log("RC=",raw,col,aArray[raw][col]);
+	aArray[raw][col] = 1;
+	// console.log("new col:",aArray[raw].length);
+	// console.log( aArray.toString());
 }
 
 tools.rotate45 = function(x, y, w){
@@ -599,6 +807,7 @@ tools.saveFile = function (fileName="1234.dm1") {
 	let content =  JSON.stringify(aArray);
 	localStorage.setItem("dmdArr",content);	//暫存編輯資料
 	
+	content = content.replaceAll("null", "0");	//陣列在json的空元素為null,置換以縮小檔案
 	// 1. 建立 Blob 物件 (內容, 類型)
   const blob = new Blob([content], { type: 'text/plain' });
   // 2. 建立下載連結
@@ -612,44 +821,84 @@ tools.saveFile = function (fileName="1234.dm1") {
 }
 
 async function upload(){
-	let [fileHandle] = await window.showOpenFilePicker({
-    startIn: 'pictures'
-  });
-  const file = await fileHandle.getFile();
-  const contents = await file.text();
+	let [fileHandle] = await window.showOpenFilePicker({	//檔案輸入對話框
+		startIn_: 'pictures', 
+		id: 'my-app-uploader',		//記住最近位置(失敗)
+	});
+	const file = await fileHandle.getFile();
+	let content = await file.text();
   
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  aArray = JSON.parse(contents); 
-  drawAlldmd();
+	content = content.replaceAll("0", "null");	//陣列在json的空元素為null, 置換以縮小檔案
+	aArray = JSON.parse(content); 
+	drawRefresh();
+	// drawAlldmd();
 }
-
-    cmdpanel.addEventListener('mousedown', gui.mouseDown);
-	cmdpanel.addEventListener('mousemove',gui.mouseMove);
-	cmdpanel.addEventListener('mouseup',gui.mouseUp);
+// with(canvas.){	//Strict mode禁用with
+    cmdpanel.addEventListener('mousedown',	gui.mouseDown);
+	cmdpanel.addEventListener('mousemove',	gui.mouseMove);
+	cmdpanel.addEventListener('mouseup',			gui.mouseUp);
+	cmdpanel.addEventListener('mouseleave',	gui.mouseLeave);
 	
-	cmdpanel.addEventListener('touchstart',		gui.touchStart);
+	cmdpanel.addEventListener('touchstart',	gui.touchStart);
 	cmdpanel.addEventListener('touchmove',	gui.touchMove);
 	cmdpanel.addEventListener('touchend',		gui.touchEnd);
 
-/*關閉視窗時*/	
+chk1.addEventListener('change', (e) => {
+	// console.log("check1");
+	drawRefresh();
+	// drawAlldmd();
+  // if (e.target.checked) {
+    // boxTxt.innerText=`開 ${e.target.checked}`;
+  // } else {
+   // boxTxt.innerText=`關 ${e.target.checked}`;
+  // }
+});
+
+chk2.addEventListener('change', (e) => {
+	// console.log("check2");
+	drawRefresh();
+	// drawAlldmd();
+  // if (e.target.checked) {
+    // boxTxt.innerText=`開 ${e.target.checked}`;
+  // } else {
+   // boxTxt.innerText=`關 ${e.target.checked}`;
+  // }
+});
+
+
+/*停用系統右鍵選單*/
+document.addEventListener("contextmenu", function(e){
+	e.preventDefault();
+},false);
+
+
+/* 關閉視窗「前」 */	
 window.onbeforeunload = function() {
 	localStorage.setItem("dmdArr", JSON.stringify(aArray));	//暫存編輯資料
 	//localStorage.removeItem(key);
 };
 
-/*視窗變動時*/
-/*
+
+/* 頁面可視狀態異動 */
+document.addEventListener("visibilitychange", () => {
+	if (document.visibilityState === "hidden"){	//visible可見、hidden隱藏prerende預渲染(很少用)、unloaded(已棄用)
+	// console.log("hidden");
+		localStorage.setItem("dmdArr", JSON.stringify(aArray));	//暫存編輯資料
+	}
+});
+/*視窗變動時,頁面滾動時*/
 window.addEventListener("scroll", function () {
     //內容...
-	var div = document.getElementById("cmd01");
+	var div = document.getElementById("control");
 	    div.style.position = "fixed";
     div.style.top = "0";
-	tools.log(window.pageYOffset);
+	// tools.log(window.pageYOffset);
 	//overscroll-behavior: contain超過時有反彈拉回的效果, none 則無。
 	//	touch-action: none; 
 	//scroll-behavior:auto直接跳到定位, smooth 捲動效果
 });
-*/
+
+
 /*
 window.scroll=function(){
   var div = document.getElementById("cmd01");
