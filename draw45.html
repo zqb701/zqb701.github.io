@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋d9</title>
+		<title>菱格紋e1</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -242,6 +242,8 @@ gui.mouseDown = function (e){
 		touchCnt = e.targetTouches.length;
 		clickTime = Date.now();
 		isMove = false;
+		mouseX = e.pageX;
+		mouseY = e.pageY;
 		/*
 		th2p.setup(e);{	//初始化move要用的x,y值
 		th2p.x0 =  e.targetTouches[0].pageX;
@@ -282,6 +284,8 @@ gui.mouseDown = function (e){
 			// console.log("a:",mouseX,mouseY);
 		}
 	}
+	
+	
 var firstMove = false;
 gui.mouseMove=function (e){
 		e.preventDefault();
@@ -378,19 +382,16 @@ gui.mouseMove=function (e){
 			centerY= yy;
 			distPrev = dist;
 		}else{
-			// let sftx = e.target.getBoundingClientRect().x - rect.left;
-			// let sfty = e.target.getBoundingClientRect().y - rect.top;
-			// console.log(x0, e.target.getBoundingClientRect().x ,rect.left);
-			
-			// let rect = canvas.getBoundingClientRect();
-			// gui.gesturesMove(x0 - rect.left, y0- rect.top);
 			gui.gesturesMove(x0, y0);
 		}
-		e.preventDefault();
+
 	}
 
 let oldX,oldY;
 gui.gesturesMove=function (x, y){
+cmdPanel.style.visibility = "hidden";
+
+
 
 	// let delay = Date.now() - clickTime;
 	// if(delay >100){
@@ -513,6 +514,8 @@ isMove = true;
 			// gui.gesturesEnd(x - x1, y-y1);
 		}
 		// e.preventDefault();//這行會報錯
+		mouseX = undefined;
+		mouseY = undefined;
 	}
 	
 gui.gesturesEnd=function (x, y){
