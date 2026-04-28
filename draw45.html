@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋d8</title>
+		<title>菱格紋d9</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -240,6 +240,8 @@ gui.mouseDown = function (e){
 	
 	gui.touchStart = function(e){
 		touchCnt = e.targetTouches.length;
+		clickTime = Date.now();
+		isMove = false;
 		/*
 		th2p.setup(e);{	//初始化move要用的x,y值
 		th2p.x0 =  e.targetTouches[0].pageX;
@@ -282,6 +284,8 @@ gui.mouseDown = function (e){
 	}
 var firstMove = false;
 gui.mouseMove=function (e){
+		e.preventDefault();
+	e.stopPropagation();
 	// console.log("mouseMove" );
 
 	if(mode ==0){
@@ -295,42 +299,7 @@ gui.mouseMove=function (e){
 						let x0 = e.pageX;
 						let y0 = e.pageY;
 						
-				if(mode ==3){
-						cvs2.style.position = "fixed";
-
-					// x0 -= canvas.getBoundingClientRect().x;
-					let rect2 = cvs2.getBoundingClientRect();
-					if(event.ctrlKey){	//上縮下放, 要按ctrl
-						let z =  (y0 - mouseY)/100;
-						// console.log(z);
-						let newW = rect2.width * (1-z);	
-						let newH = rect2.height * (1-z);
-						if(newW > 30 && newH > 30){	//禁止縮太小(那放太大???)
-							cvs2.style.left = rect2.x +rect2.width * z/2;		//連動左上角,把中央當縮放中心
-							cvs2.style.top = rect2.y +rect2.height *z/2;
-							cvs2.style.width = newW;
-							cvs2.style.height = newH;
-						}
-					}else{	//移動
-						let rect2 = cvs2.getBoundingClientRect();
-						let rectTag = e.target.getBoundingClientRect();
-						let newX = rect2.x +(x0 - mouseX);
-						let newY = rect2.y +(y0 - mouseY);
-						
-						//不可移出頁面內緣30px以外
-						if(newX < (rectTag.right-30) && (newX+rect2.width) > (rectTag.left + 30)){
-							cvs2.style.left = newX;
-						}
-						
-						if(newY < (rectTag.bottom - 30) && (newY+rect2.height) > (rectTag.top + 30)){
-							cvs2.style.top = newY;
-						}
-					}
-						mouseX = x0;
-						mouseY = y0;
-						cvs2.style.position = "absolute";
-					return;
-				}
+				
 
 
 				if(ismouseDown){
@@ -355,13 +324,12 @@ gui.mouseMove=function (e){
 		gui.gesturesMove(x0, y0);
 
 
-	e.preventDefault();
-	e.stopPropagation();
+
 }
 	
 	gui.touchMove = function (e){
-		// e.preventDefault();
-		// e.stopPropagation();
+		e.preventDefault();
+		e.stopPropagation();
 		
 		touchCnt = e.targetTouches.length;
 		let x0 = e.targetTouches[0].pageX;
@@ -432,6 +400,7 @@ gui.gesturesMove=function (x, y){
 		// return;
 	// }
 	// console.log(enGestures);
+	
 	if(mode==0 && touchCnt==1){	//單點觸擊才畫
 		isMove = true;
 		// let rect = canvas.getBoundingClientRect();
@@ -461,6 +430,44 @@ gui.gesturesMove=function (x, y){
 			oldY = tar.y;
 		}
 	 }
+	 
+	 if(mode ==3){
+						cvs2.style.position = "fixed";
+isMove = true;
+					// x0 -= canvas.getBoundingClientRect().x;
+					let rect2 = cvs2.getBoundingClientRect();
+					if(event.ctrlKey){	//上縮下放, 要按ctrl
+						let z =  (y - mouseY)/100;
+						// console.log(z);
+						let newW = rect2.width * (1-z);	
+						let newH = rect2.height * (1-z);
+						if(newW > 30 && newH > 30){	//禁止縮太小(那放太大???)
+							cvs2.style.left = rect2.x +rect2.width * z/2;		//連動左上角,把中央當縮放中心
+							cvs2.style.top = rect2.y +rect2.height *z/2;
+							cvs2.style.width = newW;
+							cvs2.style.height = newH;
+						}
+					}else{	//移動
+						// let rect2 = cvs2.getBoundingClientRect();
+						let rectTag = cvs3.getBoundingClientRect();
+						let newX = rect2.x +(x - mouseX);
+						let newY = rect2.y +(y - mouseY);
+						
+						//不可移出頁面內緣30px以外
+						if(newX < (rectTag.right-30) && (newX+rect2.width) > (rectTag.left + 30)){
+							cvs2.style.left = newX;
+						}
+						
+						if(newY < (rectTag.bottom - 30) && (newY+rect2.height) > (rectTag.top + 30)){
+							cvs2.style.top = newY;
+						}
+					}
+						mouseX = x;
+						mouseY = y;
+						cvs2.style.position = "absolute";
+					return;
+				}
+	 
 }
 	
 	gui.mouseUp = function (e){
@@ -735,12 +742,12 @@ draw.Text = function(){
 cmd.swlayer = function(tar){  //底稿draft 與菱格
 	if(mode==0){
 		mode = 3;
-		tar.innerText = "2底圖";
+		tar.innerText = "2菱格";
 		document.body.style.overflow = 'hidden';	//只是不能移動,仍可縮放
-		ctxcmd.clearRect(0,0, cmdpanel.width, cmdpanel.height);	//清除十字線
+		ctxcmd.clearRect(0,0, cvs3.width, cvs3.height);	//清除十字線
 	}else{
 		mode = 0;
-		tar.innerText = "2菱格";
+		tar.innerText = "2底圖";
 		document.body.style.overflow = "auto";	//visible
 	}
 }
@@ -1048,6 +1055,7 @@ document.addEventListener("visibilitychange", () => {
 /*視窗變動時,頁面滾動時*/
 window.addEventListener("scroll", function () {
     //內容...
+	cmdPanel.style.visibility = "hidden";
 	// var div = document.getElementById("control");
 	    //改成長按顯示在滑鼠位置div.style.position = "fixed";		div.style.top = "0";	//控制器釘住
 		// console.log(canvas.getBoundingClientRect().y);
