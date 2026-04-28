@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋d7</title>
+		<title>菱格紋d8</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -19,20 +19,24 @@ body {
   <script>   </script>
 </head>
 <body>
-<div id="control" style="position: fixed; top:0px; left:30px; height:30px; border: 10px solid yellow; background-color:yellow; z-index:9; user-select:none; cursor: pointer;">
+<div id="control" style="position: fixed; top:0px; left:30px; height:30px; border: 10px solid yellow; background-color:yellow; z-index:9; user-select:none; cursor: pointer;visibility:hidden">
 
 	<button onClick="cmd.swPen(this);" style="display: inline-block;">筆跡⧫</button>
 	<button onClick="cmd.upload();" style="display: inline-block;">載入</button>
 	<button onClick="cmd.saveFile();" style="display: inline-block;">存檔</button>
-	<button onClick="cmd.swlayer(this);" style="display: inline-block;">菱格</button>
+	<button onClick="cmd.swlayer(this);" style="display: inline-block;">2底圖</button>
 	<button onClick="cmd.clear();" style="display: inline-block;">清空</button>
 	<button onClick="cmd.print();" style="display: inline-block;">列印</button>
 	<button onClick="cmd.askLineWidth();" style="display: inline-block;">線寬</button>
 	<input type="checkbox" id="check1" checked  ><label for="check1">黑邊線</label>
 	<input type="checkbox" id="check2" checked ><label for="check2">白格線</label>
+	<div id="left" onClick="arrow.left();" style="position: fixed; top:100px; left:0px; ">左</div>
 	
+</div>
+
+
 	
-</div>	
+
 <!--
 	<div id="cmd01" 
 	style="position: fixed; border: 5px solid yellow;top:5px;left:5px;user-select:none;cursor: pointer;" onClick="cmd.swmode();" draggable="true">0</div>
@@ -42,9 +46,9 @@ body {
 	<div id="cmd03" style="position: absolute;border: 5px solid yellow;left:350px;top:0px;	cursor: pointer;user-select:none;" onClick="cmd.test2();">cmdB</div>
 	-->
 	
-	<canvas id="canvas2"  style="position: absolute; top:30px;left:0px;visibility_:hidden"></canvas>
-	<canvas id="canvas" style="position: absolute;top:30px;left:0px;visibility_:hidden"></canvas>
-	<canvas id="cmdpanel" style="position: absolute;top:30px;left:0px;visibility_:hidden"></canvas>
+	<canvas id="canvas2"  style="position: absolute; top:30px;left:30px;visibility_:hidden"></canvas>
+	<canvas id="canvas" style="position: absolute;top:0px;left:0px;visibility_:hidden"></canvas>
+	<canvas id="canvas3" style="position: absolute;top:0px;left:0px;visibility_:hidden"></canvas>
 	<!--textarea id="ttaa" style="position: absolute;top:100px;left:0px;"></textarea -->
 
 
@@ -118,12 +122,13 @@ PDF自訂檔名要改標題列
 var canvas	= document.getElementById("canvas");
 var rect = canvas.getBoundingClientRect();
 var cvs2		= document.getElementById("canvas2");
-var cmdpanel = document.getElementById("cmdpanel");
+var cvs3 = document.getElementById("canvas3");
 
 var ctx = canvas.getContext("2d");
 var ctx2 = cvs2.getContext("2d");	//底圖	
-var ctxcmd = cmdpanel.getContext("2d");	//十字線,觸控事件
+var ctxcmd = cvs3.getContext("2d");	//十字線,觸控事件
 
+var cmdPanel = document.getElementById("control");
 var chk1 = document.getElementById("check1");
 var chk2 = document.getElementById("check2");
 		
@@ -155,6 +160,7 @@ var showGrid = true;		//白格線
 var gui = {};
 var draw={};
 var cmd={};
+var arrow={};
 
 var init = function(){		
 		canvas.width = 1075;// window.innerWidth;//TODO如何取得1079
@@ -164,8 +170,8 @@ var init = function(){
 		
 		// cmdpanel.width = window.innerWidth;	
 		// cmdpanel.height = window.innerHeight;
-		cmdpanel.height = canvas.height;
-		cmdpanel.width = canvas.width;			
+		cvs3.height = canvas.height;
+		cvs3.width = canvas.width;			
 		
 		// cvs2.width = canvas.width;
 		// cvs2.height = canvas.height;
@@ -215,7 +221,9 @@ gui.mouseDown = function (e){
 	// console.log("mouseDown");
 	touchCnt = 1;	//因為手機版要判斷觸控點數,所以桌機版也要用此變數?
 	ismouseDown = true;
+	isMove = false;
 	clickTime = Date.now();
+	cmdPanel.style.visibility = "hidden";
 				// if(mode ==3){
 						// cvs2.style.position = "fixed";//fixed要放在mouseMove內
 				// }
@@ -274,7 +282,8 @@ gui.mouseDown = function (e){
 	}
 var firstMove = false;
 gui.mouseMove=function (e){
-	console.log("mouseMove" );
+	// console.log("mouseMove" );
+
 	if(mode ==0){
 		drawCross(e);
 	}
@@ -282,6 +291,7 @@ gui.mouseMove=function (e){
 			if(!enGestures){
 				return
 			}
+				isMove = true;
 						let x0 = e.pageX;
 						let y0 = e.pageY;
 						
@@ -503,8 +513,9 @@ gui.gesturesEnd=function (x, y){
 		enGestures = false;
 	}
 	if(isMove){
-			
-	}else{	//沒有移動過
+			return;
+	}
+	//沒有移動過
 	// console.log("mouseUp");
 		let delay =  Date.now() - clickTime;
 		if(delay < 200){
@@ -535,11 +546,16 @@ gui.gesturesEnd=function (x, y){
 				oldY = tar.y;
 			}
 		}else{
-			// console.log("逾時取消U");
+			// alert("逾時取消U");
+			// let ele = cmdPanel;
+			// ele.style.display = "fixed";
+			cmdPanel.style.left = x + canvas.getBoundingClientRect().left;
+			cmdPanel.style.top = y + canvas.getBoundingClientRect().top;
+			cmdPanel.style.visibility = "visible";
 			return;
 			// cmd.swmode();
 		}
-	}
+
 
 		
 		// let delay = Date.now() - clickTime;
@@ -719,24 +735,23 @@ draw.Text = function(){
 cmd.swlayer = function(tar){  //底稿draft 與菱格
 	if(mode==0){
 		mode = 3;
-		tar.innerText = "底圖";
+		tar.innerText = "2底圖";
 		document.body.style.overflow = 'hidden';	//只是不能移動,仍可縮放
 		ctxcmd.clearRect(0,0, cmdpanel.width, cmdpanel.height);	//清除十字線
 	}else{
 		mode = 0;
-		tar.innerText = "菱格";
-		document.body.style.overflow = "";
+		tar.innerText = "2菱格";
+		document.body.style.overflow = "auto";	//visible
 	}
 }
 cmd.print = function(){
 	//列印前
-	document.getElementById("control").style.display = "none";	//隱藏控制器
+	cmdPanel.style.visibility = "hidden";	//隱藏控制器,列印後不需重現
 	cvs2.style.display = "none";	//隱藏底稿
 	draw.refresh();	//清理線「渣」
 	cmdpanel.getContext("2d").clearRect(0,0,cmdpanel.width,cmdpanel.height);//清除十字線
 	//標題名稱加上日期時間
 	window.print();
-	document.getElementById("control").style.display = "block";
 	cvs2.style.display = "block";
 }
 
@@ -976,14 +991,14 @@ cmd.upload = async function(){
 }
 
 // with(canvas.){	//Strict mode禁用with
-    cmdpanel.addEventListener('mousedown',	gui.mouseDown);
-	cmdpanel.addEventListener('mousemove',	gui.mouseMove);
-	cmdpanel.addEventListener('mouseup',			gui.mouseUp);
-	cmdpanel.addEventListener('mouseleave',	gui.mouseLeave);
+    cvs3.addEventListener('mousedown',	gui.mouseDown);
+	cvs3.addEventListener('mousemove',	gui.mouseMove);
+	cvs3.addEventListener('mouseup',			gui.mouseUp);
+	cvs3.addEventListener('mouseleave',	gui.mouseLeave);
 	
-	cmdpanel.addEventListener('touchstart',	gui.touchStart);
-	cmdpanel.addEventListener('touchmove',	gui.touchMove);
-	cmdpanel.addEventListener('touchend',		gui.touchEnd);
+	cvs3.addEventListener('touchstart',	gui.touchStart);
+	cvs3.addEventListener('touchmove',	gui.touchMove);
+	cvs3.addEventListener('touchend',		gui.touchEnd);
 
 chk1.addEventListener('change', (e) => {
 	// console.log("check1");
@@ -1033,10 +1048,9 @@ document.addEventListener("visibilitychange", () => {
 /*視窗變動時,頁面滾動時*/
 window.addEventListener("scroll", function () {
     //內容...
-	var div = document.getElementById("control");
-	    div.style.position = "fixed";
-		div.style.top = "0";	//控制器釘住
-		console.log(canvas.getBoundingClientRect().y);
+	// var div = document.getElementById("control");
+	    //改成長按顯示在滑鼠位置div.style.position = "fixed";		div.style.top = "0";	//控制器釘住
+		// console.log(canvas.getBoundingClientRect().y);
 		// cvs2.style.position = "absolute";	//absolute
 
 		// cvs2.style.top = rect.getBoundingClientRect.top;
