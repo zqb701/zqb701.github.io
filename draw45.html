@@ -49,8 +49,8 @@ body {
 
 		  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
 		  <label class="form-check-label" for="inlineRadio2">縮放</label>
-			<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
-		  <label class="form-check-label" for="inlineRadio3">旋轉</label>
+			<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" style="display:none;">
+		  <label class="form-check-label" for="inlineRadio3" style="display:none;">旋轉</label>
 		</div>
 	<button onClick="cmd.clear();" style="display: inline-block;">清空</button>
 	<button onClick="cmd.print();" style="display: inline-block;">列印</button>
@@ -124,24 +124,21 @@ body {
   手機chrome的下載「對話框」要到「設定」，將「詢問...」開啟。也是能輸入檔名,不能換路徑。
 ============
 
-pen2控制器點不出來
-手機模式不會底圖旋轉
-
-某手機版控制器不會定住(何沂刪的會定住), 列印時隱藏指令也無效
-某手機存檔時會再加上.txt副檔名
-div 旋轉當游標
-
-底稿旋轉後,平移及縮放異常,座標軸及增量都異常
-
-
+白格線用獨立圖層 (點清除後,要把格線補回去,)
 
 背景  2.載入圖片從本機  4. 暫存含rect
+
+
+pen2控制器點不出來
+手機模式不會底圖旋轉
+某手機版控制器不會定住(何沂刪的會定住), 列印時隱藏指令也無效
+某手機存檔時會再加上.txt副檔名
+底稿旋轉後,平移及縮放異常,座標軸及增量都異常
   
   = err ===============
 
-
   
-  err 清除後會留框(以XOR模式為了保持透明才能看到底圖)
+  err 清除後會留框(以XOR模式為了保持透明才能看到底圖), 換另個模式比較不會?
   ====================
 (待規劃)
 Square continuous pattern 四方连续图案
@@ -286,6 +283,7 @@ var init = function(){
 	gui.mouseLeave = function (e){
 		// console.log("mouseLeave");
 		enGestures = false;		//桌機版鼠標可能移出繪圖區,要取消連續模式
+		e.target.getContext("2d").reset();
 	}
 	
 gui.mouseDown = function (e){
@@ -366,7 +364,11 @@ gui.mouseMove=function (e){
 	// console.log("mouseMove" );
 
 	if(pen <= 1){
-		drawCross(e);
+		drawCross(e);	//滑鼠事件才有十字線等...
+		e.target.style.cursor= "none";	//e.target是cvs3
+	}else{
+		e.target.style.cursor= "";	
+		
 	}
 
 			if(!enGestures){
@@ -406,9 +408,7 @@ gui.mouseMove=function (e){
 			e.preventDefault();
 			e.stopPropagation();
 		}
-			// if(pen <= 1){
-		// drawCross(e);
-	// }
+
 		isMove = true;
 		touchCnt = e.targetTouches.length;
 		let x0 = e.targetTouches[0].pageX;
@@ -498,7 +498,7 @@ gui.gesturesMove=function (x, y){
 				if(pen ==1){
 					if(aArray[theCR.raw] && aArray[theCR.raw][theCR.col] ){	//清除
 						aArray[theCR.raw][theCR.col] = null;
-						ctx.globalCompositeOperation = "xor";		//預設值"source-over"
+						ctx.globalCompositeOperation = "destination-out";		//預設值"source-over",另xor
 						draw.diamond(tar.x, tar.y);
 						ctx.globalCompositeOperation ="source-over";		//預設值"source-over"
 					}
@@ -641,7 +641,7 @@ gui.gesturesEnd=function (x, y){
 				
 				if(pen ==1){
 					if(aArray[theCR.raw] && aArray[theCR.raw][theCR.col] ){	//清除
-						ctx.globalCompositeOperation = "xor";		//預設值"source-over"
+						ctx.globalCompositeOperation = "destination-out";		//預設值"source-over",另xor
 						aArray[theCR.raw][theCR.col] = undefined;
 						draw.diamond(tar.x, tar.y);
 						ctx.globalCompositeOperation ="source-over";		//預設值"source-over"
@@ -712,15 +712,21 @@ function drawAlldmd(){
 	
 	/*畫十字線(準星/瞄準線/定位線)*/
 	function drawCross(e){
-		if(window.screen.width < 1000){	//螢幕寬度小於1000屬「手機」,不顯示定位線
-			return;
-		}
+		// if(window.screen.width < 1000){	//螢幕寬度小於1000屬「手機」,不顯示定位線
+			// return;
+		// }
 		let cvs = e.target;
 		let ctx = cvs.getContext("2d");
 		let x0 = e.pageX;
 		let y0 = e.pageY;// - cmdpanel.getBoundingClientRect().top;
 		let c0 = dmWidth * 1.414 * 3 / 2;	//中間畫線空3格
-			ctx.clearRect(0,0, cvs.width, cvs.height);
+			ctx.reset();
+			
+			let tar = tools.getColRaw(x0, y0);
+			let cnt = tools.getXYbyRC(tar.raw, tar.col);
+			x0 = cnt.x;
+			y0 = cnt.y;			
+			
 			ctx.beginPath();
 			ctx.moveTo(x0,0);
 			ctx.lineTo(x0, y0-c0);
@@ -733,24 +739,62 @@ function drawAlldmd(){
 			
 			ctx.moveTo(x0+c0, y0);
 			ctx.lineTo(cvs.width, y0);
-			ctx.closePath();
+			// ctx.closePath();
+			ctx.lineWidth = .5;	//線條粗度(細線)
+			ctx.strokeStyle = "block";	//框線顏色
 			ctx.stroke();
+			
+						 
+		let r3 = (dmWidth/sqrt2) ;
+		
+		ctx.beginPath();
+		ctx.moveTo(x0, y0-r3);	//上方
+		ctx.lineTo(x0+r3, y0);
+		ctx.lineTo(x0, y0+r3);
+		ctx.lineTo(x0-r3, y0);
+		ctx.closePath();
+		
+		ctx.lineWidth = 2;
+		// ctx.strokeStyle = "silver";	//填滿色
+		ctx.stroke();
 	}
+
+
 /*畫白格線*/
 function drawGrid(){
-
+/* 先畫雙向細格線, 再單向蓋掉略小於格寬(刻度效果), 最後每5倍格寬畫粗細*/
 	let r1 = dmWidth * 1.414;
 	let r5 = r1*5;
 	let w9 = Math.max(canvas.width, canvas.height);	//依較長邊畫正方形範圍
 	w9 = (Math.trunc(w9/r5)+1) *r5;	//畫布長寬取格寬的整數
 		
-	ctx.lineWidth = 1.0;	//線條粗度(細線)
+	ctx.lineWidth = 0.5;	//線條粗度(細線)
 	ctx.strokeStyle = "Silver";	//框線顏色
-	ctx.setLineDash([2, 4]);	//虛線
-			
-	for(let id = 1;id<6;id+=4){		//
-		for(let xa = 0; xa<w9; xa+=(r1*id)){
+	// let dash = [2, 4];
+			// ctx.setLineDash(dash);		//虛線
 			ctx.beginPath();
+		for(let xa = 0; xa<w9; xa+=r1){
+
+
+			ctx.moveTo(xa, 0);	//往右斜
+			ctx.lineTo(w9, w9 - xa);
+			ctx.moveTo(xa, w9);		//往右斜
+			ctx.lineTo(0, w9-xa);
+
+			ctx.moveTo(xa, 0);	//往左斜
+			ctx.lineTo(0, xa);
+			ctx.moveTo(xa, w9);		//往左斜
+			ctx.lineTo(w9, xa);
+			
+
+		}
+			ctx.stroke();
+	// return;
+	ctx.globalCompositeOperation = "destination-out";
+		ctx.lineWidth = dmWidth*4/5;
+						ctx.beginPath();
+	for(let xa = r1/2; xa<w9; xa+=r1){
+
 			// ctx.moveTo(xa, 0);	//往右斜
 			// ctx.lineTo(w9, w9 - xa);			
 			ctx.moveTo(xa, 0);	//往左斜
@@ -760,13 +804,32 @@ function drawGrid(){
 			// ctx.lineTo(0, w9-xa);
 			ctx.moveTo(xa, w9);		//往左斜
 			ctx.lineTo(w9, xa);
-			ctx.closePath();
+			// ctx.closePath();
+
+}
 			ctx.stroke();
+	ctx.globalCompositeOperation ="source-over";
+	/* 粗線雙向全畫*/
+			// if(畫粗線){}else{break;}
+	ctx.lineWidth = 1.5;		//(粗線)
+				ctx.setLineDash([]);		//實線
+		// for(let id = 1;id<6;id+=4){		//
+					ctx.beginPath();
+		for(let xa = 0; xa<w9; xa+=(r1*5)){
+
+
+			ctx.moveTo(xa, 0);	//往右斜
+			ctx.lineTo(w9, w9 - xa);
+			ctx.moveTo(xa, w9);		//往右斜
+			ctx.lineTo(0, w9-xa);
+
+			ctx.moveTo(xa, 0);	//往左斜
+			ctx.lineTo(0, xa);
+			ctx.moveTo(xa, w9);		//往左斜
+			ctx.lineTo(w9, xa);
+
 		}
-		// if(畫粗線){}else{break;}
-		ctx.lineWidth = 1.5;		//(粗線)
-		ctx.setLineDash([]);		//實線
-	}
+			ctx.stroke();
 }
 	
 	
@@ -774,6 +837,7 @@ draw.diamond = function (x0, y0, sftx=0,sfty=0){
 			// console.log("ddm:",x0,y0);
 		let border = .5;	//間隔用比例可否?		 
 		let r3 = dmWidth /sqrt2 + border;
+		let r5 = r3*2/15;	//連線黑格之間的刻度長度
 		ctx.beginPath();
 		ctx.moveTo(x0, y0-r3);	//上方
 		ctx.lineTo(x0+r3, y0);
@@ -784,18 +848,25 @@ draw.diamond = function (x0, y0, sftx=0,sfty=0){
 		ctx.fillStyle = "gray";	//填滿色
 		ctx.fill();
 		
-		if(document.getElementById("check1").checked){
+		if(document.getElementById("check1").checked){//畫框
 			ctx.beginPath();
-			ctx.moveTo(x0, y0-r3);	//上方
-			ctx.lineTo(x0+r3, y0);
-			ctx.moveTo(x0, y0+r3);
-			ctx.lineTo(x0-r3, y0);
-			ctx.closePath();
+			
+			ctx.moveTo(x0, y0-r3);	//上
+			ctx.lineTo(x0+r3, y0);	//右
+			// ctx.lineTo(x0+r3-r5, y0+r5);	//刻度,這個位置會被蓋掉,所以省略不畫
+			
+			ctx.moveTo(x0, y0+r3);//下
+			ctx.lineTo(x0-r3, y0);//左
+			ctx.lineTo(x0-r3+r5, y0-r5);//刻度
+			
+			// ctx.closePath();	//封閉曲線成為方塊
 			ctx.lineWidth = 1.5;	//框線粗度
 			ctx.strokeStyle = "Silver";	//框線條色
 			ctx.stroke();
 		}
 	}
+	
+	
 draw.image = function(imgURL) {
 	// ctx.strokeRect(0, 0, cvs2.width, cvs2.height);	//畫外框
     return new Promise(resolve => {
@@ -1010,7 +1081,7 @@ tools.trim = function(){  //清除陣列人無效元素
 
 cmd.askLineWidth = function(){
 	tools.hidctl();
-	let answer = prompt('請輸入線框:', "" + userWidth);
+	let answer = prompt('請輸入線框(1.00~5.00):', "" + userWidth);
 	if(!answer){
 		return;
 	}
@@ -1023,7 +1094,7 @@ cmd.askLineWidth = function(){
 }
 
 
-tools.getXYbyRC = function(raw, col){  //列行值轉座標
+tools.getXYbyRC = function(raw, col){  //列行值轉中央座標
 	let r = dmWidth/sqrt2;
 	let r2=r*2;
 	let sftx = raw%2 * r;	//奇數行向右偏移
