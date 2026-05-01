@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋e2</title>
+		<title>菱格紋e3</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -13,6 +13,22 @@ body {
 	padding: 0;
 	//overflow: hidden;	//禁止滾動頁面。overflow-x: hidden;只禁X軸
 }
+@media print {
+	.header, .footer, .noprint {
+    display: none;	//沒效
+  }
+  @page {
+    /* 設定四邊邊界 */
+    margin: 1.5cm;	//有效
+    /* 或者分開設定：
+    margin-top: 1cm;
+    margin-bottom: 1cm;
+    margin-left: 1.5cm;
+    margin-right: 1.5cm;
+    */
+    size: A4; /* 設定紙張大小，參考[STEAM學習網的@page說明](https://steam.oxxostudio.tw/category/css/content/page.html) [1] */
+  }
+}
 </style>
 
   <script ></script>
@@ -21,13 +37,13 @@ body {
 <body>
 <div id="control" style="position: fixed;  border: 10px solid yellow; background-color:yellow; z-index:9; user-select:none; cursor: pointer;">
 
-	<button id="button1" onClick="cmd.swPen(this);"  style="display: inline-block;">筆跡⧫</button>
+	<button id="button1" onClick="cmd.swPen();"  style="display: inline-block;">鎖定</button>
 	<input type="checkbox" id="autoHide" checked_  ><label for="check12">自動隱藏</label>
 	<button onClick="cmd.upload();" style="display: inline-block;">載入</button>
 	<button onClick="cmd.saveFile();" style="display: inline-block;">存檔</button>
 	
 		<div id="bgcmds" style="display:none">
-		<input type="checkbox" id="check11" checked  ><label for="check11">顯示</label>
+		<input type="checkbox" id="showbg" checked  ><label for="check11">顯示</label>
 		  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked>
 		  <label class="form-check-label" for="inlineRadio1">平移</label>
 
@@ -75,7 +91,7 @@ body {
 	<div id="cmd03" style="position: absolute;border: 5px solid yellow;left:350px;top:0px;	cursor: pointer;user-select:none;" onClick="cmd.test2();">cmdB</div>
 	-->
 	
-	<canvas id="canvas2"  style="position: absolute; top:30px;left:30px;visibility_:hidden"></canvas>
+	<canvas id="canvas2"  style="position: absolute; top:100px;left:100px;visibility_:hidden"></canvas>
 	<canvas id="canvas" style="position: absolute;top:0px;left:0px;visibility_:hidden"></canvas>
 	<canvas id="canvas3" style="position: absolute;top:0px;left:0px;visibility_:hidden"></canvas>
 	<!--textarea id="ttaa" style="position: absolute;top:100px;left:0px;"></textarea -->
@@ -108,22 +124,18 @@ body {
   手機chrome的下載「對話框」要到「設定」，將「詢問...」開啟。也是能輸入檔名,不能換路徑。
 ============
 
-格寛設定要依頁邊重算
-手機要關閉十字線
+pen2控制器點不出來
+手機模式不會底圖旋轉
+
 某手機版控制器不會定住(何沂刪的會定住), 列印時隱藏指令也無效
 某手機存檔時會再加上.txt副檔名
 div 旋轉當游標
 
-底稿旋轉後,平移及縮放異常
-控制器,初值顯示, 設定為隱藏後, 長按可顯示, 自動隱藏。列印時強制隱藏。
-0編輯1移動圖模式及3移底圖模式
+底稿旋轉後,平移及縮放異常,座標軸及增量都異常
 
-背景
-  0.內建圖片取消
-  1.(不需要)前移以操作 el.style.zIndex = "10",清除用空字串或"auto", 
-  2.載入圖片從本機/網路
-  3.獨立平移、縮放、「旋轉」,記憶
-  4. 暫存/移除/隱藏  
+
+
+背景  2.載入圖片從本機  4. 暫存含rect
   
   = err ===============
 
@@ -169,7 +181,7 @@ var chk2 = document.getElementById("check2");
 var button1 = document.getElementById("button1");
 		
 	
-var userWidth = 2.3;
+var userWidth = 2.3;//篾寬
 var dmWidth;
 const sqrt2 = Math.sqrt(2);
 var degBG = 0;		//背景的角度
@@ -182,7 +194,7 @@ var isZoon=false;
 var touchCnt;
 
 var mode = 0;	//0編輯,3底稿
-var pen = 0;	//0畫點,1清除點
+var pen = 3;	//0畫點,1清除點, 2底圖, 3鎖定
 
 var mouseX;
 var mouseY;	
@@ -201,9 +213,9 @@ var cmd2 = {};	//控制底圖用的按鈕
 var arrow={};
 
 var init = function(){		
-		canvas.width = 1075;// window.innerWidth;//TODO如何取得1079
+		canvas.width = 968;// window.innerWidth;//TODO如何取得1079
 		//1079px用chrome預覽時可見,印成pdf,用chrome看時,不可見,直到1077,
-		//1077的pdf在全家印表機印不到右邊線,故改1075
+		//1077的pdf在全家印表機印不到右邊線,且右邊界為1.5cm
 		canvas.height = canvas.width*1.414;
 		
 		// cmdpanel.width = window.innerWidth;	
@@ -217,7 +229,7 @@ var init = function(){
 		
 		
 		let printWidth = 180;	//A4寬210 mm,扣左右各15
-		dmWidth = 1.414 * userWidth * canvas.width  / printWidth;		//A4短邊21cm(8.27英寸),
+		dmWidth = userWidth * canvas.width  / printWidth;		//A4短邊21cm(8.27英寸),
 	
 	//TODO 暫時停用 draw.Text();	//放字(另放圖)
 		// ctx2.strokeRect(5,5,canvas.width-10,canvas.height-10);	//外框
@@ -226,13 +238,24 @@ var init = function(){
 	// document.getElementById("canvas").getContext("2d").translate( -50, -50);
 		tools.initArr();
 		draw.refresh();
-		draw.image("./0627.jpg");
+		draw.image("./0627b.jpg");
+		cmd.swPen(3);
 		
+		//旋轉後依角度重新畫圖0度的元件上
+		let rect8 = cvs2.getBoundingClientRect();
+		console.log(rect8.top,rect8.left);
+		// cvs2.style.transform ="rotate("+ 45 +"deg)";//旋轉
+		
+		rect8 = cvs2.getBoundingClientRect();
+		console.log(rect8.top,rect8.left);
+
+		
+		// cvs2.style.top = rect8.top + 20;
+		// cvs2.style.left = rect8.left + 20;
+		rect8 = cvs2.getBoundingClientRect();	
+		console.log(rect8.top,rect8.left);
 		    // const deg = rotated ? 0 : 66;
-		/*
-		旋轉中心 transform-origin，預設為元件中心點
-		動畫效果 box.style.transition = 'transform 0.5s ease-in-out';
-		*/
+
 		// const deg = 15;
 		// cvs2.style.transform ="rotate(${deg}deg)";		//角度要有「deg」為單位
 //cvs2.style.transform ="rotate("+ deg +"deg)";		//角度要有「deg」為單位
@@ -324,7 +347,7 @@ gui.mouseDown = function (e){
 	gui.gesturesStart=function (x,y){
 		enGestures = true;
 		isMove = false;
-		
+		tools.hidctl();
 		
 		if(mode==1){
 			mouseX = x;
@@ -337,12 +360,12 @@ gui.mouseDown = function (e){
 var firstMove = false;
 gui.mouseMove=function (e){
 
-		e.preventDefault();
-		e.stopPropagation();
+		// e.preventDefault();
+		// e.stopPropagation();
 
 	// console.log("mouseMove" );
 
-	if(mode ==0){
+	if(pen <= 1){
 		drawCross(e);
 	}
 
@@ -379,10 +402,14 @@ gui.mouseMove=function (e){
 }
 	
 	gui.touchMove = function (e){
-		if(mode !=3){
+		if(pen !=3){
 			e.preventDefault();
 			e.stopPropagation();
 		}
+			// if(pen <= 1){
+		// drawCross(e);
+	// }
+		isMove = true;
 		touchCnt = e.targetTouches.length;
 		let x0 = e.targetTouches[0].pageX;
 		let y0 = e.targetTouches[0].pageY;
@@ -437,21 +464,22 @@ gui.mouseMove=function (e){
 
 let oldX,oldY;
 gui.gesturesMove=function (x, y){
-tools.hidctl();
+
+	tools.hidctl();
 
 
 
 	// let delay = Date.now() - clickTime;
-	// if(delay >100){
-		// enGestures = false;
-	// }
-	// if(!enGestures){
-		// return;
-	// }
+	if(!isMove && new Date() - clickTime >200){
+		enGestures = false;
+	}
+	if(!enGestures){
+		return;
+	}
 	// console.log(enGestures);
-	
-	if(mode==0 && touchCnt==1){	//單點觸擊才畫
-		isMove = true;
+	isMove = true;
+	if(pen<2){		//畫點或清點
+		
 		// let rect = canvas.getBoundingClientRect();
 		let tar = tools.rotate45(x - rect.left, y - rect.top, dmWidth);
 		
@@ -480,14 +508,14 @@ tools.hidctl();
 		}
 	 }
 	 
-	 if(mode ==3){
-						cvs2.style.position = "fixed";
+	 if(pen == 2){	//底圖
+						// cvs2.style.position = "fixed";
 					isMove = true;
 					// x0 -= canvas.getBoundingClientRect().x;
 					let rect2 = cvs2.getBoundingClientRect();
 					if(event.ctrlKey || 
-					document.getElementById("inlineRadio2").checked
-					){	//上縮下放, 要按ctrl
+						document.getElementById("inlineRadio2").checked
+					){	 //上縮下放, 要按ctrl
 						let z =  (y - mouseY)/100;
 						// console.log(z);
 						let newW = rect2.width * (1-z);	
@@ -517,19 +545,25 @@ tools.hidctl();
 					}
 					
 					if(document.getElementById("inlineRadio3").checked){	//旋轉
-						degBG += 1;
+							/*
+		旋轉中心 transform-origin，預設為元件中心點
+		動畫效果 box.style.transition = 'transform 0.5s ease-in-out';
+		*/
+						
+						degBG += y - mouseY;
 						if(degBG > 360){
 							degBG -= 360;
 						}
-								if(degBG < 0){
+						if(degBG < 0){
 							degBG += 360;
 						}				
 						cvs2.style.transform ="rotate("+ degBG +"deg)";		//角度要有「deg」為單位
-					
+					// let rectt = cvs2.getBoundingClientRect();
+					// console.log(rectt.x,rectt.y);
 					}
 						mouseX = x;
 						mouseY = y;
-						cvs2.style.position = "absolute";
+						// cvs2.style.position = "absolute";
 					return;
 				}
 	 
@@ -555,8 +589,7 @@ tools.hidctl();
 		let x0 = e.changedTouches[0].pageX;
 		// let x1 = e.target.getBoundingClientRect().left;
 		// let y1 = e.target.getBoundingClientRect().top;
-		if(isZoon){	//縮放後放開
-			isZoon=false;
+
 			// distPrev = undefined;
 			// centerX = undefined;
 			// centerY = undefined;
@@ -569,14 +602,14 @@ tools.hidctl();
 			// str += ",h"+ (~~rect.height);
 			
 			// tools.log( str );
-		}else{
+
 			// let sftx = e.target.getBoundingClientRect().x - rect.left;
 			// let sfty = e.target.getBoundingClientRect().y - rect.top;
 			// console.log(x0, e.target.getBoundingClientRect().x ,rect.left);
 			
 			gui.gesturesEnd(x0 , y0);
 			// gui.gesturesEnd(x - x1, y-y1);
-		}
+
 		// e.preventDefault();//這行會報錯
 		mouseX = undefined;
 		mouseY = undefined;
@@ -623,9 +656,11 @@ gui.gesturesEnd=function (x, y){
 			// alert("逾時取消U");
 			// let ele = cmdPanel;
 			// ele.style.display = "fixed";
-			cmdPanel.style.left = x + canvas.getBoundingClientRect().left;
-			cmdPanel.style.top = y + canvas.getBoundingClientRect().top;
-			cmdPanel.style.visibility = "visible";
+			// if(document.getElementById("autoHide").checked){
+				cmdPanel.style.left = x + canvas.getBoundingClientRect().left;
+				cmdPanel.style.top = y + canvas.getBoundingClientRect().top;
+				cmdPanel.style.visibility = "visible";
+			// }
 			return;
 			// cmd.swmode();
 		}
@@ -659,9 +694,11 @@ function drawAlldmd(){
 	
 	function drawMsg(){
 		let msg = "菱格紋輔助設計APP, userWidth:" + userWidth +"mm";
-		msg += ", 白格細"+ "0.5" +"px";
+		msg += ", 白格細"+ "1.0" +"px";
 		msg += ", 白格粗"+"1.5" +"px";
 		msg += ", 黑邊線"+"0.5" +"px";
+		msg += ", canvas.width:"+ canvas.width;
+		msg += ", font:"+ ctx.font;
 		ctx.font = "20px sans-serif "; //設定文字字型 大小, cursive 對應楷書, sans-serif 對應黑體,serif 對應明體/宋體
 	// ctx2.fillStyle="#00A0E9"; //設定文字填滿顏色
 	// ctx.strokeStyle="#D50A17" //設定文字邊框
@@ -681,7 +718,7 @@ function drawAlldmd(){
 		let cvs = e.target;
 		let ctx = cvs.getContext("2d");
 		let x0 = e.pageX;
-		let y0 = e.pageY-30;// - cmdpanel.getBoundingClientRect().top;
+		let y0 = e.pageY;// - cmdpanel.getBoundingClientRect().top;
 		let c0 = dmWidth * 1.414 * 3 / 2;	//中間畫線空3格
 			ctx.clearRect(0,0, cvs.width, cvs.height);
 			ctx.beginPath();
@@ -726,6 +763,7 @@ function drawGrid(){
 			ctx.closePath();
 			ctx.stroke();
 		}
+		// if(畫粗線){}else{break;}
 		ctx.lineWidth = 1.5;		//(粗線)
 		ctx.setLineDash([]);		//實線
 	}
@@ -759,7 +797,7 @@ draw.diamond = function (x0, y0, sftx=0,sfty=0){
 		}
 	}
 draw.image = function(imgURL) {
-	ctx.strokeRect(0, 0, cvs2.width, cvs2.height);	//畫外框
+	// ctx.strokeRect(0, 0, cvs2.width, cvs2.height);	//畫外框
     return new Promise(resolve => {
         const img = new Image()
         img.crossOrigin = 'anonymous'
@@ -775,7 +813,7 @@ draw.image = function(imgURL) {
 
             // 繪圖
             ctx2.drawImage(img, 0, 0);
-			ctx.strokeRect(0, 0, cvs2.width, cvs2.height);	//畫外框
+			// ctx.strokeRect(0, 0, cvs2.width, cvs2.height);	//畫外框
             // resolve(cvs2);
          })
         img.src = imgURL
@@ -831,22 +869,27 @@ cmd.swlayer = function(tar){  //底稿draft 與菱格
 }
 cmd.print = function(){
 	//列印前
+	let tmp = cmdPanel.style.visibility;
 	cmdPanel.style.visibility = "hidden";	//隱藏控制器,列印後不需重現
 	cvs2.style.display = "none";	//隱藏底稿
 	draw.refresh();	//清理線「渣」
-	cmdpanel.getContext("2d").clearRect(0,0,cmdpanel.width,cmdpanel.height);//清除十字線
+	cvs3.getContext("2d").clearRect(0,0,cvs3.width,cvs3.height);//清除十字線
 	//標題名稱加上日期時間
 	window.print();
-	cvs2.style.display = "block";
+	 cmdPanel.style.visibility = tmp;
+	 cmd.swPen(3);
+	// document.getElementById("bgcmds").style.display = tmp;
 }
 
 cmd.clear = function(){
+	tools.hidctl();
 	let answer = confirm('清除圖案？');
 	if(answer){
 		aArray = [];
 		localStorage.setItem("dmdArr", JSON.stringify(aArray));	//暫存編輯資料
 		draw.refresh();
 	}
+	
 }
 
 	/*重繪畫面(通常用在整體參數異動時)*/
@@ -861,13 +904,21 @@ draw.refresh = 	function (){
 		drawMsg();
 	}
 
-cmd.swPen=function(tar){
+cmd.swPen=function(id){
 	let chars = ["筆跡⧫","筆跡◊", "底圖","鎖定"];	//第三種"筆⧫/◊",為互斥模式
-	pen++;
-	if(pen == chars.length){
-		pen = 0;
+	if(id){
+		if(id<chars.length){
+			pen = id;
+		}else{
+			return;
+		}
+	}else{
+		pen++;
+		if(pen == chars.length){
+			pen = 0;
+		}
 	}
-	tar.innerText =chars[pen];
+	document.getElementById("button1").innerText =chars[pen];
 	document.getElementById("bgcmds").style.display = "none";
 	switch(pen){
 	case 0:{
@@ -910,6 +961,7 @@ cmd.test2 = function(){
 
 cmd.savelocal = function(){
 	localStorage.setItem("dmdArr", JSON.stringify(aArray));
+	tools.hidctl();
 }
 
 cmd.swmode = function(){
@@ -957,6 +1009,7 @@ tools.trim = function(){  //清除陣列人無效元素
 }
 
 cmd.askLineWidth = function(){
+	tools.hidctl();
 	let answer = prompt('請輸入線框:', "" + userWidth);
 	if(!answer){
 		return;
@@ -1077,7 +1130,9 @@ tools.log = function(str, sec){
 }
 
 cmd.saveFile = function (fileName="1234.dm1") {
+	tools.hidctl();
 	tools.trim();
+	cmd.swPen(3);
 	let content =  JSON.stringify(aArray);
 	localStorage.setItem("dmdArr",content);	//暫存編輯資料
 	
@@ -1096,7 +1151,9 @@ cmd.saveFile = function (fileName="1234.dm1") {
 
 cmd.upload0 = function(){}  //因為upload加了async無法被列到清單
 cmd.upload = async function(){
-	let [fileHandle] = await window.showOpenFilePicker({	//檔案輸入對話框
+	tools.hidctl();
+	cmd.swPen(3);
+	let [fileHandle] = await window.showOpenFilePicker({	//檔案輸入對話框。用戶取消會AbortError
 		startIn_: 'pictures', 
 		id: 'my-app-uploader',		//記住最近位置(失敗)
 	});
@@ -1162,6 +1219,20 @@ chk2.addEventListener('change', (e) => {
   // }
 });
 
+document.getElementById("autoHide").addEventListener('change', (e) => {
+	if(e.target.checked){
+		cmdPanel.style.visibility = "hidden";	//隱藏控制器
+	}
+});
+
+document.getElementById("showbg").addEventListener('change', (e) => {
+	if(e.target.checked){
+		cvs2.style.display = "block";	//隱藏底稿
+	}else{
+		cvs2.style.display = "none";	
+	}
+});
+
 
 /*停用系統右鍵選單*/
 document.addEventListener("contextmenu", function(e){
@@ -1172,6 +1243,7 @@ document.addEventListener("contextmenu", function(e){
 /* 關閉視窗「前」 */	
 window.onbeforeunload = function() {
 	localStorage.setItem("dmdArr", JSON.stringify(aArray));	//暫存編輯資料
+	cmd.swPen(3);	//不可編輯
 	//localStorage.removeItem(key);
 };
 
@@ -1181,6 +1253,7 @@ document.addEventListener("visibilitychange", () => {
 	if (document.visibilityState === "hidden"){	//visible可見、hidden隱藏prerende預渲染(很少用)、unloaded(已棄用)
 	// console.log("hidden");
 		localStorage.setItem("dmdArr", JSON.stringify(aArray));	//暫存編輯資料
+		cmd.swPen(3);	//不可編輯
 	}
 });
 
