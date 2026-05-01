@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋e3</title>
+		<title>菱格紋e4</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -124,12 +124,12 @@ body {
   手機chrome的下載「對話框」要到「設定」，將「詢問...」開啟。也是能輸入檔名,不能換路徑。
 ============
 
-白格線用獨立圖層 (點清除後,要把格線補回去,)
-
+白格線用獨立圖層 (canvas的點清除後,要把格線補回去,)
+觸控時,長按避免輕微移動, 0.3秒+-5點，(因為控制器點不出來)
 背景  2.載入圖片從本機  4. 暫存含rect
 
 
-pen2控制器點不出來
+
 手機模式不會底圖旋轉
 某手機版控制器不會定住(何沂刪的會定住), 列印時隱藏指令也無效
 某手機存檔時會再加上.txt副檔名
@@ -193,12 +193,18 @@ var touchCnt;
 var mode = 0;	//0編輯,3底稿
 var pen = 3;	//0畫點,1清除點, 2底圖, 3鎖定
 
+
 var mouseX;
 var mouseY;	
 var centerX;
 var centerY;
 var distPrev;
 var clickTime;
+
+var maxX;
+var maxY;
+var minX;
+var minY
 
 var showBorder = true;	//黑格邊
 var showGrid = true;		//白格線
@@ -307,12 +313,18 @@ gui.mouseDown = function (e){
 	e.stopPropagation();
 }
 	
-	gui.touchStart = function(e){
-		touchCnt = e.targetTouches.length;
-		clickTime = Date.now();
-		isMove = false;
-		mouseX = e.pageX;
-		mouseY = e.pageY;
+gui.touchStart = function(e){
+	touchCnt = e.targetTouches.length;
+	clickTime = Date.now();
+	isMove = false;
+	mouseX = e.targetTouches[0].pageX;
+	mouseY = e.targetTouches[0].pageY;
+	
+	maxX = mouseX;
+	maxY = mouseY;
+	minX = mouseX;
+	minY = mouseY;
+	// console.log("a:" + maxX+", "+maxY+", "+minX+", "+minY);
 		/*
 		th2p.setup(e);{	//初始化move要用的x,y值
 		th2p.x0 =  e.targetTouches[0].pageX;
@@ -409,11 +421,24 @@ gui.mouseMove=function (e){
 			e.stopPropagation();
 		}
 
-		isMove = true;
+
 		touchCnt = e.targetTouches.length;
 		let x0 = e.targetTouches[0].pageX;
 		let y0 = e.targetTouches[0].pageY;
-
+		if(x0 > maxX){
+			maxX = x0;
+		}else if(x0 < minX){
+			minX = x0;
+		}
+		if(y0 > maxY){
+			maxY = y0;
+		}else if(y0 < minY){
+			minY = y0;
+		}
+		if(Math.abs(maxX-minX) > 5 || Math.abs(maxY-minY) > 5){
+					isMove = true;
+		}
+		// console.log(maxX,maxY,minX,minY);
 		
 		if(touchCnt ==2 && mode==3){		//移動底稿
 			cvs2.style.position = "fixed";
