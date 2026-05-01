@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋e4</title>
+		<title>菱格紋e5</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -435,7 +435,7 @@ gui.mouseMove=function (e){
 		}else if(y0 < minY){
 			minY = y0;
 		}
-		if(Math.abs(maxX-minX) > 5 || Math.abs(maxY-minY) > 5){
+		if(Math.abs(maxX-minX) > 10 || Math.abs(maxY-minY) > 10){
 					isMove = true;
 		}
 		// console.log(maxX,maxY,minX,minY);
@@ -495,9 +495,11 @@ gui.gesturesMove=function (x, y){
 
 
 	// let delay = Date.now() - clickTime;
-	if(!isMove && new Date() - clickTime >200){
+	if(isMove && new Date() - clickTime >200){
 		enGestures = false;
+		return;
 	}
+	
 	if(!enGestures){
 		return;
 	}
