@@ -1,7 +1,8 @@
-<html>
+<html translate="no">
 	<head>
-		<title>菱格紋e6</title>
+		<title>菱格紋e7</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
+		<meta name="google" content="notranslate">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
 		<meta name="language" content="tw">		<!-- 希望不會詢問是否翻譯 -->
@@ -242,9 +243,7 @@ var init = function(){
 		//旋轉後依角度重新畫圖0度的元件上
 		let rect8 = cvs2.getBoundingClientRect();
 		// console.log(rect8.top,rect8.left);
-		cvs2.style.transform ="rotate(45deg)";//旋轉
-		cvs2.style.transform ="rotate(45deg)";//旋轉
-		// cvs2.style.transform ="rotate(45deg) translate(100px, 100px)";//旋轉
+		// cvs2.style.transform ="rotate(45deg)";//旋轉
 		
 		rect8 = cvs2.getBoundingClientRect();
 		// console.log(rect8.top,rect8.left);
@@ -341,9 +340,13 @@ gui.touchStart = function(e){
 		// isZoom = false;	//touchEnd有放就可以了。
 		// console.log(~~x,~~y,~~x1,~~y1);
 		gui.gesturesStart(x,y);
-		/*chrome 手機模式會先觸發mouseMove,再觸發mouseDown, 故要在touchStart封鎖*/ 
-		e.preventDefault();			// 這行會報錯 //停止事件的默認動作
-		e.stopPropagation();		//阻止事件冒泡
+		/*chrome 手機模式會先觸發mouseMove,再觸發mouseDown, 故要在touchStart封鎖
+			但全封又不能使用瀏覽器的移動及縮放。
+		*/ 
+		if(pen !=3){
+			e.preventDefault();			//停止事件的默認動作
+			e.stopPropagation();		//阻止事件冒泡
+		}
 	}
 /*
 手勢操作
@@ -975,11 +978,11 @@ cmd.clear = function(){
 	/*重繪畫面(通常用在整體參數異動時)*/
 draw.refresh = 	function (){
 		ctx.clearRect(0, 0, canvas.width, canvas.height);		//清空
-		ctx.strokeRect(0, 0, canvas.width, canvas.height);	//外框
 		
 		if(chk2.checked){
 			drawGrid();
 		}
+		ctx.strokeRect(0, 0, canvas.width, canvas.height);	//外框
 		drawAlldmd();
 		drawMsg();
 	}
