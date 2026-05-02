@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>菱格紋e5</title>
+		<title>菱格紋e6</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
@@ -15,8 +15,9 @@ body {
 }
 @media print {
 	.header, .footer, .noprint {
-    display: none;	//沒效
-  }
+													display: none;	//沒效
+												  }
+  
   @page {
     /* 設定四邊邊界 */
     margin: 1.5cm;	//有效
@@ -26,24 +27,25 @@ body {
     margin-left: 1.5cm;
     margin-right: 1.5cm;
     */
-    size: A4; /* 設定紙張大小，參考[STEAM學習網的@page說明](https://steam.oxxostudio.tw/category/css/content/page.html) [1] */
+    size: A4; /* 設定紙張大小， */
   }
 }
 </style>
 
-  <script ></script>
-  <script>   </script>
+  <script></script>
+  <script></script>
 </head>
 <body>
-<div id="control" style="position: fixed;  border: 10px solid yellow; background-color:yellow; z-index:9; user-select:none; cursor: pointer;">
+<div id="control" style="position: fixed;  border: 10px solid yellow; background-color:yellow; z-index:9;top:0; user-select:none; cursor: pointer; touch-action_: none">
 
 	<button id="button1" onClick="cmd.swPen();"  style="display: inline-block;">鎖定</button>
 	<input type="checkbox" id="autoHide" checked_  ><label for="check12">自動隱藏</label>
 	<button onClick="cmd.upload();" style="display: inline-block;">載入</button>
 	<button onClick="cmd.saveFile();" style="display: inline-block;">存檔</button>
 	
-		<div id="bgcmds" style="display:none">
-		<input type="checkbox" id="showbg" checked  ><label for="check11">顯示</label>
+		<div id="bgcmds" >
+			<input type="file" id="real-input" name="filename" accept="image/*" style_="display: none;">
+			<input type="checkbox" id="showbg" checked  ><label for="check11">顯示</label>
 		  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked>
 		  <label class="form-check-label" for="inlineRadio1">平移</label>
 
@@ -55,30 +57,14 @@ body {
 	<button onClick="cmd.clear();" style="display: inline-block;">清空</button>
 	<button onClick="cmd.print();" style="display: inline-block;">列印</button>
 	<button onClick="cmd.askLineWidth();" style="display: inline-block;">篾寬</button>
+	
+	<div style="display:none">
+	<input type="range" max="5.0" min="1.0" step="0.1" value="2.3" style="width:70px;"
+		oninput="this.nextElementSibling.value = '篾寬 '+this.value+' mm'">
+		<output>篾寬 2.3 mm</output>
+	</div>
 	<input type="checkbox" id="check1" checked  ><label for="check1">黑邊線</label>
 	<input type="checkbox" id="check2" checked ><label for="check2">白格線</label>
-	<div id="left" onClick="arrow.left();" style="position: fixed; top:100px; left:0px; ">左</div>
-
-
-
-	<div style="display: inline-block; visibility:hidden">
-		<div>
-			<button onClick="cmd.swPen(this);" style="display: inline-block;">+</button>
-			<button onClick="cmd2.move(0);" style="display: inline-block;">↑</button>
-			<button onClick="cmd.swPen(this);" style="display: inline-block;">⟳</button>
-		</div>
-		<div>
-			<button onClick="cmd2.move(2);" style="display: inline-block;">←</button>
-			<button onClick="cmd.swPen(this);" style="display: inline-block;">0</button>
-			<button onClick="cmd2.move(3);" style="display: inline-block;">→</button>
-		</div>
-		<div>
-			<button onClick="cmd.swPen(this);" style="display: inline-block;">-</button>
-			<button onClick="cmd2.move(1);;" style="display: inline-block;">↓</button>
-			<button onClick="cmd.swPen(this);" style="display: inline-block;">⟲</button>
-		</div>	
-	</div>
-
 </div>
 	
 
@@ -122,29 +108,36 @@ body {
 
 列印用chrome可輪出成pdf(canvas是點陣圖, 體積大,解析低)
   手機chrome的下載「對話框」要到「設定」，將「詢問...」開啟。也是能輸入檔名,不能換路徑。
+  chrome 手機模式會先觸發mouseMove,再觸發mouseDown, 故要在touchStart封鎖
+  畫面的移動與縮放, 使用瀏覽器內建操作(不要封鎖即可)。
 ============
 
-白格線用獨立圖層 (canvas的點清除後,要把格線補回去,)
-觸控時,長按避免輕微移動, 0.3秒+-5點，(因為控制器點不出來)
+控制器_移動改用transform
+控制器失敗,改為縮小並可移動,並留在頁內。實體手機時,長按避免輕微移動, 0.3秒+-5點，(因為實體手機時, 控制器點不出來)
+控制器_手機模式,以fixed將控制器釘住失敗  const scrollY = window.scrollY || window.pageYOffset;	//chrome模擬手機時,取值恆為零
+
 背景  2.載入圖片從本機  4. 暫存含rect
+背景_圖片不用canvas編輯功能, 應換成img
+背景_底稿旋轉後,平移及縮放異常,座標軸及增量都異常
+
+白格線獨立圖層
+
+ 十字線定位會偏差
 
 
-
-手機模式不會底圖旋轉
 某手機版控制器不會定住(何沂刪的會定住), 列印時隱藏指令也無效
-某手機存檔時會再加上.txt副檔名
-底稿旋轉後,平移及縮放異常,座標軸及增量都異常
-  
+某手機存檔時會再加上.txt副檔名(去東山再測,何中原,林印任)
+
   = err ===============
 
   
-  err 清除後會留框(以XOR模式為了保持透明才能看到底圖), 換另個模式比較不會?
+ 
   ====================
 (待規劃)
 Square continuous pattern 四方连续图案
 更大的紙張尺寸, 每mm5.9個點
-cursor url 自訂滑鼠游標圖(畫點為黑菱形,清除為白菱形)
-桌機版角落放縮圖
+
+縮圖_桌機版角落放縮圖
 十字線, 10秒沒動就清除(要計時功能)
 狀態列,n秒後回復(標題當但chrome手機版顯示的是網址)
 (還是用標準GUI)網址列放參數, 如「茶」
@@ -155,10 +148,10 @@ cursor url 自訂滑鼠游標圖(畫點為黑菱形,清除為白菱形)
 區塊複製,多格點選取以複製、稿圖庫、浮水印
 ,基本繪圖功能如直線...
 底圖_字型抓Google font來用,字體設定。 有毛笔字在線生成器
-直接輸出PDF以提高畫質並縮小檔案, Generating PDF Files
-用svg取代canvas
+
+用div 或 svg取代canvas
 PDF自訂檔名要改標題列
-記錄載入時的路徑(失敗)
+記錄最近載入dm1時的路徑(失敗), 並引用。
 
 */
 
@@ -200,6 +193,8 @@ var centerX;
 var centerY;
 var distPrev;
 var clickTime;
+var touchX0;	//開始觸控點,不被move改變
+var touchY0;
 
 var maxX;
 var maxY;
@@ -246,17 +241,19 @@ var init = function(){
 		
 		//旋轉後依角度重新畫圖0度的元件上
 		let rect8 = cvs2.getBoundingClientRect();
-		console.log(rect8.top,rect8.left);
-		// cvs2.style.transform ="rotate("+ 45 +"deg)";//旋轉
+		// console.log(rect8.top,rect8.left);
+		cvs2.style.transform ="rotate(45deg)";//旋轉
+		cvs2.style.transform ="rotate(45deg)";//旋轉
+		// cvs2.style.transform ="rotate(45deg) translate(100px, 100px)";//旋轉
 		
 		rect8 = cvs2.getBoundingClientRect();
-		console.log(rect8.top,rect8.left);
+		// console.log(rect8.top,rect8.left);
 
 		
 		// cvs2.style.top = rect8.top + 20;
 		// cvs2.style.left = rect8.left + 20;
 		rect8 = cvs2.getBoundingClientRect();	
-		console.log(rect8.top,rect8.left);
+		// console.log(rect8.top,rect8.left);
 		    // const deg = rotated ? 0 : 66;
 
 		// const deg = 15;
@@ -314,11 +311,14 @@ gui.mouseDown = function (e){
 }
 	
 gui.touchStart = function(e){
+	// console.log("touchStart" );
 	touchCnt = e.targetTouches.length;
 	clickTime = Date.now();
 	isMove = false;
 	mouseX = e.targetTouches[0].pageX;
 	mouseY = e.targetTouches[0].pageY;
+	touchX0 = e.targetTouches[0].pageX;;
+	touchY0 = e.targetTouches[0].pageY;;
 	
 	maxX = mouseX;
 	maxY = mouseY;
@@ -341,8 +341,9 @@ gui.touchStart = function(e){
 		// isZoom = false;	//touchEnd有放就可以了。
 		// console.log(~~x,~~y,~~x1,~~y1);
 		gui.gesturesStart(x,y);
-		// e.preventDefault();			// 這行會報錯 //停止事件的默認動作
-		// e.stopPropagation();		//阻止事件冒泡
+		/*chrome 手機模式會先觸發mouseMove,再觸發mouseDown, 故要在touchStart封鎖*/ 
+		e.preventDefault();			// 這行會報錯 //停止事件的默認動作
+		e.stopPropagation();		//阻止事件冒泡
 	}
 /*
 手勢操作
@@ -406,25 +407,21 @@ gui.mouseMove=function (e){
 					}
 					firstMove = false;
 				}
-
-
-
 		gui.gesturesMove(x0, y0);
-
-
-
 }
 	
+	
 	gui.touchMove = function (e){
+		// console.log("touchMove" );
 		if(pen !=3){
 			e.preventDefault();
 			e.stopPropagation();
 		}
-
-
+		
 		touchCnt = e.targetTouches.length;
 		let x0 = e.targetTouches[0].pageX;
 		let y0 = e.targetTouches[0].pageY;
+
 		if(x0 > maxX){
 			maxX = x0;
 		}else if(x0 < minX){
@@ -484,7 +481,8 @@ gui.mouseMove=function (e){
 		}else{
 			gui.gesturesMove(x0, y0);
 		}
-
+	mouseX = x0;
+	mouseY = y0;
 	}
 
 let oldX,oldY;
@@ -495,16 +493,18 @@ gui.gesturesMove=function (x, y){
 
 
 	// let delay = Date.now() - clickTime;
-	if(isMove && new Date() - clickTime >200){
+	if(!isMove && new Date() - clickTime >200){	//0.2秒還沒開始畫,就不給畫了
 		enGestures = false;
 		return;
+	}else{
+			isMove = true;
 	}
 	
 	if(!enGestures){
 		return;
 	}
 	// console.log(enGestures);
-	isMove = true;
+
 	if(pen<2){		//畫點或清點
 		
 		// let rect = canvas.getBoundingClientRect();
@@ -571,29 +571,24 @@ gui.gesturesMove=function (x, y){
 						}
 					}
 					
-					if(document.getElementById("inlineRadio3").checked){	//旋轉
+	if(document.getElementById("inlineRadio3").checked){	//旋轉
 							/*
 		旋轉中心 transform-origin，預設為元件中心點
 		動畫效果 box.style.transition = 'transform 0.5s ease-in-out';
 		*/
 						
-						degBG += y - mouseY;
-						if(degBG > 360){
-							degBG -= 360;
-						}
-						if(degBG < 0){
-							degBG += 360;
-						}				
-						cvs2.style.transform ="rotate("+ degBG +"deg)";		//角度要有「deg」為單位
-					// let rectt = cvs2.getBoundingClientRect();
-					// console.log(rectt.x,rectt.y);
-					}
-						mouseX = x;
-						mouseY = y;
-						// cvs2.style.position = "absolute";
-					return;
-				}
-	 
+			degBG += y - mouseY;
+			if(degBG > 360){
+				degBG -= 360;
+			}
+			if(degBG < 0){
+				degBG += 360;
+			}				
+			cvs2.style.transform ="rotate("+ degBG +"deg)";		//角度是絕值以變數保存,後面要有「deg」為單位
+		}
+			mouseX = x;
+			mouseY = y;
+	}	 
 }
 	
 	gui.mouseUp = function (e){
@@ -646,55 +641,42 @@ gui.gesturesEnd=function (x, y){
 	if(enGestures){
 		enGestures = false;
 	}
-	if(isMove){
+	if(isMove){		//移動過,放開就不畫
 			return;
 	}
-	//沒有移動過
-	// console.log("mouseUp");
-		let delay =  Date.now() - clickTime;
-		if(delay < 200){
-			if(mode==0){//編輯
-			// console.log("畫點",x,y);
-				// let rect = canvas.getBoundingClientRect();
-				let tar = tools.rotate45(x - rect.left, y - rect.top, dmWidth);
-				let theCR = tools.getColRaw(tar.x, tar.y);
-				
-				if(pen ==0){
-					if(!aArray[theCR.raw] ||!aArray[theCR.raw][theCR.col] ){	//畫點
-						tools.setArr(theCR);
-						draw.diamond(tar.x, tar.y);
-					}
-				}
-				
-				if(pen ==1){
-					if(aArray[theCR.raw] && aArray[theCR.raw][theCR.col] ){	//清除
-						ctx.globalCompositeOperation = "destination-out";		//預設值"source-over",另xor
-						aArray[theCR.raw][theCR.col] = undefined;
-						draw.diamond(tar.x, tar.y);
-						ctx.globalCompositeOperation ="source-over";		//預設值"source-over"
-					}
-				}
 
-				
-				oldX = tar.x;
-				oldY = tar.y;
-			}
-		}else{
-			// alert("逾時取消U");
-			// let ele = cmdPanel;
-			// ele.style.display = "fixed";
-			// if(document.getElementById("autoHide").checked){
-				cmdPanel.style.left = x + canvas.getBoundingClientRect().left;
-				cmdPanel.style.top = y + canvas.getBoundingClientRect().top;
-				cmdPanel.style.visibility = "visible";
-			// }
-			return;
-			// cmd.swmode();
-		}
-
-
+	let delay =  Date.now() - clickTime;
+	if(delay < 200){		//畫單點
+		let tar = tools.rotate45(x - rect.left, y - rect.top, dmWidth);
+		let theCR = tools.getColRaw(tar.x, tar.y);
 		
-		// let delay = Date.now() - clickTime;
+		if(pen ==0){
+			if(!aArray[theCR.raw] ||!aArray[theCR.raw][theCR.col] ){	//畫點
+				tools.setArr(theCR);
+				draw.diamond(tar.x, tar.y);
+			}
+		}
+		
+		if(pen ==1){
+			if(aArray[theCR.raw] && aArray[theCR.raw][theCR.col] ){	//清除
+				ctx.globalCompositeOperation = "destination-out";		//預設值"source-over",另xor
+				aArray[theCR.raw][theCR.col] = undefined;
+				draw.diamond(tar.x, tar.y);
+				ctx.globalCompositeOperation ="source-over";		//預設值"source-over"
+			}
+		}
+		oldX = tar.x;
+		oldY = tar.y;
+	}else{
+		// cmdPanel.style.left = x + canvas.getBoundingClientRect().left;
+		// cmdPanel.style.top = y + canvas.getBoundingClientRect().top;
+		let dx = x + canvas.getBoundingClientRect().left;
+		let dy = y + canvas.getBoundingClientRect().top;
+		//scale(2)縮放,transform-origin縮放中心(預設中央)
+		// cmdPanel.style.transform ="translate("+ dx+"px, "+ dy +"px) rotate(45deg) ";
+		cmdPanel.style.transform ="translate("+ dx+"px, "+ dy +"px)";
+		cmdPanel.style.visibility = "visible";
+	}
 }
 	
 
@@ -1356,7 +1338,13 @@ document.addEventListener("visibilitychange", () => {
 });
 
 
-/*視窗變動時,頁面滾動時*/
+// window.addEventListener("touchmove", function () {
+	// const scrollY = window.scrollY || window.pageYOffset;	//chrome模擬手機時,取值恆為零
+	// console.log(scrollY);
+// });
+
+
+/*[手機無效]視窗變動時,頁面滾動時*/
 window.addEventListener("scroll", function () {
     //內容...
 	tools.hidctl();
@@ -1374,6 +1362,23 @@ window.addEventListener("scroll", function () {
 });
 
 
+/* 此法瀏覽器會記錄最近的路徑*/
+var input = document.getElementById('real-input');
+input.addEventListener('change', () => {
+  const file = input.files[0];
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    // Save the Base64 string to localStorage
+    // localStorage.setItem('imageBG', reader.result);
+    console.log(input.files[0].name);	//只能存檔名???沒有路徑
+  };
+
+  if (file) {
+    reader.readAsDataURL(file);
+  }
+  
+});
 /*
 window.scroll=function(){
   var div = document.getElementById("cmd01");
