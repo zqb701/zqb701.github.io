@@ -1,20 +1,22 @@
 <html translate="no">
 	<head>
-		<title>菱格紋e7</title>
+		<title>菱格紋e9</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="google" content="notranslate">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- meta name="viewport" content="width=device-width, initial-scale=1.0" -->
 		<!-- 小螢幕等比例放大, 轉橫向時再依寬度放大-->
 		<meta name="language" content="tw">		<!-- 希望不會詢問是否翻譯 -->
 <style>
 html,
 body {
-	border: none;
-	margin: 0;
-	padding: 0;
+	background-color: white;	//背景顏色, 預設值transparent (透明)
+	border: none;	//框線樣式, 例5px solid black
+	margin: 0;			//外邊距
+	padding: 0;		//內邊距
 	//overflow: hidden;	//禁止滾動頁面。overflow-x: hidden;只禁X軸
 	// scroll-snap-stop: always;	//無效
 }
+
 @media print {
 	.header, .footer, .noprint {
 													display: none;	//沒效
@@ -38,16 +40,32 @@ body {
   <script></script>
 </head>
 <body>
-<div style="position: sticky;  top: 0;  width: 100%;">asd</div>
+<script>
+_body = function(){  }
+</script>
+<div id="control" style="position:fixed ;  border: 10px solid yellow; background-color:yellow; z-index:9;top:0; user-select:none; cursor: pointer; touch-action_: none;border-radius: 10px;" class="noprint">
 
-<div id="control" style="position:fixed ;  border: 10px solid yellow; background-color:yellow; z-index:9;top:30; user-select:none; cursor: pointer; touch-action_: none">
-
-	<button id="button1" onClick="cmd.swPen();"  style="display: inline-block;">鎖定</button>
-	<input type="checkbox" id="autoHide" checked_  ><label for="check12">自動隱藏</label>
+	<button id="button1" onClick="cmd.swPen();"  >鎖定</button>
+<div id="mainCmd" style="display:none;">
+	<input type="checkbox" id="autoHide" checked_  style="display:none">
+	<label for="check12" style="display:none">自動隱藏</label>
 	<button onClick="cmd.upload();" style="display: inline-block;">載入</button>
 	<button onClick="cmd.saveFile();" style="display: inline-block;">存檔</button>
+	<button onClick="cmd.clear();" style="display: inline-block;">清空</button>
+	<button onClick="cmd.print();" style="display: inline-block;">列印</button>
+	<button onClick="cmd.askLineWidth();" style="display: inline-block;">篾寬</button>
 	
-		<div id="bgcmds" >
+	<div style="display:none">
+	<input type="range" max="5.0" min="1.0" step="0.1" value="2.3" style="width:70px;"
+		oninput="this.nextElementSibling.value = '篾寬 '+this.value+' mm'">
+		<output>篾寬 2.3 mm</output>
+	</div>
+	<input type="checkbox" id="check1" checked  ><label for="check1">黑隔邊</label>
+	<input type="checkbox" id="check2" checked ><label for="check2">白格線</label>
+	<button onClick="cmd.loadDemo();" style="display: inline-block;">範例</button>
+	</div>
+	
+		<div id="bgcmds" style="display:none">
 			<input type="file" id="real-input" name="filename" accept="image/*" style_="display: none;">
 			<input type="checkbox" id="showbg" checked  ><label for="check11">顯示</label>
 		  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked>
@@ -58,17 +76,7 @@ body {
 			<input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" style="display:none;">
 		  <label class="form-check-label" for="inlineRadio3" style="display:none;">旋轉</label>
 		</div>
-	<button onClick="cmd.clear();" style="display: inline-block;">清空</button>
-	<button onClick="cmd.print();" style="display: inline-block;">列印</button>
-	<button onClick="cmd.askLineWidth();" style="display: inline-block;">篾寬</button>
 	
-	<div style="display:none">
-	<input type="range" max="5.0" min="1.0" step="0.1" value="2.3" style="width:70px;"
-		oninput="this.nextElementSibling.value = '篾寬 '+this.value+' mm'">
-		<output>篾寬 2.3 mm</output>
-	</div>
-	<input type="checkbox" id="check1" checked  ><label for="check1">黑邊線</label>
-	<input type="checkbox" id="check2" checked ><label for="check2">白格線</label>
 </div>
 	
 
@@ -84,6 +92,7 @@ body {
 	<canvas id="canvas2"  style="position: absolute; top:100px;left:100px;visibility_:hidden"></canvas>
 	<canvas id="canvas" style="position: absolute;top:0px;left:0px;visibility_:hidden"></canvas>
 	<canvas id="canvas3" style="position: absolute;top:0px;left:0px;visibility_:hidden"></canvas>
+	
 	<!--textarea id="ttaa" style="position: absolute;top:100px;left:0px;"></textarea -->
 
 
@@ -108,13 +117,20 @@ body {
 
 </body>
 <script>
+var _memo = function(){  }
 /*
 
 列印用chrome可輪出成pdf(canvas是點陣圖, 體積大,解析低)
   手機chrome的下載「對話框」要到「設定」，將「詢問...」開啟。也是能輸入檔名,不能換路徑。
   chrome 手機模式會先觸發mouseMove,再觸發mouseDown, 故要在touchStart封鎖
-  畫面的移動與縮放, 使用瀏覽器內建操作(不要封鎖即可)。
+  畫面的移動與縮放, 使用瀏覽器內建操作(不要封鎖即可)。但控制器會移出畫面
 ============
+背景預設為不顯示。
+訊息文字用tag而非畫成點陣圖的一部份。
+白格線獨立圖層
+ 十字線定位會偏差
+ 存成dm1要依日期預設檔名
+
 
 控制器_移動改用transform
 控制器失敗,改為縮小並可移動,並留在頁內。實體手機時,長按避免輕微移動, 0.3秒+-5點，(因為實體手機時, 控制器點不出來)
@@ -124,9 +140,9 @@ body {
 背景_圖片不用canvas編輯功能, 應換成img
 背景_底稿旋轉後,平移及縮放異常,座標軸及增量都異常
 
-白格線獨立圖層
- 十字線定位會偏差
- 自動載入範例檔「壽」
+
+ 
+ ok,從網站自動載入範例檔「壽」
 
 
 某手機版控制器不會定住(何沂刪的會定住), 列印時隱藏指令也無效
@@ -242,7 +258,7 @@ var init = function(){
 	// document.getElementById("canvas").getContext("2d").translate( -50, -50);
 		tools.initArr();
 		draw.refresh();
-		draw.image("./0627b.jpg");
+		draw.image("../0627.jpg");
 		cmd.swPen(3);
 		
 		//旋轉後依角度重新畫圖0度的元件上
@@ -655,13 +671,15 @@ gui.gesturesMove=function (x, y){
 	}
 	
 gui.gesturesEnd=function (x, y){
+	// console.log("a1");
 	if(enGestures){
 		enGestures = false;
 	}
+	// console.log("a2");
 	if(isMove){		//移動過,放開就不畫
 			return;
 	}
-
+// console.log("a3");
 	let delay =  Date.now() - clickTime;
 	if(delay < 200){		//畫單點
 		let tar = tools.rotate45(x - rect.left, y - rect.top, dmWidth);
@@ -966,14 +984,21 @@ cmd.swlayer = function(tar){  //底稿draft 與菱格
 }
 cmd.print = function(){
 	//列印前
-	let tmp = cmdPanel.style.visibility;
-	cmdPanel.style.visibility = "hidden";	//隱藏控制器,列印後不需重現
-	cvs2.style.display = "none";	//隱藏底稿
-	draw.refresh();	//清理線「渣」
+	let display2 = cvs2.style.display;
+	cvs2.style.display = "none";	//隱藏底稿(CSS用noprint無效)
+	draw.refresh();	//重畫, 為了清理線「渣」
 	cvs3.getContext("2d").clearRect(0,0,cvs3.width,cvs3.height);//清除十字線
-	//標題名稱加上日期時間
-	window.print();
-	 cmdPanel.style.visibility = tmp;
+	let title0 = document.title;
+	document.title = title0 + "_" + tools.nowByHHMM();
+	
+	try{
+		window.print();
+	}catch(err){
+		alert(err.message);
+	}
+	//列印後回覆狀態
+	cvs2.style.display = display2;
+	document.title = title0;
 	 cmd.swPen(3);
 	// document.getElementById("bgcmds").style.display = tmp;
 }
@@ -981,12 +1006,11 @@ cmd.print = function(){
 cmd.clear = function(){
 	tools.hidctl();
 	let answer = confirm('清除圖案？');
-	if(answer){
-		aArray = [];
-		localStorage.setItem("dmdArr", JSON.stringify(aArray));	//暫存編輯資料
-		draw.refresh();
-	}
+	if(!answer) return;
 	
+	aArray = [];
+	localStorage.setItem("dmdArr", JSON.stringify(aArray));	//暫存編輯資料
+	draw.refresh();	
 }
 
 	/*重繪畫面(通常用在整體參數異動時)*/
@@ -1015,22 +1039,24 @@ cmd.swPen=function(id){
 			pen = 0;
 		}
 	}
+	
 	document.getElementById("button1").innerText =chars[pen];
-	document.getElementById("bgcmds").style.display = "none";
+	document.body.style.overflow = 'hidden';			//沒有滑動條,只是不能移動,仍可用滑鼠滾輪縮放
+	
 	switch(pen){
 	case 0:{
 		mode = 0;
-		document.body.style.overflow = 'hidden';			//只是不能移動,仍可縮放
+		document.getElementById("mainCmd").style.display = "none";
+		
 	break;
 	}
 	case 1:{
 		mode = 0;
-		document.body.style.overflow = 'hidden';			//只是不能移動,仍可縮放
+
 	break;
 	}
 	case 2:{
 		mode = 3;
-		document.body.style.overflow = 'hidden';			//只是不能移動,仍可縮放
 		ctxcmd.clearRect(0,0, cvs3.width, cvs3.height);	//清除十字線
 		document.getElementById("bgcmds").style.display = "block";
 	break;
@@ -1038,6 +1064,8 @@ cmd.swPen=function(id){
 	case 3:{
 		mode = 1;
 		document.body.style.overflow = "auto";			//visible
+		document.getElementById("bgcmds").style.display = "none";
+		document.getElementById("mainCmd").style.display = "block";
 	break;
 	}
 	  default: {
@@ -1045,15 +1073,6 @@ cmd.swPen=function(id){
   }
 }
 	
-}
-cmd.test = function(){
-	document.getElementById("ttaa").value = JSON.stringify(aArray);
-}
-
-cmd.test2 = function(){
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	aArray = JSON.parse(document.getElementById("ttaa").value); 
-	drawAlldmd();
 }
 
 cmd.savelocal = function(){
@@ -1073,6 +1092,27 @@ cmd.swmode = function(){
 }
 
 var tools={};
+tools.nowByHHMM=function(colon=""){
+			//colon冒號, 也可以放別的分隔符號
+			let now = new Date();
+			let strH = "" + now.getHours();
+			/*
+			用運算子補零
+			(now.getMinutes()/10).toFixed() + (now.getMinutes()%10);
+			*/
+			if(strH< 10){
+				strH = "0"+ strH;
+			}
+			if(colon){
+				strH += ":";
+			}
+			let strM = now.getMinutes();
+			if(strM< 10){
+				strM = "0"+ strM;
+			}
+			return strH + strM;
+		}
+		
 tools.hidctl = function(){  //隱藏控制器
 		if(autoHide.checked){
 		cmdPanel.style.visibility = "hidden";
@@ -1152,6 +1192,7 @@ tools.getColRaw=function(x0, y0){  //座標轉列行值
 tools.initArr = function(){
 	/*取得暫存陣列或重置*/
 	let dmdArrlocal = localStorage.getItem("dmdArr");	
+		//localStorage.removeItem('myKey');	//清除變數
 		
 	// if(dmdArrlocal && dmdArrlocal !="[]"){
 	if(dmdArrlocal){
@@ -1250,39 +1291,40 @@ cmd.upload0 = function(){}  //因為upload加了async無法被列到清單
 cmd.upload = async function(){
 	tools.hidctl();
 	cmd.swPen(3);
-	let [fileHandle] = await window.showOpenFilePicker({	//檔案輸入對話框。用戶取消會AbortError
-		startIn_: 'pictures', 
-		id: 'my-app-uploader',		//記住最近位置(失敗)
-	});
-	const file = await fileHandle.getFile();
-	let content = await file.text();
-  
-	content = content.replaceAll("0", "null");	//陣列在json的空元素為null, 置換以縮小檔案
-	aArray = JSON.parse(content); 
-	draw.refresh();
+	try{
+		let [fileHandle] = await window.showOpenFilePicker({	
+			startIn_: 'pictures', 
+			id: 'my-app-uploader',		//記住最近位置(失敗)
+		});
+		const file = await fileHandle.getFile();
+		let content = await file.text();
+	  
+		content = content.replaceAll("0", "null");	//陣列在json的空元素為null
+		aArray = JSON.parse(content); 
+		draw.refresh();
+	}catch(err){
+		alert(err.message);	//檔案輸入對話框。用戶取消會AbortError
+	}
 	// drawAlldmd();
 }
 
-cmd2.move = function(v){
-	let rect = cvs2.getBoundingClientRect();
-	switch(v){
-		case 0:
-			cvs2.style.top = rect.top - 5;	//上
-			return;
-		case 1:
-			cvs2.style.top = rect.top + 5;		//下
-			return;
-		case 2:
-			cvs2.style.left = rect.left - 5;		//左
-			return;
-		case 3:
-			cvs2.style.left = rect.left + 5;		//右
-			return;
-		default:
-			return;
-	}
+cmd.loadDemo = function(){
+	let answer = confirm('現有圖案將被清除？');
+	if(!answer) return;
+	
+	fetch('data01.dm1')
+		.then(response => response.text())
+		.then(data => {
+		// console.log(data); // 文字內容
 
+				data = data.replaceAll("0", "null");	//陣列在json的空元素為null
+			aArray = JSON.parse(data); 
+			draw.refresh();
+		})
+		.catch(error => console.error('Error:', error));
 }
+
+var _event = function(){  }
 // with(canvas.){	//Strict mode禁用with
 cvs3.addEventListener('mousedown',	gui.mouseDown);
 cvs3.addEventListener('mousemove',	gui.mouseMove);
@@ -1294,7 +1336,7 @@ cvs3.addEventListener('touchmove',	gui.touchMove);
 cvs3.addEventListener('touchend',		gui.touchEnd);
 
 
-chk1.addEventListener('change', (e) => {
+chk1.addEventListener('change', (e) => {  //黑隔邊
 	// console.log("check1");
 	draw.refresh();
 	// drawAlldmd();
@@ -1305,7 +1347,7 @@ chk1.addEventListener('change', (e) => {
   // }
 });
 
-chk2.addEventListener('change', (e) => {
+chk2.addEventListener('change', (e) => {  //白格線
 	// console.log("check2");
 	draw.refresh();
 	// drawAlldmd();
@@ -1332,9 +1374,14 @@ document.getElementById("showbg").addEventListener('change', (e) => {
 
 
 /*停用系統右鍵選單*/
-document.addEventListener("contextmenu", function(e){
-	e.preventDefault();
-},false);
+document.oncontextmenu = function(event){
+	cmdPanel.style.transform ="translate("+ event.clientX+"px, "+ event.clientY +"px)";
+	return false;
+	// e.preventDefault();	//只放這行也可以
+}
+// document.addEventListener("contextmenu", function(e){
+	// e.preventDefault();
+// },false);
 
 
 /* 關閉視窗「前」 */	
@@ -1357,6 +1404,12 @@ document.addEventListener("visibilitychange", () => {
 window.onload = function() {
     window.scrollTo(0, 0);	//無反應
 };
+
+window.addEventListener('resize', () => {
+  // console.log(`New size: ${window.innerWidth} x ${window.innerHeight}`);
+  localStorage.setItem("dmdArr", JSON.stringify(aArray));	//暫存編輯資料
+		cmd.swPen(3);	//不可編輯
+});
 
 // window.addEventListener("touchmove", function () {
 	// const scrollY = window.scrollY || window.pageYOffset;	//chrome模擬手機時,取值恆為零
@@ -1390,7 +1443,7 @@ window.addEventListener('touchend', (e) => {
 				// let dx = x0- xc;
 		// let dy = y0 -  yc;
 		cmdPanel.style.position = "fixed";
-		console.log(scrnX,scrnY,sx,sy,dy);
+		// console.log(scrnX,scrnY,sx,sy,dy);
 		//scale(2)縮放,transform-origin縮放中心(預設中央)
 		// cmdPanel.style.transform ="translate("+ dx+"px, "+ dy +"px) rotate(45deg) ";
 		// cmdPanel.style.transform ="translate("+ dx+"px, "+ dy +"px)";

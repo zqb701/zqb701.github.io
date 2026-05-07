@@ -747,7 +747,7 @@ IT.git_GUI=function(){
 		(google 也能放html???)
 	申請
 		a.點選右上角的帳號圖示/Settings/Developer settings/Personal access tokens/)
-		b.或連結, https://github.com/settings/tokens, 
+		b.或連結, https:/.com/settings/tokens, 
 		c
 			a.reGenerate, 
 			b或 [Generate new token], 勾選所有選項。
@@ -758,7 +758,7 @@ IT.git_GUI=function(){
 		3.[github]	user = zqb701	token = ghp_SZH...PjK
 		
 	git-gui 0.21 版
-	指令：git push -f, git s, git add *, git add 0628.jpg
+	指令：git push -f, git s, git add *, git add 0628.jpg, git mv directory/* new-directory/
 	動態存帳密：git config --global credential.helper store, 再git push一次, 之後就不會問了
 		用cache取代store, 表示暫時記密碼, 預設15分鐘, 但window不支援。
 		可到 user/xxx/.git-credentials修改
@@ -1489,6 +1489,11 @@ focus MK 2.5 可開啟電腦功能可開啟如下:
 公升公里油耗轉換 (原本為每百公里跑幾公升，可隨時切換)
 定速 (必須自己安裝定速系統開關)
 變速箱 省油或運動 模式 (限PS變速箱 )
+
+mk2只有TCS(前輪), 有實體鍵, mk2.5為ESP(四輪), 關閉要從儀表板。
+2.0的TCS主要作用是在加速時偵測到驅動輪打滑時藉由控制煞車及油門來停止驅動輪打滑！
+所以說如果當你的後輪或是前輪發生側滑，TCS是沒有用的！
+ESP除了能防止加速時驅動輪打滑外，還可以偵測出過彎時車身的動態，車子是前面或是後面有發生側滑現象，並針對某一特定輪點煞將車頭往彎中拉回不推頭
 
 mondeo mk4 如電池容量有變動...需用原廠電腦設定...這方法只是BMS歸零...但原廠IDS沒電瓶容量項目可設定...2011年之前的無BMS的就沒差,因為那是恆充14.2V. 發電機也沒單向輪軸
 
