@@ -1,6 +1,6 @@
 <html translate="no">
 	<head>
-		<title>菱格紋e9</title>
+		<title>菱格紋f0</title>
 		<meta charset="utf-8"><!-- 避免亂碼 -->
 		<meta name="google" content="notranslate">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" >
@@ -116,6 +116,15 @@ _body = function(){  }
 	</svg>
 
 </body>
+<script defer>
+	//script defer:資源載入後才執行, async同, 但不保證照順序, 空白則立即執行,
+	//作用等同 window.addEventListener('load', function() {...}
+    if ('serviceWorker' in navigator) {
+		navigator.serviceWorker.register('sw.js')	//使用serviceWorder為了離線功能(另有推送通知和背景同步)
+		.then(reg => console.log('完成 SW 設定!', reg))
+            .catch(err => console.log('Error!', err));
+    }
+</script>
 <script>
 
 
@@ -133,7 +142,7 @@ _body = function(){  }
 訊息文字用tag而非畫成點陣圖的一部份。
  十字線定位會偏差(桌機版)
  存成dm1要依日期預設檔名
- cmdPanel.scrollIntoView();有效//window.scrollTo(0, 1);//可以隱藏 URL bar ???
+ 
  
  控制鈕在手機的大小
  編輯時畫布禁止預設移動, 但控制器沒有禁到,會造成畫面移動
@@ -259,9 +268,13 @@ var init = function(){
 		通用變數用isMobile
 	*/
 	if(screen.width <= 768){
-		document.getElementById("button1").style.width	= "75px";
-		document.getElementById("button1").style.height	= "75px";
+		let button1 = document.getElementById("button1");
+		button1.style.width	= "75px";
+		button1.style.height	= "75px";
 	}
+	// button1.style.background="radial-gradient(circle at center,yellow,red)";
+// cmdPanel.style.borderImage="radial-gradient(circle at center,red)";
+	// cmdPanel.class= "bg-gradient-to-r from-purple-500";
 	
 	
 	// document.getElementById("canvas").getContext("2d").translate( -50, -50);
@@ -1398,7 +1411,11 @@ document.onvisibilitychange=function(){
 }
 
 window.onload = function() {
-    window.scrollTo(1, 1);	//無反應
+	console.log("window.onload()");
+    //window.scrollTo(1, 1);	//無反應
+	//document.body.style.zoom = "1.0"; //無效
+	// cmdPanel.scrollIntoView();	//無效
+	//document.getElementById("control").scrollIntoView();	//無效
 };
 
 
