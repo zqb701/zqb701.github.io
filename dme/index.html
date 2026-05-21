@@ -50,7 +50,7 @@ _body = function(){  }
 	<input type="checkbox" id="autoHide" checked_  style="display:none">
 	<label for="check12" style="display:none">自動隱藏</label>
 	<button onClick="cmd.upload();" style="display: inline-block;">載入</button>
-	<button onClick="cmd.saveFile();" style="display: inline-block;">存檔</button>
+	<button onClick="cmd.saveFile();" style="display: inline-block;">匯出</button>
 	<button onClick="cmd.clear();" style="display: inline-block;">清空</button>
 	<button onClick="cmd.print();" style="display: inline-block;">列印</button>
 	<button onClick="cmd.askLineWidth();" style="display: inline-block;">篾寬</button>
@@ -1044,7 +1044,7 @@ draw.refresh = 	function (){
 		}
 		ctx.strokeRect(0, 0, canvas.width, canvas.height);	//外框
 		draw.Alldmd();
-		draw.Msg();
+		// draw.Msg();
 	}
 
 cmd.swPen=function(id){
