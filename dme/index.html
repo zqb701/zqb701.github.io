@@ -119,11 +119,11 @@ _body = function(){  }
 <script defer>
 	//script defer:資源載入後才執行, async同, 但不保證照順序, 空白則立即執行,
 	//作用等同 window.addEventListener('load', function() {...}
-    if ('serviceWorker' in navigator) {
-		navigator.serviceWorker.register('sw.js')	//使用serviceWorder為了離線功能(另有推送通知和背景同步)
-		.then(reg => console.log('完成 SW 設定!', reg))
-            .catch(err => console.log('Error!', err));
-    }
+    // if ('serviceWorker' in navigator) {
+		// navigator.serviceWorker.register('sw.js')	//使用serviceWorder為了離線功能(另有推送通知和背景同步)
+		// .then(reg => console.log('完成 SW 設定!', reg))
+            // .catch(err => console.log('Error!', err));
+    // }
 </script>
 <script>
 
