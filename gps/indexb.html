@@ -11315,7 +11315,9 @@ path.toNextNode=function() {
 	return true;
 }//end of toNextNode()
 
-myCanvas.getSubZoom = function(h,t){  //子路徑的放大倍數
+	class canvas01{}
+	var myCanvas = new canvas01();	
+myCanvas.getSubZoom=function(h, t){  //子路徑的放大倍數
 	//以前後3點的座標為放大倍數
 	let subHead = nextPoint - h;
 	let subTail = nextPoint + t;
@@ -11348,8 +11350,7 @@ myCanvas.getSubZoom = function(h,t){  //子路徑的放大倍數
 	return z.toFixed(0);
 	
 }
-	class canvas01{}
-	var myCanvas = new canvas01();	
+
 	myCanvas.abc = "123";
 	
 myCanvas.drawClearMap = function (){
@@ -11387,8 +11388,7 @@ myCanvas.drawBaseMap = function(){
 	 var circleTmp;
 	 
 	 //todo 如果有參數傳入, 就取前3點到後3點, 考慮末端。
-	 path.beginPath();
-
+	 // path.beginPath();
  	for (let p=0; p< mapPoints.length; p++){		//TODO 改用Path2D物件
 		// if(points[p][4-vector]){	//畫紅點
 			circle0.moveTo(mapPoints[p][0], mapPoints[p][1]);
