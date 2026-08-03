@@ -34,7 +34,7 @@ xxxxxx	候選清單：現況是切綠燈時取得第一筆Fn，須增加「其�
 <head>
 	<meta charset="utf-8">
 	<title>GPS02</title>
-	<script> 		var version = "v0.72c30y6"; 	</script>
+	<script> 		var version = "v0.72c31"; 	</script>
 </head>
 
 <style>
@@ -10265,7 +10265,7 @@ tools.addlog("signal.click(5fb):" + error.message);
 	
 	var march = document.getElementById("march");
 	march.addEventListener("touchstart", signal.click);
-	march.addEventListener("mouseup", signal.click);
+	// march.addEventListener("mouseup", signal.click);
 	
 	var lightRed = document.getElementById("divRed");
 	lightRed.addEventListener("touchstart", signal.toRed);
